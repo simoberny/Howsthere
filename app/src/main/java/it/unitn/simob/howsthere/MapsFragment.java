@@ -61,6 +61,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        //Quando ruoto il dispositivo o quando viene risvegliato salvo e recupero lo stato della mappa
         MapStateManager mgr = new MapStateManager(getActivity());
         mgr.saveMapState(gm);
     }
@@ -70,6 +71,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                              Bundle savedInstanceState) {
        final View rootview = inflater.inflate(R.layout.fragment_maps, container, false);
 
+       //Attiva la barra di colore bianco sulle versioni di android superiori a Marshmallow
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -117,11 +119,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     }
 
     public void getLocation(View view) {
-        double longi = 0, lat = 0;
         LocationListener ll = new mylocationlistener();
-
-        final TextView tlat = (TextView) getActivity().findViewById(R.id.lat);
-        final TextView tlog = (TextView) getActivity().findViewById(R.id.log);
 
         boolean gps_enabled = false;
         boolean network_enabled = false;
@@ -143,6 +141,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
                 if (gps_enabled) {
+                    //Servizio che richiede la posizione con GPS se disponibile ogni secondo
                     lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, ll);
                 }
 
@@ -155,7 +154,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                     else
                         finalLoc = gps_loc;
                 } else {
-
                     if (gps_loc != null) {
                         finalLoc = gps_loc;
                     } else if (net_loc != null) {
@@ -163,59 +161,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                         finalLoc = net_loc;
                     }
                 }
-
                 if (finalLoc != null) {
                     goToLoc(new LatLng(finalLoc.getLatitude(), finalLoc.getLongitude()), 5);
                 }
             }
-
         } else {
+            //Se non ci sono i permessi li richiedo all'utente
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
-
     }
 
-    private void goToLoc(LatLng pos, int zoom){
-        ln = new LatLng(pos.latitude, pos.longitude);
-
-        final EditText lat = (EditText) getActivity().findViewById(R.id.latedit);
-        final EditText log = (EditText) getActivity().findViewById(R.id.longedit);
-        lat.setText("" + pos.latitude);
-        log.setText("" + pos.longitude);
-
-        gm.clear();
-        gm.addMarker(new MarkerOptions().position(ln));
-        gm.moveCamera(CameraUpdateFactory.newLatLng(ln));
-        gm.animateCamera(CameraUpdateFactory.zoomTo(zoom));
-    }
-
-    public static class DatePickerFragment extends DialogFragment {
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            return new DatePickerDialog(contesto.getContext(), (DatePickerDialog.OnDateSetListener) contesto, year, month, day);
-        }
-    }
-
-    @Override
-    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.MONTH, month);
-        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-        dataSelezionata = c.getTime();
-
-        String currentDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
-        TextView date = (TextView) getActivity().findViewById(R.id.datetext);
-        date.setText(currentDate);
-    }
-
+    //Listener per la posizione GPS
     private class mylocationlistener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
@@ -231,11 +188,73 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         public void onStatusChanged(String provider, int status, Bundle extras) {}
     }
 
+
+    /**
+     * Funzione da data la copia di posizionamento e lo zoom della mappa muove la mappa in quella direzione
+     * Può essere chiamata ad esempio quando si chiede la propria posizione per posizionare la mappa
+     * @param pos
+     * @param zoom
+     */
+    private void goToLoc(LatLng pos, int zoom){
+        ln = new LatLng(pos.latitude, pos.longitude);
+
+        final EditText lat = (EditText) getActivity().findViewById(R.id.latedit);
+        final EditText log = (EditText) getActivity().findViewById(R.id.longedit);
+        lat.setText("" + pos.latitude);
+        log.setText("" + pos.longitude);
+
+        gm.clear();
+        gm.addMarker(new MarkerOptions().position(ln));
+        gm.moveCamera(CameraUpdateFactory.newLatLng(ln));
+        gm.animateCamera(CameraUpdateFactory.zoomTo(zoom));
+    }
+
+    /**
+     * Mini classe per la gestione del selezionatore della data
+     */
+    public static class DatePickerFragment extends DialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            return new DatePickerDialog(contesto.getContext(), (DatePickerDialog.OnDateSetListener) contesto, year, month, day);
+        }
+    }
+
+    /**
+     * Gestisco l'evento della data selezionata e la salvo anche nella variabile globale
+     * @param datePicker
+     * @param year
+     * @param month
+     * @param dayOfMonth
+     */
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        dataSelezionata = c.getTime();
+
+        String currentDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
+        TextView date = (TextView) getActivity().findViewById(R.id.datetext);
+        date.setText(currentDate);
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
     }
 
+    /**
+     * Funzione principale per gestire la mappa che viene caricata quando la mappa è pronta
+     * Qui viene gestito il click
+     * @param googleMap
+     */
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         gm = googleMap;
@@ -263,6 +282,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         });
     }
 
+    /**
+     * Classe per gestire il salvataggio dello stato della mappa tra una sessione e l'altra o quando
+     * il telefono cambia il suo stato
+     */
     public class MapStateManager {
         private static final String LONGITUDE = "longitude";
         private static final String LATITUDE = "latitude";

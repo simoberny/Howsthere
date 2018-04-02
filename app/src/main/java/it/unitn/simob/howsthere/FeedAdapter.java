@@ -24,15 +24,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         public ImageView image;
 
         public MyViewHolder(View view) {
-
             super(view);
             name = (TextView) view.findViewById(R.id.cardView_name);
             location = (TextView) view.findViewById(R.id.cardView_location);
             timeStamp = (TextView) view.findViewById(R.id.cardView_timestamp);
             image = (ImageView) view.findViewById(R.id.cardView_image);
-
         }
-
     }
 
     public FeedAdapter(Context mContext, List<Feed> feedList) {
@@ -50,21 +47,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-
-        // sets all the text and image resources when the card view is bind in our adapter
         final Feed feed = feedList.get(position);
         holder.name.setText(feed.getName());
         holder.location.setText(feed.getLocation());
         holder.timeStamp.setText(feed.getTimeStamp());
 
-        // this is the code for the Glide image library
+        //Libreria per la gestione ottimizzata delle immagini
         Glide.with(mContext)
                 .load(feed.getImageUrl())
                 .override(1280, 720)
                 .fitCenter()
                 .priority(Priority.LOW)
                 .into(holder.image);
-
     }
 
     @Override

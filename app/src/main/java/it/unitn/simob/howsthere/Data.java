@@ -44,6 +44,8 @@ public class Data extends AppCompatActivity {
     private String id = null;
     private String gPeak = null;
 
+    //Le richieste GET vengono gestite dalla libreria RetroFit
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +70,7 @@ public class Data extends AppCompatActivity {
         dataT.setText("" + data);
 
         if (savedInstanceState != null) {
+            // Se c'è un istanza salvata non richiedo nuovamente i dati
             String savedID = savedInstanceState.getString("ID");
             String savedPeak = savedInstanceState.getString("peak");
             id = savedID;
@@ -75,6 +78,7 @@ public class Data extends AppCompatActivity {
             idt.setText(savedID);
             setPeak(savedPeak);
         }else{
+            // Altrimenti controllo la connessione a internet e inizio la richiesta partendo dall'ID
             if(checkInternetConnection()){
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl("http://www.heywhatsthat.com/")
@@ -88,6 +92,7 @@ public class Data extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             try {
                                 id = response.body().string();
+                                //Ottenuto l'ID controllo lo stato della generazione del panorama
                                 changeID(id);
                                 checkStatus(id);
                             } catch (IOException e) {
@@ -109,6 +114,7 @@ public class Data extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState (Bundle outState) {
+        // Salvataggio dell'istanza
         super.onSaveInstanceState(outState);
         outState.putCharSequence("ID", id);
         outState.putCharSequence("peak", gPeak);
@@ -127,6 +133,7 @@ public class Data extends AppCompatActivity {
         HeyWhatsReady service = retrofit.create(HeyWhatsReady.class);
         Call<ResponseBody> call = service.getStatus(idpass);
 
+        // Finestra di dialogo con il loader di attesa
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(Data.this);
         progressDoalog.setMax(100);
@@ -142,8 +149,10 @@ public class Data extends AppCompatActivity {
                     try {
                         String status = response.body().string();
                         if(status.length() > 0 && status.charAt(0) == '1'){
+                            // Se la mappa è pronta vado ad ottenere il panorama
                             loadPeakData(idpass);
                         }else{
+                            //Altrimenti aspetto e riprovo dopo 10 secondi
                             Thread.sleep(10000);
                             checkStatus(idpass);
                         }
@@ -153,7 +162,7 @@ public class Data extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Waiting failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Attesa fallita!", Toast.LENGTH_SHORT).show();
                 }
                 progressDoalog.dismiss();
             }
@@ -212,6 +221,9 @@ public class Data extends AppCompatActivity {
     }
 
     private void setPeak(String peak){
+
+        //Faccio il parsing della stringa e butto i dati nella libreria per generare grafici
+
         List<Entry> entries = new ArrayList<Entry>();
         List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
 
@@ -256,6 +268,7 @@ public class Data extends AppCompatActivity {
         chart.invalidate(); // refresh
     }
 
+    //Interfacce per le richieste GET
     public interface HeyWhatsID {
         @GET("api/query?src=hows")
         Call<ResponseBody> getID(@Query("lat") Double lat, @Query("lon") Double lon);

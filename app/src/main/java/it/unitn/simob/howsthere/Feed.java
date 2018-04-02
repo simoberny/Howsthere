@@ -4,6 +4,9 @@ package it.unitn.simob.howsthere;
  * Created by simob on 02/04/2018.
  */
 
+/**
+ * Classe per la gestione dei feed, poi andrà completata con il database usando le Room
+ */
 public class Feed {
     private String name, location, imageUrl, timeStamp;
 

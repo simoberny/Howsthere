@@ -41,16 +41,15 @@ public class FeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
-
+        //Attiva la barra di colore bianco sulle versioni di android superiori a Marshmallow
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             getActivity().getWindow().setStatusBarColor(Color.WHITE);
         }
 
-        feedList = new ArrayList<>();
-        adapter = new FeedAdapter(getActivity(), feedList);
-
+        feedList = new ArrayList<>(); //Inizializzazione lista dei feed
+        adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -58,7 +57,7 @@ public class FeedFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
-        // create a new object feed to be inserted in our adapter.
+        //Oggetti statici caricati nella feed
         Feed feed = new Feed("Simone Bernabè",
                 "Metro Manila, Philippines",
                 "https://campingselection-528047.c.cdn77.org/media/default/images/en-us/editorial-area/region-trentino.jpg",
@@ -83,7 +82,7 @@ public class FeedFragment extends Fragment {
                 "26 MINUTES AGO");
         feedList.add(0, feed);
 
-        //call this every time you're going to add new items in your recycler view
+        //Dico all'adattatore che sono stati aggiunti degli elementi
         adapter.notifyDataSetChanged();
 
         return view;
