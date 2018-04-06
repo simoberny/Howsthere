@@ -43,6 +43,9 @@ public class Data extends AppCompatActivity {
 
     private String id = null;
     private String gPeak = null;
+    private Retrofit retrofit = null;
+    private TextView idt = null;
+    private ProgressDialog progressDialog;
 
     //Le richieste GET vengono gestite dalla libreria RetroFit
 
@@ -63,11 +66,21 @@ public class Data extends AppCompatActivity {
         TextView latT = (TextView) findViewById(R.id.latT);
         TextView longT = (TextView) findViewById(R.id.longT);
         TextView dataT = (TextView) findViewById(R.id.dateT);
-        TextView idt = (TextView) findViewById(R.id.idt);
+        idt = (TextView) findViewById(R.id.idt);
 
         latT.setText("" + lat);
         longT.setText("" + lng);
         dataT.setText("" + data);
+
+        //Preparo la finestra di caricamento
+        progressDialog = new ProgressDialog(Data.this);
+        progressDialog.setMax(100);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        //Variabile Retrofit per gestire tutte le richieste GET
+        retrofit = new Retrofit.Builder()
+                .baseUrl("http://www.heywhatsthat.com/")
+                .build();
 
         if (savedInstanceState != null) {
             // Se c'è un istanza salvata non richiedo nuovamente i dati
@@ -78,197 +91,23 @@ public class Data extends AppCompatActivity {
             idt.setText(savedID);
             setPeak(savedPeak);
         }else{
-            // Altrimenti controllo la connessione a internet e inizio la richiesta partendo dall'ID
-            if(checkInternetConnection()){
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("http://www.heywhatsthat.com/")
-                        .build();
-
-                HeyWhatsID service = retrofit.create(HeyWhatsID.class);
-                Call<ResponseBody> call = service.getID(lat, lng);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()) {
-                            try {
-                                id = response.body().string();
-                                //Ottenuto l'ID controllo lo stato della generazione del panorama
-                                changeID(id);
-                                checkStatus(id);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Impossibile caricare l'ID!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.d("Error", t.getMessage());
-                    }
-                });
-            }
+            callsAPI(lat, lng);
         }
     }
 
+    /**
+     * Salvataggio dell'istanza
+     */
     @Override
     protected void onSaveInstanceState (Bundle outState) {
-        // Salvataggio dell'istanza
         super.onSaveInstanceState(outState);
         outState.putCharSequence("ID", id);
         outState.putCharSequence("peak", gPeak);
     }
 
-    private void changeID(String idpass){
-        TextView idt = (TextView) findViewById(R.id.idt);
-        idt.setText(idpass);
-    }
-
-    private void checkStatus(final String idpass){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://www.heywhatsthat.com/")
-                .build();
-
-        HeyWhatsReady service = retrofit.create(HeyWhatsReady.class);
-        Call<ResponseBody> call = service.getStatus(idpass);
-
-        // Finestra di dialogo con il loader di attesa
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(Data.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Eseguendo il panorama...");
-        progressDoalog.setTitle("Attendere (1 minuto)...");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDoalog.show();
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        String status = response.body().string();
-                        if(status.length() > 0 && status.charAt(0) == '1'){
-                            // Se la mappa è pronta vado ad ottenere il panorama
-                            loadPeakData(idpass);
-                        }else{
-                            //Altrimenti aspetto e riprovo dopo 10 secondi
-                            Thread.sleep(10000);
-                            checkStatus(idpass);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Attesa fallita!", Toast.LENGTH_SHORT).show();
-                }
-                progressDoalog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("Error", t.getMessage());
-                progressDoalog.dismiss();
-            }
-        });
-    }
-
-    private void loadPeakData(String idpass){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://www.heywhatsthat.com/")
-                .build();
-        HeyWhatsPeak service = retrofit.create(HeyWhatsPeak.class);
-        Call<ResponseBody> call = service.getPeak(idpass);
-
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(Data.this);
-        progressDoalog.setMax(100);
-        progressDoalog.setMessage("Caricando l'orizzonte...");
-        progressDoalog.setTitle("Attendere...");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDoalog.show();
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        gPeak = response.body().string();
-                        setPeak(gPeak);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Impossibile caricare i picchi!", Toast.LENGTH_SHORT).show();
-                    try {
-                        Log.d("Error", response.errorBody().string());
-                        Log.d("Error", response.message());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                progressDoalog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                progressDoalog.dismiss();
-                Log.d("Error", t.getMessage());
-            }
-        });
-    }
-
-    private void setPeak(String peak){
-
-        //Faccio il parsing della stringa e butto i dati nella libreria per generare grafici
-
-        List<Entry> entries = new ArrayList<Entry>();
-        List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
-
-        for(int a = 1; a< lines.size(); a++){
-            List<String> tempsplit = Arrays.asList(lines.get(a).split(","));
-            entries.add(new Entry(Float.parseFloat(tempsplit.get(1)), Float.parseFloat(tempsplit.get(6))));
-        }
-
-        LineChart chart = (LineChart) findViewById(R.id.chart);
-
-        chart.setDrawGridBackground(false);
-        chart.setMaxHighlightDistance(300);
-        XAxis x = chart.getXAxis();
-        x.setEnabled(false);
-
-        chart.getAxisRight().setEnabled(false);
-
-        chart.getAxisLeft().setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return String.format("%.2f",value);
-            }
-        });
-
-        LineDataSet dataSet = new LineDataSet(entries, "Profilo montagne"); // add entries to dataset
-        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-
-        dataSet.setFillColor(ContextCompat.getColor(getApplicationContext(),R.color.pale_green));
-        dataSet.setColor(ContextCompat.getColor(getApplicationContext(),R.color.pale_green));
-
-        dataSet.setDrawFilled(true);
-        dataSet.setDrawValues(true);
-
-        dataSet.setFillAlpha(255);
-        dataSet.setDrawCircles(false);
-
-        chart.getDescription().setText("Profilo montagne");
-        LineData lineData = new LineData(dataSet);
-        chart.getXAxis().setDrawGridLines(false);
-        chart.setData(lineData);
-        chart.animateX(2500);
-        chart.invalidate(); // refresh
-    }
-
-    //Interfacce per le richieste GET
+    /**
+     * Interfacce per le richieste GET
+     */
     public interface HeyWhatsID {
         @GET("api/query?src=hows")
         Call<ResponseBody> getID(@Query("lat") Double lat, @Query("lon") Double lon);
@@ -284,16 +123,139 @@ public class Data extends AppCompatActivity {
         Call<ResponseBody> getPeak(@Query("id") String ID);
     }
 
-    private boolean checkInternetConnection() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        // test for connection
-        if (cm.getActiveNetworkInfo() != null
-                && cm.getActiveNetworkInfo().isAvailable()
-                && cm.getActiveNetworkInfo().isConnected()) {
-            return true;
-        } else {
-            Toast.makeText(getApplicationContext(), "Internet non disponibile", Toast.LENGTH_SHORT).show();
-            return false;
+    private void callsAPI(Double lat, Double lng){
+        HeyWhatsID service = retrofit.create(HeyWhatsID.class);
+        Call<ResponseBody> call = service.getID(lat, lng);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        id = response.body().string();
+                        idt.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                idt.setText(id);
+                            }
+                        });
+                        checkStatus(id); //Ottenuto l'ID controllo lo stato della generazione del panorama
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Impossibile caricare l'ID!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("Errore: ", t.getMessage());
+            }
+        });
+    }
+
+    private void checkStatus(final String idpass){
+        HeyWhatsReady service = retrofit.create(HeyWhatsReady.class);
+        Call<ResponseBody> call = service.getStatus(idpass);
+
+        progressDialog.setMessage("Eseguendo il panorama...");
+        progressDialog.setTitle("Attendere (1 minuto)...");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String status = response.body().string();
+                        if(status.length() > 0 && status.charAt(0) == '1'){ // Se la mappa è pronta vado ad ottenere il panorama
+                            loadPeakData(idpass);
+                        }else{ //Altrimenti aspetto e riprovo dopo 10 secondi
+                            Thread.sleep(10000);
+                            checkStatus(idpass);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "La mappa non è stata generata!", Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("Errore: ", t.getMessage());
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    private void loadPeakData(String idpass){
+        HeyWhatsPeak service = retrofit.create(HeyWhatsPeak.class);
+        Call<ResponseBody> call = service.getPeak(idpass);
+
+        progressDialog.setMessage("Caricando l'orizzonte...");
+        progressDialog.setTitle("Attendere...");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        gPeak = response.body().string();
+                        setPeak(gPeak);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Impossibile caricare i picchi!", Toast.LENGTH_SHORT).show();
+                }
+                progressDialog.dismiss();
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("Error", t.getMessage());
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    private void setPeak(String peak){
+        //Faccio il parsing della stringa e butto i dati nella libreria per generare grafici
+        List<Entry> entries = new ArrayList<Entry>();
+        List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
+
+        for(int a = 1; a< lines.size(); a++){
+            List<String> tempsplit = Arrays.asList(lines.get(a).split(","));
+            entries.add(new Entry(Float.parseFloat(tempsplit.get(1)), Float.parseFloat(tempsplit.get(6))));
         }
+
+        LineChart chart = (LineChart) findViewById(R.id.chart);
+        chart.setDrawGridBackground(false);
+        chart.setMaxHighlightDistance(300);
+        chart.getXAxis().setEnabled(false);
+        chart.getAxisRight().setEnabled(false);
+
+        LineDataSet dataSet = new LineDataSet(entries, "Profilo montagne"); // add entries to dataset
+        dataSet.setMode(LineDataSet.Mode.STEPPED);
+
+        dataSet.setFillColor(ContextCompat.getColor(getApplicationContext(),R.color.pale_green));
+        dataSet.setColor(ContextCompat.getColor(getApplicationContext(),R.color.pale_green));
+
+        dataSet.setDrawFilled(true);
+        dataSet.setDrawValues(true);
+
+        dataSet.setFillAlpha(255);
+        dataSet.setDrawCircles(false);
+
+        chart.getDescription().setText("Profilo montagne");
+        LineData lineData = new LineData(dataSet);
+        chart.getXAxis().setDrawGridLines(false);
+        chart.setData(lineData);
+        chart.animateX(2500);
+        chart.invalidate();
     }
 }

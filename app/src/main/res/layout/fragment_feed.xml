@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="20dp"
     tools:context="it.unitn.simob.howsthere.FeedFragment">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,7 +9,8 @@
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="info.androidprime.instagramfeed.activity.MainActivity">
+        tools:context="info.androidprime.instagramfeed.activity.MainActivity"
+        android:fitsSystemWindows="true">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"

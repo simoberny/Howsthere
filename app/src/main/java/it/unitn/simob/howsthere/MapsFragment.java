@@ -6,31 +6,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.Manifest;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -52,6 +51,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     private int zoomLevel = 0;
     public static MapsFragment contesto;
     private Date dataSelezionata = Calendar.getInstance().getTime();
+    BottomSheetDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,12 +71,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                              Bundle savedInstanceState) {
        final View rootview = inflater.inflate(R.layout.fragment_maps, container, false);
 
-       //Attiva la barra di colore bianco sulle versioni di android superiori a Marshmallow
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
+        dialog = new BottomSheetDialog(getActivity());
+        View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
+        dialog.setContentView(sheetView);
 
        FloatingActionButton position = (FloatingActionButton) rootview.findViewById(R.id.position);
        position.setOnClickListener(new View.OnClickListener(){
@@ -86,7 +83,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
            }
        });
 
-        FloatingActionButton date = (FloatingActionButton) rootview.findViewById(R.id.dateopen);
+        FloatingActionButton date = (FloatingActionButton) sheetView.findViewById(R.id.dateopen);
         date.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -104,6 +101,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 i.putExtra("long", ln.longitude);
                 i.putExtra("data", dataSelezionata.toString());
                 startActivity(i);
+            }
+        });
+
+        SupportPlaceAutocompleteFragment placeAutoComplete = (SupportPlaceAutocompleteFragment)  this.getChildFragmentManager().findFragmentById(R.id.place_autocomplete);
+        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                LatLng pl = place.getLatLng();
+                goToLoc(pl, 15);
+                Log.d("Maps", "Place selected: " + place.getName());
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.d("Maps", "An error occurred: " + status);
             }
         });
 
@@ -142,7 +154,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
                 if (gps_enabled) {
                     //Servizio che richiede la posizione con GPS se disponibile ogni secondo
-                    lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, ll);
+                    lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, ll);
                 }
 
                 if (network_enabled)
@@ -162,7 +174,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                     }
                 }
                 if (finalLoc != null) {
-                    goToLoc(new LatLng(finalLoc.getLatitude(), finalLoc.getLongitude()), 5);
+                    goToLoc(new LatLng(finalLoc.getLatitude(), finalLoc.getLongitude()), 10);
                 }
             }
         } else {
@@ -177,7 +189,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         @Override
         public void onLocationChanged(Location location) {
             if (location != null) {
-                goToLoc(new LatLng(location.getLatitude(), location.getLongitude()), 5);
+                goToLoc(new LatLng(location.getLatitude(), location.getLongitude()), 10);
             }
         }
         @Override
@@ -197,11 +209,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
      */
     private void goToLoc(LatLng pos, int zoom){
         ln = new LatLng(pos.latitude, pos.longitude);
-
-        final EditText lat = (EditText) getActivity().findViewById(R.id.latedit);
-        final EditText log = (EditText) getActivity().findViewById(R.id.longedit);
-        lat.setText("" + pos.latitude);
-        log.setText("" + pos.longitude);
 
         gm.clear();
         gm.addMarker(new MarkerOptions().position(ln));
@@ -241,13 +248,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         dataSelezionata = c.getTime();
 
         String currentDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
-        TextView date = (TextView) getActivity().findViewById(R.id.datetext);
-        date.setText(currentDate);
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+        View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
+        TextView date = (TextView) sheetView.findViewById(R.id.dateselected);
+        date.setText(currentDate);
     }
 
     /**
@@ -259,6 +263,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     public void onMapReady(final GoogleMap googleMap) {
         gm = googleMap;
         gm.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        gm.setPadding(0, 300, 0,0);
 
         MapStateManager mgr = new MapStateManager(getActivity());
         CameraPosition position = mgr.getSavedCameraPosition();
@@ -268,16 +273,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             goToLoc(gm.getCameraPosition().target, (int) gm.getCameraPosition().zoom);
         }
 
-        final EditText lat = (EditText) getActivity().findViewById(R.id.latedit);
-        final EditText log = (EditText) getActivity().findViewById(R.id.longedit);
         LatLng ll = null;
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
             @Override
             public void onMapClick(LatLng point) {
-                lat.setText("" + point.latitude);
-                log.setText("" + point.longitude);
                 gm.clear();
                 gm.addMarker(new MarkerOptions().position(point));
+                dialog.show();
             }
         });
     }
