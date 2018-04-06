@@ -52,6 +52,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     public static MapsFragment contesto;
     private Date dataSelezionata = Calendar.getInstance().getTime();
     BottomSheetDialog dialog;
+    View sheetView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
        final View rootview = inflater.inflate(R.layout.fragment_maps, container, false);
 
         dialog = new BottomSheetDialog(getActivity());
-        View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
+        sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
         dialog.setContentView(sheetView);
 
        FloatingActionButton position = (FloatingActionButton) rootview.findViewById(R.id.position);
@@ -248,8 +249,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         dataSelezionata = c.getTime();
 
         String currentDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
-
-        View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
         TextView date = (TextView) sheetView.findViewById(R.id.dateselected);
         date.setText(currentDate);
     }
