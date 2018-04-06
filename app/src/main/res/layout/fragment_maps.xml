@@ -44,20 +44,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:clickable="true"
             android:src="@drawable/ic_my_location_black_24dp"
             app:backgroundTint="@color/wallet_bright_foreground_holo_dark" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/position"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:clickable="true"
-            android:src="@drawable/ic_arrow_forward_white_24dp"
-            app:backgroundTint="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color" />
     </RelativeLayout>
 </FrameLayout>

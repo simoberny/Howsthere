@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,9 +44,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
-
     private GoogleMap gm = null;
     private LatLng ln = null;
     private int zoomLevel = 0;
@@ -84,7 +83,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
            }
        });
 
-        FloatingActionButton date = (FloatingActionButton) sheetView.findViewById(R.id.dateopen);
+        Button date = (Button) sheetView.findViewById(R.id.dataselect);
         date.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -93,7 +92,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             }
         });
 
-        FloatingActionButton send = (FloatingActionButton) rootview.findViewById(R.id.send);
+        Button send = (Button) sheetView.findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -262,7 +261,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     public void onMapReady(final GoogleMap googleMap) {
         gm = googleMap;
         gm.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        gm.setPadding(0, 300, 0,0);
+        gm.setPadding(0, 180, 0,0);
 
         MapStateManager mgr = new MapStateManager(getActivity());
         CameraPosition position = mgr.getSavedCameraPosition();
