@@ -270,13 +270,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             gm.moveCamera(update);
             goToLoc(gm.getCameraPosition().target, (int) gm.getCameraPosition().zoom);
         }
-
-        LatLng ll = null;
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
             @Override
             public void onMapClick(LatLng point) {
                 gm.clear();
                 gm.addMarker(new MarkerOptions().position(point));
+                ln = new LatLng(point.latitude, point.longitude);
                 dialog.show();
             }
         });

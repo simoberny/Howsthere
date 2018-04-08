@@ -40,7 +40,7 @@ public class Maps extends AppCompatActivity{
                     break;
                 case R.id.navigation_settings:
                     //TODO fragment per le impostazioni
-                    selectedFragment = Sun.newInstance(); //TODO
+                    selectedFragment = SettingsFragment.newInstance(); //TODO
                     break;
             }
 

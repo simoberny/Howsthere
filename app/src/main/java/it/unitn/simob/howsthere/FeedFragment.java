@@ -70,7 +70,7 @@ public class FeedFragment extends Fragment {
                 "10 HOURS AGO");
         feedList.add(0, feed);
 
-        feed = new Feed("Silvio Berlusconi",
+        feed = new Feed("Marco Rossi",
                 "Metro Manila, Philippines",
                 "https://media.istockphoto.com/photos/sun-at-the-sky-with-copy-space-picture-id155366999?k=6&m=155366999&s=612x612&w=0&h=EFpmVaOq8RHHN5q1fq1qHDhn_V_YS2Ex_Z7UDD2efEs=",
                 "26 MINUTES AGO");

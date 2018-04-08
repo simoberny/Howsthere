@@ -40,7 +40,7 @@
             android:elevation="1dp"
             android:paddingStart="20dp"
             android:stateListAnimator="@null"
-            android:text="Data" />
+            android:text="Seleziona data" />
 
         <TextView
             android:id="@+id/dateselected"
@@ -54,6 +54,41 @@
             android:textSize="18sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:clipToPadding="false">
+
+        <Button
+            android:id="@+id/timeselect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/wallet_bright_foreground_holo_dark"
+            android:drawableLeft="@drawable/ic_date_range_black_24dp"
+            android:elevation="1dp"
+            android:paddingStart="20dp"
+            android:stateListAnimator="@null"
+            android:text="Seleziona ora" />
+
+        <TextView
+            android:id="@+id/timeselected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/dateopen"
+            android:layout_weight="1"
+            android:text="Alba e Tramonto"
+            android:textSize="18sp" />
+    </LinearLayout>
     <Button
         android:id="@+id/send"
         android:layout_width="match_parent"
