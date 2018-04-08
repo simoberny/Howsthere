@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -67,13 +68,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        final View rootview = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        dialog = new BottomSheetDialog(getActivity());
-        sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
-        dialog.setContentView(sheetView);
+       dialog = new BottomSheetDialog(getActivity());
+       sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
+       dialog.setContentView(sheetView);
 
        FloatingActionButton position = (FloatingActionButton) rootview.findViewById(R.id.position);
        position.setOnClickListener(new View.OnClickListener(){
@@ -83,17 +83,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
            }
        });
 
-        Button date = (Button) sheetView.findViewById(R.id.dataselect);
-        date.setOnClickListener(new View.OnClickListener(){
+       Button date = (Button) sheetView.findViewById(R.id.dataselect);
+       date.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getActivity().getSupportFragmentManager(), "Seleziona data");
             }
-        });
+       });
 
-        Button send = (Button) sheetView.findViewById(R.id.send);
-        send.setOnClickListener(new View.OnClickListener(){
+       Button send = (Button) sheetView.findViewById(R.id.send);
+       send.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), Data.class);
@@ -102,7 +102,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 i.putExtra("data", dataSelezionata.toString());
                 startActivity(i);
             }
-        });
+       });
 
         SupportPlaceAutocompleteFragment placeAutoComplete = (SupportPlaceAutocompleteFragment)  this.getChildFragmentManager().findFragmentById(R.id.place_autocomplete);
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -147,7 +147,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
             LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                Toast.makeText(getActivity(), "GPS is disabled!", Toast.LENGTH_LONG).show();
+                Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.map_container), "Il GPS è disattivato", Snackbar.LENGTH_SHORT);
+                mySnackbar.show();
             } else {
                 gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
                 network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -156,7 +157,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                     //Servizio che richiede la posizione con GPS se disponibile ogni secondo
                     lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, ll);
                 }
-
                 if (network_enabled)
                     net_loc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
