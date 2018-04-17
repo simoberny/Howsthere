@@ -1,8 +1,6 @@
 package it.unitn.simob.howsthere;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
@@ -11,46 +9,12 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import java.lang.reflect.Field;
 
 
 public class Maps extends AppCompatActivity{
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment = null;
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    selectedFragment = MapsFragment.newInstance();
-                    break;
-                case R.id.navigation_sun:
-                    selectedFragment = Sun.newInstance();
-                    break;
-                case R.id.navigation_feed:
-                    selectedFragment = FeedFragment.newInstance();
-                    break;
-                case R.id.navigation_settings:
-                    //TODO fragment per le impostazioni
-                    selectedFragment = SettingsFragment.newInstance(); //TODO
-                    break;
-            }
-
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_layout, selectedFragment);
-            transaction.commit();
-            return true;
-        }
-    };
-
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +31,8 @@ public class Maps extends AppCompatActivity{
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) navigation.getChildAt(0);
+
+        //elimino lo shift e metto visibili sempre le scritte
         Field shiftingMode = null;
         try {
             shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
@@ -78,12 +44,40 @@ public class Maps extends AppCompatActivity{
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-
         for (int i = 0; i < menuView.getChildCount(); i++) {
             BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(i);
             itemView.setShiftingMode(false);
             itemView.setChecked(false);
         }
+        //fine modifica barra sotto
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment selectedFragment = null;
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    selectedFragment = MapsFragment.newInstance();
+                    break;
+                case R.id.navigation_sun:
+                    selectedFragment = Meteo.newInstance();
+                    break;
+                case R.id.navigation_feed:
+                    selectedFragment = FeedFragment.newInstance();
+                    break;
+                case R.id.navigation_settings:
+                    selectedFragment = SettingsFragment.newInstance();
+                    break;
+            }
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_layout, selectedFragment);
+            transaction.commit();
+            return true;
+        }
+    };
 }

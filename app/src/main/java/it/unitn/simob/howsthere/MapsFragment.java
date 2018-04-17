@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -41,9 +43,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
     private GoogleMap gm = null;
@@ -52,7 +57,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     public static MapsFragment contesto;
     private Date dataSelezionata = Calendar.getInstance().getTime();
     BottomSheetDialog dialog;
-    View sheetView;
+    View dialogView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,10 +75,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        final View rootview = inflater.inflate(R.layout.fragment_maps, container, false);
-
+       //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
        dialog = new BottomSheetDialog(getActivity());
-       sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
-       dialog.setContentView(sheetView);
+       dialogView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
+       dialog.setContentView(dialogView);
 
        FloatingActionButton position = (FloatingActionButton) rootview.findViewById(R.id.position);
        position.setOnClickListener(new View.OnClickListener(){
@@ -83,7 +88,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
            }
        });
 
-       Button date = (Button) sheetView.findViewById(R.id.dataselect);
+       Button date = (Button) dialogView.findViewById(R.id.dataselect);
        date.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -92,7 +97,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             }
        });
 
-       Button send = (Button) sheetView.findViewById(R.id.send);
+       Button send = (Button) dialogView.findViewById(R.id.send);
        send.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -104,13 +109,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             }
        });
 
+       //Carico il cerca di google
         SupportPlaceAutocompleteFragment placeAutoComplete = (SupportPlaceAutocompleteFragment)  this.getChildFragmentManager().findFragmentById(R.id.place_autocomplete);
         placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
                 LatLng pl = place.getLatLng();
                 goToLoc(pl, 15);
-                Log.d("Maps", "Place selected: " + place.getName());
             }
 
             @Override
@@ -119,6 +124,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             }
         });
 
+        //Mappa di google
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -143,7 +149,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 == PackageManager.PERMISSION_GRANTED) {
 
             gm.setMyLocationEnabled(true);
-            gm.getUiSettings().setMyLocationButtonEnabled(false);
+            gm.getUiSettings().setMyLocationButtonEnabled(true);
 
             LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -248,7 +254,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         dataSelezionata = c.getTime();
 
         String currentDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
-        TextView date = (TextView) sheetView.findViewById(R.id.dateselected);
+        TextView date = (TextView) dialogView.findViewById(R.id.dateselected);
         date.setText(currentDate);
     }
 
@@ -276,6 +282,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 gm.clear();
                 gm.addMarker(new MarkerOptions().position(point));
                 ln = new LatLng(point.latitude, point.longitude);
+                Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
+                List<Address> addresses = null;
+                try {
+                    addresses = gcd.getFromLocation(point.latitude, point.longitude, 1);
+                    if (addresses.size() > 0) {
+                        Toast.makeText(getActivity(), "Città: " + addresses.get(0).getLocality(), Toast.LENGTH_LONG).show();
+                        System.out.println(addresses.get(0).getLocality());
+                    }else{
+                        Log.d("Problema address", "Problema");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 dialog.show();
             }
         });

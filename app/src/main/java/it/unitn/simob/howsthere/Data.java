@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -63,14 +64,14 @@ public class Data extends AppCompatActivity {
             data = "Data non selezionata!";
         }
 
-        TextView latT = (TextView) findViewById(R.id.latT);
+        /*TextView latT = (TextView) findViewById(R.id.latT);
         TextView longT = (TextView) findViewById(R.id.longT);
-        TextView dataT = (TextView) findViewById(R.id.dateT);
+        TextView dataT = (TextView) findViewById(R.id.dateT);*/
         idt = (TextView) findViewById(R.id.idt);
 
-        latT.setText("" + lat);
+        /*latT.setText("" + lat);
         longT.setText("" + lng);
-        dataT.setText("" + data);
+        dataT.setText("" + data);*/
 
         //Preparo la finestra di caricamento
         progressDialog = new ProgressDialog(Data.this);
@@ -158,7 +159,7 @@ public class Data extends AppCompatActivity {
         Call<ResponseBody> call = service.getStatus(idpass);
 
         progressDialog.setMessage("Eseguendo il panorama...");
-        progressDialog.setTitle("Attendere (1 minuto)...");
+        progressDialog.setTitle("Controllo lo stato...");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -170,7 +171,7 @@ public class Data extends AppCompatActivity {
                         if(status.length() > 0 && status.charAt(0) == '1'){ // Se la mappa è pronta vado ad ottenere il panorama
                             loadPeakData(idpass);
                         }else{ //Altrimenti aspetto e riprovo dopo 10 secondi
-                            Thread.sleep(10000);
+                            Thread.sleep(1000);
                             checkStatus(idpass);
                         }
                     } catch (IOException e) {
@@ -180,8 +181,8 @@ public class Data extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "La mappa non è stata generata!", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
-                progressDialog.dismiss();
             }
 
             @Override
@@ -226,31 +227,35 @@ public class Data extends AppCompatActivity {
     private void setPeak(String peak){
         //Faccio il parsing della stringa e butto i dati nella libreria per generare grafici
         List<Entry> entries = new ArrayList<Entry>();
+
         List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
 
         for(int a = 1; a< lines.size(); a++){
             List<String> tempsplit = Arrays.asList(lines.get(a).split(","));
-            entries.add(new Entry(Float.parseFloat(tempsplit.get(1)), Float.parseFloat(tempsplit.get(6))));
+            entries.add(new Entry(Float.parseFloat(tempsplit.get(0)), Float.parseFloat(tempsplit.get(2))));
         }
-
 
         LineChart chart = (LineChart) findViewById(R.id.chart);
         chart.setDrawGridBackground(false);
-        chart.setMaxHighlightDistance(300);
-        chart.getXAxis().setEnabled(false);
         chart.getAxisRight().setEnabled(false);
+        chart.getAxisLeft().setEnabled(false);
 
         LineDataSet dataSet = new LineDataSet(entries, "Profilo montagne"); // add entries to dataset
 
-        dataSet.setColor(Color.RED);
-        dataSet.setLineWidth(0.5f);
+        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        dataSet.setColor(R.color.pale_green);
+        dataSet.setLineWidth(4f);
         dataSet.setDrawValues(false);
         dataSet.setDrawCircles(false);
-        dataSet.setDrawFilled(false);
+        dataSet.setCircleColor(Color.BLACK);
+        dataSet.setDrawCircleHole(false);
+        dataSet.setDrawValues(true);
+        dataSet.setDrawFilled(true);
+        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
+        dataSet.setFillDrawable(drawable);
 
         chart.getDescription().setText("Profilo montagne");
         LineData lineData = new LineData(dataSet);
-        chart.getXAxis().setDrawGridLines(false);
         chart.setData(lineData);
         chart.animateX(2500);
         chart.invalidate();
