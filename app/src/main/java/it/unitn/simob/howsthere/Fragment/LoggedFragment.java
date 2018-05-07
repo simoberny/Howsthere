@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import it.unitn.simob.howsthere.Fragment.SettingsFragment;
 import it.unitn.simob.howsthere.R;
 
 /**
@@ -47,7 +46,7 @@ public class LoggedFragment extends Fragment {
                 FirebaseAuth.getInstance().signOut();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.frame_layout, new SettingsFragment()).commit();
+                        .replace(R.id.frame_layout, new UserFragment()).commit();
             }
         });
 

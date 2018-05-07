@@ -26,18 +26,18 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import it.unitn.simob.howsthere.R;
 
-public class SettingsFragment extends Fragment {
+public class UserFragment extends Fragment {
 
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
 
-    public SettingsFragment() {
+    public UserFragment() {
         // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance() {
-        SettingsFragment fragment = new SettingsFragment();
+    public static UserFragment newInstance() {
+        UserFragment fragment = new UserFragment();
         return fragment;
     }
 
@@ -60,7 +60,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -134,7 +134,7 @@ public class SettingsFragment extends Fragment {
         if(user == null){
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_layout, new SettingsFragment()).commit();
+                    .replace(R.id.frame_layout, new UserFragment()).commit();
         }else{
             LoggedFragment lo = new LoggedFragment();
             FragmentManager fragmentManager = getFragmentManager();

@@ -3,7 +3,7 @@
     android:id="@+id/fragment_logged"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.unitn.simob.howsthere.Fragment.SettingsFragment">
+    tools:context="it.unitn.simob.howsthere.Fragment.UserFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

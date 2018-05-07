@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import it.unitn.simob.howsthere.Fragment.FeedFragment;
 import it.unitn.simob.howsthere.Fragment.HistoryFragment;
 import it.unitn.simob.howsthere.Fragment.MapsFragment;
-import it.unitn.simob.howsthere.Fragment.SettingsFragment;
+import it.unitn.simob.howsthere.Fragment.UserFragment;
 
 
 public class MainActivity extends AppCompatActivity{
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity{
                     selectedFragment = FeedFragment.newInstance();
                     break;
                 case R.id.navigation_user:
-                    selectedFragment = SettingsFragment.newInstance();
+                    selectedFragment = UserFragment.newInstance();
                     break;
             }
 
