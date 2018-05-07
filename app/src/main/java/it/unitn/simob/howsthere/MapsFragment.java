@@ -120,7 +120,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
             @Override
             public void onError(Status status) {
-                Log.d("Maps", "An error occurred: " + status);
+                Log.d("MainActivity", "An error occurred: " + status);
             }
         });
 
@@ -205,7 +205,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {}
     }
-
 
     /**
      * Funzione da data la copia di posizionamento e lo zoom della mappa muove la mappa in quella direzione

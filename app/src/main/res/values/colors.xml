@@ -5,4 +5,5 @@
     <color name="colorAccent">#2196F3</color>
     <color name="traslucentmaps">#80222222</color>
     <color name="pale_green">#6bf3ad</color>
+    <color name="buttongrey">#eee</color>
 </resources>

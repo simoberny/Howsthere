@@ -1,9 +1,7 @@
 package it.unitn.simob.howsthere;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -11,11 +9,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import java.lang.reflect.Field;
 
-
-public class Maps extends AppCompatActivity{
-    @SuppressLint("RestrictedApi")
+public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,25 +27,6 @@ public class Maps extends AppCompatActivity{
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) navigation.getChildAt(0);
 
-        //elimino lo shift e metto visibili sempre le scritte
-        Field shiftingMode = null;
-        try {
-            shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
-            shiftingMode.setAccessible(true);
-            shiftingMode.setBoolean(menuView, false);
-            shiftingMode.setAccessible(false);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < menuView.getChildCount(); i++) {
-            BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(i);
-            itemView.setShiftingMode(false);
-            itemView.setChecked(false);
-        }
-        //fine modifica barra sotto
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
@@ -63,13 +39,13 @@ public class Maps extends AppCompatActivity{
                 case R.id.navigation_home:
                     selectedFragment = MapsFragment.newInstance();
                     break;
-                case R.id.navigation_sun:
-                    selectedFragment = Meteo.newInstance();
+                case R.id.navigation_storico:
+                    selectedFragment = History.newInstance();
                     break;
                 case R.id.navigation_feed:
                     selectedFragment = FeedFragment.newInstance();
                     break;
-                case R.id.navigation_settings:
+                case R.id.navigation_user:
                     selectedFragment = SettingsFragment.newInstance();
                     break;
             }

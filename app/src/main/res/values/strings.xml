@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">Howsthere</string>
     <string name="title_home">Mappa</string>
-    <string name="title_sun">Sole</string>
+    <string name="title_storico">Storico</string>
     <string name="title_feed">Feed</string>
-    <string name="title_settings">Impostazioni</string>
+    <string name="title_user">Utente</string>
+    <string name="id_web_auth">1038601279559-un0k7omgoi1n4sfq933mifruo4a60kgk.apps.googleusercontent.com</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Prova fragment per il calcolo sole</string>
     <string name="title_activity_data">Data</string>
+    <string name="title_activity_registration">Registration</string>
 </resources>

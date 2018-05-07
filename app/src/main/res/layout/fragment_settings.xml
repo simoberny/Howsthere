@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_sett"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="it.unitn.simob.howsthere.SettingsFragment">
@@ -21,6 +22,7 @@
             android:textSize="24sp" />
 
         <LinearLayout
+            android:id="@+id/sign_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="35dp"
@@ -36,33 +38,11 @@
                 android:text="Eseguire il Login"
                 android:textSize="24sp" />
 
-            <Button
-                android:id="@+id/button2"
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/circle"
-                android:text="Login" />
+                android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/circle"
-                android:backgroundTint="#F44336"
-                android:text="Google"
-                android:textColor="@android:color/white" />
-
-            <Button
-                android:id="@+id/button4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/circle"
-                android:backgroundTint="#3b5998"
-                android:text="Facebook"
-                android:textColor="@android:color/white" />
         </LinearLayout>
 
     </LinearLayout>
