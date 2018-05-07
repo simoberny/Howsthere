@@ -1,4 +1,4 @@
-package it.unitn.simob.howsthere;
+package it.unitn.simob.howsthere.Oggetti;
 
 /**
  * Created by simob on 02/04/2018.

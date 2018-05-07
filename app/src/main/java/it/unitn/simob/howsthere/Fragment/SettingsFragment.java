@@ -24,7 +24,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import it.unitn.simob.howsthere.Logged;
 import it.unitn.simob.howsthere.R;
 
 public class SettingsFragment extends Fragment {
@@ -137,7 +136,7 @@ public class SettingsFragment extends Fragment {
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_layout, new SettingsFragment()).commit();
         }else{
-            Logged lo = new Logged();
+            LoggedFragment lo = new LoggedFragment();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_layout, lo).commit();

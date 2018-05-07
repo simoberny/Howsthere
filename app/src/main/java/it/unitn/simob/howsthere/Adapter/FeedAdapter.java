@@ -1,4 +1,4 @@
-package it.unitn.simob.howsthere;
+package it.unitn.simob.howsthere.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +12,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 
 import java.util.List;
+
+import it.unitn.simob.howsthere.Oggetti.Feed;
+import it.unitn.simob.howsthere.R;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
 

@@ -1,4 +1,4 @@
-package it.unitn.simob.howsthere;
+package it.unitn.simob.howsthere.Fragment;
 
 
 import android.os.Bundle;
@@ -14,15 +14,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import it.unitn.simob.howsthere.Fragment.SettingsFragment;
+import it.unitn.simob.howsthere.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Logged extends Fragment {
+public class LoggedFragment extends Fragment {
 
     private FirebaseAuth mAuth;
 
-    public Logged() {
+    public LoggedFragment() {
         // Required empty public constructor
     }
 

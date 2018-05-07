@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unitn.simob.howsthere.Feed;
-import it.unitn.simob.howsthere.FeedAdapter;
+import it.unitn.simob.howsthere.Oggetti.Feed;
+import it.unitn.simob.howsthere.Adapter.FeedAdapter;
 import it.unitn.simob.howsthere.R;
 
 public class FeedFragment extends Fragment {
