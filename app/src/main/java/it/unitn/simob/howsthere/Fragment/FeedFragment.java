@@ -1,8 +1,6 @@
-package it.unitn.simob.howsthere;
+package it.unitn.simob.howsthere.Fragment;
 
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,11 +9,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import it.unitn.simob.howsthere.Feed;
+import it.unitn.simob.howsthere.FeedAdapter;
+import it.unitn.simob.howsthere.R;
 
 public class FeedFragment extends Fragment {
 

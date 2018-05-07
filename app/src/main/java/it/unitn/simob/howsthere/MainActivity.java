@@ -9,6 +9,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import it.unitn.simob.howsthere.Fragment.FeedFragment;
+import it.unitn.simob.howsthere.Fragment.HistoryFragment;
+import it.unitn.simob.howsthere.Fragment.MapsFragment;
+import it.unitn.simob.howsthere.Fragment.SettingsFragment;
+
 
 public class MainActivity extends AppCompatActivity{
     @Override
@@ -40,7 +45,7 @@ public class MainActivity extends AppCompatActivity{
                     selectedFragment = MapsFragment.newInstance();
                     break;
                 case R.id.navigation_storico:
-                    selectedFragment = History.newInstance();
+                    selectedFragment = HistoryFragment.newInstance();
                     break;
                 case R.id.navigation_feed:
                     selectedFragment = FeedFragment.newInstance();

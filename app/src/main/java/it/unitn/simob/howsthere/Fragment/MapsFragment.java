@@ -1,4 +1,4 @@
-package it.unitn.simob.howsthere;
+package it.unitn.simob.howsthere.Fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -49,6 +49,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import it.unitn.simob.howsthere.Data;
+import it.unitn.simob.howsthere.R;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
     private GoogleMap gm = null;
