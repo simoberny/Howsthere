@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Howsthere</string>
+    <string name="fui_default_toolbar_title" translatable="false">Login</string>
     <string name="title_home">Mappa</string>
     <string name="title_storico">Storico</string>
     <string name="title_feed">Feed</string>
@@ -10,4 +11,7 @@
     <string name="hello_blank_fragment">Prova fragment per il calcolo sole</string>
     <string name="title_activity_data">Data</string>
     <string name="title_activity_registration">Registration</string>
+
+    <string name="twitter_consumer_key" translatable="false">YczMt2TxjS8H0JSa0z7xN3TOX</string>
+    <string name="twitter_consumer_secret" translatable="false">izpJJ3OHZwFRWSAinvuhMl2A57ygWjxBkZnj3YGZ6k066Dghgz</string>
 </resources>

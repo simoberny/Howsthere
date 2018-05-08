@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.twitter.sdk.android.core.TwitterCore;
 
 import it.unitn.simob.howsthere.R;
 
@@ -47,6 +49,10 @@ public class LoggedFragment extends Fragment {
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.frame_layout, new UserFragment()).commit();
+                TwitterCore.getInstance().getSessionManager().clearActiveSession();
+                AuthUI.getInstance()
+                        .signOut(getContext());
+                AuthUI.getInstance().delete(getContext());
             }
         });
 

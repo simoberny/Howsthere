@@ -29,7 +29,7 @@
             android:gravity="center_vertical|center_horizontal"
             android:orientation="vertical">
 
-            <TextView
+            <!--<TextView
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,11 +38,22 @@
                 android:text="Eseguire il Login"
                 android:textSize="24sp" />
 
-            <com.google.android.gms.common.SignInButton
+            <com.firebase.ui.auth.util.ui.SupportVectorDrawablesButton
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/sign_in_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                style="@style/FirebaseUI.Button.AccountChooser.GoogleButton"
+                android:text="@string/fui_sign_in_with_google"
+                tools:ignore="UnusedIds" />
 
+            <com.firebase.ui.auth.util.ui.SupportVectorDrawablesButton
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/login_twitter"
+                style="@style/FirebaseUI.Button.AccountChooser.TwitterButton"
+                android:text="@string/fui_sign_in_with_twitter"
+                tools:ignore="UnusedIds" />
+            -->
         </LinearLayout>
 
     </LinearLayout>

@@ -2,40 +2,38 @@ package it.unitn.simob.howsthere.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
+import com.firebase.ui.auth.util.ui.SupportVectorDrawablesButton;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.Arrays;
 
 import it.unitn.simob.howsthere.R;
+
+import static android.app.Activity.RESULT_OK;
 
 public class UserFragment extends Fragment {
 
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
+    private SupportVectorDrawablesButton mLoginButton;
 
-    public UserFragment() {
-        // Required empty public constructor
-    }
+    private static final int RC_SIGN_IN = 123;
 
-    // TODO: Rename and change types and number of parameters
+    public UserFragment() {}
+
     public static UserFragment newInstance() {
         UserFragment fragment = new UserFragment();
         return fragment;
@@ -44,6 +42,18 @@ public class UserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setLogo(R.drawable.icon_login)
+                        .setIsSmartLockEnabled(false)
+                        .setAvailableProviders(Arrays.asList(
+                                new AuthUI.IdpConfig.EmailBuilder().build(),
+                                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                new AuthUI.IdpConfig.TwitterBuilder().build()))
+                        .build(),
+                RC_SIGN_IN);
     }
 
     @Override
@@ -61,73 +71,40 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
-
         mAuth = FirebaseAuth.getInstance();
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.id_web_auth))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(view.getContext(), gso);
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(view.getContext());
-        SignInButton gb = (SignInButton) view.findViewById(R.id.sign_in_button);
-        gb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn();
-            }
-        });
-
         return view;
-    }
-
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, 12);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == 12) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
-            } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Log.w("SIGNIN", "Google sign in failed", e);
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            if (resultCode == RESULT_OK) {
+                showSnackbar("Loggato!");//updateUI(response);
+                return;
+            } else {
+                if (response == null) {
+                    showSnackbar("Cancellato");
+                    return;
+                }
+
+                if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    showSnackbar("No network");
+                    return;
+                }
+
+                showSnackbar("No network");
+                Log.e("ERRORACT", "Sign-in error: ", response.getError());
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d("SUCC_SIGNIN", "firebaseAuthWithGoogle:" + acct.getId());
-
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("SUCCESSFULL", "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("AUTHFAILED", "signInWithCredential:failure", task.getException());
-                            updateUI(null);
-                        }
-
-                    }
-                });
+    private void showSnackbar(String string){
+        Toast.makeText(this.getContext(), string, Toast.LENGTH_LONG);
     }
 
     private void updateUI(final FirebaseUser user){
