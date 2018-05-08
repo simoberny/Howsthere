@@ -4,31 +4,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.firebase.ui.auth.util.ui.SupportVectorDrawablesButton;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
 
 import it.unitn.simob.howsthere.R;
 
 import static android.app.Activity.RESULT_OK;
 
 public class UserFragment extends Fragment {
-
-    GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
-    private SupportVectorDrawablesButton mLoginButton;
 
     private static final int RC_SIGN_IN = 123;
 
@@ -42,18 +35,6 @@ public class UserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setLogo(R.drawable.icon_login)
-                        .setIsSmartLockEnabled(false)
-                        .setAvailableProviders(Arrays.asList(
-                                new AuthUI.IdpConfig.EmailBuilder().build(),
-                                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                new AuthUI.IdpConfig.TwitterBuilder().build()))
-                        .build(),
-                RC_SIGN_IN);
     }
 
     @Override
@@ -61,16 +42,21 @@ public class UserFragment extends Fragment {
         super.onStart();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            Log.d("UTENTE", "Utente: " + currentUser.getDisplayName());
-            updateUI(currentUser);
-        }
+        updateUI(currentUser);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
+
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction;
+        transaction=manager.beginTransaction();
+        transaction.add(R.id.user, new UnLoggedFragment());
+        transaction.add(R.id.settings, new SettingsFragment());
+        transaction.commit();
+
         mAuth = FirebaseAuth.getInstance();
 
         return view;
@@ -84,7 +70,7 @@ public class UserFragment extends Fragment {
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
-                showSnackbar("Loggato!");//updateUI(response);
+                showSnackbar("Loggato!");
                 return;
             } else {
                 if (response == null) {
@@ -111,12 +97,11 @@ public class UserFragment extends Fragment {
         if(user == null){
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_layout, new UserFragment()).commit();
+                    .replace(R.id.user, new UnLoggedFragment()).commit();
         }else{
-            LoggedFragment lo = new LoggedFragment();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_layout, lo).commit();
+                    .replace(R.id.user, new LoggedFragment()).commit();
         }
     }
 }

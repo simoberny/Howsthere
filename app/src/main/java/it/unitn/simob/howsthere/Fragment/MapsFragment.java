@@ -1,5 +1,6 @@
 package it.unitn.simob.howsthere.Fragment;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -28,7 +29,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.Manifest;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;

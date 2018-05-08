@@ -2,6 +2,7 @@ package it.unitn.simob.howsthere.Fragment;
 
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,11 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import it.unitn.simob.howsthere.Oggetti.Feed;
 import it.unitn.simob.howsthere.Adapter.FeedAdapter;
+import it.unitn.simob.howsthere.Oggetti.Feed;
 import it.unitn.simob.howsthere.R;
 
 public class FeedFragment extends Fragment {
@@ -23,6 +27,7 @@ public class FeedFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private FeedAdapter adapter;
     private List<Feed> feedList;
+    private FirebaseAuth mAuth;
 
     public FeedFragment() {
     }
@@ -41,6 +46,17 @@ public class FeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        FloatingActionButton add_feed = view.findViewById(R.id.add_feed);
+
+        if(currentUser == null){
+            add_feed.setVisibility(View.GONE);
+        }else{
+            add_feed.setVisibility(View.VISIBLE);
+        }
 
         feedList = new ArrayList<>(); //Inizializzazione lista dei feed
         adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista

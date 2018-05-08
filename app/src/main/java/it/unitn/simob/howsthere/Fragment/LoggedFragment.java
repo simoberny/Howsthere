@@ -1,19 +1,30 @@
 package it.unitn.simob.howsthere.Fragment;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 import com.twitter.sdk.android.core.TwitterCore;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import it.unitn.simob.howsthere.R;
 
@@ -37,10 +48,11 @@ public class LoggedFragment extends Fragment {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        TextView tx = (TextView) view.findViewById(R.id.user);
+        TextView tx = view.findViewById(R.id.nome);
         tx.setText(currentUser.getDisplayName());
-        TextView tel = (TextView) view.findViewById(R.id.telefono);
-        tel.setText(currentUser.getEmail());
+        ImageView avatar = view.findViewById(R.id.avatar);
+        Picasso.get().load(currentUser.getPhotoUrl()).into(avatar);
+
         Button out = (Button) view.findViewById(R.id.signout);
         out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,4 +71,20 @@ public class LoggedFragment extends Fragment {
         return view;
     }
 
+    private Bitmap getImageBitmap(String url) {
+        Bitmap bm = null;
+        try {
+            URL aURL = new URL(url);
+            URLConnection conn = aURL.openConnection();
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            bm = BitmapFactory.decodeStream(bis);
+            bis.close();
+            is.close();
+        } catch (IOException e) {
+            Log.e("IMAGE", "Error getting bitmap", e);
+        }
+        return bm;
+    }
 }

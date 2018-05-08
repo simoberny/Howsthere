@@ -6,13 +6,14 @@
     tools:context="it.unitn.simob.howsthere.Fragment.FeedFragment">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/add_feed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
         android:src="@drawable/ic_add_white_24dp"
+        android:visibility="gone"
         app:backgroundTint="@android:color/holo_red_light" />
 
     <LinearLayout
