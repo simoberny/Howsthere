@@ -7,6 +7,8 @@
     <string name="title_user">Utente</string>
     <string name="id_web_auth">1038601279559-un0k7omgoi1n4sfq933mifruo4a60kgk.apps.googleusercontent.com</string>
 
+    <string name="pref_settings">Impostazioni</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Prova fragment per il calcolo sole</string>
     <string name="title_activity_data">Data</string>

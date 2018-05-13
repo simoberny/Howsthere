@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_logged"
     android:layout_width="match_parent"
@@ -7,45 +8,57 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:clipChildren="false">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        app:cardElevation="6dp">
 
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false"
-            android:paddingBottom="30dp">
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <TableRow
+            <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:paddingBottom="30dp">
 
-                <ImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_launcher_round" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/nome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center_vertical"
-                    android:textSize="24sp" />
-            </TableRow>
-        </TableLayout>
+                    <ImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/account_image"
+                        android:src="@mipmap/ic_launcher_round" />
 
-        <Button
-            android:id="@+id/signout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="true"
-            android:text="Disconnettiti" />
+                    <TextView
+                        android:id="@+id/nome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:textSize="24sp" />
+                </TableRow>
+            </TableLayout>
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/signout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                android:clipToPadding="false"
+                android:fitsSystemWindows="false"
+                android:text="Disconnettiti" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
 </FrameLayout>

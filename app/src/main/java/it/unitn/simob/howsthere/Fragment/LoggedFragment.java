@@ -27,6 +27,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import it.unitn.simob.howsthere.R;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,7 +52,7 @@ public class LoggedFragment extends Fragment {
         TextView tx = view.findViewById(R.id.nome);
         tx.setText(currentUser.getDisplayName());
         ImageView avatar = view.findViewById(R.id.avatar);
-        Picasso.get().load(currentUser.getPhotoUrl()).into(avatar);
+        Picasso.get().load(currentUser.getPhotoUrl()).transform(new CropCircleTransformation()).into(avatar);
 
         Button out = (Button) view.findViewById(R.id.signout);
         out.setOnClickListener(new View.OnClickListener() {

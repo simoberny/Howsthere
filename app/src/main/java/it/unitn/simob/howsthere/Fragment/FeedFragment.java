@@ -1,7 +1,10 @@
 package it.unitn.simob.howsthere.Fragment;
 
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,6 +32,9 @@ public class FeedFragment extends Fragment {
     private FeedAdapter adapter;
     private List<Feed> feedList;
     private FirebaseAuth mAuth;
+    private ImageView im;
+
+    static final int REQUEST_IMAGE_CAPTURE = 25;
 
     public FeedFragment() {
     }
@@ -50,7 +57,15 @@ public class FeedFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        im = (ImageView) view.findViewById(R.id.photo);
+
         FloatingActionButton add_feed = view.findViewById(R.id.add_feed);
+        add_feed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
 
         if(currentUser == null){
             add_feed.setVisibility(View.GONE);
@@ -96,6 +111,23 @@ public class FeedFragment extends Fragment {
         adapter.notifyDataSetChanged();
 
         return view;
+    }
+
+
+    private void dispatchTakePictureIntent(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 25 && resultCode == getActivity().RESULT_OK) { //PHOTO Return
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            im.setImageBitmap(imageBitmap);
+        }
     }
 
 }

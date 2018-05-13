@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "1038601279559-aok2r7k9ch5pnni47420ufkm6p6fajfn.apps.googleusercontent.com",
+          "client_id": "1038601279559-htcrkogjdj6thiab037nt81temfsd3ol.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "it.unitn.simob.howsthere",
-            "certificate_hash": "4b4efc8abb7e6ebecc6fdc2b69412e175e741be7"
+            "certificate_hash": "cb1f35d0eb55b26905801e33030c41c58702f8f2"
           }
         },
         {
