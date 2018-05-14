@@ -17,7 +17,7 @@
         android:title="@string/title_feed" />
     <item
         android:id="@+id/navigation_user"
-        android:icon="@drawable/ic_person_black_24dp"
+        android:icon="@drawable/ic_settings_black_24dp"
         android:title="@string/title_user" />
 
 </menu>

@@ -12,6 +12,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Prova fragment per il calcolo sole</string>
     <string name="title_activity_data">Data</string>
+    <string name="title_activity_add_feed">Aggiungi feed</string>
     <string name="title_activity_registration">Registration</string>
 
     <string name="twitter_consumer_key" translatable="false">YczMt2TxjS8H0JSa0z7xN3TOX</string>

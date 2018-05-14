@@ -19,3 +19,15 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class android.support.v7.widget.** { *; }
+
+# Add this global rule
+-keepattributes Signature
+
+# This rule will properly ProGuard all the model classes in
+# the package com.yourcompany.models. Modify to fit the structure
+# of your app.
+-keepclassmembers class it.unitn.simob.howsthere.Oggetti.Feed.** {
+  *;
+}

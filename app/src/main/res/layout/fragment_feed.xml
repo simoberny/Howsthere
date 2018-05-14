@@ -31,11 +31,6 @@
             app:title="Feed"
             app:titleTextColor="@android:color/white" />
 
-        <ImageView
-            android:id="@+id/photo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <RelativeLayout
             android:id="@+id/activity_main"
             android:layout_width="match_parent"
@@ -48,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"/>
 
         </RelativeLayout>
     </LinearLayout>

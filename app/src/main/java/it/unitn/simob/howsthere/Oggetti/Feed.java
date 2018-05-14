@@ -10,6 +10,8 @@ package it.unitn.simob.howsthere.Oggetti;
 public class Feed {
     private String name, location, imageUrl, timeStamp;
 
+    public Feed(){}
+
     public Feed(String name, String location, String imageUrl, String timeStamp) {
         this.name = name;
         this.location = location;

@@ -50,7 +50,16 @@ public class LoggedFragment extends Fragment {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         TextView tx = view.findViewById(R.id.nome);
-        tx.setText(currentUser.getDisplayName());
+        TextView em = view.findViewById(R.id.email);
+
+        String nome_cap = "";
+        if(currentUser.getDisplayName().length() > 0){
+            nome_cap = toTitleCase(currentUser.getDisplayName());
+        }
+
+        tx.setText(nome_cap);
+        em.setText(currentUser.getEmail());
+
         ImageView avatar = view.findViewById(R.id.avatar);
         Picasso.get().load(currentUser.getPhotoUrl()).transform(new CropCircleTransformation()).into(avatar);
 
@@ -87,5 +96,16 @@ public class LoggedFragment extends Fragment {
             Log.e("IMAGE", "Error getting bitmap", e);
         }
         return bm;
+    }
+
+    public static String toTitleCase(String givenString) {
+        String[] arr = givenString.split(" ");
+        StringBuffer sb = new StringBuffer();
+
+        for (int i = 0; i < arr.length; i++) {
+            sb.append(Character.toUpperCase(arr[i].charAt(0)))
+                    .append(arr[i].substring(1)).append(" ");
+        }
+        return sb.toString().trim();
     }
 }

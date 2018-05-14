@@ -4,7 +4,6 @@ package it.unitn.simob.howsthere.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,31 +12,44 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.vansuita.pickimage.bean.PickResult;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
+import com.vansuita.pickimage.enums.EPickType;
+import com.vansuita.pickimage.listeners.IPickCancel;
+import com.vansuita.pickimage.listeners.IPickResult;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import it.unitn.simob.howsthere.Adapter.FeedAdapter;
 import it.unitn.simob.howsthere.Oggetti.Feed;
+import it.unitn.simob.howsthere.PostFeed;
 import it.unitn.simob.howsthere.R;
 
 public class FeedFragment extends Fragment {
-
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private FeedAdapter adapter;
     private List<Feed> feedList;
     private FirebaseAuth mAuth;
-    private ImageView im;
 
     static final int REQUEST_IMAGE_CAPTURE = 25;
+    FirebaseDatabase database;
+    DatabaseReference feed;
 
-    public FeedFragment() {
-    }
+    public FeedFragment() { }
 
     public static FeedFragment newInstance() {
         FeedFragment fragment = new FeedFragment();
@@ -47,6 +59,7 @@ public class FeedFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        database = FirebaseDatabase.getInstance();
     }
 
     @Override
@@ -57,13 +70,28 @@ public class FeedFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        im = (ImageView) view.findViewById(R.id.photo);
+        feedList = new ArrayList<Feed>();
 
         FloatingActionButton add_feed = view.findViewById(R.id.add_feed);
         add_feed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent();
+                PickImageDialog.build(new PickSetup().setPickTypes(EPickType.GALLERY, EPickType.CAMERA).setGalleryIcon(R.mipmap.gallery_colored).setCameraIcon(R.mipmap.camera_colored))
+                        .setOnPickResult(new IPickResult() {
+                            @Override
+                            public void onPickResult(PickResult r) {
+                                Intent i = new Intent(getContext(), PostFeed.class);
+                                Bitmap bitmap = r.getBitmap();
+                                ByteArrayOutputStream bs = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bs);
+                                i.putExtra("photo", bs.toByteArray());
+                                startActivityForResult(i, 15);
+                            }
+                        })
+                        .setOnPickCancel(new IPickCancel() {
+                            @Override
+                            public void onCancelClick() { }
+                        }).show(getActivity().getSupportFragmentManager());
             }
         });
 
@@ -73,7 +101,31 @@ public class FeedFragment extends Fragment {
             add_feed.setVisibility(View.VISIBLE);
         }
 
-        feedList = new ArrayList<>(); //Inizializzazione lista dei feed
+        feed = database.getReference("feeds");
+        ChildEventListener childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                feedList.add(dataSnapshot.getValue(Feed.class));
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) { }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                feedList.remove(dataSnapshot.getValue(Feed.class));
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) { }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        };
+
+        feed.addChildEventListener(childEventListener);
+
         adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
 
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -82,52 +134,19 @@ public class FeedFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
-        //Oggetti statici caricati nella feed
-        Feed feed = new Feed("Simone Bernabè",
-                "Metro Manila, Philippines",
-                "https://campingselection-528047.c.cdn77.org/media/default/images/en-us/editorial-area/region-trentino.jpg",
-                "3 DAYS AGO");
-        feedList.add(0, feed);
-
-        feed = new Feed("Matteo Dal Ponte",
-                "Metro Manila, Philippines",
-                "https://www.boscolo.com/it/viaggi/files/it_viaggi/styles/bootstrap_header/public/trentino-alto-adige-testata.jpg?itok=OEva-6rR",
-                "1 DAY AGO");
-        feedList.add(0, feed);
-
-        feed = new Feed("Andrea Filippi",
-                "Metro Manila, Philippines",
-                "https://c1.staticflickr.com/5/4297/35852716531_e9f57be43b_b.jpg",
-                "10 HOURS AGO");
-        feedList.add(0, feed);
-
-        feed = new Feed("Marco Rossi",
-                "Metro Manila, Philippines",
-                "https://media.istockphoto.com/photos/sun-at-the-sky-with-copy-space-picture-id155366999?k=6&m=155366999&s=612x612&w=0&h=EFpmVaOq8RHHN5q1fq1qHDhn_V_YS2Ex_Z7UDD2efEs=",
-                "26 MINUTES AGO");
-        feedList.add(0, feed);
-
-        //Dico all'adattatore che sono stati aggiunti degli elementi
-        adapter.notifyDataSetChanged();
-
+        adapter.notifyDataSetChanged(); //Dico all'adattatore che sono stati aggiunti degli elementi
         return view;
-    }
-
-
-    private void dispatchTakePictureIntent(){
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 25 && resultCode == getActivity().RESULT_OK) { //PHOTO Return
+        if (requestCode == 15 && resultCode == getActivity().RESULT_OK) { //PHOTO Return
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            im.setImageBitmap(imageBitmap);
+            String uri = (String) extras.get("uri");
+
+            Feed ne = new Feed(mAuth.getCurrentUser().getDisplayName(), "A caso", uri , new Date().toString());
+            DatabaseReference newPostRef = feed.push();
+            newPostRef.setValue(ne);
         }
     }
-
 }
