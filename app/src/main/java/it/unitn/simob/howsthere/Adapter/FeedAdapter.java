@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 
+import java.util.Collections;
 import java.util.List;
 
 import it.unitn.simob.howsthere.Oggetti.Feed;
@@ -62,6 +63,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                 .fitCenter()
                 .priority(Priority.LOW)
                 .into(holder.image);
+
     }
 
     @Override

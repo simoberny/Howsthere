@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
@@ -38,12 +40,14 @@ import it.unitn.simob.howsthere.Oggetti.Feed;
 import it.unitn.simob.howsthere.PostFeed;
 import it.unitn.simob.howsthere.R;
 
-public class FeedFragment extends Fragment {
+public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private FeedAdapter adapter;
     private List<Feed> feedList;
     private FirebaseAuth mAuth;
+
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     static final int REQUEST_IMAGE_CAPTURE = 25;
     FirebaseDatabase database;
@@ -101,12 +105,60 @@ public class FeedFragment extends Fragment {
             add_feed.setVisibility(View.VISIBLE);
         }
 
+        adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(mLayoutManager);
+        mLayoutManager.setReverseLayout(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+
+                mSwipeRefreshLayout.setRefreshing(true);
+                loadRecyclerViewData();
+            }
+        });
+
+        adapter.notifyDataSetChanged(); //Dico all'adattatore che sono stati aggiunti degli elementi
+        return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 15 && resultCode == getActivity().RESULT_OK) { //PHOTO Return
+            Bundle extras = data.getExtras();
+            String uri = (String) extras.get("uri");
+
+            Feed ne = new Feed(mAuth.getCurrentUser().getDisplayName(), "A caso", uri , new Date().toString());
+            mSwipeRefreshLayout.setRefreshing(true);
+            DatabaseReference newPostRef = feed.push();
+            newPostRef.setValue(ne);
+        }
+    }
+
+    @Override
+    public void onRefresh() { mSwipeRefreshLayout.setRefreshing(false); }
+
+    private void loadRecyclerViewData() {
+        // Showing refresh animation before making http call
+        mSwipeRefreshLayout.setRefreshing(true);
+
         feed = database.getReference("feeds");
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 feedList.add(dataSnapshot.getValue(Feed.class));
-                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -121,32 +173,24 @@ public class FeedFragment extends Fragment {
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) { }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
         };
 
+        feed.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long numChildren = dataSnapshot.getChildrenCount();
+                adapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(false);
+                mLayoutManager.smoothScrollToPosition(recyclerView, null, 0);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
         feed.addChildEventListener(childEventListener);
-
-        adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
-
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
-
-        adapter.notifyDataSetChanged(); //Dico all'adattatore che sono stati aggiunti degli elementi
-        return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 15 && resultCode == getActivity().RESULT_OK) { //PHOTO Return
-            Bundle extras = data.getExtras();
-            String uri = (String) extras.get("uri");
-
-            Feed ne = new Feed(mAuth.getCurrentUser().getDisplayName(), "A caso", uri , new Date().toString());
-            DatabaseReference newPostRef = feed.push();
-            newPostRef.setValue(ne);
-        }
     }
 }
