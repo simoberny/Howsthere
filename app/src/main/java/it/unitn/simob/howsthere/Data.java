@@ -38,7 +38,6 @@ public class Data extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     //Le richieste GET vengono gestite dalla libreria RetroFit
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,15 +52,7 @@ public class Data extends AppCompatActivity {
             data = "Data non selezionata!";
         }
 
-        /*TextView latT = (TextView) findViewById(R.id.latT);
-        TextView longT = (TextView) findViewById(R.id.longT);
-        TextView dataT = (TextView) findViewById(R.id.dateT);*/
         idt = (TextView) findViewById(R.id.idt);
-
-        /*latT.setText("" + lat);
-        longT.setText("" + lng);
-        dataT.setText("" + data);*/
-
         //Preparo la finestra di caricamento
         progressDialog = new ProgressDialog(Data.this);
         progressDialog.setMax(100);
@@ -122,6 +113,7 @@ public class Data extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     try {
                         id = response.body().string();
+                        System.out.print("ID: " + id);
                         idt.post(new Runnable() {
                             @Override
                             public void run() {
@@ -159,7 +151,7 @@ public class Data extends AppCompatActivity {
                         String status = response.body().string();
                         if(status.length() > 0 && status.charAt(0) == '1'){ // Se la mappa è pronta vado ad ottenere il panorama
                             loadPeakData(idpass);
-                        }else{ //Altrimenti aspetto e riprovo dopo 10 secondi
+                        }else{ //Altrimenti aspetto e riprovo dopo 1 secondi
                             Thread.sleep(1000);
                             checkStatus(idpass);
                         }

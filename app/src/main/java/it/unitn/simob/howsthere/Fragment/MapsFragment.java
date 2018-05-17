@@ -41,6 +41,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -217,7 +218,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
      */
     private void goToLoc(LatLng pos, int zoom){
         ln = new LatLng(pos.latitude, pos.longitude);
-
         gm.clear();
         gm.addMarker(new MarkerOptions().position(ln));
         gm.moveCamera(CameraUpdateFactory.newLatLng(ln));
@@ -272,35 +272,52 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         gm.setPadding(0, 180, 0,0);
 
         MapStateManager mgr = new MapStateManager(getActivity());
-        CameraPosition position = mgr.getSavedCameraPosition();
+        final CameraPosition position = mgr.getSavedCameraPosition();
+
         if (position != null) {
             CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
             gm.moveCamera(update);
             goToLoc(gm.getCameraPosition().target, (int) gm.getCameraPosition().zoom);
         }
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
+
+        gm.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
             @Override
             public void onMapClick(LatLng point) {
                 gm.clear();
-                gm.addMarker(new MarkerOptions().position(point));
-                ln = new LatLng(point.latitude, point.longitude);
-                Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
-                List<Address> addresses = null;
-                try {
-                    addresses = gcd.getFromLocation(point.latitude, point.longitude, 1);
-                    if (addresses.size() > 0) {
-                        Toast.makeText(getActivity(), "Città: " + addresses.get(0).getLocality(), Toast.LENGTH_LONG).show();
-                        System.out.println(addresses.get(0).getLocality());
-                    }else{
-                        Log.d("Problema address", "Problema");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                dialog.show();
+                gm.addMarker(new MarkerOptions().position(point).draggable(true));
+                positionAndDialog(point.latitude, point.longitude);
             }
         });
+
+        gm.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {}
+            @Override
+            public void onMarkerDrag(Marker marker) { }
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                positionAndDialog(marker.getPosition().latitude, marker.getPosition().longitude);
+            }
+        });
+    }
+
+    public void positionAndDialog(Double lat, Double lon){
+        ln = new LatLng(lat, lon);
+        Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(ln.latitude, ln.longitude, 1);
+            if (addresses.size() > 0) {
+                Toast.makeText(getActivity(), "Città: " + addresses.get(0).getLocality(), Toast.LENGTH_LONG).show();
+                System.out.println(addresses.get(0).getLocality());
+            }else{
+                Log.d("Problema address", "Problema");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        dialog.show();
     }
 
     /**

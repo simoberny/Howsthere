@@ -108,9 +108,12 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
 
         mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+        mLayoutManager.setSmoothScrollbarEnabled(true);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(mLayoutManager);
-        mLayoutManager.setReverseLayout(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
@@ -121,16 +124,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark);
 
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        loadRecyclerViewData();
 
-                mSwipeRefreshLayout.setRefreshing(true);
-                loadRecyclerViewData();
-            }
-        });
-
-        adapter.notifyDataSetChanged(); //Dico all'adattatore che sono stati aggiunti degli elementi
         return view;
     }
 
@@ -178,19 +174,19 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         };
 
+        feed.addChildEventListener(childEventListener);
+
         feed.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                long numChildren = dataSnapshot.getChildrenCount();
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore
                 mSwipeRefreshLayout.setRefreshing(false);
-                mLayoutManager.smoothScrollToPosition(recyclerView, null, 0);
+
+                recyclerView.getLayoutManager().scrollToPosition(0);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
-
-        feed.addChildEventListener(childEventListener);
     }
 }
