@@ -86,7 +86,7 @@ public class PostFeed extends AppCompatActivity {
                 final StorageReference feedRef = storageRef.child("images/" + file_name);
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                mBitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
                 byte[] data = baos.toByteArray();
 
                 UploadTask uploadTask = feedRef.putBytes(data);
@@ -128,10 +128,8 @@ public class PostFeed extends AppCompatActivity {
 
     private void sendUri(Uri down){
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("crop",mBitmap);
         returnIntent.putExtra("uri", down.toString());
         setResult(Activity.RESULT_OK,returnIntent);
-        Log.d("FEED", "Feed aggiunto!" + down);
         finish();
     }
 

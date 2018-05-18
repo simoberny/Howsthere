@@ -8,7 +8,9 @@ package it.unitn.simob.howsthere.Oggetti;
  * Classe per la gestione dei feed, poi andrà completata con il database usando le Room
  */
 public class Feed {
-    private String name, location, imageUrl, timeStamp;
+    private String ID;
+    private String name, location, imageUrl, panoramaID, timeStamp;
+    private Integer likes;
 
     public Feed(){}
 
@@ -17,6 +19,7 @@ public class Feed {
         this.location = location;
         this.imageUrl = imageUrl;
         this.timeStamp = timeStamp;
+        this.likes = 0;
     }
 
     public String getName() {
@@ -49,5 +52,29 @@ public class Feed {
 
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getPanoramaID() {
+        return panoramaID;
+    }
+
+    public void setPanoramaID(String panoramaID) {
+        this.panoramaID = panoramaID;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
     }
 }

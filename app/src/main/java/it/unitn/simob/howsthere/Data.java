@@ -30,7 +30,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public class Data extends AppCompatActivity {
-
     private String id = null;
     private String gPeak = null;
     private Retrofit retrofit = null;
@@ -210,7 +209,6 @@ public class Data extends AppCompatActivity {
         List<Entry> entries = new ArrayList<Entry>();
 
         List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
-
         for(int a = 1; a< lines.size(); a++){
             List<String> tempsplit = Arrays.asList(lines.get(a).split(","));
             entries.add(new Entry(Float.parseFloat(tempsplit.get(0)), Float.parseFloat(tempsplit.get(2))));

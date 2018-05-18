@@ -17,7 +17,10 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@android:color/background_dark"
-            custom:cropMaxCropResultHeightPX="400"/>
+            custom:cropMinCropResultWidthPX="500"
+            custom:cropMinCropResultHeightPX="500"
+            custom:cropMaxCropResultWidthPX="500"
+            custom:cropMaxCropResultHeightPX="500"/>
 
         <TextView
             android:id="@+id/posizione"
