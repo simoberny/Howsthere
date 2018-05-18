@@ -4,16 +4,22 @@ package it.unitn.simob.howsthere.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -22,6 +28,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
@@ -30,6 +41,7 @@ import com.vansuita.pickimage.listeners.IPickCancel;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -50,8 +62,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     SwipeRefreshLayout mSwipeRefreshLayout;
 
     static final int REQUEST_IMAGE_CAPTURE = 25;
-    FirebaseDatabase database;
     DatabaseReference feed;
+    FirebaseFirestore db;
 
     public FeedFragment() { }
 
@@ -63,7 +75,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = FirebaseDatabase.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -108,8 +120,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
 
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setReverseLayout(true);
-        mLayoutManager.setStackFromEnd(true);
         mLayoutManager.setSmoothScrollbarEnabled(true);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -136,10 +146,29 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             Bundle extras = data.getExtras();
             String uri = (String) extras.get("uri");
 
-            Feed ne = new Feed(mAuth.getCurrentUser().getDisplayName(), "A caso", uri , new Date().toString());
+            Date date = new Date();
+            DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(date);
+
+            final Feed ne = new Feed(mAuth.getCurrentUser().getDisplayName(), "A caso", uri , date.toString());
             mSwipeRefreshLayout.setRefreshing(true);
-            DatabaseReference newPostRef = feed.push();
-            newPostRef.setValue(ne);
+
+            db.collection("feeds")
+                    .add(ne)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            ne.setID(documentReference.getId());
+                            feedList.add(0, ne);
+                            mSwipeRefreshLayout.setRefreshing(false);
+                            adapter.notifyDataSetChanged();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("FAILUREWRITE+", "Error adding document", e);
+                        }
+                    });
         }
     }
 
@@ -147,46 +176,31 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onRefresh() { mSwipeRefreshLayout.setRefreshing(false); }
 
     private void loadRecyclerViewData() {
-        // Showing refresh animation before making http call
         mSwipeRefreshLayout.setRefreshing(true);
 
-        feed = database.getReference("feeds");
-        ChildEventListener childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                feedList.add(dataSnapshot.getValue(Feed.class));
-            }
+        db.collection("feeds").orderBy("timeStamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Feed getFromDb = document.toObject(Feed.class);
+                                if(!feedList.contains(getFromDb)) {
+                                    Feed newf = document.toObject(Feed.class);
+                                    newf.setID(document.getId());
+                                    feedList.add(newf);
+                                }
+                            }
+                        } else {
+                            Log.w("Errorcloud", "Error getting documents.", task.getException());
+                        }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) { }
+                        adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore
+                        mSwipeRefreshLayout.setRefreshing(false);
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                feedList.remove(dataSnapshot.getValue(Feed.class));
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) { }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        };
-
-        feed.addChildEventListener(childEventListener);
-
-        feed.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore
-                mSwipeRefreshLayout.setRefreshing(false);
-
-                recyclerView.getLayoutManager().scrollToPosition(0);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
+                        recyclerView.getLayoutManager().scrollToPosition(0);
+                    }
+                });
     }
 }

@@ -8,9 +8,9 @@
         android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@android:color/white"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:title="History"
-        app:titleTextColor="@android:color/white" />
+        app:titleTextColor="@color/colorPrimary" />
 </android.support.design.widget.CoordinatorLayout>
