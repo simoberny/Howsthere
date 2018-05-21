@@ -52,6 +52,8 @@ dependencies {
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
     implementation 'com.github.jrvansuita:PickImage:+'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
+    compile "com.androidplot:androidplot-core:1.5.4"
+    implementation files('libs/commons-suncalc-2.2.jar')
 }
 
 apply plugin: 'com.google.gms.google-services'

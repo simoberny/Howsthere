@@ -12,13 +12,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+
+import org.shredzone.commons.suncalc.MoonPosition;
+import org.shredzone.commons.suncalc.SunPosition;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -36,7 +52,8 @@ public class Data extends AppCompatActivity {
     private Retrofit retrofit = null;
     private TextView idt = null;
     private ProgressDialog progressDialog;
-
+    private Date data;
+    private Double lon,lat;
     //Le richieste GET vengono gestite dalla libreria RetroFit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +63,20 @@ public class Data extends AppCompatActivity {
         Intent i = getIntent();
         Double lat = i.getDoubleExtra("lat", 0.0);
         Double lng = i.getDoubleExtra("long", 0.0);
-        String data = i.getStringExtra("data");
-
-        if(data == null){
-            data = "Data non selezionata!";
+        this.lon = lng;
+        this.lat = lat;
+        //String data = new SimpleDateFormat("dd/MM/yyyy").format(new Date(i.getLongExtra("data", 0)));
+        Date data = new Date();
+        data.setTime(i.getLongExtra("data", 0));
+        this.data = data;
+        if(data.getTime() == 0){
+            Toast.makeText(getApplicationContext(), "Data non selezionata",
+                    Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(getApplicationContext(), "data: " + data.toString(),
+                    Toast.LENGTH_LONG).show();
         }
+        //System.out.println("data: " + datas);
 
         idt = (TextView) findViewById(R.id.idt);
         //Preparo la finestra di caricamento
@@ -206,14 +232,137 @@ public class Data extends AppCompatActivity {
     }
 
     private void setPeak(String peak){
-        //Faccio il parsing della stringa e butto i dati nella libreria per generare grafici
-        List<Entry> entries = new ArrayList<Entry>();
+        //Faccio il parsing della stringa e butto i dati nella libreria per generare grafici e per salvare nel database.
 
+        /*FORMATO DATI MONTAGNE (7 colonne,e 361 righe di cui una di descrizione)
+            -azimuth:               0-360 vale 0 a nord e cresce verso est
+            -altitude:              inclinazione all' orizzonte già calcolata
+            -distance (m):          distanza montagna
+            -latitude:
+            -longitude
+            -elevation (m amsl):    altitudine montagna dal mare
+        */
+        double[][] risultatiMontagne = new double[7][360];
+        /*FORMATO DATI SOLE (288 righe di "posizione") viene eseguito un calcolo ogni 5 minuti 24*(60/5)
+            -ora:
+            -minuto:
+            -altezza (gradi):       inclinazione all' orizzonte
+            -azimuth:               0-360 vale 0 a nord e cresce verso est
+        */
+
+        class posizione implements Comparable
+        {
+            public int compareTo(Object x) {
+
+                if(x == null) System.out.println("dati sole/luna mancanti!");;
+
+                if(!(x instanceof posizione)) throw new ClassCastException();
+
+                posizione e = (posizione) x;
+
+                if(azimuth>e.azimuth){
+                    return 1;
+                }else if(azimuth<e.azimuth){
+                    return -1;
+                }else{
+                    return 0;
+                }
+
+            }
+            int ora;
+            int minuto;
+            double altezza;
+            double azimuth;
+        };
+        posizione[] risultatiSole = new posizione[288];
+        posizione[] risultatiLuna = new posizione[288];
+
+
+        List<Entry> entriesMontagne = new ArrayList<Entry>();
+        List<Entry> entriesSole = new ArrayList<Entry>();
+        List<Entry> entriesLuna = new ArrayList<Entry>();
+
+
+        //CALCOLO SOLE ogni ora
+        int indexSole = 0;
+        for (int ora = 0; ora<24; ora++) {
+            for (int min = 0; min < 60; min+=5) {
+
+                //dataC.setHours(ora); //deprecato
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(data);
+                //System.out.println("AAAAAAAAAAAAAAA Data sole: " + calendar.toString());
+                calendar.set(Calendar.HOUR_OF_DAY, ora);
+                calendar.set(Calendar.MINUTE, min);
+
+                SunPosition position = SunPosition.compute()
+                        .on(calendar.getTime())       // set a date
+                        .at(lat, lon)   // set a location
+                        .execute();     // get the results
+                //result.concat("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth());
+                //myAwesomeTextView.append("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
+                //System.out.println("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
+
+
+                risultatiSole[indexSole] = new posizione();
+                risultatiSole[indexSole].ora=ora;
+                risultatiSole[indexSole].minuto=min;
+                risultatiSole[indexSole].altezza=position.getAltitude();
+                risultatiSole[indexSole].azimuth=position.getAzimuth();
+                indexSole++;
+            }
+        }
+        Arrays.sort(risultatiSole); //ordino secondo azimuth
+        for(int i = 0; i<288; i++) { //passo dati al grafico
+            if(risultatiSole[i].minuto == 0) {
+                entriesSole.add(new Entry((float) risultatiSole[i].azimuth, (float) risultatiSole[i].altezza));
+            }
+        }
+        //CALCOLO LUNA ogni ora
+        int indexLuna = 0;
+        for (int ora = 0; ora<24; ora++) {
+            for (int min = 0; min < 60; min+=5) {
+
+                //dataC.setHours(ora); //deprecato
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(data);
+                //System.out.println("AAAAAAAAAAAAAAA Data luna: " + calendar.toString());
+                calendar.set(Calendar.HOUR_OF_DAY, ora);
+                calendar.set(Calendar.MINUTE, min);
+
+                MoonPosition position = MoonPosition.compute()
+                        .on(calendar.getTime())       // set a date
+                        .at(lat, lon)   // set a location
+                        .execute();     // get the results
+                //result.concat("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth());
+                //myAwesomeTextView.append("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
+                //System.out.println("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
+
+                //entriesSole.add(new Entry((float) position.getAzimuth(), (float) position.getAltitude()));
+                risultatiLuna[indexLuna] = new posizione();
+                risultatiLuna[indexLuna].ora=ora;
+                risultatiLuna[indexLuna].minuto=min;
+                risultatiLuna[indexLuna].altezza=position.getAltitude();
+                risultatiLuna[indexLuna].azimuth=position.getAzimuth();
+                indexLuna++;
+            }
+        }
+        //Arrays.sort(risultatiLuna); //ordino secondo azimuth
+        for(int i = 0; i<288; i++) { //passo dati al grafico
+            if(risultatiLuna[i].minuto == 0){
+                entriesLuna.add(new Entry((float) risultatiLuna[i].azimuth, (float) risultatiLuna[i].altezza));
+            }
+        }
+
+        //PARSING dati
         List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
-
         for(int a = 1; a< lines.size(); a++){
             List<String> tempsplit = Arrays.asList(lines.get(a).split(","));
-            entries.add(new Entry(Float.parseFloat(tempsplit.get(0)), Float.parseFloat(tempsplit.get(2))));
+            //todo
+            for (int i =0; i<7; i++) {
+                 risultatiMontagne[i][a-1] = Double.parseDouble(tempsplit.get(i));
+            }
+            entriesMontagne.add(new Entry(Float.parseFloat(tempsplit.get(0)), Float.parseFloat(tempsplit.get(2))));
         }
 
         LineChart chart = (LineChart) findViewById(R.id.chart);
@@ -221,24 +370,118 @@ public class Data extends AppCompatActivity {
         chart.getAxisRight().setEnabled(false);
         chart.getAxisLeft().setEnabled(false);
 
-        LineDataSet dataSet = new LineDataSet(entries, "Profilo montagne"); // add entries to dataset
+        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Profilo montagne"); // add entries to dataset
+        LineDataSet dataSetSole = new LineDataSet(entriesSole, "sole");
+        LineDataSet dataSetLuna = new LineDataSet(entriesLuna, "luna");
 
-        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        dataSet.setColor(R.color.pale_green);
-        dataSet.setLineWidth(4f);
-        dataSet.setDrawValues(false);
-        dataSet.setDrawCircles(false);
-        dataSet.setCircleColor(Color.BLACK);
-        dataSet.setDrawCircleHole(false);
-        dataSet.setDrawValues(true);
-        dataSet.setDrawFilled(true);
+        //proprietà grafico Montagne
+        dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
+        dataSetMontagne.setColor(R.color.pale_green);
+        //dataSet.setLineWidth(4f);
+        dataSetMontagne.setDrawValues(false);
+        dataSetMontagne.setDrawCircles(false);
+        dataSetMontagne.setCircleColor(Color.BLACK);
+        dataSetMontagne.setDrawCircleHole(false);
+        dataSetMontagne.setDrawValues(true);
+        dataSetMontagne.setDrawFilled(true);
         Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-        dataSet.setFillDrawable(drawable);
+        dataSetMontagne.setFillDrawable(drawable);
 
-        chart.getDescription().setText("Profilo montagne");
-        LineData lineData = new LineData(dataSet);
+        //proprietà grafiche Sole
+        dataSetSole.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        dataSetSole.setColor(Color.YELLOW);
+        dataSetSole.setLineWidth(1f);
+        dataSetSole.setDrawValues(false);
+        dataSetSole.setDrawCircles(true);
+        dataSetSole.setCircleColor(Color.YELLOW);
+        dataSetSole.setDrawCircleHole(false);
+        dataSetSole.setDrawValues(false);
+        dataSetSole.setDrawFilled(false);
+
+        //proprietà grafiche Luna
+        dataSetLuna.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        dataSetLuna.setColor(Color.GRAY);
+        dataSetLuna.setLineWidth(1f);
+        dataSetLuna.setDrawValues(false);
+        dataSetLuna.setDrawCircles(true);
+        dataSetLuna.setCircleColor(Color.GRAY);
+        dataSetLuna.setDrawCircleHole(false);
+        dataSetLuna.setDrawValues(false);
+        dataSetLuna.setDrawFilled(false);
+
+        chart.getDescription().setText("Profilo montagne con sole e luna");
+
+
+        LineData lineData = new LineData();
+        lineData.addDataSet(dataSetMontagne);
+        lineData.addDataSet(dataSetSole);
+        lineData.addDataSet(dataSetLuna);
+        XAxis left = chart.getXAxis();
+        left.setGranularity(1f);
+        chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                if (value == 0 || value == 360) {
+                    return "N"; // here you can map your values or pass it as empty string
+                }else if (value == 90) {
+                    return "E"; // here you can map your values or pass it as empty string
+                }else if (value == 180) {
+                    return "S"; // here you can map your values or pass it as empty string
+                }else if (value == 270) {
+                    return "O"; // here you can map your values or pass it as empty string
+                }else{
+                    return "";
+                }
+            }
+        });
+
+
+        Legend l = chart.getLegend();
+        l.setFormSize(10f); // set the size of the legend forms/shapes
+        //l.setForm(LegendForm.CIRCLE); // set what type of form/shape should be used
+        //l.setPosition(LegendPosition.BELOW_CHART_LEFT);
+        //l.setTypeface(...);
+        l.setTextSize(12f);
+        l.setTextColor(Color.BLACK);
+        l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
+        l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
+
+        // set custom labels and colors
+        List<Entry> entrinseo = new ArrayList<Entry>();
+        entrinseo.add(new Entry(0,5));
+        //l.setCustom(entrinseo);
+
+
+
+
+
         chart.setData(lineData);
         chart.animateX(2500);
         chart.invalidate();
+
+
+
+        //stampo risultati montagne
+        /*
+        for(int i = 0; i<360; i++){
+            for(int j = 0; j<7; j++){
+                System.out.print(risultatiMontagne[j][i] + "," + '\t');
+            }
+            System.out.println('\n');
+        }*/
+
+        //stampo risultati sole
+        for(int i = 0; i<288; i++){
+            System.out.println("SOLE: " + "ora: "+ risultatiSole[i].ora + ":"+ risultatiSole[i].minuto + '\t' +" altitudine: " + risultatiSole[i].altezza + '\t' +" azimuth: " + risultatiSole[i].azimuth);
+        }
+
+        //stampo risultati luna
+        for(int i = 0; i<288; i++){
+            System.out.println("LUNA: " + "ora: "+ risultatiLuna[i].ora + ":"+ risultatiLuna[i].minuto + '\t' +" altitudine: " + risultatiLuna[i].altezza + '\t' +" azimuth: " + risultatiLuna[i].azimuth);
+        }
+
+
     }
 }
+
+
