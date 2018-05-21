@@ -60,9 +60,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private FirebaseAuth mAuth;
 
     SwipeRefreshLayout mSwipeRefreshLayout;
-
-    static final int REQUEST_IMAGE_CAPTURE = 25;
-    DatabaseReference feed;
     FirebaseFirestore db;
 
     public FeedFragment() { }
@@ -147,9 +144,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             String uri = (String) extras.get("uri");
 
             Date date = new Date();
-            DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(date);
 
-            final Feed ne = new Feed(mAuth.getCurrentUser().getDisplayName(), "A caso", uri , date.toString());
+            final Feed ne = new Feed(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getDisplayName(), "A caso", uri , DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(date));
             mSwipeRefreshLayout.setRefreshing(true);
 
             db.collection("feeds")

@@ -1,7 +1,5 @@
 package it.unitn.simob.howsthere;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -15,7 +13,7 @@ import it.unitn.simob.howsthere.Fragment.FeedFragment;
 import it.unitn.simob.howsthere.Fragment.HistoryFragment;
 import it.unitn.simob.howsthere.Fragment.MapsFragment;
 import it.unitn.simob.howsthere.Fragment.UserFragment;
-
+import it.unitn.simob.howsthere.Fragment.UserProfile;
 
 public class MainActivity extends AppCompatActivity{
     @Override
@@ -53,7 +51,7 @@ public class MainActivity extends AppCompatActivity{
                     selectedFragment = FeedFragment.newInstance();
                     break;
                 case R.id.navigation_user:
-                    selectedFragment = UserFragment.newInstance();
+                    selectedFragment = UserProfile.newInstance();
                     break;
             }
 

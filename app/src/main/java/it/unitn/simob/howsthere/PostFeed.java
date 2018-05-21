@@ -86,7 +86,7 @@ public class PostFeed extends AppCompatActivity {
                 final StorageReference feedRef = storageRef.child("images/" + file_name);
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                mBitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+                mBitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                 byte[] data = baos.toByteArray();
 
                 UploadTask uploadTask = feedRef.putBytes(data);
