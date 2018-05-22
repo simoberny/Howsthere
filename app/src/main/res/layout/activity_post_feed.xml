@@ -11,16 +11,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.theartofdev.edmodo.cropper.CropImageView xmlns:custom="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/cropImageView"
+        <com.fenchtose.nocropper.CropperView
+            android:background="#ff282828"
+            android:id="@+id/cropper_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/background_dark"
-            custom:cropMinCropResultWidthPX="500"
-            custom:cropMinCropResultHeightPX="500"
-            custom:cropMaxCropResultWidthPX="500"
-            custom:cropMaxCropResultHeightPX="500"/>
+            app:nocropper__grid_opacity="0.8"
+            app:nocropper__grid_thickness="0.8dp"
+            app:nocropper__grid_color="@color/colorAccent"
+            app:nocropper__padding_color="#ff282828"/>
 
         <TextView
             android:id="@+id/posizione"

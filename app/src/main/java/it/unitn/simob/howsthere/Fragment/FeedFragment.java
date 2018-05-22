@@ -3,6 +3,7 @@ package it.unitn.simob.howsthere.Fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
@@ -58,11 +61,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private FeedAdapter adapter;
     private List<Feed> feedList;
     private FirebaseAuth mAuth;
+    TextView nofeed;
 
     SwipeRefreshLayout mSwipeRefreshLayout;
-
-    static final int REQUEST_IMAGE_CAPTURE = 25;
-    DatabaseReference feed;
     FirebaseFirestore db;
 
     public FeedFragment() { }
@@ -99,7 +100,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                 Intent i = new Intent(getContext(), PostFeed.class);
                                 Bitmap bitmap = r.getBitmap();
                                 ByteArrayOutputStream bs = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bs);
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bs);
                                 i.putExtra("photo", bs.toByteArray());
                                 startActivityForResult(i, 15);
                             }
@@ -137,6 +138,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefreshLayout.setRefreshing(true);
         loadRecyclerViewData();
 
+        nofeed = view.findViewById(R.id.nofeed);
+
         return view;
     }
 
@@ -145,11 +148,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (requestCode == 15 && resultCode == getActivity().RESULT_OK) { //PHOTO Return
             Bundle extras = data.getExtras();
             String uri = (String) extras.get("uri");
+            String filename = (String) extras.get("filename");
 
             Date date = new Date();
-            DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(date);
 
-            final Feed ne = new Feed(mAuth.getCurrentUser().getDisplayName(), "A caso", uri , date.toString());
+            final Feed ne = new Feed(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getDisplayName(), "A caso", uri , DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(date), filename);
             mSwipeRefreshLayout.setRefreshing(true);
 
             db.collection("feeds")
@@ -196,9 +199,16 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             Log.w("Errorcloud", "Error getting documents.", task.getException());
                         }
 
+                        if(feedList.size() > 0){
+                            nofeed.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                        }else{
+                            nofeed.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }
+
                         adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore
                         mSwipeRefreshLayout.setRefreshing(false);
-
                         recyclerView.getLayoutManager().scrollToPosition(0);
                     }
                 });

@@ -4,22 +4,31 @@ package it.unitn.simob.howsthere.Oggetti;
  * Created by simob on 02/04/2018.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Classe per la gestione dei feed, poi andrà completata con il database usando le Room
  */
 public class Feed {
     private String ID;
+    private String uid;
     private String name, location, imageUrl, panoramaID, timeStamp;
     private Integer likes;
+    private List<String> likes_id;
+    private String file_name;
 
     public Feed(){}
 
-    public Feed(String name, String location, String imageUrl, String timeStamp) {
+    public Feed(String UID, String name, String location, String imageUrl, String timeStamp, String filename) {
+        this.uid = UID;
         this.name = name;
         this.location = location;
         this.imageUrl = imageUrl;
         this.timeStamp = timeStamp;
         this.likes = 0;
+        this.likes_id = new ArrayList<String>();
+        this.file_name = filename;
     }
 
     public String getName() {
@@ -76,5 +85,29 @@ public class Feed {
 
     public void setLikes(Integer likes) {
         this.likes = likes;
+    }
+
+    public List<String> getLikes_id() {
+        return likes_id;
+    }
+
+    public void setLikes_id(List<String> likes_id) {
+        this.likes_id = likes_id;
+    }
+
+    public void add_user_to_like(String id){
+        this.likes_id.add(id);
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getFile_name() {
+        return file_name;
     }
 }

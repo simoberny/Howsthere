@@ -9,8 +9,11 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        app:cardCornerRadius="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:clipToPadding="false"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -50,7 +53,7 @@
                 android:layout_marginTop="5dp"
                 android:src="@drawable/icon_dots" />
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/cardView_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,9 +61,9 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:adjustViewBounds="true"
-                android:maxHeight="350dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/placeholder" />
+                android:scaleType="centerInside"
+                android:background="@android:color/black"
+                android:maxHeight="350dp" />
 
             <ProgressBar
                 android:id="@+id/progressBar2"
@@ -68,6 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/cardView_image"
+                android:indeterminate="true"
                 android:visibility="visible" />
 
             <ImageView
@@ -100,7 +104,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"
                 android:text="26 MINUTES AGO"
-                android:textSize="9sp" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/likes"

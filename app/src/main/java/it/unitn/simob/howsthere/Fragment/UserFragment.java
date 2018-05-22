@@ -35,14 +35,12 @@ public class UserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
     }
 
     @Override
@@ -53,11 +51,11 @@ public class UserFragment extends Fragment {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction;
         transaction=manager.beginTransaction();
-        transaction.add(R.id.user, new UnLoggedFragment());
-        transaction.add(R.id.settings, new SettingsFragment());
+        transaction.add(R.id.settings, SettingsFragment.newInstance());
         transaction.commit();
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
 
         return view;
     }

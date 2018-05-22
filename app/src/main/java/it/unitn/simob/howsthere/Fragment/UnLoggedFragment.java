@@ -23,6 +23,11 @@ public class UnLoggedFragment extends Fragment {
 
     public UnLoggedFragment() { }
 
+    public static UnLoggedFragment newInstance() {
+        UnLoggedFragment fragment = new UnLoggedFragment();
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
