@@ -52,6 +52,8 @@ import java.util.List;
 import java.util.Locale;
 
 import it.unitn.simob.howsthere.Data;
+import it.unitn.simob.howsthere.Oggetti.Panorama;
+import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
@@ -78,7 +80,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       final View rootview = inflater.inflate(R.layout.fragment_maps, container, false);
+
+        PanoramiStorage ps = new PanoramiStorage();
+
+        //parte di test che popola
+        Panorama p = new Panorama();
+        p.città = "trento";
+        p.data = new Date();
+        ps.addPanorama(p);
+        Panorama p1 = new Panorama();
+        p1.città = "trento";
+        p1.data = new Date();
+        ps.addPanorama(p1);
+
+        //end test
+
+        final View rootview = inflater.inflate(R.layout.fragment_maps, container, false);
        //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
        dialog = new BottomSheetDialog(getActivity());
        dialogView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
