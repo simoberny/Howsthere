@@ -66,32 +66,34 @@ public class MioFeedFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         feedList = new ArrayList<Feed>();
 
-        adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
+        if(currentUser != null){
+            adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setSmoothScrollbarEnabled(true);
+            mLayoutManager = new LinearLayoutManager(getActivity());
+            mLayoutManager.setSmoothScrollbarEnabled(true);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_mio);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
+            recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_mio);
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(adapter);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_orange_dark,
-                android.R.color.holo_blue_dark);
+            mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+            mSwipeRefreshLayout.setOnRefreshListener(this);
+            mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                    android.R.color.holo_green_dark,
+                    android.R.color.holo_orange_dark,
+                    android.R.color.holo_blue_dark);
 
-        mSwipeRefreshLayout.setRefreshing(true);
-        loadRecyclerViewData();
+            mSwipeRefreshLayout.setRefreshing(true);
+            loadRecyclerViewData();
+        }
 
         return view;
     }
 
     @Override
     public void onRefresh() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        loadRecyclerViewData();
     }
 
     private void loadRecyclerViewData() {

@@ -201,10 +201,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                         if(feedList.size() > 0){
                             nofeed.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.VISIBLE);
                         }else{
                             nofeed.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
                         }
 
                         adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore

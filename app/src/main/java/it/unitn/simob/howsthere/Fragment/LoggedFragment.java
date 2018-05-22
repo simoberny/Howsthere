@@ -73,34 +73,16 @@ public class LoggedFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.frame_layout, new UserFragment()).commit();
-                TwitterCore.getInstance().getSessionManager().clearActiveSession();
                 AuthUI.getInstance()
                         .signOut(getContext());
                 AuthUI.getInstance().delete(getContext());
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.user, UnLoggedFragment.newInstance()).commit();
             }
         });
 
         return view;
-    }
-
-    private Bitmap getImageBitmap(String url) {
-        Bitmap bm = null;
-        try {
-            URL aURL = new URL(url);
-            URLConnection conn = aURL.openConnection();
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();
-        } catch (IOException e) {
-            Log.e("IMAGE", "Error getting bitmap", e);
-        }
-        return bm;
     }
 
     public static String toTitleCase(String givenString) {
