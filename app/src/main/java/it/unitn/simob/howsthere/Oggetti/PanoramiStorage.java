@@ -18,6 +18,7 @@ import java.util.List;
  */
 
 public class PanoramiStorage {
+
     private List<Panorama> Panorami = new ArrayList();
 
     public Panorama getPanoramabyID(int ID){
@@ -28,6 +29,12 @@ public class PanoramiStorage {
             }
         }
         return null;
+    }
+
+    public void delete(int posizione){
+        load();
+        Panorami.remove(posizione);
+        save();
     }
 
     public void addPanorama(Panorama p){
@@ -44,7 +51,8 @@ public class PanoramiStorage {
     private void load(){
         ObjectInput in;
         try {
-            in = new ObjectInputStream(new FileInputStream("appSaveState.data"));
+            File inFile = new File(Environment.getExternalStorageDirectory(), "appSaveState.data");
+            in = new ObjectInputStream(new FileInputStream(inFile));
             Panorami=(List<Panorama>) in.readObject();
             in.close();
         } catch (Exception e) {e.printStackTrace();}

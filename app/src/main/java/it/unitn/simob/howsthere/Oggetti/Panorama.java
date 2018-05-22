@@ -20,5 +20,4 @@ public class Panorama implements Serializable {
     public String alba;
     public String tramonto;
     public int ore_sole;
-
 }
