@@ -46,7 +46,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public class Data extends AppCompatActivity {
-
     private String id = null;
     private String gPeak = null;
     private Retrofit retrofit = null;
@@ -120,8 +119,7 @@ public class Data extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Data non selezionata",
                     Toast.LENGTH_LONG).show();
         }else{
-            Toast.makeText(getApplicationContext(), "data: " + data.toString(),
-                    Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "data: " + data.toString(), Toast.LENGTH_LONG).show();
         }
         //System.out.println("data: " + datas);
 
@@ -281,35 +279,23 @@ public class Data extends AppCompatActivity {
     private void setPeak(String peak){
         //Faccio il parsing della stringa e butto i dati nella libreria per generare grafici e per salvare nel database.
 
-
-
-
         List<Entry> entriesMontagne = new ArrayList<Entry>();
         List<Entry> entriesSole = new ArrayList<Entry>();
         List<Entry> entriesLuna = new ArrayList<Entry>();
 
-
-        //CALCOLO SOLE ogni ora
+        //CALCOLO SOLE ogni 5 min
         int indexSole = 0;
         for (int ora = 0; ora<24; ora++) {
             for (int min = 0; min < 60; min+=5) {
-
-                //dataC.setHours(ora); //deprecato
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(data);
-                //System.out.println("AAAAAAAAAAAAAAA Data sole: " + calendar.toString());
                 calendar.set(Calendar.HOUR_OF_DAY, ora);
                 calendar.set(Calendar.MINUTE, min);
-
                 SunPosition position = SunPosition.compute()
                         .on(calendar.getTime())       // set a date
                         .at(lat, lon)   // set a location
                         .execute();     // get the results
-                //result.concat("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth());
-                //myAwesomeTextView.append("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
                 //System.out.println("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
-
-
                 risultatiSole[indexSole] = new posizione();
                 risultatiSole[indexSole].ora=ora;
                 risultatiSole[indexSole].minuto=min;
@@ -325,17 +311,12 @@ public class Data extends AppCompatActivity {
             }
         }
 
-
-
-
-        //CALCOLO LUNA ogni ora
+        //CALCOLO LUNA ogni 5 min
         int indexLuna = 0;
         for (int ora = 0; ora<24; ora++) {
             for (int min = 0; min < 60; min+=5) {
-                //dataC.setHours(ora); //deprecato
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(data);
-                //System.out.println("AAAAAAAAAAAAAAA Data luna: " + calendar.toString());
                 calendar.set(Calendar.HOUR_OF_DAY, ora);
                 calendar.set(Calendar.MINUTE, min);
 
@@ -343,10 +324,8 @@ public class Data extends AppCompatActivity {
                         .on(calendar.getTime())       // set a date
                         .at(lat, lon)   // set a location
                         .execute();     // get the results
-                //result.concat("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth());
-                //myAwesomeTextView.append("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
+
                 //System.out.println("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
-                //entriesSole.add(new Entry((float) position.getAzimuth(), (float) position.getAltitude()));
                 risultatiLuna[indexLuna] = new posizione();
                 risultatiLuna[indexLuna].ora=ora;
                 risultatiLuna[indexLuna].minuto=min;
@@ -355,7 +334,7 @@ public class Data extends AppCompatActivity {
                 indexLuna++;
             }
         }
-        //Arrays.sort(risultatiLuna); //ordino secondo azimuth
+        //Arrays.sort(risultatiLuna); //ordino secondo azimuth ATTENZIONE: se vengono ordinati allora si mescolano i dati della mattina dopo quelli della sera
         for(int i = 0; i<288; i++) { //passo dati al grafico
             if(risultatiLuna[i].minuto == 0){
                 entriesLuna.add(new Entry((float) risultatiLuna[i].azimuth, (float) risultatiLuna[i].altezza));
@@ -376,27 +355,27 @@ public class Data extends AppCompatActivity {
         List<posizione> alba = new ArrayList<posizione>();
         List<posizione> tramonto = new ArrayList<posizione>();
         boolean prev = false;
+        int minutiSole = 0;
         for(int i = 0; i<288; i++){
             boolean sopra = sopra(i);
+            if (sopra) minutiSole+=5;
             //System.out.println("ora: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto +" sopra? " + sopra);
             if(!prev && sopra){ //alba
                 alba.add(risultatiSole[i]);
-                System.out.println("alba: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto );
+                //System.out.println("alba: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto );
                 Toast.makeText(getApplicationContext(),"alba: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto, Toast.LENGTH_LONG).show();
             }
             if(prev && !sopra){ //alba
                 tramonto.add(risultatiSole[i]);
-                System.out.println("tramonto: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto );
+                //System.out.println("tramonto: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto );
                 Toast.makeText(getApplicationContext(),"tramonto: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto , Toast.LENGTH_LONG).show();
             }
             prev=sopra;
         }
+        Toast.makeText(getApplicationContext(),"Ore di Sole: " + minutiSole/60 + " ore, "+ (minutiSole-(minutiSole/60)*60)+ " minuti" , Toast.LENGTH_LONG).show();
 
 
-
-
-
-
+        //proprietà grafico:
         LineChart chart = (LineChart) findViewById(R.id.chart);
         chart.setDrawGridBackground(false);
         chart.getAxisRight().setEnabled(false);
@@ -443,7 +422,6 @@ public class Data extends AppCompatActivity {
 
         chart.getDescription().setText("Profilo montagne con sole e luna");
 
-
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
         lineData.addDataSet(dataSetSole);
@@ -467,7 +445,6 @@ public class Data extends AppCompatActivity {
             }
         });
 
-
         Legend l = chart.getLegend();
         l.setFormSize(10f); // set the size of the legend forms/shapes
         //l.setForm(LegendForm.CIRCLE); // set what type of form/shape should be used
@@ -483,18 +460,14 @@ public class Data extends AppCompatActivity {
         entrinseo.add(new Entry(0,5));
         //l.setCustom(entrinseo);
 
-
-
-
-
         chart.setData(lineData);
         chart.animateX(2500);
         chart.invalidate();
 
 
+        //SALA STAMPA
 
         //stampo risultati montagne
-
         /*for(int i = 0; i<360; i++){
             for(int j = 0; j<7; j++){
                 System.out.print(risultatiMontagne[j][i] + "," + '\t');
@@ -525,7 +498,7 @@ public class Data extends AppCompatActivity {
             System.out.println(j);
         }
 
-        if(j==359){ //azimuth maggiore di tutti i dati delle montagne quindi confronto con il primo
+        if(j==359){ //azimuth maggiore di tutti i dati delle montagne quindi confronto con l' ultimo e il primo
             if (risultatiSole[i].altezza > ((risultatiMontagne[2][259]+risultatiMontagne[2][0])/2)) {
                 return true;
             }

@@ -40,6 +40,11 @@ public class LoggedFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static LoggedFragment newInstance() {
+        LoggedFragment fragment = new LoggedFragment();
+        return fragment;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
