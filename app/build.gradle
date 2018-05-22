@@ -54,7 +54,8 @@ dependencies {
     implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
     implementation 'com.facebook.fresco:fresco:1.9.0'
     implementation 'com.fenchtose.nocropper:nocropper:0.3.0'
-
+    implementation "com.androidplot:androidplot-core:1.5.4"
+    implementation files('libs/commons-suncalc-2.2.jar')
 }
 
 apply plugin: 'com.google.gms.google-services'

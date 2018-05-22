@@ -108,7 +108,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 Intent i = new Intent(getActivity(), Data.class);
                 i.putExtra("lat", ln.latitude);
                 i.putExtra("long", ln.longitude);
-                i.putExtra("data", dataSelezionata.toString());
+                i.putExtra("data", dataSelezionata.getTime());
                 startActivity(i);
             }
        });
