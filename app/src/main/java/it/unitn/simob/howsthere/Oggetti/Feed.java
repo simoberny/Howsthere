@@ -16,10 +16,11 @@ public class Feed {
     private String name, location, imageUrl, panoramaID, timeStamp;
     private Integer likes;
     private List<String> likes_id;
+    private String file_name;
 
     public Feed(){}
 
-    public Feed(String UID, String name, String location, String imageUrl, String timeStamp) {
+    public Feed(String UID, String name, String location, String imageUrl, String timeStamp, String filename) {
         this.uid = UID;
         this.name = name;
         this.location = location;
@@ -27,6 +28,7 @@ public class Feed {
         this.timeStamp = timeStamp;
         this.likes = 0;
         this.likes_id = new ArrayList<String>();
+        this.file_name = filename;
     }
 
     public String getName() {
@@ -103,5 +105,9 @@ public class Feed {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getFile_name() {
+        return file_name;
     }
 }

@@ -19,6 +19,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
+        android:name=".App"
         android:label="@string/app_name"
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
@@ -40,7 +41,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/AppThemeNoBar">
             >
@@ -51,6 +52,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
             android:name=".Data"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_data"
@@ -60,6 +65,7 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".PostFeed"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_add_feed">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

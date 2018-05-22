@@ -1,11 +1,9 @@
 package it.unitn.simob.howsthere.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.support.annotation.Nullable;
-import android.support.transition.Visibility;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,8 +25,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,23 +32,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
-import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import it.unitn.simob.howsthere.Oggetti.Feed;
 import it.unitn.simob.howsthere.R;
-import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
-
     private Context mContext;
     private List<Feed> feedList;
     private Context con;
@@ -63,7 +57,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, location, timeStamp;
-        public ImageView image, menu;
+        public ImageView menu;
+        public ImageView image;
         public ProgressBar po;
         public String ID;
         public ImageView heart;
@@ -82,9 +77,22 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             image.setOnTouchListener(new View.OnTouchListener() {
                 private GestureDetector gestureDetector = new GestureDetector(con, new GestureDetector.SimpleOnGestureListener() {
                     @Override
+                    public boolean onSingleTapConfirmed(MotionEvent e) {
+                        new ImageViewer.Builder(mContext, feedList)
+                                .setFormatter(new ImageViewer.Formatter<Feed>() {
+                                    @Override
+                                    public String format(Feed customImage) {
+                                        return customImage.getImageUrl();
+                                    }
+                                })
+                                .setStartPosition(getAdapterPosition()-1).show();
+                        return super.onSingleTapConfirmed(e);
+                    }
+
+                    @Override
                     public boolean onDoubleTap(MotionEvent e) {
-                        ImageViewAnimatedChange(view.getContext(), heart, R.drawable.icon_heart_fill);
-                        ImageViewAnimatedChange(view.getContext(), image, image.getDrawable());
+                        ImageViewAnimatedChange(view.getContext(), heart, null,R.drawable.icon_heart_fill);
+                        ImageViewAnimatedChange(view.getContext(), image, image.getDrawable(), 0);
                         makeLike(ID);
                         return super.onDoubleTap(e);
                     }
@@ -99,7 +107,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             heart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ImageViewAnimatedChange(view.getContext(), heart, R.drawable.icon_heart_fill);
+                    ImageViewAnimatedChange(view.getContext(), heart, null, R.drawable.icon_heart_fill);
                     makeLike(ID);
                 }
             });
@@ -137,7 +145,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         }
     }
 
-    public static void ImageViewAnimatedChange(Context c, final ImageView v, final Drawable new_image) {
+    public static void ImageViewAnimatedChange(Context c, final ImageView v, final Drawable new_image, final int new_image_id) {
         final Animation anim_out = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
         final Animation anim_in  = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
         anim_out.setAnimationListener(new Animation.AnimationListener()
@@ -146,28 +154,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             @Override public void onAnimationRepeat(Animation animation) {}
             @Override public void onAnimationEnd(Animation animation)
             {
-                v.setImageDrawable(new_image);
-                anim_in.setAnimationListener(new Animation.AnimationListener() {
-                    @Override public void onAnimationStart(Animation animation) {}
-                    @Override public void onAnimationRepeat(Animation animation) {}
-                    @Override public void onAnimationEnd(Animation animation) {}
-                });
-                v.startAnimation(anim_in);
-            }
-        });
-        v.startAnimation(anim_out);
-    }
+                if(new_image_id == 0){
+                    v.setImageDrawable(new_image);
+                }else{
+                    v.setImageResource(new_image_id);
+                }
 
-    public static void ImageViewAnimatedChange(Context c, final ImageView v, final int new_image) {
-        final Animation anim_out = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
-        final Animation anim_in  = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
-        anim_out.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override public void onAnimationStart(Animation animation) {}
-            @Override public void onAnimationRepeat(Animation animation) {}
-            @Override public void onAnimationEnd(Animation animation)
-            {
-                v.setImageResource(new_image);
                 anim_in.setAnimationListener(new Animation.AnimationListener() {
                     @Override public void onAnimationStart(Animation animation) {}
                     @Override public void onAnimationRepeat(Animation animation) {}
@@ -202,6 +194,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         holder.ID = feed.getID();
         holder.name.setText(feed.getName());
         holder.location.setText(feed.getLocation());
+
         db.collection("feeds").document(holder.ID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -269,6 +262,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                 .placeholder(R.drawable.placeholder)
                 .priority(Priority.LOW)
                 .into(holder.image);
+
+        /*Zoomy.Builder builder = new Zoomy.Builder((Activity) mContext).target(holder.image);
+        builder.register();*/
     }
 
     private void showPopupMenu(View view,int position, String id) {
@@ -303,16 +299,29 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.view_image:
+
                     return true;
+                case R.id.download:
+                    break;
                 case R.id.delete_feed:
                     db.collection("feeds").document(id)
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    feedList.remove(position);
-                                    notifyItemRemoved(position);
-                                    Log.d("DELETE", "DocumentSnapshot successfully deleted!");
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                    StorageReference storageRef = storage.getReference();
+
+                                    String file_name = UUID.randomUUID() + ".jpg";
+                                    final StorageReference delRef = storageRef.child("images/" +feedList.get(position).getFile_name());
+                                    delRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            feedList.remove(position);
+                                            notifyItemRemoved(position);
+                                            Log.d("DELETE", "DocumentSnapshot successfully deleted!");
+                                        }
+                                    });
                                 }
                             });
                     return true;

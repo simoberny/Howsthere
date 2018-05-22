@@ -53,7 +53,7 @@
                 android:layout_marginTop="5dp"
                 android:src="@drawable/icon_dots" />
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/cardView_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,10 +61,9 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:adjustViewBounds="true"
+                android:scaleType="centerInside"
                 android:background="@android:color/black"
-                android:maxHeight="350dp"
-                android:src="@drawable/placeholder" />
-
+                android:maxHeight="350dp" />
 
             <ProgressBar
                 android:id="@+id/progressBar2"

@@ -7,6 +7,11 @@
         android:title="Visualizza immagine" />
 
     <item
+        android:id="@+id/download"
+        android:orderInCategory="100"
+        android:title="Download immagine" />
+
+    <item
         android:id="@+id/delete_feed"
         android:orderInCategory="101"
         android:title="Cancella feed"></item>

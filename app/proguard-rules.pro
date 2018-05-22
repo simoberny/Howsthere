@@ -31,3 +31,7 @@
 -keepclassmembers class it.unitn.simob.howsthere.Oggetti.Feed.** {
   *;
 }
+
+-dontwarn com.yalantis.ucrop**
+-keep class com.yalantis.ucrop** { *; }
+-keep interface com.yalantis.ucrop** { *; }
