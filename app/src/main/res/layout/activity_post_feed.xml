@@ -11,15 +11,31 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.fenchtose.nocropper.CropperView
-            android:background="#ff282828"
-            android:id="@+id/cropper_view"
+        <FrameLayout
+            android:id="@+id/top_frame"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:nocropper__grid_opacity="0.8"
-            app:nocropper__grid_thickness="0.8dp"
-            app:nocropper__grid_color="@color/colorAccent"
-            app:nocropper__padding_color="#ff282828"/>
+            android:layout_height="wrap_content">
+            <com.fenchtose.nocropper.CropperView
+                android:background="#ff282828"
+                android:id="@+id/cropper_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:nocropper__grid_opacity="0.8"
+                app:nocropper__grid_thickness="0.8dp"
+                app:nocropper__grid_color="@color/colorAccent"
+                app:nocropper__padding_color="#ff282828"/>
+
+            <ImageView
+                android:id="@+id/rotate_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:layout_margin="16dp"
+                android:layout_gravity="right|bottom"
+                android:background="@drawable/black_transp_circ_ripple"
+                android:scaleType="center"
+                android:src="@mipmap/ic_rotate_right_white_24dp"/>
+        </FrameLayout>
 
         <TextView
             android:id="@+id/posizione"

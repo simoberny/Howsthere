@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 
 import com.fenchtose.nocropper.CropperView;
@@ -43,6 +45,7 @@ public class PostFeed extends AppCompatActivity {
     Bitmap mBitmap;
     ProgressDialog progressDialog;
     CropperView crop;
+    private int rotationCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,14 @@ public class PostFeed extends AppCompatActivity {
 
         crop = findViewById(R.id.cropper_view);
         crop.setImageBitmap(mBitmap);
+
+        ImageView rotate = findViewById(R.id.rotate_button);
+        rotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rotateImage();
+            }
+        });
 
         Button invia = findViewById(R.id.invia);
         invia.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +133,23 @@ public class PostFeed extends AppCompatActivity {
         returnIntent.putExtra("uri", down.toString());
         setResult(Activity.RESULT_OK,returnIntent);
         finish();
+    }
+
+    private void rotateImage() {
+        if (mBitmap == null) {
+            Log.e(TAG, "bitmap is not loaded yet");
+            return;
+        }
+
+        mBitmap = rotateBitmap(mBitmap, 90);
+        crop.setImageBitmap(mBitmap);
+        rotationCount++;
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
 }
