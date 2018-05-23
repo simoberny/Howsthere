@@ -31,7 +31,6 @@ import it.unitn.simob.howsthere.Oggetti.Feed;
 import it.unitn.simob.howsthere.R;
 
 public class MioFeedFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
-
     private RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
     private FeedAdapter adapter;
@@ -87,7 +86,6 @@ public class MioFeedFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mSwipeRefreshLayout.setRefreshing(true);
             loadRecyclerViewData();
         }
-
         return view;
     }
 
@@ -100,28 +98,28 @@ public class MioFeedFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mSwipeRefreshLayout.setRefreshing(true);
 
         db.collection("feeds").whereEqualTo("uid", currentUser.getUid()).orderBy("timeStamp", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Feed getFromDb = document.toObject(Feed.class);
-                                if(!feedList.contains(getFromDb)) {
-                                    Feed newf = document.toObject(Feed.class);
-                                    newf.setID(document.getId());
-                                    feedList.add(newf);
-                                }
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Feed getFromDb = document.toObject(Feed.class);
+                            if(!feedList.contains(getFromDb)) {
+                                Feed newf = document.toObject(Feed.class);
+                                newf.setID(document.getId());
+                                feedList.add(newf);
                             }
-                        } else {
-                            Log.w("Errorcloud", "Error getting documents.", task.getException());
                         }
-
-                        adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore
-                        mSwipeRefreshLayout.setRefreshing(false);
-
-                        recyclerView.getLayoutManager().scrollToPosition(0);
+                    } else {
+                        Log.w("Errorcloud", "Error getting documents.", task.getException());
                     }
-                });
+
+                    adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore
+                    mSwipeRefreshLayout.setRefreshing(false);
+
+                    recyclerView.getLayoutManager().scrollToPosition(0);
+                }
+            });
     }
 }

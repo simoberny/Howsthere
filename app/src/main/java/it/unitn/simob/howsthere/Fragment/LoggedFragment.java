@@ -66,7 +66,7 @@ public class LoggedFragment extends Fragment {
         em.setText(currentUser.getEmail());
 
         ImageView avatar = view.findViewById(R.id.avatar);
-        Picasso.get().load(currentUser.getPhotoUrl()).transform(new CropCircleTransformation()).into(avatar);
+        Picasso.get().load(currentUser.getPhotoUrl()).placeholder(R.drawable.user_placeholder).transform(new CropCircleTransformation()).into(avatar);
 
         Button out = (Button) view.findViewById(R.id.signout);
         out.setOnClickListener(new View.OnClickListener() {

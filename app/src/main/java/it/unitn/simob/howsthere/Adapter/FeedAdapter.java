@@ -2,8 +2,11 @@ package it.unitn.simob.howsthere.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,11 +23,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +42,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -78,14 +87,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                 private GestureDetector gestureDetector = new GestureDetector(con, new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
-                        new ImageViewer.Builder(mContext, feedList)
-                                .setFormatter(new ImageViewer.Formatter<Feed>() {
-                                    @Override
-                                    public String format(Feed customImage) {
-                                        return customImage.getImageUrl();
-                                    }
-                                })
-                                .setStartPosition(getAdapterPosition()-1).show();
+                        openGallery(getAdapterPosition());
                         return super.onSingleTapConfirmed(e);
                     }
 
@@ -299,9 +301,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.view_image:
-
+                    openGallery(position);
                     return true;
                 case R.id.download:
+                    Glide.with(mContext)
+                            .load(feedList.get(position).getImageUrl())
+                            .asBitmap()
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation)  {
+                                    saveImage(resource);
+                                }
+                            });
                     break;
                 case R.id.delete_feed:
                     db.collection("feeds").document(id)
@@ -329,6 +340,53 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             }
             return false;
         }
+    }
+
+    private String saveImage(Bitmap image) {
+        String savedImagePath = null;
+
+        String imageFileName = "JPEG_" + "FILE_NAME" + ".jpg";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                + "/Howsthere");
+        boolean success = true;
+        if (!storageDir.exists()) {
+            success = storageDir.mkdirs();
+        }
+        if (success) {
+            File imageFile = new File(storageDir, imageFileName);
+            savedImagePath = imageFile.getAbsolutePath();
+            try {
+                OutputStream fOut = new FileOutputStream(imageFile);
+                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+                fOut.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Add the image to the system gallery
+            galleryAddPic(savedImagePath);
+            Toast.makeText(mContext, "IMAGE SAVED", Toast.LENGTH_LONG).show();
+        }
+        return savedImagePath;
+    }
+
+    private void galleryAddPic(String imagePath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(imagePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        con.sendBroadcast(mediaScanIntent);
+    }
+
+    public void openGallery(int posizione){
+        new ImageViewer.Builder(mContext, feedList)
+                .setFormatter(new ImageViewer.Formatter<Feed>() {
+                    @Override
+                    public String format(Feed customImage) {
+                        return customImage.getImageUrl();
+                    }
+                })
+                .setStartPosition(posizione-1).show();
     }
 
 }
