@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.unitn.simob.howsthere.Data">
+    tools:context="it.unitn.simob.howsthere.Data"
+    android:id="@+id/dataContainerLayout">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -113,8 +114,8 @@
                     android:id="@+id/textView9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginTop="0dp"
                     android:gravity="center_vertical"
                     android:text="ID Panorama" />
 
@@ -125,6 +126,14 @@
                     android:layout_marginLeft="20dp"
                     android:gravity="center"
                     android:text="Loading ..." />
+
+                <Button
+                    android:id="@+id/calcoloMediaAnnuale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/data_struc"
+                    android:layout_centerHorizontal="true"
+                    android:text="Button" />
             </TableRow>
         </TableLayout>
 
@@ -137,6 +146,8 @@
             android:layout_marginBottom="20dp">
 
         </com.github.mikephil.charting.charts.LineChart>
+
+
 
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

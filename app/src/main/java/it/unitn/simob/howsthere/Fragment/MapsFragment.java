@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -39,6 +40,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -64,6 +67,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     private Date dataSelezionata = Calendar.getInstance().getTime();
     BottomSheetDialog dialog;
     View dialogView;
+    Marker marker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,8 +78,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         //Quando ruoto il dispositivo o quando viene risvegliato salvo e recupero lo stato della mappa
-        MapStateManager mgr = new MapStateManager(getActivity());
-        mgr.saveMapState(gm);
+        if(gm != null) {
+            MapStateManager mgr = new MapStateManager(getActivity());
+            mgr.saveMapState(gm);
+        }
     }
 
     @Override
@@ -95,6 +101,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
        dialog = new BottomSheetDialog(getActivity());
        dialogView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
        dialog.setContentView(dialogView);
+       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+           @Override
+           public void onDismiss(DialogInterface dialog) {
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
+           }
+       });
+
+       dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+           @Override
+           public void onCancel(DialogInterface dialog) {
+               marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
+           }
+       });
 
        FloatingActionButton position = (FloatingActionButton) rootview.findViewById(R.id.position);
        position.setOnClickListener(new View.OnClickListener(){
@@ -110,6 +129,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             public void onClick(View view) {
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getActivity().getSupportFragmentManager(), "Seleziona data");
+                marker.hideInfoWindow();
             }
        });
 
@@ -231,7 +251,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     private void goToLoc(LatLng pos, int zoom){
         ln = new LatLng(pos.latitude, pos.longitude);
         gm.clear();
-        gm.addMarker(new MarkerOptions().position(ln));
+        marker = gm.addMarker(new MarkerOptions().position(ln).draggable(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray)));
         gm.moveCamera(CameraUpdateFactory.newLatLng(ln));
         gm.animateCamera(CameraUpdateFactory.zoomTo(zoom));
     }
@@ -296,8 +316,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             @Override
             public void onMapClick(LatLng point) {
                 gm.clear();
-                gm.addMarker(new MarkerOptions().position(point).draggable(true));
-                positionAndDialog(point.latitude, point.longitude);
+                marker = gm.addMarker(new MarkerOptions().position(point).draggable(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray)));
+                positionAndDialog(point.latitude, point.longitude, marker);
+            }
+        });
+
+        gm.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                positionAndDialog(marker.getPosition().latitude, marker.getPosition().longitude, marker);
+                return false;
             }
         });
 
@@ -308,18 +336,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             public void onMarkerDrag(Marker marker) { }
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                positionAndDialog(marker.getPosition().latitude, marker.getPosition().longitude);
+                positionAndDialog(marker.getPosition().latitude, marker.getPosition().longitude, marker);
             }
         });
     }
 
-    public void positionAndDialog(Double lat, Double lon){
+    public void positionAndDialog(Double lat, Double lon, Marker marker){
         ln = new LatLng(lat, lon);
+
+        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_red));
         Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
         List<Address> addresses = null;
         try {
             addresses = gcd.getFromLocation(ln.latitude, ln.longitude, 1);
             if (addresses.size() > 0) {
+                if(addresses.get(0).getLocality() != null){
+                    marker.setTitle(addresses.get(0).getLocality());
+                    marker.showInfoWindow();
+                }
+
                 Toast.makeText(getActivity(), "Città: " + addresses.get(0).getLocality(), Toast.LENGTH_LONG).show();
                 System.out.println(addresses.get(0).getLocality());
             }else{

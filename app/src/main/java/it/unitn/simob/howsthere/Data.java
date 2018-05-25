@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +56,10 @@ public class Data extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Date data;
     private Double lon,lat;
+    private Integer n_tentativi = 5;
+    private Integer richiestaID = 0;
+    private Integer richiestaStato = 0;
+    private Integer richiestaDatiMontagne = 0;
     //Le richieste GET vengono gestite dalla libreria RetroFit
 
     /*FORMATO DATI MONTAGNE (7 colonne,e 361 righe di cui una di descrizione)
@@ -147,6 +154,7 @@ public class Data extends AppCompatActivity {
         }
     }
 
+
     /**
      * Salvataggio dell'istanza
      */
@@ -175,9 +183,12 @@ public class Data extends AppCompatActivity {
         Call<ResponseBody> getPeak(@Query("id") String ID);
     }
 
-    private void callsAPI(Double lat, Double lng){
+    private void callsAPI(final Double lat, final Double lng){
         HeyWhatsID service = retrofit.create(HeyWhatsID.class);
         Call<ResponseBody> call = service.getID(lat, lng);
+        progressDialog.setMessage("Generazione id panorama...");
+        progressDialog.setTitle("Richiesta id panorama");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -191,28 +202,56 @@ public class Data extends AppCompatActivity {
                                 idt.setText(id);
                             }
                         });
+                        progressDialog.dismiss();
                         checkStatus(id); //Ottenuto l'ID controllo lo stato della generazione del panorama
+
                     } catch (IOException e) {
                         e.printStackTrace();
+                        richiediID();
+
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "Impossibile caricare l'ID!", Toast.LENGTH_SHORT).show();
+                    richiediID();
                 }
             }
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t)                                                                                                                                                                                                         {
                 Log.d("Errore: ", t.getMessage());
+                richiediID();
             }
         });
     }
 
+    private void richiediID(){
+        if (richiestaID<n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            callsAPI(lat, lon);
+            progressDialog.setMessage("Richiesta id panorama, tentativo n°: " + (richiestaID+1));
+            richiestaID++;
+        }else{
+            System.out.println("ID non ottenuto, controllare la connessione");
+            Snackbar.make(findViewById(R.id.dataContainerLayout), "ID non ottenuto, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    richiestaID = 0;
+                    callsAPI(lat, lon);
+                }
+            }).show();
+            progressDialog.dismiss();
+        }
+    }
+
     private void checkStatus(final String idpass){
+        progressDialog.setMessage("Aspettando il panorama...");
+        progressDialog.setTitle("Attesa dati Panorama");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsReady service = retrofit.create(HeyWhatsReady.class);
         Call<ResponseBody> call = service.getStatus(idpass);
-
-        progressDialog.setMessage("Eseguendo il panorama...");
-        progressDialog.setTitle("Controllo lo stato...");
-        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -221,37 +260,60 @@ public class Data extends AppCompatActivity {
                     try {
                         String status = response.body().string();
                         if(status.length() > 0 && status.charAt(0) == '1'){ // Se la mappa è pronta vado ad ottenere il panorama
+                            progressDialog.dismiss();
                             loadPeakData(idpass);
-                        }else{ //Altrimenti aspetto e riprovo dopo 1 secondi
-                            Thread.sleep(1000);
-                            checkStatus(idpass);
+                        }else{
+                            richiediStato(idpass);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        richiediStato(idpass);
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "La mappa non è stata generata!", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
+                    richiediStato(idpass);
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d("Errore: ", t.getMessage());
-                progressDialog.dismiss();
+                richiediStato(idpass);
+
             }
         });
     }
 
+    private void richiediStato(final String idpass){
+        if (richiestaStato<n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            checkStatus(idpass);
+            progressDialog.setMessage("controllo se è pronto il panorama, tentativo n°: " + (richiestaStato+1));
+            richiestaStato++;
+        }else{
+            System.out.println("panorama non pronto, controllare la connessione");
+            Snackbar.make(findViewById(R.id.dataContainerLayout), "panorama non pronto, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    richiestaStato = 0;
+                    checkStatus(idpass);
+                }
+            }).show();
+            progressDialog.dismiss();
+        }
+    }
+
     private void loadPeakData(String idpass){
+        progressDialog.setMessage("Creazione grafico...");
+        progressDialog.setTitle("Scaricamento e Incrocio dati");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsPeak service = retrofit.create(HeyWhatsPeak.class);
         Call<ResponseBody> call = service.getPeak(idpass);
-
-        progressDialog.setMessage("Caricando l'orizzonte...");
-        progressDialog.setTitle("Attendere...");
-        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -274,6 +336,28 @@ public class Data extends AppCompatActivity {
                 progressDialog.dismiss();
             }
         });
+    }
+    private void richiediDatiMontagne(final String idpass){
+        if (richiestaDatiMontagne<10){ // richiedo l' id se non lì ho già fatto troppe volte
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            checkStatus(idpass);
+            progressDialog.setMessage("controllo se è pronto il panorama, tentativo n°: " + (richiestaDatiMontagne+1));
+            richiestaDatiMontagne++;
+        }else{
+            System.out.println("panorama non pronto, controllare la connessione");
+            Snackbar.make(findViewById(R.id.dataContainerLayout), "dati non ricevuti, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    richiestaDatiMontagne = 0;
+                    checkStatus(idpass);
+                }
+            }).show();
+            progressDialog.dismiss();
+        }
     }
 
     private void setPeak(String peak){
@@ -493,9 +577,9 @@ public class Data extends AppCompatActivity {
         //nota: ci sono 2 casi limite, uno è che il sole / luna abbia l' azimuth iniziale più basso di tutti i punti del profilo montagne e l' altro è che lo abbia maggiore di tutte le montagne.
         int j = 0;
         for(int c = 0; c<360 && !(risultatiMontagne[0][c]>=risultatiSole[i].azimuth);c++){ //allineamento sole montagne
-            if(i==3)System.out.println(" azimut " + risultatiMontagne[0][c]+ " azimut sole" + risultatiSole[i].azimuth);
+            //if(i==3)System.out.println(" azimut " + risultatiMontagne[0][c]+ " azimut sole" + risultatiSole[i].azimuth);
             j = c;
-            System.out.println(j);
+            //System.out.println(j);
         }
 
         if(j==359){ //azimuth maggiore di tutti i dati delle montagne quindi confronto con l' ultimo e il primo
@@ -504,7 +588,7 @@ public class Data extends AppCompatActivity {
             }
         }else{ //azimuth intermedio
             if (risultatiSole[i].altezza > ((risultatiMontagne[2][j]+risultatiMontagne[2][j+1])/2)) {
-                System.out.println("Montangna: " + risultatiMontagne[2][j] + " Sole: " + risultatiSole[i].altezza);
+                //System.out.println("Montangna: " + risultatiMontagne[2][j] + " Sole: " + risultatiSole[i].altezza);
                 //System.out.print(" true "+ risultatiSole[i].ora + ":" + risultatiSole[i].minuto);
                 //System.out.println(" azimut 1 " + risultatiMontagne[0][j-1]+ " azimut 2 " + risultatiMontagne[0][j]+ " azimut sole" + risultatiSole[i].azimuth);
                 return true;

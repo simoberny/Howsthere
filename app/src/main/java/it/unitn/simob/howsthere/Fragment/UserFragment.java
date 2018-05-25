@@ -40,6 +40,8 @@ public class UserFragment extends Fragment {
 
     @Override
     public void onStart() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
         super.onStart();
     }
 

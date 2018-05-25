@@ -31,7 +31,6 @@ import it.unitn.simob.howsthere.Oggetti.Feed;
 import it.unitn.simob.howsthere.R;
 
 public class MioFeedFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
-
     private RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
     private FeedAdapter adapter;
@@ -66,60 +65,61 @@ public class MioFeedFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         feedList = new ArrayList<Feed>();
 
-        adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
+        if(currentUser != null){
+            adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setSmoothScrollbarEnabled(true);
+            mLayoutManager = new LinearLayoutManager(getActivity());
+            mLayoutManager.setSmoothScrollbarEnabled(true);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_mio);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
+            recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_mio);
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(adapter);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_orange_dark,
-                android.R.color.holo_blue_dark);
+            mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+            mSwipeRefreshLayout.setOnRefreshListener(this);
+            mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                    android.R.color.holo_green_dark,
+                    android.R.color.holo_orange_dark,
+                    android.R.color.holo_blue_dark);
 
-        mSwipeRefreshLayout.setRefreshing(true);
-        loadRecyclerViewData();
-
+            mSwipeRefreshLayout.setRefreshing(true);
+            loadRecyclerViewData();
+        }
         return view;
     }
 
     @Override
     public void onRefresh() {
-        mSwipeRefreshLayout.setRefreshing(false);
+        loadRecyclerViewData();
     }
 
     private void loadRecyclerViewData() {
         mSwipeRefreshLayout.setRefreshing(true);
 
         db.collection("feeds").whereEqualTo("uid", currentUser.getUid()).orderBy("timeStamp", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Feed getFromDb = document.toObject(Feed.class);
-                                if(!feedList.contains(getFromDb)) {
-                                    Feed newf = document.toObject(Feed.class);
-                                    newf.setID(document.getId());
-                                    feedList.add(newf);
-                                }
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Feed getFromDb = document.toObject(Feed.class);
+                            if(!feedList.contains(getFromDb)) {
+                                Feed newf = document.toObject(Feed.class);
+                                newf.setID(document.getId());
+                                feedList.add(newf);
                             }
-                        } else {
-                            Log.w("Errorcloud", "Error getting documents.", task.getException());
                         }
-
-                        adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore
-                        mSwipeRefreshLayout.setRefreshing(false);
-
-                        recyclerView.getLayoutManager().scrollToPosition(0);
+                    } else {
+                        Log.w("Errorcloud", "Error getting documents.", task.getException());
                     }
-                });
+
+                    adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore
+                    mSwipeRefreshLayout.setRefreshing(false);
+
+                    recyclerView.getLayoutManager().scrollToPosition(0);
+                }
+            });
     }
 }
