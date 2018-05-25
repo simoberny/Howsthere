@@ -88,11 +88,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         p.città = "trento";
         p.data = new Date();
         ps.addPanorama(p);
-        Panorama p1 = new Panorama();
-        p1.città = "trento";
-        p1.data = new Date();
-        ps.addPanorama(p1);
-
         //end test
 
         final View rootview = inflater.inflate(R.layout.fragment_maps, container, false);

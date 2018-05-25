@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
 
-public class StoricoAdapter extends ArrayAdapter<Panorama> {
+public class StoricoAdapter extends ArrayAdapter<Panorama>{
 
     List<Panorama> l = null;
 
@@ -31,7 +32,7 @@ public class StoricoAdapter extends ArrayAdapter<Panorama> {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.singolo_storico, null);
@@ -39,13 +40,13 @@ public class StoricoAdapter extends ArrayAdapter<Panorama> {
         convertView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                // TODO Auto-generated method stub
+                parent.getChildAt(position).getBackground().setAlpha(50);
                 return true;
             }
 
         });
 
-        ImageView iv = (ImageView) convertView.findViewById(R.id.chiudi);
+        FrameLayout iv = (FrameLayout) convertView.findViewById(R.id.chiudi_container);
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +69,9 @@ public class StoricoAdapter extends ArrayAdapter<Panorama> {
     }
 
 
+    public void onClick_menu() {
+
+    }
 }
 
 

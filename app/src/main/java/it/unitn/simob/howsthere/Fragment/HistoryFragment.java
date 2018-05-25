@@ -25,6 +25,7 @@ import it.unitn.simob.howsthere.R;
 
 public class HistoryFragment extends Fragment{
     public HistoryFragment() {}
+    public StoricoAdapter adapter;
 
     public static HistoryFragment newInstance() {
         HistoryFragment fragment = new HistoryFragment();
@@ -50,8 +51,7 @@ public class HistoryFragment extends Fragment{
         int id = item.getItemId();
 
         if (id == R.id.delete) {
-
-            // Do something
+            adapter.onClick_menu();
             return true;
         }
 
@@ -72,7 +72,7 @@ public class HistoryFragment extends Fragment{
         ListView r = view.findViewById(R.id.storico_lista);
         PanoramiStorage ps = new PanoramiStorage();
         List<Panorama> list = ps.getAllPanorama();
-        final StoricoAdapter adapter = new StoricoAdapter(view.getContext(), R.layout.singolo_storico, list);
+        adapter = new StoricoAdapter(view.getContext(), R.layout.singolo_storico, list);
         r.setAdapter(adapter);
         return view;
     }
