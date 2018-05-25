@@ -74,8 +74,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         //Quando ruoto il dispositivo o quando viene risvegliato salvo e recupero lo stato della mappa
-        MapStateManager mgr = new MapStateManager(getActivity());
-        mgr.saveMapState(gm);
+        if(gm != null) {
+            MapStateManager mgr = new MapStateManager(getActivity());
+            mgr.saveMapState(gm);
+        }
     }
 
     @Override
