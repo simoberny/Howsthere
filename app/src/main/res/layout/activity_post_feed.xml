@@ -37,15 +37,14 @@
                 android:src="@mipmap/ic_rotate_right_white_24dp"/>
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/posizione"
+        <EditText
+            android:id="@+id/desc"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="15dp"
-            android:text="Posizione"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp" />
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ems="10"
+            android:hint="Descrizione"
+            android:inputType="textPersonName" />
 
     </LinearLayout>
 

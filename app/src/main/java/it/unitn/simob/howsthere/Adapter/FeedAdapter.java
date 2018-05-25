@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -65,7 +66,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     FirebaseUser currentUser;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, location, timeStamp;
+        public TextView name, location, timeStamp, descrizione, likes;
         public ImageView menu;
         public ImageView image;
         public ProgressBar po;
@@ -75,49 +76,20 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         public MyViewHolder(final View view) {
             super(view);
             name = (TextView) view.findViewById(R.id.cardView_name);
+            descrizione = view.findViewById(R.id.descrizione);
             location = (TextView) view.findViewById(R.id.cardView_location);
             timeStamp = (TextView) view.findViewById(R.id.cardView_timestamp);
             image = (ImageView) view.findViewById(R.id.cardView_image);
             po = (ProgressBar) view.findViewById(R.id.progressBar2);
             heart = (ImageView) view.findViewById(R.id.heart);
             menu = view.findViewById(R.id.cardView_dots);
+            likes = view.findViewById(R.id.likes);
             con = view.getContext();
-
-            image.setOnTouchListener(new View.OnTouchListener() {
-                private GestureDetector gestureDetector = new GestureDetector(con, new GestureDetector.SimpleOnGestureListener() {
-                    @Override
-                    public boolean onSingleTapConfirmed(MotionEvent e) {
-                        openGallery(getAdapterPosition());
-                        return super.onSingleTapConfirmed(e);
-                    }
-
-                    @Override
-                    public boolean onDoubleTap(MotionEvent e) {
-                        ImageViewAnimatedChange(view.getContext(), heart, null,R.drawable.icon_heart_fill);
-                        ImageViewAnimatedChange(view.getContext(), image, image.getDrawable(), 0);
-                        makeLike(ID);
-                        return super.onDoubleTap(e);
-                    }
-                });
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    gestureDetector.onTouchEvent(event);
-                    return true;
-                }
-            });
-
-            heart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ImageViewAnimatedChange(view.getContext(), heart, null, R.drawable.icon_heart_fill);
-                    makeLike(ID);
-                }
-            });
         }
 
     }
 
-    public void makeLike(final String id){
+    public void makeLike(final String id, final int position, final ImageView img){
         if(currentUser != null){
             db.collection("feeds").document(id)
                     .get()
@@ -132,16 +104,24 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                             if(!liked.contains(currentUser.getUid())){
                                 temp.setLikes(temp.getLikes() + 1);
                                 temp.add_user_to_like(currentUser.getUid());
-
-                                db.collection("feeds").document(id)
-                                        .set(temp)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                System.out.println("Feed aggiornata!");
-                                            }
-                                        });
+                                ImageViewAnimatedChange(con, img, null, R.drawable.icon_heart_fill);
+                            }else{
+                                temp.setLikes(temp.getLikes() - 1);
+                                temp.remove_user_to_like(currentUser.getUid());
+                                ImageViewAnimatedChange(con, img, null, R.drawable.icon_heart);
                             }
+
+                            feedList.set(position, temp);
+                            notifyItemChanged(position);
+
+                            db.collection("feeds").document(id)
+                                .set(temp)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        System.out.println("Feed aggiornata!");
+                                    }
+                                });
                         }
                     });
         }
@@ -196,6 +176,37 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         holder.ID = feed.getID();
         holder.name.setText(feed.getName());
         holder.location.setText(feed.getLocation());
+        holder.descrizione.setText(feed.getDescrizione());
+        holder.likes.setText(feed.getLikes() + " Mi piace");
+
+        holder.image.setOnTouchListener(new View.OnTouchListener() {
+            private GestureDetector gestureDetector = new GestureDetector(con, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapConfirmed(MotionEvent e) {
+                    openGallery(position);
+                    return super.onSingleTapConfirmed(e);
+                }
+
+                @Override
+                public boolean onDoubleTap(MotionEvent e) {
+                    ImageViewAnimatedChange(con, holder.image, holder.image.getDrawable(), 0);
+                    makeLike(holder.ID, position, holder.heart);
+                    return super.onDoubleTap(e);
+                }
+            });
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                gestureDetector.onTouchEvent(event);
+                return true;
+            }
+        });
+
+        holder.heart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                makeLike(holder.ID, position, holder.heart);
+            }
+        });
 
         db.collection("feeds").document(holder.ID)
                 .get()
@@ -205,7 +216,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                         Feed f = documentSnapshot.toObject(Feed.class);
                         if(f != null && f.getLikes_id().contains(currentUser.getUid())){
                             holder.heart.setImageResource(R.drawable.icon_heart_fill);
+                            System.out.println("LIKE feed " + holder.ID + " : SI");
+                        }else{
+                            holder.heart.setImageResource(R.drawable.icon_heart);
+                            System.out.println("LIKE feed " + holder.ID + " : NO");
                         }
+
                     }
                 });
 
@@ -220,8 +236,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             }
         });
 
-
-
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
         long diff = 0;
         try {
@@ -234,13 +248,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         }
 
         String tempo = "";
+        System.out.println("DIFFERENZA: " + diff);
+
 
         if(diff < 60){
             tempo = diff + " min";
         }else if(diff >= 60 && (diff/60) < 24){
             tempo = (diff / 60) + " ore";
         }else{
-            tempo = (diff / 60 / 24) + " giorni";
+            long temp = (diff / 60 / 24);
+            tempo = temp + " giorn" + (((int)temp == 1) ? "o" : "i");
         }
 
         holder.timeStamp.setText(tempo);
@@ -261,12 +278,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                         return false;
                     }
                 })
-                .placeholder(R.drawable.placeholder)
-                .priority(Priority.LOW)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.image);
-
-        /*Zoomy.Builder builder = new Zoomy.Builder((Activity) mContext).target(holder.image);
-        builder.register();*/
     }
 
     private void showPopupMenu(View view,int position, String id) {

@@ -13,14 +13,14 @@ import java.util.List;
 public class Feed {
     private String ID;
     private String uid;
-    private String name, location, imageUrl, panoramaID, timeStamp;
+    private String name, location, imageUrl, panoramaID, timeStamp, descrizione;
     private Integer likes;
     private List<String> likes_id;
     private String file_name;
 
     public Feed(){}
 
-    public Feed(String UID, String name, String location, String imageUrl, String timeStamp, String filename) {
+    public Feed(String UID, String name, String location, String imageUrl, String timeStamp, String filename, String descrizione) {
         this.uid = UID;
         this.name = name;
         this.location = location;
@@ -29,6 +29,7 @@ public class Feed {
         this.likes = 0;
         this.likes_id = new ArrayList<String>();
         this.file_name = filename;
+        this.descrizione = descrizione;
     }
 
     public String getName() {
@@ -99,6 +100,10 @@ public class Feed {
         this.likes_id.add(id);
     }
 
+    public void remove_user_to_like(String id){
+        this.likes_id.remove(id);
+    }
+
     public String getUid() {
         return uid;
     }
@@ -109,5 +114,13 @@ public class Feed {
 
     public String getFile_name() {
         return file_name;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
     }
 }

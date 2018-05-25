@@ -71,13 +71,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         //Gestire i cambi di impostazioni
-        if (key.equals("pref_name")) {
+        /*if (key.equals("pref_name")) {
             Preference pref = findPreference(key);
             pref.setSummary(sharedPreferences.getString(key, (user != null) ? user.getDisplayName() : "Non loggato!"));
         }else if(key.equals("maps_type")){
             ListPreference pref = (ListPreference) findPreference(key);
             pref.setValue(sharedPreferences.getString(key, "-1"));
-        }
+        }*/
 
     }
 
