@@ -60,6 +60,7 @@ import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
+    private String citta = "";
     private GoogleMap gm = null;
     private LatLng ln = null;
     private int zoomLevel = 0;
@@ -86,15 +87,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        PanoramiStorage ps = new PanoramiStorage();
-
-        //parte di test che popola
-        Panorama p = new Panorama();
-        p.città = "trento";
-        p.data = new Date();
-        ps.addPanorama(p);
-        //end test
 
         final View rootview = inflater.inflate(R.layout.fragment_maps, container, false);
        //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
@@ -141,6 +133,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 i.putExtra("lat", ln.latitude);
                 i.putExtra("long", ln.longitude);
                 i.putExtra("data", dataSelezionata.getTime());
+                i.putExtra("citta", citta);
                 startActivity(i);
             }
        });
@@ -354,8 +347,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                     marker.setTitle(addresses.get(0).getLocality());
                     marker.showInfoWindow();
                 }
-
-                Toast.makeText(getActivity(), "Città: " + addresses.get(0).getLocality(), Toast.LENGTH_LONG).show();
+                citta = addresses.get(0).getLocality();
+                //Toast.makeText(getActivity(), "Città: " + addresses.get(0).getLocality(), Toast.LENGTH_LONG).show();
                 System.out.println(addresses.get(0).getLocality());
             }else{
                 Log.d("Problema address", "Problema");

@@ -1,6 +1,9 @@
 package it.unitn.simob.howsthere.Oggetti;
 
+import android.content.Context;
 import android.os.Environment;
+import android.widget.Toast;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,10 +24,11 @@ public class PanoramiStorage {
 
     private List<Panorama> Panorami = new ArrayList();
 
-    public Panorama getPanoramabyID(int ID){
+    public Panorama getPanoramabyID(String ID){
         load();
         for(int i=0;i<Panorami.size();i++){
-            if(Panorami.get(i).ID == ID){
+            System.out.println("Panorami.get(i).ID: "+ Panorami.get(i).ID);
+            if(Panorami.get(i).ID.equals(ID)){
                 return Panorami.get(i);
             }
         }

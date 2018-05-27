@@ -62,7 +62,7 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         TextView nome_citta = (TextView) convertView.findViewById(R.id.nome_citta);
         TextView data = (TextView) convertView.findViewById(R.id.data);
         Panorama p = l.get(position);
-        nome_citta.setText(p.città + " ");
+        nome_citta.setText(p.ID+ " ");
         data.setText(p.data.toString());
 
         return convertView;
