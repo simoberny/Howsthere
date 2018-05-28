@@ -16,19 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
+
 
 import org.shredzone.commons.suncalc.MoonPosition;
 import org.shredzone.commons.suncalc.SunPosition;
@@ -88,6 +76,7 @@ public class Data extends AppCompatActivity {
         progressDialog = new ProgressDialog(Data.this);
         progressDialog.setMax(100);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCanceledOnTouchOutside(false);
 
         //Variabile Retrofit per gestire tutte le richieste GET
         retrofit = new Retrofit.Builder()
@@ -147,17 +136,22 @@ public class Data extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
-                        panorama.ID = response.body().string();
-                        System.out.print("ID: " + panorama.ID);
-                        idt.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                idt.setText(panorama.ID);
-                            }
-                        });
-                        progressDialog.dismiss();
-                        checkStatus(panorama.ID); //Ottenuto l'ID controllo lo stato della generazione del panorama
-
+                        String id = response.body().string();
+                        if(id != null && id != "") {
+                            panorama.ID = id;
+                            System.out.print("ID: " + panorama.ID);
+                            idt.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    idt.setText(panorama.ID);
+                                }
+                            });
+                            progressDialog.dismiss();
+                            checkStatus(panorama.ID); //Ottenuto l'ID controllo lo stato della generazione del panorama
+                        }else{
+                            Toast.makeText(getApplicationContext(), "ID vuoto!", Toast.LENGTH_SHORT).show();
+                            richiediID();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                         richiediID();
@@ -262,8 +256,8 @@ public class Data extends AppCompatActivity {
     }
 
     private void loadPeakData(String idpass){
-        progressDialog.setMessage("Creazione grafico...");
-        progressDialog.setTitle("Scaricamento e Incrocio dati");
+        progressDialog.setMessage("Scarico dati Montagne...");
+        progressDialog.setTitle("Scaricamento e Calcolo posizione pianeti");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsPeak service = retrofit.create(HeyWhatsPeak.class);
         Call<ResponseBody> call = service.getPeak(idpass);
@@ -281,7 +275,7 @@ public class Data extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), "Impossibile caricare i picchi!", Toast.LENGTH_SHORT).show();
                 }
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
@@ -314,11 +308,10 @@ public class Data extends AppCompatActivity {
     }
 
     private void setPeak(String peak){
-        //Faccio il parsing della stringa e butto i dati nella libreria per generare grafici e per salvare nel database.
 
-        List<Entry> entriesMontagne = new ArrayList<Entry>();
-        List<Entry> entriesSole = new ArrayList<Entry>();
-        List<Entry> entriesLuna = new ArrayList<Entry>();
+        progressDialog.setMessage("Calcolo posizione pianeti...");
+        progressDialog.setTitle("Scaricamento e Calcolo posizione pianeti");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
 
         //CALCOLO SOLE ogni 5 min
         int indexSole = 0;
@@ -341,43 +334,40 @@ public class Data extends AppCompatActivity {
                 indexSole++;
             }
         }
-        Arrays.sort(panorama.risultatiSole); //ordino secondo azimuth
-        for(int i = 0; i<288; i++) { //passo dati al grafico
-            if(panorama.risultatiSole[i].minuto == 0) {
-                entriesSole.add(new Entry((float) panorama.risultatiSole[i].azimuth, (float) panorama.risultatiSole[i].altezza));
-            }
-        }
+
+
 
         //CALCOLO LUNA ogni 5 min
         int indexLuna = 0;
-        for (int ora = 0; ora<24; ora++) {
-            for (int min = 0; min < 60; min+=5) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(panorama.data);
-                calendar.set(Calendar.HOUR_OF_DAY, ora);
-                calendar.set(Calendar.MINUTE, min);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(panorama.data);
+        calendar.add(Calendar.DATE, -1);
+        for(int giorno = 0; giorno<3; giorno++) {
+            calendar.add(Calendar.DATE, +1);
+            for (int ora = 0; ora < 24; ora++) {
+                for (int min = 0; min < 60; min += 5) {
+                    calendar.set(Calendar.HOUR_OF_DAY, ora);
+                    calendar.set(Calendar.MINUTE, min);
+                    MoonPosition position = MoonPosition.compute()
+                            .on(calendar.getTime())       // set a date
+                            .at(panorama.lat, panorama.lon)   // set a location
+                            .execute();     // get the results
+                    //luna ieri
+                    //calendar.add(Calendar.DATE, -1);
+                    //luna domani
 
-                MoonPosition position = MoonPosition.compute()
-                        .on(calendar.getTime())       // set a date
-                        .at(panorama.lat, panorama.lon)   // set a location
-                        .execute();     // get the results
-
-                //System.out.println("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
-                panorama.risultatiLuna[indexLuna] = new Posizione();
-                panorama.risultatiLuna[indexLuna].ora=ora;
-                panorama.risultatiLuna[indexLuna].minuto=min;
-                panorama.risultatiLuna[indexLuna].altezza=position.getAltitude();
-                panorama.risultatiLuna[indexLuna].azimuth=position.getAzimuth();
-                indexLuna++;
+                    //System.out.println("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
+                    panorama.risultatiLuna[indexLuna] = new Posizione();
+                    panorama.risultatiLuna[indexLuna].ora = ora;
+                    panorama.risultatiLuna[indexLuna].minuto = min;
+                    panorama.risultatiLuna[indexLuna].altezza = position.getAltitude();
+                    panorama.risultatiLuna[indexLuna].azimuth = position.getAzimuth();
+                    indexLuna++;
+                }
             }
         }
 
-        //Arrays.sort(risultatiLuna); //ordino secondo azimuth ATTENZIONE: se vengono ordinati allora si mescolano i dati della mattina dopo quelli della sera
-        for(int i = 0; i<288; i++) { //passo dati al grafico
-            if(panorama.risultatiLuna[i].minuto == 0){
-                entriesLuna.add(new Entry((float) panorama.risultatiLuna[i].azimuth, (float) panorama.risultatiLuna[i].altezza));
-            }
-        }
+
 
         //PARSING dati
         List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
@@ -386,15 +376,14 @@ public class Data extends AppCompatActivity {
             for (int i =0; i<7; i++) {
                 panorama.risultatiMontagne[i][a-1] = Double.parseDouble(tempsplit.get(i));
             }
-            entriesMontagne.add(new Entry(Float.parseFloat(tempsplit.get(0)), Float.parseFloat(tempsplit.get(2))));
         }
 
         //ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne
         boolean prev = false;
-        int minutiSole = 0;
+        panorama.minutiSole = 0;
         for(int i = 0; i<288; i++){
             boolean sopra = sopra(i);
-            if (sopra) minutiSole+=5;
+            if (sopra) panorama.minutiSole+=5;
             //System.out.println("ora: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto +" sopra? " + sopra);
             if(!prev && sopra){ //alba
                 panorama.albe.add(panorama.risultatiSole[i]);
@@ -408,105 +397,27 @@ public class Data extends AppCompatActivity {
             }
             prev=sopra;
         }
-        Toast.makeText(getApplicationContext(),"Ore di Sole: " + minutiSole/60 + " ore, "+ (minutiSole-(minutiSole/60)*60)+ " minuti" , Toast.LENGTH_LONG).show();
-
+        Toast.makeText(getApplicationContext(),"Ore di Sole: " + panorama.minutiSole/60 + " ore, "+ (panorama.minutiSole-(panorama.minutiSole/60)*60)+ " minuti" , Toast.LENGTH_LONG).show();
+        progressDialog.dismiss();
+        progressDialog.setMessage("Calcolo posizione pianeti...");
+        progressDialog.setTitle("Salvo i dati...");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         //salvo i dati del panorama con panoramiStorage
         PanoramiStorage p = new PanoramiStorage();
         p.addPanorama(panorama);
+        progressDialog.dismiss();
 
+        /*progressDialog.setMessage("...");
+        progressDialog.setTitle("Carico la pagina dei risultati");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento*/
+
+
+        //chiamo la classe Risultati
         Intent i = new Intent(this,Risultati.class);
         i.putExtra("ID", panorama.ID);
         startActivity(i);
 
-        //proprietà grafico:
-        LineChart chart = (LineChart) findViewById(R.id.chart);
-        chart.setDrawGridBackground(false);
-        chart.getAxisRight().setEnabled(false);
-        chart.getAxisLeft().setEnabled(false);
-
-        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Profilo montagne"); // add entries to dataset
-        LineDataSet dataSetSole = new LineDataSet(entriesSole, "sole");
-        LineDataSet dataSetLuna = new LineDataSet(entriesLuna, "luna");
-
-        //proprietà grafico Montagne
-        dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
-        dataSetMontagne.setColor(R.color.pale_green);
-        //dataSet.setLineWidth(4f);
-        dataSetMontagne.setDrawValues(false);
-        dataSetMontagne.setDrawCircles(false);
-        dataSetMontagne.setCircleColor(Color.BLACK);
-        dataSetMontagne.setDrawCircleHole(false);
-        dataSetMontagne.setDrawValues(true);
-        dataSetMontagne.setDrawFilled(true);
-        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
-        dataSetMontagne.setFillDrawable(drawable);
-
-        //proprietà grafiche Sole
-        dataSetSole.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        dataSetSole.setColor(Color.YELLOW);
-        dataSetSole.setLineWidth(1f);
-        dataSetSole.setDrawValues(false);
-        dataSetSole.setDrawCircles(true);
-        dataSetSole.setCircleColor(Color.YELLOW);
-        dataSetSole.setDrawCircleHole(false);
-        dataSetSole.setDrawValues(true);
-        dataSetSole.setDrawFilled(false);
-
-        //proprietà grafiche Luna
-        dataSetLuna.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        dataSetLuna.setColor(Color.GRAY);
-        dataSetLuna.setLineWidth(1f);
-        dataSetLuna.setDrawValues(false);
-        dataSetLuna.setDrawCircles(true);
-        dataSetLuna.setCircleColor(Color.GRAY);
-        dataSetLuna.setDrawCircleHole(false);
-        dataSetLuna.setDrawValues(false);
-        dataSetLuna.setDrawFilled(false);
-
-        chart.getDescription().setText("Profilo montagne con sole e luna");
-
-        LineData lineData = new LineData();
-        lineData.addDataSet(dataSetMontagne);
-        lineData.addDataSet(dataSetSole);
-        lineData.addDataSet(dataSetLuna);
-        XAxis left = chart.getXAxis();
-        left.setGranularity(1f);
-        chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                if (value == 0 || value == 360) {
-                    return "N"; // here you can map your values or pass it as empty string
-                }else if (value == 90) {
-                    return "E"; // here you can map your values or pass it as empty string
-                }else if (value == 180) {
-                    return "S"; // here you can map your values or pass it as empty string
-                }else if (value == 270) {
-                    return "O"; // here you can map your values or pass it as empty string
-                }else{
-                    return "";
-                }
-            }
-        });
-
-        Legend l = chart.getLegend();
-        l.setFormSize(10f); // set the size of the legend forms/shapes
-        //l.setForm(LegendForm.CIRCLE); // set what type of form/shape should be used
-        //l.setPosition(LegendPosition.BELOW_CHART_LEFT);
-        //l.setTypeface(...);
-        l.setTextSize(12f);
-        l.setTextColor(Color.BLACK);
-        l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
-        l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
-
-        // set custom labels and colors
-        List<Entry> entrinseo = new ArrayList<Entry>();
-        entrinseo.add(new Entry(0,5));
-        //l.setCustom(entrinseo);
-
-        chart.setData(lineData);
-        chart.animateX(2500);
-        chart.invalidate();
-
+        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Data");
 
         //SALA STAMPA
 

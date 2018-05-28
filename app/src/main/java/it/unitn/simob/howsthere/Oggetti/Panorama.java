@@ -32,6 +32,8 @@ public class Panorama implements Serializable {
 
     public Posizione[] risultatiSole;
     public Posizione[] risultatiLuna;
+    //public Posizione[] risultatiLunaGiornoPrima;
+    //public Posizione[] risultatiLunaGiornoDopo;
 
     // lista di posizioni dove il sole appare e scompare.
     public List<Posizione> albe;
@@ -41,7 +43,7 @@ public class Panorama implements Serializable {
     public String citta;
     public Date data;
     //public Bitmap grafico;
-
+    public int minutiSole = 0;
     public int ore_sole;
     public  double lat = 0;
     public  double lon = 0;
@@ -49,7 +51,9 @@ public class Panorama implements Serializable {
     public Panorama(){
         risultatiMontagne = new double[7][360];
         risultatiSole = new Posizione[288];
-        risultatiLuna = new Posizione[288];
+        risultatiLuna = new Posizione[864];
+        //risultatiLunaGiornoPrima = new Posizione[288];
+        //risultatiLunaGiornoDopo = new Posizione[288];
         albe = new ArrayList<Posizione>();
         tramonti = new ArrayList<Posizione>();
         data = new Date();

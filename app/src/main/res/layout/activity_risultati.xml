@@ -4,6 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.unitn.simob.howsthere.Risultati">
+    tools:context="it.unitn.simob.howsthere.Risultati"
+    android:id="@+id/risultatiMainLayout">
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/risultatiMainLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp">
 
+    </com.github.mikephil.charting.charts.LineChart>
 </android.support.constraint.ConstraintLayout>

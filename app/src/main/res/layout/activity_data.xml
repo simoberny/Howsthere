@@ -136,18 +136,5 @@
                     android:text="Button" />
             </TableRow>
         </TableLayout>
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/data_struc"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp">
-
-        </com.github.mikephil.charting.charts.LineChart>
-
-
-
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
