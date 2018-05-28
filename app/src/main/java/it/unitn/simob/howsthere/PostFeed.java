@@ -96,6 +96,14 @@ public class PostFeed extends AppCompatActivity {
                 byte[] data = baos.toByteArray();
             }
         });
+
+        Button annulla = findViewById(R.id.annulla);
+        annulla.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void uploadToFirebase(final byte [] data){

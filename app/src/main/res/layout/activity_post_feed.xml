@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".PostFeed"
     android:id="@+id/post_feed_con">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,7 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
             <FrameLayout
                 android:id="@+id/top_frame"
                 android:layout_width="match_parent"
@@ -39,38 +37,76 @@
                     android:background="@drawable/black_transp_circ_ripple"
                     android:scaleType="center"
                     android:src="@mipmap/ic_rotate_right_white_24dp"/>
+
             </FrameLayout>
 
-            <EditText
-                android:id="@+id/desc"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:ems="10"
-                android:hint="Descrizione"
-                android:inputType="textPersonName" />
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Scrivi qualcosa" />
+
+                <EditText
+                    android:id="@+id/desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Scrivi qualcosa"
+                    android:inputType="textPersonName"
+                    android:textColorHint="@color/title_nobar" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Panorama" />
+            </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:padding="8dp">
+            android:layout_alignParentBottom="true">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/annulla"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:text="Annulla" />
 
                 <Button
                     android:id="@+id/invia"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
-                    android:drawableRight="@android:drawable/ic_menu_send"
-                    android:text="Invia" />
+                    android:layout_weight="2"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:drawableEnd="@android:drawable/ic_menu_send"
+                    android:elevation="1dp"
+                    android:text="Carica"
+                    android:textColor="@android:color/white" />
             </LinearLayout>
 
         </RelativeLayout>

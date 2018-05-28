@@ -79,9 +79,9 @@
         android:layout_weight="2">
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider" />
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
 
         <Button
             android:id="@+id/send"
