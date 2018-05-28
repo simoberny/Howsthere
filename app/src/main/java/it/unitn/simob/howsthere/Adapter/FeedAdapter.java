@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -53,6 +54,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.Oggetti.Feed;
 import it.unitn.simob.howsthere.R;
 
@@ -86,71 +88,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             likes = view.findViewById(R.id.likes);
             con = view.getContext();
         }
-
-    }
-
-    public void makeLike(final String id, final int position, final ImageView img){
-        if(currentUser != null){
-            db.collection("feeds").document(id)
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            Feed temp = documentSnapshot.toObject(Feed.class);
-                            temp.setID(id);
-
-                            List<String> liked = temp.getLikes_id();
-
-                            if(!liked.contains(currentUser.getUid())){
-                                temp.setLikes(temp.getLikes() + 1);
-                                temp.add_user_to_like(currentUser.getUid());
-                                ImageViewAnimatedChange(con, img, null, R.drawable.icon_heart_fill);
-                            }else{
-                                temp.setLikes(temp.getLikes() - 1);
-                                temp.remove_user_to_like(currentUser.getUid());
-                                ImageViewAnimatedChange(con, img, null, R.drawable.icon_heart);
-                            }
-
-                            feedList.set(position, temp);
-                            notifyItemChanged(position);
-
-                            db.collection("feeds").document(id)
-                                .set(temp)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        System.out.println("Feed aggiornata!");
-                                    }
-                                });
-                        }
-                    });
-        }
-    }
-
-    public static void ImageViewAnimatedChange(Context c, final ImageView v, final Drawable new_image, final int new_image_id) {
-        final Animation anim_out = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
-        final Animation anim_in  = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
-        anim_out.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override public void onAnimationStart(Animation animation) {}
-            @Override public void onAnimationRepeat(Animation animation) {}
-            @Override public void onAnimationEnd(Animation animation)
-            {
-                if(new_image_id == 0){
-                    v.setImageDrawable(new_image);
-                }else{
-                    v.setImageResource(new_image_id);
-                }
-
-                anim_in.setAnimationListener(new Animation.AnimationListener() {
-                    @Override public void onAnimationStart(Animation animation) {}
-                    @Override public void onAnimationRepeat(Animation animation) {}
-                    @Override public void onAnimationEnd(Animation animation) {}
-                });
-                v.startAnimation(anim_in);
-            }
-        });
-        v.startAnimation(anim_out);
     }
 
     public FeedAdapter(Context mContext, List<Feed> feedList) {
@@ -163,9 +100,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // inflate new view when we create new items in our recyclerview
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cardview_feed, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_feed, parent, false);
         db = FirebaseFirestore.getInstance();
         return new MyViewHolder(itemView);
     }
@@ -208,25 +143,27 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             }
         });
 
-        db.collection("feeds").document(holder.ID)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Feed f = documentSnapshot.toObject(Feed.class);
-                        if(f != null && f.getLikes_id().contains(currentUser.getUid())){
-                            holder.heart.setImageResource(R.drawable.icon_heart_fill);
-                            System.out.println("LIKE feed " + holder.ID + " : SI");
-                        }else{
-                            holder.heart.setImageResource(R.drawable.icon_heart);
-                            System.out.println("LIKE feed " + holder.ID + " : NO");
+        if(currentUser != null) {
+            db.collection("feeds").document(holder.ID)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Feed f = documentSnapshot.toObject(Feed.class);
+                            if (f != null && f.getLikes_id().contains(currentUser.getUid())) {
+                                holder.heart.setImageResource(R.drawable.icon_heart_fill);
+                                System.out.println("LIKE feed " + holder.ID + " : SI");
+                            } else {
+                                holder.heart.setImageResource(R.drawable.icon_heart);
+                                System.out.println("LIKE feed " + holder.ID + " : NO");
+                            }
                         }
-
-                    }
-                });
-
-        if(!currentUser.getUid().equals(feed.getUid())){
-            holder.menu.setVisibility(View.GONE);
+                    });
+            if(!currentUser.getUid().equals(feed.getUid())){
+                holder.menu.setVisibility(View.GONE);
+            }
+        }else{
+            holder.heart.setVisibility(View.GONE);
         }
 
         holder.menu.setOnClickListener(new View.OnClickListener() {
@@ -248,8 +185,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         }
 
         String tempo = "";
-        System.out.println("DIFFERENZA: " + diff);
-
 
         if(diff < 60){
             tempo = diff + " min";
@@ -301,6 +236,72 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         return super.getItemId(position);
     }
 
+    public void makeLike(final String id, final int position, final ImageView img){
+        if(currentUser != null){
+            db.collection("feeds").document(id)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Feed temp = documentSnapshot.toObject(Feed.class);
+                            temp.setID(id);
+
+                            List<String> liked = temp.getLikes_id();
+
+                            if(!liked.contains(currentUser.getUid())){
+                                temp.setLikes(temp.getLikes() + 1);
+                                temp.add_user_to_like(currentUser.getUid());
+                                ImageViewAnimatedChange(con, img, null, R.drawable.icon_heart_fill);
+                            }else{
+                                temp.setLikes(temp.getLikes() - 1);
+                                temp.remove_user_to_like(currentUser.getUid());
+                                ImageViewAnimatedChange(con, img, null, R.drawable.icon_heart);
+                            }
+
+                            feedList.set(position, temp);
+                            notifyItemChanged(position);
+
+                            db.collection("feeds").document(id)
+                                    .set(temp)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            System.out.println("Feed aggiornata!");
+                                        }
+                                    });
+                        }
+                    });
+        }else{
+            Snackbar mySnackbar = Snackbar.make(((MainActivity)mContext).findViewById(R.id.frame_layout), "Esegui il login per lasciare like alle foto!", Snackbar.LENGTH_SHORT);
+            mySnackbar.show();
+        }
+    }
+
+    public static void ImageViewAnimatedChange(Context c, final ImageView v, final Drawable new_image, final int new_image_id) {
+        final Animation anim_out = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
+        final Animation anim_in  = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
+        anim_out.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override public void onAnimationStart(Animation animation) {}
+            @Override public void onAnimationRepeat(Animation animation) {}
+            @Override public void onAnimationEnd(Animation animation)
+            {
+                if(new_image_id == 0){
+                    v.setImageDrawable(new_image);
+                }else{
+                    v.setImageResource(new_image_id);
+                }
+
+                anim_in.setAnimationListener(new Animation.AnimationListener() {
+                    @Override public void onAnimationStart(Animation animation) {}
+                    @Override public void onAnimationRepeat(Animation animation) {}
+                    @Override public void onAnimationEnd(Animation animation) {}
+                });
+                v.startAnimation(anim_in);
+            }
+        });
+        v.startAnimation(anim_out);
+    }
 
     class FeedItemClickListener implements PopupMenu.OnMenuItemClickListener {
         private int position;
@@ -343,7 +344,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                                         public void onSuccess(Void aVoid) {
                                             feedList.remove(position);
                                             notifyItemRemoved(position);
-                                            Log.d("DELETE", "DocumentSnapshot successfully deleted!");
+                                            Snackbar mySnackbar = Snackbar.make(((MainActivity)mContext).findViewById(R.id.frame_layout), "Feed eliminata!", Snackbar.LENGTH_SHORT);
+                                            mySnackbar.show();
                                         }
                                     });
                                 }
@@ -376,9 +378,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                 e.printStackTrace();
             }
 
-            // Add the image to the system gallery
             galleryAddPic(savedImagePath);
-            Toast.makeText(mContext, "IMAGE SAVED", Toast.LENGTH_LONG).show();
+            Snackbar mySnackbar = Snackbar.make(((MainActivity)mContext).findViewById(R.id.frame_layout), "Foto salvata nella galleria!", Snackbar.LENGTH_SHORT);
+            mySnackbar.show();
         }
         return savedImagePath;
     }
@@ -393,14 +395,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
     public void openGallery(int posizione){
         new ImageViewer.Builder(mContext, feedList)
-                .setFormatter(new ImageViewer.Formatter<Feed>() {
-                    @Override
-                    public String format(Feed customImage) {
-                        return customImage.getImageUrl();
-                    }
-                })
-                .setStartPosition(posizione-1).show();
+            .setFormatter(new ImageViewer.Formatter<Feed>() {
+                @Override
+                public String format(Feed customImage) {
+                    return customImage.getImageUrl();
+                }
+            })
+            .setStartPosition(posizione-1).show();
     }
-
 }
 

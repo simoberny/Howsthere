@@ -1,73 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostFeed">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <FrameLayout
-            android:id="@+id/top_frame"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.fenchtose.nocropper.CropperView
-                android:background="#ff282828"
-                android:id="@+id/cropper_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:nocropper__grid_opacity="0.8"
-                app:nocropper__grid_thickness="0.8dp"
-                app:nocropper__grid_color="@color/colorAccent"
-                app:nocropper__padding_color="#ff282828"/>
-
-            <ImageView
-                android:id="@+id/rotate_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:padding="8dp"
-                android:layout_margin="16dp"
-                android:layout_gravity="right|bottom"
-                android:background="@drawable/black_transp_circ_ripple"
-                android:scaleType="center"
-                android:src="@mipmap/ic_rotate_right_white_24dp"/>
-        </FrameLayout>
-
-        <EditText
-            android:id="@+id/desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:ems="10"
-            android:hint="Descrizione"
-            android:inputType="textPersonName" />
-
-    </LinearLayout>
+    tools:context=".PostFeed"
+    android:id="@+id/post_feed_con">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="8dp">
-
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/invia"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/top_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.fenchtose.nocropper.CropperView
+                    android:background="#ff282828"
+                    android:id="@+id/cropper_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:nocropper__grid_opacity="0.8"
+                    app:nocropper__grid_thickness="0.8dp"
+                    app:nocropper__grid_color="@color/colorAccent"
+                    app:nocropper__padding_color="#ff282828"/>
+
+                <ImageView
+                    android:id="@+id/rotate_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:layout_margin="16dp"
+                    android:layout_gravity="right|bottom"
+                    android:background="@drawable/black_transp_circ_ripple"
+                    android:scaleType="center"
+                    android:src="@mipmap/ic_rotate_right_white_24dp"/>
+            </FrameLayout>
+
+            <EditText
+                android:id="@+id/desc"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
-                android:drawableRight="@android:drawable/ic_menu_send"
-                android:text="Invia" />
+                android:layout_margin="10dp"
+                android:ems="10"
+                android:hint="Descrizione"
+                android:inputType="textPersonName" />
+
         </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/invia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                    android:drawableRight="@android:drawable/ic_menu_send"
+                    android:text="Invia" />
+            </LinearLayout>
+
+        </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

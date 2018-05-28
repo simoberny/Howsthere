@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-        <EditTextPreference
-            android:capitalize="words"
-            android:defaultValue="@string/pref_default_display_name"
-            android:inputType="textCapWords"
-            android:key="pref_name"
-            android:maxLines="1"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/pref_title_display_name" />
-
         <ListPreference
             android:defaultValue="-1"
             android:entries="@array/pref_maps_list_title"
@@ -17,5 +7,11 @@
             android:key="maps_type"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
+            android:summary="%s"
             android:title="@string/pref_maps_type" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="night_mode"
+            android:summary="Risparmia batteria su schermi Amoled"
+            android:title="Tema scuro" />
 </PreferenceScreen>

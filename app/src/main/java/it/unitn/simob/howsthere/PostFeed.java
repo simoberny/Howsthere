@@ -10,6 +10,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,11 +46,11 @@ import retrofit2.http.Url;
 public class PostFeed extends AppCompatActivity {
     private static final String TAG = "Feed";
 
-    Bitmap mBitmap;
-    ProgressDialog progressDialog;
-    CropperView crop;
+    private Bitmap mBitmap;
+    private ProgressDialog progressDialog;
+    private CropperView crop;
     private int rotationCount = 0;
-    TextView desc;
+    private TextView desc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,6 @@ public class PostFeed extends AppCompatActivity {
         progressDialog.setTitle("Database");
 
         Intent data = getIntent();
-
         Uri file = Uri.parse(data.getStringExtra("photo"));
 
         try {
@@ -74,8 +74,8 @@ public class PostFeed extends AppCompatActivity {
 
         crop = findViewById(R.id.cropper_view);
         crop.setImageBitmap(mBitmap);
-
         desc = findViewById(R.id.desc);
+
         ImageView rotate = findViewById(R.id.rotate_button);
         rotate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,52 +89,60 @@ public class PostFeed extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progressDialog.show();
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference();
-
-                final String file_name = UUID.randomUUID() + ".jpg";
-
-                final StorageReference feedRef = storageRef.child("images/" + file_name);
-
                 mBitmap = crop.getCroppedBitmap().getBitmap();
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 mBitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                 byte[] data = baos.toByteArray();
+            }
+        });
+    }
 
-                UploadTask uploadTask = feedRef.putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+    private void uploadToFirebase(final byte [] data){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
 
-                    }
-                });
+        final String file_name = UUID.randomUUID() + ".jpg";
+        final StorageReference feedRef = storageRef.child("images/" + file_name);
 
-                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+        UploadTask uploadTask = feedRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.post_feed_con), "Caricamento foto fallito!", Snackbar.LENGTH_LONG);
+                mySnackbar.setAction("Riprova", new View.OnClickListener() {
                     @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-
-                        return feedRef.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Uri downloadUri = task.getResult();
-                            progressDialog.dismiss();
-                            sendUri(downloadUri, file_name);
-                        } else {
-                        }
+                    public void onClick(View v) {
+                        uploadToFirebase(data);
                     }
                 });
+                mySnackbar.show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.post_feed_con), "Caricamento avvenuto con successo!", Snackbar.LENGTH_SHORT);
+                mySnackbar.show();
+            }
+        });
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+
+                return feedRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    progressDialog.dismiss();
+                    sendUri(downloadUri, file_name);
+                }
             }
         });
     }

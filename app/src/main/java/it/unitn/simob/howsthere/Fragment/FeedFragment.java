@@ -1,6 +1,4 @@
 package it.unitn.simob.howsthere.Fragment;
-
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -72,13 +70,12 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private FeedAdapter adapter;
     private List<Feed> feedList;
     private FirebaseAuth mAuth;
-    TextView nofeed;
-    PickImageDialog dialog;
+    private TextView nofeed;
+    private PickImageDialog dialog;
 
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    FirebaseFirestore db;
-
-    String mCurrentPhotoPath;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private FirebaseFirestore db;
+    private String mCurrentPhotoPath;
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int GALLERY_INTENT = 25;

@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        app:cardElevation="6dp">
+        app:cardElevation="6dp"
+        style="?attr/cardStyle">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,8 +64,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/buttongrey" />
-
+                android:background="@color/divider" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

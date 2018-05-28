@@ -50,7 +50,7 @@ public class UserFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
-        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentManager manager = getChildFragmentManager();
         FragmentTransaction transaction;
         transaction=manager.beginTransaction();
         transaction.add(R.id.settings, SettingsFragment.newInstance());
@@ -60,37 +60,6 @@ public class UserFragment extends Fragment {
         updateUI(currentUser);
 
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            if (resultCode == RESULT_OK) {
-                showSnackbar("Loggato!");
-                return;
-            } else {
-                if (response == null) {
-                    showSnackbar("Cancellato");
-                    return;
-                }
-
-                if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    showSnackbar("No network");
-                    return;
-                }
-
-                showSnackbar("No network");
-                Log.e("ERRORACT", "Sign-in error: ", response.getError());
-            }
-        }
-    }
-
-    private void showSnackbar(String string){
-        Toast.makeText(this.getContext(), string, Toast.LENGTH_LONG);
     }
 
     private void updateUI(final FirebaseUser user){

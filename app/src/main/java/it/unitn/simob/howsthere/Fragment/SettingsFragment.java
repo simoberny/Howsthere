@@ -4,7 +4,10 @@ package it.unitn.simob.howsthere.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v14.preference.SwitchPreference;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
@@ -14,15 +17,18 @@ import android.support.v7.preference.PreferenceManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
+
+import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener{
+public class SettingsFragment extends PreferenceFragmentCompat{
     private FirebaseAuth mAuth;
     FirebaseUser user;
-    SharedPreferences prefG;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -33,17 +39,48 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
 
-        prefG = getActivity().getPreferences(Context.MODE_PRIVATE);
-
-        PreferenceManager.getDefaultSharedPreferences(this.getContext()).registerOnSharedPreferenceChangeListener(this);
-
         addPreferencesFromResource(R.xml.pref_general);
+
+        final SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
+
+        CheckBoxPreference nightmode = (CheckBoxPreference) findPreference("night_mode");
+        nightmode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putBoolean("modify", true);
+                if ((Boolean) newValue) {
+                    editor.putInt("night_mode", AppCompatDelegate.MODE_NIGHT_YES);
+                    editor.apply();
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    ((MainActivity) getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    editor.putInt("night_mode", AppCompatDelegate.MODE_NIGHT_NO);
+                    editor.apply();
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    ((MainActivity) getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                }
+                ((MainActivity) getActivity()).getDelegate().applyDayNight();
+                ((MainActivity) getActivity()).recreate();
+                return true;
+            }
+        });
+
+        ListPreference maps = (ListPreference) findPreference("maps_type");
+        maps.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putInt("maps_type", Integer.parseInt(newValue.toString()));
+                editor.apply();
+                return true;
+            }
+        });
 
         user = mAuth.getCurrentUser();
     }
@@ -51,35 +88,4 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getPreferenceScreen()
-                .getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        getPreferenceScreen()
-                .getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        //Gestire i cambi di impostazioni
-        /*if (key.equals("pref_name")) {
-            Preference pref = findPreference(key);
-            pref.setSummary(sharedPreferences.getString(key, (user != null) ? user.getDisplayName() : "Non loggato!"));
-        }else if(key.equals("maps_type")){
-            ListPreference pref = (ListPreference) findPreference(key);
-            pref.setValue(sharedPreferences.getString(key, "-1"));
-        }*/
-
-    }
-
-
 }
