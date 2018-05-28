@@ -20,13 +20,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@android:color/white"
+                android:background="@color/background"
                 android:minHeight="?attr/actionBarSize"
                 android:padding="3dp"
                 android:theme="?attr/actionBarTheme"
                 app:title="History"
-                app:titleTextColor="@color/colorPrimary" />
-
+                app:titleTextColor="@color/title_nobar" />
         </LinearLayout>
 
         <ListView

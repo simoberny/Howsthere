@@ -1,18 +1,25 @@
 package it.unitn.simob.howsthere.Fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
 
 import java.util.Arrays;
 
 import it.unitn.simob.howsthere.R;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,6 +61,37 @@ public class UnLoggedFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            if (resultCode == RESULT_OK) {
+                showSnackbar("Login avvenuto con successo!");
+                return;
+            } else {
+                if (response == null) {
+                    showSnackbar("Login fallito!");
+                    return;
+                }
+
+                if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    showSnackbar("Rete internet non disponibile!");
+                    return;
+                }
+
+                showSnackbar("No network");
+                Log.e("ERRORACT", "Sign-in error: ", response.getError());
+            }
+        }
+    }
+
+    private void showSnackbar(String string){
+        Toast.makeText(this.getContext(), string, Toast.LENGTH_LONG);
     }
 
 }

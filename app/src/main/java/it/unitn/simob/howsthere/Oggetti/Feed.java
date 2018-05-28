@@ -11,12 +11,9 @@ import java.util.List;
  * Classe per la gestione dei feed, poi andrà completata con il database usando le Room
  */
 public class Feed {
-    private String ID;
-    private String uid;
-    private String name, location, imageUrl, panoramaID, timeStamp, descrizione;
+    private String ID, uid, name, location, imageUrl, panoramaID, timeStamp, descrizione, file_name;
     private Integer likes;
     private List<String> likes_id;
-    private String file_name;
 
     public Feed(){}
 

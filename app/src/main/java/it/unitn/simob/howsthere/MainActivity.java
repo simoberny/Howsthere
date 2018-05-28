@@ -1,5 +1,7 @@
 package it.unitn.simob.howsthere;
 
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -7,6 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 
 import it.unitn.simob.howsthere.Fragment.FeedFragment;
@@ -18,6 +21,16 @@ import it.unitn.simob.howsthere.Fragment.UserProfile;
 public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("SettingsPref", 0);
+        SharedPreferences.Editor editor = pref.edit();
+        Integer night_mode = pref.getInt("night_mode", 0);
+        Boolean modify = pref.getBoolean("modify", false);
+
+        if(night_mode == 2){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -25,14 +38,14 @@ public class MainActivity extends AppCompatActivity{
         transaction.replace(R.id.frame_layout, MapsFragment.newInstance());
         transaction.commit();
 
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }*/
-
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        BottomNavigationMenuView menuView = (BottomNavigationMenuView) navigation.getChildAt(0);
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        System.out.println("BOOLEAN: " + modify);
+        if(modify){
+            navigation.setSelectedItemId(R.id.navigation_user);
+            editor.remove("modify");
+            editor.commit();
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

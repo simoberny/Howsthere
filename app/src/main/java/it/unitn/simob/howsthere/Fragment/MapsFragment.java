@@ -66,14 +66,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     private int zoomLevel = 0;
     public static MapsFragment contesto;
     private Date dataSelezionata = Calendar.getInstance().getTime();
-    BottomSheetDialog dialog;
-    View dialogView;
-    Marker marker;
+    private BottomSheetDialog dialog;
+    private View dialogView;
+    private Marker marker;
+
+    private Integer maps_type = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contesto = this;
+
+        SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
+        maps_type = pref.getInt("maps_type", -1);
     }
 
     @Override
@@ -293,8 +298,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         gm = googleMap;
-        gm.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        switch(maps_type){
+            case 1:
+                gm.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+            case 0:
+                gm.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case -1:
+                gm.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                break;
+        }
+
         gm.setPadding(0, 180, 0,0);
+        gm.getUiSettings().setMapToolbarEnabled(false);
 
         MapStateManager mgr = new MapStateManager(getActivity());
         final CameraPosition position = mgr.getSavedCameraPosition();
@@ -336,7 +354,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     public void positionAndDialog(Double lat, Double lon, Marker marker){
         ln = new LatLng(lat, lon);
-
+        TextView tx = dialogView.findViewById(R.id.info_pre);
         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_red));
         Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
         List<Address> addresses = null;
@@ -348,10 +366,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                     marker.showInfoWindow();
                 }
                 citta = addresses.get(0).getLocality();
-                //Toast.makeText(getActivity(), "Città: " + addresses.get(0).getLocality(), Toast.LENGTH_LONG).show();
-                System.out.println(addresses.get(0).getLocality());
+                tx.setText("Posizione: " + citta + ", " + addresses.get(0).getCountryName());
             }else{
                 Log.d("Problema address", "Problema");
+                tx.setText("Posizione sconosciuta");
             }
         } catch (IOException e) {
             e.printStackTrace();
