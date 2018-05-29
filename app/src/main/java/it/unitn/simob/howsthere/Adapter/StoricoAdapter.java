@@ -24,7 +24,7 @@ import it.unitn.simob.howsthere.R;
 
 public class StoricoAdapter extends ArrayAdapter<Panorama>{
 
-    List<Panorama> l = null;
+    public List<Panorama> l = null;
 
     public StoricoAdapter(Context context, int textViewResourceId, List<Panorama> objects) {
         super(context, textViewResourceId, objects);
@@ -36,24 +36,28 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.singolo_storico, null);
-
+/*
         FrameLayout iv = (FrameLayout) convertView.findViewById(R.id.chiudi_container);
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.out.println("cliccato:  " + position);
-                PanoramiStorage p = new PanoramiStorage();
+                PanoramiStorage p = PanoramiStorage.panorami_storage;
                 p.delete(position);
                 l.remove(position);
                 notifyDataSetChanged();
             }
         });
+        */
 
         TextView nome_citta = (TextView) convertView.findViewById(R.id.nome_citta);
         TextView data = (TextView) convertView.findViewById(R.id.data);
+        TextView ID = (TextView) convertView.findViewById(R.id.ID);
+
         Panorama p = l.get(position);
-        nome_citta.setText(p.ID+ " ");
+        nome_citta.setText(p.citta+ " ");
         data.setText(p.data.toString());
+        ID.setText(p.ID);
 
         return convertView;
     }
