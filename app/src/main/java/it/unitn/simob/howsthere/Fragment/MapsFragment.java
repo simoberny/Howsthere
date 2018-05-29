@@ -57,10 +57,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 
 import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.views.overlay.MinimapOverlay;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
-import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -210,6 +206,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
             //inflate and create the map
             map = (org.osmdroid.views.MapView) rootview.findViewById(R.id.map);
+            /*switch(maps_type){
+                case 1:
+                    gm.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    break;
+                case 0:
+                    gm.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    break;
+                case -1:
+                    gm.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                    break;
+            }*/
             map.setTileSource(TileSourceFactory.MAPNIK);
             //todo scelta mappa
             map.setBuiltInZoomControls(true);
