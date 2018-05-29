@@ -31,6 +31,8 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -40,7 +42,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -55,8 +56,6 @@ import java.util.List;
 import java.util.Locale;
 
 import it.unitn.simob.howsthere.Data;
-import it.unitn.simob.howsthere.Oggetti.Panorama;
-import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
@@ -71,6 +70,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     private Marker marker;
 
     private Integer maps_type = -1;
+    private Integer map = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +79,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
         SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
         maps_type = pref.getInt("maps_type", -1);
+        if(isGooglePlayServicesAvailable(getContext())){
+            map = pref.getInt("map", 0);
+        }else{
+            map = 1;
+            SharedPreferences.Editor edit = pref.edit();
+            edit.putInt("map", 1);
+        }
+    }
+
+    public boolean isGooglePlayServicesAvailable(Context context){
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
+        return resultCode == ConnectionResult.SUCCESS;
     }
 
     @Override
@@ -93,8 +106,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View rootview = inflater.inflate(R.layout.fragment_maps, container, false);
-       //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
+        final View rootview = (map == 0) ? inflater.inflate(R.layout.fragment_maps, container, false) : inflater.inflate(R.layout.fragment_maps_osm, container, false);
+        //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
        dialog = new BottomSheetDialog(getActivity());
        dialogView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
        dialog.setContentView(dialogView);
@@ -143,24 +156,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             }
        });
 
-       //Carico il cerca di google
-        SupportPlaceAutocompleteFragment placeAutoComplete = (SupportPlaceAutocompleteFragment)  this.getChildFragmentManager().findFragmentById(R.id.place_autocomplete);
-        placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                LatLng pl = place.getLatLng();
-                goToLoc(pl, 15);
-            }
+        if (map == 0) {
+            //Carico il cerca di google
+            SupportPlaceAutocompleteFragment placeAutoComplete = (SupportPlaceAutocompleteFragment) this.getChildFragmentManager().findFragmentById(R.id.place_autocomplete);
+            placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(Place place) {
+                    LatLng pl = place.getLatLng();
+                    goToLoc(pl, 15);
+                }
 
-            @Override
-            public void onError(Status status) {
-                Log.d("MainActivity", "An error occurred: " + status);
-            }
-        });
+                @Override
+                public void onError(Status status) {
+                    Log.d("MainActivity", "An error occurred: " + status);
+                }
+            });
 
-        //Mappa di google
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+            //Mappa di google
+            SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        }
 
        return rootview;
     }

@@ -37,6 +37,16 @@
         <item>-1</item>
     </string-array>
 
+    <string name="pref_maps_op">Sorgente mappa</string>
+    <string-array name="pref_maps_op_title">
+        <item>Open Street Maps</item>
+        <item>Google Maps</item>
+    </string-array>
+    <string-array name="pref_maps_op_values">
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
 
     <!-- Traduzione schermata di login -->
 
