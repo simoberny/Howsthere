@@ -2,8 +2,12 @@ package it.unitn.simob.howsthere;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +27,8 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +52,9 @@ public class Risultati extends AppCompatActivity {
         System.out.println("recuperato panorama" +id);
         System.out.println("panorama NULL? " + p);
         stampaGrafico();
+        //creaImmagine();
     }
+
     void stampaGrafico(){
         List<Entry> entriesMontagne = new ArrayList<Entry>();
         List<Entry> entriesSole = new ArrayList<Entry>();
@@ -152,6 +160,7 @@ public class Risultati extends AppCompatActivity {
         chart.getXAxis().setDrawAxisLine(false);
         chart.getAxisLeft().setDrawAxisLine(false);
         chart.getXAxis().setDrawGridLines(false);
+        chart.saveToGallery("grafico",100);
         /*XAxis left = chart.getXAxis();
         //chart.getXAxis().setLabelCount(0);
         chart.getXAxis().setDrawLabels(false);
