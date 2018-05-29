@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
         <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_maps_op_title"
+            android:entryValues="@array/pref_maps_op_values"
+            android:key="map"
+            android:summary="%s"
+            android:title="Sorgente mappa" />
+        <ListPreference
             android:defaultValue="-1"
             android:entries="@array/pref_maps_list_title"
             android:entryValues="@array/pref_maps_list_values"
