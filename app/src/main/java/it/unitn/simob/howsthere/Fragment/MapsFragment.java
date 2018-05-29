@@ -144,19 +144,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
            @Override
            public void onDismiss(DialogInterface dialog) {
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
+               if (marker != null) marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
            }
        });
 
        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
            @Override
            public void onCancel(DialogInterface dialog) {
-               marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
+               if (marker != null) marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
            }
        });
 
 
-       FloatingActionButton position = (FloatingActionButton) rootview.findViewById(R.id.position);
+       final FloatingActionButton position = (FloatingActionButton) rootview.findViewById(R.id.position);
        position.setOnClickListener(new View.OnClickListener(){
            @Override
            public void onClick(View view) {
@@ -170,7 +170,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             public void onClick(View view) {
                 DialogFragment datePicker = new DatePickerFragment();
                 datePicker.show(getActivity().getSupportFragmentManager(), "Seleziona data");
-                marker.hideInfoWindow();
+                if (marker != null) marker.hideInfoWindow();
             }
        });
 
@@ -218,10 +218,29 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             mapController.setZoom(5);
             GeoPoint startPoint = new GeoPoint(45.626037, 9.322756);
             mapController.setCenter(startPoint);
-            //gps position
-            .mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mMapView);
-            this.mLocationOverlay.enableMyLocation();
-            mMapView.getOverlays().add(this.mLocationOverlay);
+
+            //posizione
+            MyLocationNewOverlay mLocationOverlay;
+            mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getActivity()),map);
+            mLocationOverlay.enableMyLocation();
+            map.getOverlays().add(mLocationOverlay);
+
+            //evento mappa
+            MapEventsReceiver mReceive = new MapEventsReceiver() {
+                @Override
+                public boolean singleTapConfirmedHelper(GeoPoint p) {
+                    //Toast.makeText(getActivity(), p.getLatitude() + " - "+p.getLongitude(), Toast.LENGTH_LONG).show();
+                    positionAndDialog(p.getLatitude(),p.getLongitude(),null);
+                    return false;
+                }
+
+                @Override
+                public boolean longPressHelper(GeoPoint p) {
+                    return false;
+                }
+            };
+            MapEventsOverlay OverlayEvents = new MapEventsOverlay(getContext(), mReceive);
+            map.getOverlays().add(OverlayEvents);
         }
 
        return rootview;
@@ -311,7 +330,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     private void goToLoc(LatLng pos, int zoom){
         ln = new LatLng(pos.latitude, pos.longitude);
         gm.clear();
-        marker = gm.addMarker(new MarkerOptions().position(ln).draggable(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray)));
+        if (marker != null) marker = gm.addMarker(new MarkerOptions().position(ln).draggable(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray)));
         gm.moveCamera(CameraUpdateFactory.newLatLng(ln));
         gm.animateCamera(CameraUpdateFactory.zoomTo(zoom));
     }
@@ -417,15 +436,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     public void positionAndDialog(Double lat, Double lon, Marker marker){
         ln = new LatLng(lat, lon);
         TextView tx = dialogView.findViewById(R.id.info_pre);
-        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_red));
+
         Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
         List<Address> addresses = null;
         try {
             addresses = gcd.getFromLocation(ln.latitude, ln.longitude, 1);
             if (addresses.size() > 0) {
                 if(addresses.get(0).getLocality() != null){
-                    marker.setTitle(addresses.get(0).getLocality());
-                    marker.showInfoWindow();
+                    if (marker != null) {
+                        marker.setTitle(addresses.get(0).getLocality());
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_red));
+                        marker.showInfoWindow();
+                    }
+
                 }
                 citta = addresses.get(0).getLocality();
                 tx.setText("Posizione: " + citta + ", " + addresses.get(0).getCountryName());
