@@ -69,11 +69,26 @@ public class HistoryFragment extends Fragment{
 
         ((MainActivity)getActivity()).setSupportActionBar(bar);
 
-        ListView r = view.findViewById(R.id.storico_lista);
-        PanoramiStorage ps = new PanoramiStorage();
-        List<Panorama> list = ps.getAllPanorama();
+        ListView r = (ListView) view.findViewById(R.id.storico_lista);
+        List<Panorama> list = PanoramiStorage.panorami_storage.getAllPanorama();
         adapter = new StoricoAdapter(view.getContext(), R.layout.singolo_storico, list);
         r.setAdapter(adapter);
+
+        r.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv: "+ parent.toString());
+
+                }
+        });
+
+        r.setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener(){
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv: "+ parent.toString());
+                return true;
+            }
+        });
+
         return view;
     }
 

@@ -1,5 +1,6 @@
 package it.unitn.simob.howsthere;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,10 +18,16 @@ import it.unitn.simob.howsthere.Fragment.HistoryFragment;
 import it.unitn.simob.howsthere.Fragment.MapsFragment;
 import it.unitn.simob.howsthere.Fragment.UserFragment;
 import it.unitn.simob.howsthere.Fragment.UserProfile;
+import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 
 public class MainActivity extends AppCompatActivity{
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        PanoramiStorage.context = this;
+        PanoramiStorage.panorami_storage = new PanoramiStorage();
+
         SharedPreferences pref = getApplicationContext().getSharedPreferences("SettingsPref", 0);
         SharedPreferences.Editor editor = pref.edit();
         Integer night_mode = pref.getInt("night_mode", 0);
