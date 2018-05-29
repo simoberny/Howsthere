@@ -71,7 +71,7 @@ public class Data extends AppCompatActivity {
         }*/
         panorama.citta = i.getStringExtra("citta");
 
-        idt = (TextView) findViewById(R.id.idt);
+        //idt = (TextView) findViewById(R.id.idt);
         //Preparo la finestra di caricamento
         progressDialog = new ProgressDialog(Data.this);
         progressDialog.setMax(100);

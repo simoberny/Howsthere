@@ -7,8 +7,14 @@
     android:animateLayoutChanges="true"
     tools:context="it.unitn.simob.howsthere.Fragment.MapsFragment">
 
-
-
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <org.osmdroid.views.MapView android:id="@+id/map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/r_touch"
         android:layout_width="match_parent"

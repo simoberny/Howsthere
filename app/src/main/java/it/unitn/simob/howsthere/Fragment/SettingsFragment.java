@@ -89,6 +89,7 @@ public class SettingsFragment extends PreferenceFragmentCompat{
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putInt("map", Integer.parseInt(newValue.toString()));
                 editor.apply();
+                //((MainActivity)getActivity()).recreate();
                 return true;
             }
         });

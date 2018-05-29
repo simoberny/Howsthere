@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity{
             navigation.setSelectedItemId(R.id.navigation_user);
             editor.remove("modify");
             editor.commit();
+        }else{
+            navigation.setSelectedItemId(R.id.navigation_home);
         }
     }
 
