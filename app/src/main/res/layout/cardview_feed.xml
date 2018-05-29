@@ -89,6 +89,19 @@
                 android:layout_marginTop="12dp"
                 android:text="" />
 
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/cardView_dots"
+                android:layout_alignTop="@+id/heart"
+                android:layout_below="@id/cardView_image"
+                android:drawableLeft="@drawable/baseline_bar_chart_24"
+                android:drawablePadding="10dp"
+                android:text="Visualizza sole"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp" />
+
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"

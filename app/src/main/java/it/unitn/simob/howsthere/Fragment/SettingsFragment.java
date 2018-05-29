@@ -82,6 +82,19 @@ public class SettingsFragment extends PreferenceFragmentCompat{
             }
         });
 
+        ListPreference sorgente_map = (ListPreference) findPreference("map");
+        sorgente_map.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putInt("map", Integer.parseInt(newValue.toString()));
+                editor.apply();
+                //((MainActivity)getActivity()).recreate();
+                return true;
+            }
+        });
+
+
         user = mAuth.getCurrentUser();
     }
 
