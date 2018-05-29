@@ -2,6 +2,7 @@ package it.unitn.simob.howsthere.Oggetti;
 
 import android.content.Context;
 import android.os.Environment;
+import android.os.Handler;
 import android.widget.Toast;
 
 import java.io.File;
@@ -16,6 +17,9 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.MIN_PRIORITY;
+import static java.lang.Thread.NORM_PRIORITY;
+
 /**
  * Created by matteo on 18/05/18.
  */
@@ -24,13 +28,13 @@ public class PanoramiStorage {
 
     public static Context context;
     public static PanoramiStorage panorami_storage;
+    Handler handler = new Handler();
+    Handler handler1 = new Handler();
 
-    private List<Panorama> Panorami = new ArrayList();
+    public List<Panorama> Panorami = new ArrayList();
 
     public Panorama getPanoramabyID(String ID) {
-        if (Panorami.size() == 0) {
-            load();
-        }
+        load();
         for (int i = 0; i < Panorami.size(); i++) {
             System.out.println("Panorami.get(i).ID: " + Panorami.get(i).ID);
             if (Panorami.get(i).ID.equals(ID)) {
@@ -41,9 +45,7 @@ public class PanoramiStorage {
     }
 
     public void delete(int posizione) {
-        if (Panorami.size() == 0) {
-            load();
-        }
+        load();
         Panorami.remove(posizione);
         save();
     }
@@ -55,30 +57,72 @@ public class PanoramiStorage {
     }
 
     public List<Panorama> getAllPanorama() {
-        if (Panorami.size() == 0) {
-            load();
-        }
+        load();
         return Panorami;
     }
 
     private void load() {
-        ObjectInput in;
-        try {
-            File directory = new File(context.getFilesDir() + File.separator + "panorami");
-            directory.mkdirs();
-            File inFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
-            in = new ObjectInputStream(new FileInputStream(inFile));
-            Panorami = (List<Panorama>) in.readObject();
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        //System.err.println("llllllllllllllllllllllload: panorami size: "+Panorami.size());
+        if(Panorami.size() == 0) {
+            ObjectInput in;
+            try {
+                File directory = new File(context.getFilesDir() + File.separator + "panorami");
+                directory.mkdirs();
+                File inFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
+                in = new ObjectInputStream(new FileInputStream(inFile));
+                Panorami = (List<Panorama>) in.readObject();
+                in.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void save() {        
+    public void initial_load() {
+        //System.err.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL: chiamato initial load");
+        Runnable r = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                ObjectInput in;
+                try {
+                    File directory = new File(context.getFilesDir() + File.separator + "panorami");
+                    directory.mkdirs();
+                    File inFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
+                    in = new ObjectInputStream(new FileInputStream(inFile));
+                    Panorami = (List<Panorama>) in.readObject();
+                    in.close();
+                    System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL: Fatto initial load");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                handler1.post(new Runnable()  //If you want to update the UI, queue the code on the UI thread
+                {
+                    public void run()
+                    {
+                        //Code to update the UI
+                    }
+                });
+            }
+        };
+
+        Thread t = new Thread(r);
+        t.setPriority(MIN_PRIORITY);
+        t.start();
+    }
+
+    private void save() {
+        Runnable r = new Runnable()
+        {
+            @Override
+            public void run()
+            {
                 try {
                     File outFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
-                    System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC file dir:  "+context.getFilesDir());
+                    //System.err.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC file dir:  "+context.getFilesDir());
                     ObjectOutput out = new ObjectOutputStream(new FileOutputStream(outFile));
                     out.writeObject(Panorami);
                     out.close();
@@ -86,7 +130,18 @@ public class PanoramiStorage {
                     e.printStackTrace();
                 }
 
+                handler.post(new Runnable()  //If you want to update the UI, queue the code on the UI thread
+                {
+                    public void run()
+                    {
+                        //Code to update the UI
+                    }
+                });
+            }
+        };
 
+        Thread t = new Thread(r);
+        t.start();
     }
 }
 
