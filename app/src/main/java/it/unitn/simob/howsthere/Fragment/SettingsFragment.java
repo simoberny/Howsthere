@@ -3,6 +3,7 @@ package it.unitn.simob.howsthere.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v14.preference.SwitchPreference;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 
+import io.grpc.internal.SharedResourceHolder;
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.R;
 
@@ -47,6 +49,14 @@ public class SettingsFragment extends PreferenceFragmentCompat{
         addPreferencesFromResource(R.xml.pref_general);
 
         final SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
+        Integer map_type = pref.getInt("map", 0);
+
+        if(map_type == 1){
+            ListPreference maps = (ListPreference) findPreference("maps_type");
+            maps.setEntries(R.array.pref_maps_list_title_osm);
+            maps.setEntryValues(R.array.pref_maps_list_values_osm);
+            maps.setValue(String.valueOf(R.string.pref_maps_type_osm));
+        }
 
         CheckBoxPreference nightmode = (CheckBoxPreference) findPreference("night_mode");
         nightmode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -86,8 +96,13 @@ public class SettingsFragment extends PreferenceFragmentCompat{
         sorgente_map.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Integer map_source = Integer.parseInt(newValue.toString());
+                ListPreference maps = (ListPreference) findPreference("maps_type");
+                maps.setEntries(R.array.pref_maps_list_title_osm);
+                maps.setEntryValues(R.array.pref_maps_list_values_osm);
+                maps.setValue(String.valueOf(R.string.pref_maps_type_osm));
                 SharedPreferences.Editor editor = pref.edit();
-                editor.putInt("map", Integer.parseInt(newValue.toString()));
+                editor.putInt("map", map_source);
                 editor.apply();
                 //((MainActivity)getActivity()).recreate();
                 return true;
