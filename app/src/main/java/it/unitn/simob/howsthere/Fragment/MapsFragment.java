@@ -14,6 +14,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
@@ -40,6 +41,7 @@ import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragmen
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -47,6 +49,20 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.events.MapEventsReceiver;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+
+import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.MinimapOverlay;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -70,8 +86,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     private Marker marker;
 
     private Integer maps_type = -1;
-    private Integer map = 0;
+    private Integer map_id = 0;
 
+    //open street map
+    org.osmdroid.views.MapView map = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,12 +98,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
         maps_type = pref.getInt("maps_type", -1);
         if(isGooglePlayServicesAvailable(getContext())){
-            map = pref.getInt("map", 0);
+            map_id = pref.getInt("map", 0);
         }else{
-            map = 1;
+            map_id = 1;
             SharedPreferences.Editor edit = pref.edit();
             edit.putInt("map", 1);
         }
+
+        Context ctx = getActivity().getApplicationContext();
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+    }
+    public void onResume(){
+        super.onResume();
+        if (map != null) map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    public void onPause(){
+        super.onPause();
+        if (map != null) map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
     public boolean isGooglePlayServicesAvailable(Context context){
@@ -106,7 +136,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final View rootview = (map == 0) ? inflater.inflate(R.layout.fragment_maps, container, false) : inflater.inflate(R.layout.fragment_maps_osm, container, false);
+        final View rootview = (map_id == 0) ? inflater.inflate(R.layout.fragment_maps, container, false) : inflater.inflate(R.layout.fragment_maps_osm, container, false);
         //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
        dialog = new BottomSheetDialog(getActivity());
        dialogView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
@@ -124,6 +154,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
            }
        });
+
 
        FloatingActionButton position = (FloatingActionButton) rootview.findViewById(R.id.position);
        position.setOnClickListener(new View.OnClickListener(){
@@ -156,7 +187,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             }
        });
 
-        if (map == 0) {
+        if (map_id == 0) {
             //Carico il cerca di google
             SupportPlaceAutocompleteFragment placeAutoComplete = (SupportPlaceAutocompleteFragment) this.getChildFragmentManager().findFragmentById(R.id.place_autocomplete);
             placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -175,6 +206,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             //Mappa di google
             SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
+        }else{  //mappa open source per chi non ha i google play services
+
+            //inflate and create the map
+            map = (org.osmdroid.views.MapView) rootview.findViewById(R.id.map);
+            map.setTileSource(TileSourceFactory.MAPNIK);
+            //todo scelta mappa
+            map.setBuiltInZoomControls(true);
+            map.setMultiTouchControls(true);
+            IMapController mapController = map.getController();
+            mapController.setZoom(5);
+            GeoPoint startPoint = new GeoPoint(45.626037, 9.322756);
+            mapController.setCenter(startPoint);
+            //gps position
+            .mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context),mMapView);
+            this.mLocationOverlay.enableMyLocation();
+            mMapView.getOverlays().add(this.mLocationOverlay);
         }
 
        return rootview;

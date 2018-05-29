@@ -160,7 +160,8 @@ public class Risultati extends AppCompatActivity {
         chart.getXAxis().setDrawAxisLine(false);
         chart.getAxisLeft().setDrawAxisLine(false);
         chart.getXAxis().setDrawGridLines(false);
-        chart.saveToGallery("grafico",100);
+
+        //chart.saveToGallery("grafico.jpeg",100);
         /*XAxis left = chart.getXAxis();
         //chart.getXAxis().setLabelCount(0);
         chart.getXAxis().setDrawLabels(false);
