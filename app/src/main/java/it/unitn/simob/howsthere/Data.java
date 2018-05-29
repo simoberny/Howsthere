@@ -403,7 +403,7 @@ public class Data extends AppCompatActivity {
         progressDialog.setTitle("Salvo i dati...");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         //salvo i dati del panorama con panoramiStorage
-        PanoramiStorage p = new PanoramiStorage();
+        PanoramiStorage p = PanoramiStorage.panorami_storage;
         p.addPanorama(panorama);
         progressDialog.dismiss();
 

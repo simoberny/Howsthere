@@ -41,7 +41,7 @@ public class Risultati extends AppCompatActivity {
         Intent i = getIntent();
         String id = i.getStringExtra("ID");
         System.out.println("RISULTATI id: " +id);
-        PanoramiStorage panoramiStorage = new PanoramiStorage();
+        PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
         p = panoramiStorage.getPanoramabyID(id);
         System.out.println("recuperato panorama" +id);
         System.out.println("panorama NULL? " + p);

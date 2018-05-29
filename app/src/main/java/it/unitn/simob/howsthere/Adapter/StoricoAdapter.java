@@ -37,15 +37,6 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.singolo_storico, null);
 
-        convertView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                parent.getChildAt(position).getBackground().setAlpha(50);
-                return true;
-            }
-
-        });
-
         FrameLayout iv = (FrameLayout) convertView.findViewById(R.id.chiudi_container);
         iv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +48,6 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
                 notifyDataSetChanged();
             }
         });
-
 
         TextView nome_citta = (TextView) convertView.findViewById(R.id.nome_citta);
         TextView data = (TextView) convertView.findViewById(R.id.data);
