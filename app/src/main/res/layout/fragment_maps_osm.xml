@@ -7,6 +7,8 @@
     android:animateLayoutChanges="true"
     tools:context="it.unitn.simob.howsthere.Fragment.MapsFragment">
 
+
+
     <RelativeLayout
         android:id="@+id/r_touch"
         android:layout_width="match_parent"
