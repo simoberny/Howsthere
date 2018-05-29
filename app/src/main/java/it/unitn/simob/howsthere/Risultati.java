@@ -151,6 +151,7 @@ public class Risultati extends AppCompatActivity {
         chart.getXAxis().setDrawLabels(false);
         chart.getXAxis().setDrawAxisLine(false);
         chart.getAxisLeft().setDrawAxisLine(false);
+        chart.getXAxis().setDrawGridLines(false);
         /*XAxis left = chart.getXAxis();
         //chart.getXAxis().setLabelCount(0);
         chart.getXAxis().setDrawLabels(false);
