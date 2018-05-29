@@ -12,6 +12,7 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -102,8 +103,9 @@ public class Risultati extends AppCompatActivity {
         dataSetMontagne.setDrawCircles(false);
         dataSetMontagne.setCircleColor(Color.BLACK);
         dataSetMontagne.setDrawCircleHole(false);
-        dataSetMontagne.setDrawValues(true);
+        dataSetMontagne.setDrawValues(false);
         dataSetMontagne.setDrawFilled(true);
+
         Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
         dataSetMontagne.setFillDrawable(drawable);
 
@@ -115,7 +117,7 @@ public class Risultati extends AppCompatActivity {
         dataSetSole.setDrawCircles(true);
         dataSetSole.setCircleColor(Color.YELLOW);
         dataSetSole.setDrawCircleHole(false);
-        dataSetSole.setDrawValues(true);
+        dataSetSole.setDrawValues(false);
         dataSetSole.setDrawFilled(false);
 
         //proprietà grafiche Luna
@@ -130,33 +132,36 @@ public class Risultati extends AppCompatActivity {
         dataSetLuna.setDrawFilled(false);
 
         int[] coloricerchiLuna = new int[64]; //un colore per ogni dato sul grafico (24 al giorno)
-
         for(int i = 0; i<24; i++){
-
             coloricerchiLuna[i] = Color.argb(65,88, 88, 88);
         }
         for(int i = 24; i<48; i++){
-
             coloricerchiLuna[i] = Color.GRAY;
         }
         for(int i = 48; i<64; i++){
-
             coloricerchiLuna[i] = Color.argb(65,88, 88, 88);
         }
         dataSetLuna.setCircleColors(coloricerchiLuna);
 
         chart.getDescription().setText("Profilo montagne con sole e luna");
-
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
         lineData.addDataSet(dataSetSole);
         lineData.addDataSet(dataSetLuna);
-        XAxis left = chart.getXAxis();
-        left.setGranularity(1f);
-        chart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+        chart.getXAxis().setDrawLabels(false);
+        chart.getXAxis().setDrawAxisLine(false);
+        chart.getAxisLeft().setDrawAxisLine(false);
+        /*XAxis left = chart.getXAxis();
+        //chart.getXAxis().setLabelCount(0);
+        chart.getXAxis().setDrawLabels(false);
+        chart.getXAxis().setDrawAxisLine(false);
+        YAxis yAxis = chart.getAxisLeft(); // Show left y-axis line
+        yAxis.setDrawAxisLine(false);*/
+
+        /*chart.getXAxis().setValueFormatter(new IAxisValueFormatter() { //tolto perchè vedevi i valori solo zoomando
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if (value == 0 || value == 360) {
+                if (value == 1 || value == 359) {
                     return "N"; // here you can map your values or pass it as empty string
                 }else if (value == 90) {
                     return "E"; // here you can map your values or pass it as empty string
@@ -168,7 +173,7 @@ public class Risultati extends AppCompatActivity {
                     return "";
                 }
             }
-        });
+        });*/
 
         Legend l = chart.getLegend();
         l.setFormSize(10f); // set the size of the legend forms/shapes
@@ -186,7 +191,7 @@ public class Risultati extends AppCompatActivity {
         //l.setCustom(entrinseo);
 
         chart.setData(lineData);
-        chart.animateX(2500);
+        chart.animateX(3500);
         chart.invalidate();
 
 
