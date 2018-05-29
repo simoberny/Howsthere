@@ -44,7 +44,6 @@ import retrofit2.http.Query;
 public class Data extends AppCompatActivity {
     private String gPeak = null;
     private Retrofit retrofit = null;
-    private TextView idt = null;
     private ProgressDialog progressDialog;
     private Integer n_tentativi = 5;
     private Integer richiestaID = 0;
@@ -71,7 +70,6 @@ public class Data extends AppCompatActivity {
         }*/
         panorama.citta = i.getStringExtra("citta");
 
-        //idt = (TextView) findViewById(R.id.idt);
         //Preparo la finestra di caricamento
         progressDialog = new ProgressDialog(Data.this);
         progressDialog.setMax(100);
@@ -89,7 +87,6 @@ public class Data extends AppCompatActivity {
             String savedPeak = savedInstanceState.getString("peak");
             panorama.ID = savedID;
             gPeak = savedPeak;
-            idt.setText(savedID);
             setPeak(savedPeak);
         }else{
             callsAPI(panorama.lat, panorama.lon);
@@ -140,12 +137,6 @@ public class Data extends AppCompatActivity {
                         if(id != null && id != "") {
                             panorama.ID = id;
                             System.out.print("ID: " + panorama.ID);
-                            idt.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    idt.setText(panorama.ID);
-                                }
-                            });
                             progressDialog.dismiss();
                             checkStatus(panorama.ID); //Ottenuto l'ID controllo lo stato della generazione del panorama
                         }else{
