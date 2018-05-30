@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:windowBackground">@color/real_background</item>
-        <item name="android:colorBackground">@color/real_background</item>
+        <item name="android:colorBackground">@color/background</item>
     </style>
 
 
@@ -24,8 +24,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="android:windowBackground">@color/real_background</item>
-        <item name="android:colorBackground">@color/real_background</item>
-        <item name="cardStyle">@color/real_background</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="cardStyle">@color/background</item>
     </style>
 
     <style name="AppThemeNoBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
