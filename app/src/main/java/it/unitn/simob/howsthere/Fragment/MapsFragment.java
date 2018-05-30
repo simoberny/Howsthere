@@ -165,7 +165,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                    map.getController().setCenter(osm_marker.getPosition());
                    osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
                }
-
            }
        });
 
@@ -180,7 +179,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                }
            }
        });
-
 
        final FloatingActionButton position = (FloatingActionButton) rootview.findViewById(R.id.position);
        position.setOnClickListener(new View.OnClickListener(){
@@ -395,7 +393,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {}
     }
-
     /**
      * Funzione da data la copia di posizionamento e lo zoom della mappa muove la mappa in quella direzione
      * Può essere chiamata ad esempio quando si chiede la propria posizione per posizionare la mappa

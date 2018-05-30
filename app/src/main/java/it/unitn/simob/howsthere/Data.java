@@ -408,6 +408,7 @@ public class Data extends AppCompatActivity {
         Intent i = new Intent(this,Risultati.class);
         i.putExtra("ID", panorama.ID);
         startActivity(i);
+        finish();
 
         //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Data");
 

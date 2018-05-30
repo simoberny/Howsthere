@@ -1,6 +1,7 @@
 package it.unitn.simob.howsthere;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 
 public class MainActivity extends AppCompatActivity{
 
+    private FeedFragment ff;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -38,9 +41,13 @@ public class MainActivity extends AppCompatActivity{
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent i = getIntent();
+        Bundle extra = i.getExtras();
+
+        ff = FeedFragment.newInstance(extra);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, MapsFragment.newInstance());
@@ -48,11 +55,13 @@ public class MainActivity extends AppCompatActivity{
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        System.out.println("BOOLEAN: " + modify);
+
         if(modify){
             navigation.setSelectedItemId(R.id.navigation_user);
             editor.remove("modify");
             editor.commit();
+        }else if(extra != null){
+            navigation.setSelectedItemId(R.id.navigation_feed);
         }else{
             navigation.setSelectedItemId(R.id.navigation_home);
         }
@@ -71,7 +80,7 @@ public class MainActivity extends AppCompatActivity{
                     selectedFragment = HistoryFragment.newInstance();
                     break;
                 case R.id.navigation_feed:
-                    selectedFragment = FeedFragment.newInstance();
+                    selectedFragment = ff;
                     break;
                 case R.id.navigation_user:
                     selectedFragment = UserProfile.newInstance();

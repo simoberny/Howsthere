@@ -17,7 +17,7 @@ public class Feed {
 
     public Feed(){}
 
-    public Feed(String UID, String name, String location, String imageUrl, String timeStamp, String filename, String descrizione) {
+    public Feed(String UID, String name, String location, String imageUrl, String timeStamp, String filename, String descrizione, String pan_id) {
         this.uid = UID;
         this.name = name;
         this.location = location;
@@ -27,6 +27,7 @@ public class Feed {
         this.likes_id = new ArrayList<String>();
         this.file_name = filename;
         this.descrizione = descrizione;
+        this.panoramaID = pan_id;
     }
 
     public String getName() {

@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -37,6 +39,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import it.unitn.simob.howsthere.Oggetti.Feed;
@@ -51,6 +55,10 @@ public class PostFeed extends AppCompatActivity {
     private CropperView crop;
     private int rotationCount = 0;
     private TextView desc;
+    private String id;
+    private double lat;
+    private double lon;
+    private String posizione;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +70,18 @@ public class PostFeed extends AppCompatActivity {
         progressDialog.setTitle("Database");
 
         Intent data = getIntent();
+        id = data.getStringExtra("ID");
+
+        lat = data.getDoubleExtra("lat", 0.0);
+        lon = data.getDoubleExtra("lon", 0.0);
+
+        posizione = getLocation(lat, lon);
+
+        TextView posizione_text = findViewById(R.id.getposizione);
+        posizione_text.setText(posizione);
+
+        System.out.println(posizione);
+
         Uri file = Uri.parse(data.getStringExtra("photo"));
 
         try {
@@ -94,6 +114,7 @@ public class PostFeed extends AppCompatActivity {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 mBitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
                 byte[] data = baos.toByteArray();
+                uploadToFirebase(data);
             }
         });
 
@@ -157,6 +178,9 @@ public class PostFeed extends AppCompatActivity {
 
     private void sendUri(Uri down, String filename){
         Intent returnIntent = new Intent();
+
+        returnIntent.putExtra("posizione", posizione);
+        returnIntent.putExtra("panoramaid", id);
         returnIntent.putExtra("filename", filename);
         returnIntent.putExtra("uri", down.toString());
         returnIntent.putExtra("descrizione", desc.getText().toString());
@@ -195,6 +219,28 @@ public class PostFeed extends AppCompatActivity {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    private String getLocation(double lat, double lon){
+        Geocoder gcd = new Geocoder(this, Locale.getDefault());
+        List<Address> addresses = null;
+        String citta = "";
+        try {
+            addresses = gcd.getFromLocation(lat, lon, 1);
+            if (addresses.size() > 0) {
+                if(addresses.get(0).getLocality() != null){
+                    citta = addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName();
+                }else{
+                    citta = lat + ", " + lon;
+                }
+            }else{
+                citta = lat + ", " + lon;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return citta;
     }
 
 }

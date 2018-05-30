@@ -1,12 +1,14 @@
 package it.unitn.simob.howsthere.Fragment;
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -69,13 +71,16 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private LinearLayoutManager mLayoutManager;
     private FeedAdapter adapter;
     private List<Feed> feedList;
-    private FirebaseAuth mAuth;
+    private static FirebaseAuth mAuth;
     private TextView nofeed;
     private PickImageDialog dialog;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private FirebaseFirestore db;
+    private static FirebaseFirestore db;
     private String mCurrentPhotoPath;
+    FirebaseUser currentUser;
+
+    Boolean _areLecturesLoaded =false;
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int GALLERY_INTENT = 25;
@@ -83,15 +88,33 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     public FeedFragment() { }
 
-    public static FeedFragment newInstance() {
+    public static FeedFragment newInstance(Bundle bun) {
         FeedFragment fragment = new FeedFragment();
+        Bundle args = bun;
+        fragment.setArguments(args);
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = FirebaseFirestore.getInstance();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        Bundle extras = getArguments();
+        if(extras != null){
+            String pan_id = (String) extras.get("panoramaid");
+            String posizione = (String) extras.get("posizione");
+            String uri = (String) extras.get("uri");
+            String filename = (String) extras.get("filename");
+            String descrizione = (String) extras.get("descrizione");
+
+            feed_to_db(uri, filename, descrizione, pan_id, posizione);
+        }
     }
 
     @Override
@@ -99,9 +122,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
+        currentUser = mAuth.getCurrentUser();
         feedList = new ArrayList<Feed>();
 
         FloatingActionButton add_feed = view.findViewById(R.id.add_feed);
@@ -242,39 +263,46 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 if(resultCode == RESULT_OK){
                     dialog.dismiss();
                     Bundle extras = data.getExtras();
+
+                    String pan_id = (String) extras.get("panoramaid");
+                    String posizione = (String) extras.get("posizione");
                     String uri = (String) extras.get("uri");
                     String filename = (String) extras.get("filename");
                     String descrizione = (String) extras.get("descrizione");
 
-                    feed_to_db(uri, filename, descrizione);
+                    feed_to_db(uri, filename, descrizione, pan_id, posizione);
                 }
         }
     }
 
-    private void feed_to_db(String uri, String filename, String descrizione){
+    private void feed_to_db(String uri, String filename, String descrizione, String pan_id, String posizione) {
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 
-        final Feed ne = new Feed(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getDisplayName(), "A caso", uri , dateFormat.format(date), filename, descrizione);
         mSwipeRefreshLayout.setRefreshing(true);
 
+        final Feed ne = new Feed(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getDisplayName(), posizione, uri, dateFormat.format(date), filename, descrizione, pan_id);
+
+        final SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("MaxPhotoRef", 0);
+        final SharedPreferences.Editor editor = pref.edit();
+
         db.collection("feeds")
-            .add(ne)
-            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    ne.setID(documentReference.getId());
-                    feedList.add(0, ne);
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    adapter.notifyDataSetChanged();
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w("FAILUREWRITE+", "Error adding document", e);
-                }
-            });
+                .add(ne)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        ne.setID(documentReference.getId());
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        editor.putInt("day", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+                        editor.putInt("max_daily", pref.getInt("max_daily", 0) + 1);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("FAILUREWRITE+", "Error adding document", e);
+                    }
+                });
     }
 
     @Override
