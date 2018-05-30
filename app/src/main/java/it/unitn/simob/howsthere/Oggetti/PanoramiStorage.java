@@ -50,9 +50,21 @@ public class PanoramiStorage {
         save();
     }
 
+    public void delete_by_id(String id){
+        load();
+        for (int i = 0; i < Panorami.size(); i++) {
+            System.out.println("Panorami.get(i).ID: " + Panorami.get(i).ID);
+            if (Panorami.get(i).ID.equals(id)) {
+                Panorami.remove(i);
+                save();
+                break;
+            }
+        }
+    }
+
     public void addPanorama(Panorama p) {
         load();
-        Panorami.add(p);
+        Panorami.add(0,p);
         save();
     }
 
@@ -141,75 +153,9 @@ public class PanoramiStorage {
         };
 
         Thread t = new Thread(r);
+        t.setPriority(MIN_PRIORITY);
         t.start();
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-    /*
-    public static Context context;
-
-    private List<Panorama> Panorami = new ArrayList();
-
-    public Panorama getPanoramabyID(String ID){
-        load();
-        for(int i=0;i<Panorami.size();i++){
-            System.out.println("Panorami.get(i).ID: "+ Panorami.get(i).ID);
-            if(Panorami.get(i).ID.equals(ID)){
-                return Panorami.get(i);
-            }
-        }
-        return null;
-    }
-
-    public void delete(int posizione){
-        load();
-        Panorami.remove(posizione);
-        save();
-    }
-
-    public void addPanorama(Panorama p){
-        load();
-        Panorami.add(p);
-        save();
-    }
-
-    public List<Panorama> getAllPanorama(){
-        load();
-        return Panorami;
-    }
-
-    private void load(){
-        ObjectInput in;
-        try {
-            File directory = new File(context.getFilesDir()+File.separator+"panorami");
-            directory.mkdirs();
-            File inFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
-            in = new ObjectInputStream(new FileInputStream(inFile));
-            Panorami=(List<Panorama>) in.readObject();
-            in.close();
-        } catch (Exception e) {e.printStackTrace();}
-    }
-
-    private void save(){
-        try {
-            File outFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
-            //System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC file dir:  "+context.getFilesDir());
-            ObjectOutput out = new ObjectOutputStream(new FileOutputStream(outFile));
-            out.writeObject(Panorami);
-            out.close();
-        }catch (Exception e) {e.printStackTrace();}
-    }
-}
-    */
 

@@ -14,11 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 
+import java.util.Date;
+
 import it.unitn.simob.howsthere.Fragment.FeedFragment;
 import it.unitn.simob.howsthere.Fragment.HistoryFragment;
 import it.unitn.simob.howsthere.Fragment.MapsFragment;
 import it.unitn.simob.howsthere.Fragment.UserFragment;
 import it.unitn.simob.howsthere.Fragment.UserProfile;
+import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 
 public class MainActivity extends AppCompatActivity{
@@ -31,6 +34,14 @@ public class MainActivity extends AppCompatActivity{
         PanoramiStorage.context = this;
         PanoramiStorage.panorami_storage = new PanoramiStorage();
         PanoramiStorage.panorami_storage.initial_load();
+
+        for(int i=0; i<0;i++){
+            Panorama p = new Panorama();
+            p.data = new Date();
+            p.citta = "ciao"+ "  "+i;
+            p.ID = ""+i;
+            PanoramiStorage.panorami_storage.addPanorama(p);
+        }
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("SettingsPref", 0);
         SharedPreferences.Editor editor = pref.edit();
