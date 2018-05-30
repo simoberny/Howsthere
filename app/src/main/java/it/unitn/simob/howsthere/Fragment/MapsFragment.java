@@ -161,8 +161,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
            public void onDismiss(DialogInterface dialog) {
                if (map_id == 0)
                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
-               else
+               else{
+                   map.getController().setCenter(osm_marker.getPosition());
                    osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
+               }
+
            }
        });
 
@@ -171,8 +174,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
            public void onCancel(DialogInterface dialog) {
                if (map_id == 0)
                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
-               else
+               else {
+                   map.getController().setCenter(osm_marker.getPosition());
                    osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
+               }
            }
        });
 
