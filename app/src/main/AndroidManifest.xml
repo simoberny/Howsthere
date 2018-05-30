@@ -67,6 +67,9 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_data"
             android:theme="@style/AppThemeNoBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".PostFeed"

@@ -1,6 +1,7 @@
 package it.unitn.simob.howsthere;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +48,7 @@ public class Data extends AppCompatActivity {
     private String gPeak = null;
     private Retrofit retrofit = null;
     private ProgressDialog progressDialog;
-    private Integer n_tentativi = 5;
+    private Integer n_tentativi = 4; //+1 iniziale
     private Integer richiestaID = 0;
     private Integer richiestaStato = 0;
     private Integer richiestaDatiMontagne = 0;
@@ -104,10 +107,11 @@ public class Data extends AppCompatActivity {
         outState.putCharSequence("peak", gPeak);
     }
 
+
     /**
      * Interfacce per le richieste GET
      */
-    public interface HeyWhatsID {
+    public interface HeyWhatsID { // http://www.heywhatsthat.com/api/query?src=hows&lat=45.627107&lon= 9.315373
         @GET("api/query?src=hows")
         Call<ResponseBody> getID(@Query("lat") Double lat, @Query("lon") Double lon);
     }
@@ -138,26 +142,48 @@ public class Data extends AppCompatActivity {
                             panorama.ID = id;
                             System.out.print("ID: " + panorama.ID);
                             progressDialog.dismiss();
-                            checkStatus(panorama.ID); //Ottenuto l'ID controllo lo stato della generazione del panorama
+                            TextView tx = (TextView)findViewById(R.id.idCheck); //recupero e rendo visibile la conferma ricezione ID
+                            tx.setVisibility(TextView.VISIBLE);
+                            checkStatus(); //Ottenuto l'ID controllo lo stato della generazione del panorama
                         }else{
-                            Toast.makeText(getApplicationContext(), "ID vuoto!", Toast.LENGTH_SHORT).show();
-                            richiediID();
+                            progressDialog.dismiss();
+                            System.out.println("id vuoto: Le posizioni consentite includono latitudini da 60N fino a 54S (disponibile anche parte dell' alaska). Il mare è disponibile solo vicino alle coste.");
+                            LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
+                            ln.setVisibility(TextView.VISIBLE);
+                            TextView tx = (TextView)findViewById(R.id.idErrTitolo);
+                            tx.setText("Posizione scelta non valida!");
+                            TextView tx1 = (TextView)findViewById(R.id.idErrDescrizione);
+                            tx1.setText("Le posizioni consentite includono latitudini da 60N fino a 54S (inclusa parte dell' alaska). Il mare è disponibile solo vicino alle coste.");
+                            Button bt = (Button) findViewById(R.id.idErrButton);
+                            bt.setVisibility(TextView.GONE);
+
+                            /*try {
+                                Thread.sleep(6000); // ritorno alla mappa dopo 6 secondi
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }*/
+                            /*Intent myIntent = new Intent(getApplication(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);;
+                            getApplicationContext().startActivity(myIntent);*/
                         }
                     } catch (IOException e) {
+                        System.out.println("errore generico nella lettura id");
                         e.printStackTrace();
                         richiediID();
 
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Impossibile caricare l'ID!", Toast.LENGTH_SHORT).show();
+                    System.out.println("risposta dal sito fallita");
                     richiediID();
                 }
             }
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t)                                                                                                                                                                                                         {
-                Log.d("Errore: ", t.getMessage());
-                richiediID();
-            }
+            public void onFailure(Call<ResponseBody> call, Throwable t)
+                {
+                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa: on failure");
+                    //Toast.makeText(getApplicationContext(), "Impossibile caricare l'ID! ONFAILURE", Toast.LENGTH_SHORT).show();
+                    //Log.d("Errore: ", t.getMessage());
+                    richiediID();
+                }
         });
     }
 
@@ -169,27 +195,38 @@ public class Data extends AppCompatActivity {
                 e1.printStackTrace();
             }
             callsAPI(panorama.lat, panorama.lon);
-            progressDialog.setMessage("Richiesta id panorama, tentativo n°: " + (richiestaID+1));
             richiestaID++;
+            progressDialog.setMessage("Richiesta id panorama, tentativo n°: " + (richiestaID+1));
+
         }else{
             System.out.println("ID non ottenuto, controllare la connessione");
+            LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
+            ln.setVisibility(TextView.VISIBLE);
             Snackbar.make(findViewById(R.id.dataContainerLayout), "ID non ottenuto, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    richiestaID = 0;
-                    callsAPI(panorama.lat, panorama.lon);
+                    azzeraTentativiID();
                 }
             }).show();
             progressDialog.dismiss();
         }
     }
+    public void azzeraTentativiID(View view) { //wrapper chiamato dal pulsante riprova
+        azzeraTentativiID();
+    }
+    public void azzeraTentativiID(){
+        LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout); //recupero e rendo visibile la conferma ricezione ID
+        ln.setVisibility(TextView.GONE);
+        richiestaID = 0;
+        callsAPI(panorama.lat, panorama.lon);
+    }
 
-    private void checkStatus(final String idpass){
+    private void checkStatus(){
         progressDialog.setMessage("Aspettando il panorama...");
         progressDialog.setTitle("Attesa dati Panorama");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsReady service = retrofit.create(HeyWhatsReady.class);
-        Call<ResponseBody> call = service.getStatus(idpass);
+        Call<ResponseBody> call = service.getStatus(panorama.ID);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -199,59 +236,71 @@ public class Data extends AppCompatActivity {
                         String status = response.body().string();
                         if(status.length() > 0 && status.charAt(0) == '1'){ // Se la mappa è pronta vado ad ottenere il panorama
                             progressDialog.dismiss();
-                            loadPeakData(idpass);
+                            TextView tx = (TextView)findViewById(R.id.panoramaCheck); //recupero e rendo visibile la conferma che è pronto il panorama
+                            tx.setVisibility(TextView.VISIBLE);
+                            loadPeakData();
                         }else{
-                            richiediStato(idpass);
+                            richiediStato();
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
-                        richiediStato(idpass);
+                        richiediStato();
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "La mappa non è stata generata!", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
-                    richiediStato(idpass);
+                    richiediStato();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d("Errore: ", t.getMessage());
-                richiediStato(idpass);
+                richiediStato();
 
             }
         });
     }
 
-    private void richiediStato(final String idpass){
+    private void richiediStato(){
         if (richiestaStato<n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
-            checkStatus(idpass);
-            progressDialog.setMessage("controllo se è pronto il panorama, tentativo n°: " + (richiestaStato+1));
+            checkStatus();
             richiestaStato++;
+            progressDialog.setMessage("controllo se è pronto il panorama, tentativo n°: " + (richiestaStato+1));
         }else{
             System.out.println("panorama non pronto, controllare la connessione");
+            LinearLayout ln = (LinearLayout) findViewById(R.id.prontoErrLayout);
+            ln.setVisibility(TextView.VISIBLE);
             Snackbar.make(findViewById(R.id.dataContainerLayout), "panorama non pronto, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    richiestaStato = 0;
-                    checkStatus(idpass);
+                    azzeraTentativiStato();
                 }
             }).show();
             progressDialog.dismiss();
         }
     }
+    public void azzeraTentativiStato(View view) { //wrapper chiamato dal pulsante riprova
+        azzeraTentativiStato();
+    }
+    public void azzeraTentativiStato(){
+        LinearLayout ln = (LinearLayout) findViewById(R.id.prontoErrLayout);
+        ln.setVisibility(TextView.GONE);
+        richiestaStato = 0;
+        checkStatus();
+    }
 
-    private void loadPeakData(String idpass){
+    private void loadPeakData(){
         progressDialog.setMessage("Scarico dati Montagne...");
         progressDialog.setTitle("Scaricamento e Calcolo posizione pianeti");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsPeak service = retrofit.create(HeyWhatsPeak.class);
-        Call<ResponseBody> call = service.getPeak(idpass);
+        Call<ResponseBody> call = service.getPeak(panorama.ID);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -259,43 +308,58 @@ public class Data extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     try {
                         gPeak = response.body().string();
+                        progressDialog.dismiss();
+                        TextView tx = (TextView)findViewById(R.id.panoramaDownload); //recupero e rendo visibile la conferma scaricamento dati
+                        tx.setVisibility(TextView.VISIBLE);
                         setPeak(gPeak);
                     } catch (IOException e) {
+                        richiediDatiMontagne();
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Impossibile caricare i picchi!", Toast.LENGTH_SHORT).show();
+                    richiediDatiMontagne();
                 }
                 //progressDialog.dismiss();
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d("Error", t.getMessage());
-                progressDialog.dismiss();
+                richiediDatiMontagne();
+
             }
         });
     }
-    private void richiediDatiMontagne(final String idpass){
-        if (richiestaDatiMontagne<10){ // richiedo l' id se non lì ho già fatto troppe volte
+    private void richiediDatiMontagne(){
+        if (richiestaDatiMontagne<n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
-            checkStatus(idpass);
-            progressDialog.setMessage("controllo se è pronto il panorama, tentativo n°: " + (richiestaDatiMontagne+1));
             richiestaDatiMontagne++;
+            progressDialog.setMessage("controllo se è pronto il panorama, tentativo n°: " + (richiestaDatiMontagne+1));
+            loadPeakData();
         }else{
             System.out.println("panorama non pronto, controllare la connessione");
+            LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
+            ln.setVisibility(TextView.VISIBLE);
             Snackbar.make(findViewById(R.id.dataContainerLayout), "dati non ricevuti, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    richiestaDatiMontagne = 0;
-                    checkStatus(idpass);
+                    azzeraTentativiScaricamentoPanorama();
                 }
             }).show();
             progressDialog.dismiss();
         }
+    }
+    public void azzeraTentativiScaricamentoPanorama(){
+        LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
+        ln.setVisibility(TextView.GONE);
+        richiestaDatiMontagne = 0;
+        loadPeakData();
+    }
+    public void azzeraTentativiScaricamentoPanorama(View view) { //wrapper chiamato dal pulsante riprova
+        azzeraTentativiScaricamentoPanorama();
     }
 
     private void setPeak(String peak){

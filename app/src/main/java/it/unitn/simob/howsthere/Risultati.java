@@ -40,7 +40,6 @@ public class Risultati extends AppCompatActivity {
     Panorama p;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Risultati");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_risultati);
 
@@ -52,7 +51,6 @@ public class Risultati extends AppCompatActivity {
         System.out.println("recuperato panorama" +id);
         System.out.println("panorama NULL? " + p);
         stampaGrafico();
-        //creaImmagine();
     }
 
     void stampaGrafico(){
