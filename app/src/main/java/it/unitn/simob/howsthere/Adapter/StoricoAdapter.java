@@ -36,19 +36,7 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.singolo_storico, null);
-/*
-        FrameLayout iv = (FrameLayout) convertView.findViewById(R.id.chiudi_container);
-        iv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("cliccato:  " + position);
-                PanoramiStorage p = PanoramiStorage.panorami_storage;
-                p.delete(position);
-                l.remove(position);
-                notifyDataSetChanged();
-            }
-        });
-        */
+
 
         TextView nome_citta = (TextView) convertView.findViewById(R.id.nome_citta);
         TextView data = (TextView) convertView.findViewById(R.id.data);
@@ -56,7 +44,8 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
 
         Panorama p = l.get(position);
         nome_citta.setText(p.citta+ " ");
-        data.setText(p.data.toString());
+        String d = "Giorno: "+p.data.getDay()+"/"+p.data.getMonth()+"/"+p.data.getYear()+"  Ora: "+p.data.getHours()+":"+p.data.getHours();
+        data.setText(d);
         ID.setText(p.ID);
 
         return convertView;

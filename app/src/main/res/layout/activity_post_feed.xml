@@ -13,30 +13,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <FrameLayout
                 android:id="@+id/top_frame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <com.fenchtose.nocropper.CropperView
-                    android:background="#ff282828"
                     android:id="@+id/cropper_view"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:background="#ff282828"
+                    app:nocropper__grid_color="@color/colorAccent"
                     app:nocropper__grid_opacity="0.8"
                     app:nocropper__grid_thickness="0.8dp"
-                    app:nocropper__grid_color="@color/colorAccent"
-                    app:nocropper__padding_color="#ff282828"/>
+                    app:nocropper__padding_color="#ff282828" />
 
                 <ImageView
                     android:id="@+id/rotate_button"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:padding="8dp"
-                    android:layout_margin="16dp"
                     android:layout_gravity="right|bottom"
+                    android:layout_margin="16dp"
                     android:background="@drawable/black_transp_circ_ripple"
+                    android:padding="8dp"
                     android:scaleType="center"
-                    android:src="@mipmap/ic_rotate_right_white_24dp"/>
+                    android:src="@mipmap/ic_rotate_right_white_24dp" />
 
             </FrameLayout>
 
@@ -45,6 +47,20 @@
                 android:layout_height="match_parent"
                 android:layout_margin="15dp"
                 android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/posizi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Posizione" />
+
+                <TextView
+                    android:id="@+id/getposizione"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView3"
@@ -59,7 +75,8 @@
                     android:ems="10"
                     android:hint="Scrivi qualcosa"
                     android:inputType="textPersonName"
-                    android:textColorHint="@color/title_nobar" />
+                    android:textColorHint="@android:color/darker_gray" />
+
 
                 <TextView
                     android:id="@+id/textView4"

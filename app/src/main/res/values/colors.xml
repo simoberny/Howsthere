@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#1085e2</color>
     <color name="colorAccent">#2196F3</color>
     <color name="background">#ffffff</color>
+    <color name="real_background">#f6f6f6</color>
     <color name="traslucentmaps">#80222222</color>
     <color name="pale_green">#6bf3ad</color>
     <color name="buttongrey">#eeeeee</color>

@@ -64,7 +64,7 @@
         </activity>
         <activity
             android:name=".Data"
-            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_data"
             android:theme="@style/AppThemeNoBar">
             <meta-data

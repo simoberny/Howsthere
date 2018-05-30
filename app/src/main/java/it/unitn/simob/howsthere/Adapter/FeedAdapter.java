@@ -57,6 +57,7 @@ import java.util.concurrent.TimeUnit;
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.Oggetti.Feed;
 import it.unitn.simob.howsthere.R;
+import it.unitn.simob.howsthere.Risultati;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
     private Context mContext;
@@ -74,6 +75,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         public ProgressBar po;
         public String ID;
         public ImageView heart;
+        public TextView panorama;
 
         public MyViewHolder(final View view) {
             super(view);
@@ -86,6 +88,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             heart = (ImageView) view.findViewById(R.id.heart);
             menu = view.findViewById(R.id.cardView_dots);
             likes = view.findViewById(R.id.likes);
+            panorama = view.findViewById(R.id.panorama);
             con = view.getContext();
         }
     }
@@ -113,6 +116,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         holder.location.setText(feed.getLocation());
         holder.descrizione.setText(feed.getDescrizione());
         holder.likes.setText(feed.getLikes() + " Mi piace");
+
+        holder.panorama.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Intent i = new Intent(con, Risultati.class);
+                    i.putExtra("ID", feed.getPanoramaID());
+                    con.startActivity(i);
+            }
+        });
 
         holder.image.setOnTouchListener(new View.OnTouchListener() {
             private GestureDetector gestureDetector = new GestureDetector(con, new GestureDetector.SimpleOnGestureListener() {
@@ -339,11 +351,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
                                     String file_name = UUID.randomUUID() + ".jpg";
                                     final StorageReference delRef = storageRef.child("images/" +feedList.get(position).getFile_name());
+                                    feedList.remove(position);
+                                    notifyItemRemoved(position);
                                     delRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            feedList.remove(position);
-                                            notifyItemRemoved(position);
                                             Snackbar mySnackbar = Snackbar.make(((MainActivity)mContext).findViewById(R.id.frame_layout), "Feed eliminata!", Snackbar.LENGTH_SHORT);
                                             mySnackbar.show();
                                         }

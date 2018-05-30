@@ -90,7 +90,7 @@
                 android:text="" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/panorama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/cardView_dots"
@@ -98,7 +98,7 @@
                 android:layout_below="@id/cardView_image"
                 android:drawableLeft="@drawable/baseline_bar_chart_24"
                 android:drawablePadding="10dp"
-                android:text="Visualizza sole"
+                android:text="Panorama"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp" />
 

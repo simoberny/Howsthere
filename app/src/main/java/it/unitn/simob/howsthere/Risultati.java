@@ -1,16 +1,27 @@
 package it.unitn.simob.howsthere;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -26,25 +37,49 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.vansuita.pickimage.bundle.PickSetup;
+import com.vansuita.pickimage.dialog.PickImageDialog;
+import com.vansuita.pickimage.enums.EPickType;
+import com.vansuita.pickimage.listeners.IPickClick;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 
 public class Risultati extends AppCompatActivity {
-    Panorama p;
+    private Panorama p;
+    private String id;
+
+    private PickImageDialog dialog;
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+    public static final int GALLERY_INTENT = 25;
+    public static final int CAMERA_INTENT = 26;
+    private String mCurrentPhotoPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_risultati);
 
+        FloatingActionButton take_photo = findViewById(R.id.take_photo);
+        take_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getImage();
+            }
+        });
+
         Intent i = getIntent();
-        String id = i.getStringExtra("ID");
+        id = i.getStringExtra("ID");
         System.out.println("RISULTATI id: " +id);
         PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
         p = panoramiStorage.getPanoramabyID(id);
@@ -202,10 +237,134 @@ public class Risultati extends AppCompatActivity {
         chart.setData(lineData);
         chart.animateX(3500);
         chart.invalidate();
+    }
 
 
+    public void getImage(){
+        final SharedPreferences pref = getApplicationContext().getSharedPreferences("MaxPhotoRef", 0);
+        final SharedPreferences.Editor editor = pref.edit();
+        Integer day = pref.getInt("day", 32);
+        Integer actual_max = pref.getInt("max_daily", 5);
 
+        if(Calendar.getInstance().get(Calendar.DAY_OF_MONTH) > day){
+            editor.putInt("max_daily", 0);
+        }else{
+            if(actual_max > 0){
+                dialog = PickImageDialog.build(new PickSetup().setPickTypes(EPickType.GALLERY, EPickType.CAMERA).setGalleryIcon(R.mipmap.gallery_colored).setCameraIcon(R.mipmap.camera_colored))
+                        .setOnClick(new IPickClick() {
+                            @Override
+                            public void onGalleryClick() {
+                                if(checkPermission()) {
+                                    openGallery();
+                                }
+                            }
 
+                            @Override
+                            public void onCameraClick() {
+                                if(checkPermission()) {
+                                    openCamera();
+                                }
+                            }
+                        }).show(this);
+            }else{
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.risultatiMainLayout), "Superato il limite massimo di foto in un giorno, torna domani!", Snackbar.LENGTH_LONG);
+                mySnackbar.show();
+            }
+        }
+    }
 
+    public void openGallery(){
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickPhoto, GALLERY_INTENT);
+    }
+
+    public void openCamera(){
+        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePicture.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "it.unitn.simob.howsthere.fileprovider",
+                        photoFile);
+                takePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePicture, CAMERA_INTENT);
+            }
+        }
+    }
+
+    public void cropImage(Uri uri) {
+        if(uri != null){
+            Intent i = new Intent(this, PostFeed.class);
+            i.putExtra("photo", uri.toString());
+            i.putExtra("ID", id);
+            i.putExtra("lat", p.lat);
+            i.putExtra("lon", p.lon);
+            // Eventualmente mandare anche la foto del panorame //
+
+            startActivityForResult(i, 15);
+        }
+    }
+
+    public boolean checkPermission(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            return true;
+        }else {
+            if (Build.VERSION.SDK_INT >= 23) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                return false;
+            }else{
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                return false;
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case CAMERA_INTENT:
+                if(resultCode == RESULT_OK){
+                    File m_file = new File(mCurrentPhotoPath);
+                    Uri m_imgUri = Uri.fromFile(m_file);
+                    cropImage(m_imgUri);
+                }
+
+                break;
+            case GALLERY_INTENT:
+                if(resultCode == RESULT_OK){
+                    cropImage(data.getData());
+                }
+                break;
+            case 15:
+                if(resultCode == RESULT_OK){
+                    Bundle extras = data.getExtras();
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtras(extras);
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+                break;
+        }
     }
 }

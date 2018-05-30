@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.twitter.sdk.android.core.models.TwitterCollection;
 
@@ -37,8 +38,8 @@ import it.unitn.simob.howsthere.Risultati;
 
 public class HistoryFragment extends Fragment{
 
-    static List selezionati_posiz = new ArrayList();
-    //List<String> selezionati_id = new ArrayList<String>(); //TODO: implementare il delete con ID invece che posizione!
+    //static List selezionati_posiz = new ArrayList();
+    List<String> selezionati_id = new ArrayList<String>();
     boolean in_selezione = false;
 
     public HistoryFragment() {}
@@ -68,26 +69,28 @@ public class HistoryFragment extends Fragment{
         int id = item.getItemId();
 
         if (id == R.id.delete) {
-            System.err.println("jasdklfjjjjjjjjjjjjjjjjjjjjjjjjjjjj numero di item:" +selezionati_posiz.size()+" adapter:  "+adapter.l.size()+"  panorami: "+ PanoramiStorage.panorami_storage.Panorami.size()+ "    posizione 0  "+selezionati_posiz.get(0));
-            //adapter.onClick_menu();
-            for(int i =0; i<selezionati_posiz.size(); i++){
-                System.out.println("     selezionati:  "+selezionati_posiz.get(i));
-                PanoramiStorage p = PanoramiStorage.panorami_storage;
-                p.delete(0);
-                adapter.l.remove(0);
+            if(in_selezione) {
+                System.err.println("jasdklfjjjjjjjjjjjjjjjjjjjjjjjjjjjj numero di item:" + selezionati_id.size() + " adapter:  " + adapter.l.size() + "  panorami: " + PanoramiStorage.panorami_storage.Panorami.size() + "    posizione 0  " + selezionati_id.get(0));
+                //adapter.onClick_menu();
+                for (int i = 0; i < selezionati_id.size(); i++) {
+                    System.err.println("     selezionati:  " + selezionati_id.get(i));
+                    PanoramiStorage p = PanoramiStorage.panorami_storage;
+                    p.delete_by_id(selezionati_id.get(i));
+                }
                 adapter.notifyDataSetChanged();
-                selezionati_posiz.remove(i);
+                selezionati_id.clear();
                 in_selezione = false;
+                return true;
+            }else{
+                Toast.makeText(getActivity(),"Seleziona card con pressione prolungata",5);
             }
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_history, container, false);
         // riscrivere la barra con la barra di sistema
         Toolbar bar = view.findViewById(R.id.history_toolbar);
@@ -103,17 +106,28 @@ public class HistoryFragment extends Fragment{
 
         r.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                TextView ID = parent.findViewById(R.id.ID);
+                TextView ID = view.findViewById(R.id.ID);
                 String idi = (String) ID.getText();
+                ImageView v = view.findViewById(R.id.spunta);
                 if(!in_selezione) {
                     Intent i = new Intent(getActivity(), Risultati.class);
                     i.putExtra("ID", idi);
                     startActivity(i);
+                    System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+idi+"   arraysize: "+selezionati_id.size());
+
+                }else if(selezionati_id.contains(idi)){
+                    selezionati_id.remove(idi);
+                    v.setVisibility(View.INVISIBLE);
+                    if(selezionati_id.size()==0){
+                        in_selezione = false;
+                    }
+                    System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+idi+"   arraysize: "+selezionati_id.size());
+
                 }else{
-                    selezionati_posiz.add(position);
-                    //selezionati_id.add(idi);
-                    ImageView v = view.findViewById(R.id.spunta);
+                    selezionati_id.add(idi);
                     v.setVisibility(View.VISIBLE);
+                    System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+idi+"   arraysize: "+selezionati_id.size());
+
                 }
             }
         });
@@ -123,11 +137,13 @@ public class HistoryFragment extends Fragment{
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id){
                 ImageView v = view.findViewById(R.id.spunta);
                 v.setVisibility(View.VISIBLE);
+                TextView ID = view.findViewById(R.id.ID);
+                String idi = (String) ID.getText();
 
-                selezionati_posiz.add(position);
+                selezionati_id.add(idi);
                 //selezionati_id.add(idi);
 
-                System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+position+"   arraysize: "+selezionati_posiz.size());
+                System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+idi+"   arraysize: "+selezionati_id.size());
                 in_selezione = true;
                 return true;
             }
