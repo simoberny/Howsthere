@@ -32,21 +32,21 @@
         <item>Ibrida</item>
     </string-array>
     <string-array name="pref_maps_list_values">
-        <item>1</item>
         <item>0</item>
-        <item>-1</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
     <string name="pref_maps_type_osm">Tipo mappa OSM</string>
     <string-array name="pref_maps_list_title_osm">
-        <item>Skymap</item>
         <item>Cyclemap</item>
         <item>Satellite</item>
+        <item>Classica</item>
     </string-array>
     <string-array name="pref_maps_list_values_osm">
-        <item>1</item>
         <item>0</item>
-        <item>-1</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
     <string name="pref_maps_op">Sorgente mappa</string>

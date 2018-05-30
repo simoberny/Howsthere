@@ -23,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,18 +57,29 @@ import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.MinimapOverlay;
+import org.osmdroid.views.overlay.Overlay;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
+import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay2;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import it.unitn.simob.howsthere.Data;
+import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.R;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
@@ -79,20 +91,27 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     private Date dataSelezionata = Calendar.getInstance().getTime();
     private BottomSheetDialog dialog;
     private View dialogView;
+
+    //Marker Google
     private Marker marker;
 
+    //Marker OSM
+    org.osmdroid.views.overlay.Marker osm_marker;
+
+    //Gestione Mappe
     private Integer maps_type = -1;
     private Integer map_id = 0;
 
     //open street map
     org.osmdroid.views.MapView map = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contesto = this;
 
         SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
-        maps_type = pref.getInt("maps_type", -1);
+        maps_type = pref.getInt("maps_type", 2);
         if(isGooglePlayServicesAvailable(getContext())){
             map_id = pref.getInt("map", 0);
         }else{
@@ -140,14 +159,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
            @Override
            public void onDismiss(DialogInterface dialog) {
-               if (marker != null) marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
+               if (map_id == 0)
+                   marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
+               else
+                   osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
            }
        });
 
        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
            @Override
            public void onCancel(DialogInterface dialog) {
-               if (marker != null) marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
+               if (map_id == 0)
+                   marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
+               else
+                   osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
            }
        });
 
@@ -203,34 +228,35 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
         }else{  //mappa open source per chi non ha i google play services
-
-            //inflate and create the map
             map = (org.osmdroid.views.MapView) rootview.findViewById(R.id.map);
-            /*switch(maps_type){
-                case 1:
-                    gm.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                    break;
+            switch(maps_type){
                 case 0:
-                    gm.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    map.setTileSource(TileSourceFactory.HIKEBIKEMAP);
                     break;
-                case -1:
-                    gm.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                case 1:
+                    map.setTileSource(TileSourceFactory.USGS_SAT);
                     break;
-            }*/
-            map.setTileSource(TileSourceFactory.MAPNIK);
-            //todo scelta mappa
+                case 2:
+                    map.setTileSource(TileSourceFactory.MAPNIK);
+                    break;
+            }
+
+            List<Overlay> overlays = new ArrayList<Overlay>();
+
             map.setBuiltInZoomControls(true);
             map.setMultiTouchControls(true);
             IMapController mapController = map.getController();
-            mapController.setZoom(5);
+            mapController.setZoom(5.0);
+            //Posizione iniziale (ARCORE)
             GeoPoint startPoint = new GeoPoint(45.626037, 9.322756);
             mapController.setCenter(startPoint);
 
-            //posizione
-            MyLocationNewOverlay mLocationOverlay;
-            mLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(getActivity()),map);
-            mLocationOverlay.enableMyLocation();
-            map.getOverlays().add(mLocationOverlay);
+            final DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+            MinimapOverlay mMinimapOverlay = new MinimapOverlay(getContext(), map.getTileRequestCompleteHandler());
+            mMinimapOverlay.setWidth(dm.widthPixels / 5);
+            mMinimapOverlay.setHeight(dm.heightPixels / 5);
+            mMinimapOverlay.setPadding(10);
+            overlays.add(mMinimapOverlay);
 
             //evento mappa
             MapEventsReceiver mReceive = new MapEventsReceiver() {
@@ -240,14 +266,49 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                     positionAndDialog(p.getLatitude(),p.getLongitude(),null);
                     return false;
                 }
-
                 @Override
                 public boolean longPressHelper(GeoPoint p) {
                     return false;
                 }
             };
-            MapEventsOverlay OverlayEvents = new MapEventsOverlay(getContext(), mReceive);
-            map.getOverlays().add(OverlayEvents);
+
+            MapEventsOverlay OverlayEvents = new MapEventsOverlay(mReceive);
+            overlays.add(OverlayEvents);
+
+            osm_marker = new org.osmdroid.views.overlay.Marker(map);
+            osm_marker.setDraggable(true);
+            osm_marker.setPosition(startPoint);
+            osm_marker.setTitle("Amata Arcore");
+            osm_marker.setSnippet("Amata Arcore");
+            osm_marker.setAnchor(org.osmdroid.views.overlay.Marker.ANCHOR_CENTER, org.osmdroid.views.overlay.Marker.ANCHOR_BOTTOM);
+            osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_red));
+            osm_marker.setDragOffset(5);
+            osm_marker.setOnMarkerDragListener(new org.osmdroid.views.overlay.Marker.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDrag(org.osmdroid.views.overlay.Marker marker) {
+
+                }
+
+                @Override
+                public void onMarkerDragEnd(org.osmdroid.views.overlay.Marker marker) {
+                    positionAndDialog(marker.getPosition().getLatitude(), marker.getPosition().getLongitude(), null);
+                }
+
+                @Override
+                public void onMarkerDragStart(org.osmdroid.views.overlay.Marker marker) {
+
+                }
+            });
+            osm_marker.setOnMarkerClickListener(new org.osmdroid.views.overlay.Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(org.osmdroid.views.overlay.Marker marker, org.osmdroid.views.MapView mapView) {
+                    positionAndDialog(marker.getPosition().getLatitude(), marker.getPosition().getLongitude(), null);
+                    return false;
+                }
+            });
+            map.getOverlays().add(osm_marker);
+
+            map.getOverlays().addAll(overlays);
         }
 
        return rootview;
@@ -270,8 +331,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
 
-            gm.setMyLocationEnabled(true);
-            gm.getUiSettings().setMyLocationButtonEnabled(true);
+            if (map_id == 0){
+                gm.setMyLocationEnabled(true);
+                gm.getUiSettings().setMyLocationButtonEnabled(true);
+            }
 
             LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -336,10 +399,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
      */
     private void goToLoc(LatLng pos, int zoom){
         ln = new LatLng(pos.latitude, pos.longitude);
-        gm.clear();
-        if (marker != null) marker = gm.addMarker(new MarkerOptions().position(ln).draggable(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray)));
-        gm.moveCamera(CameraUpdateFactory.newLatLng(ln));
-        gm.animateCamera(CameraUpdateFactory.zoomTo(zoom));
+        if(map_id == 0){
+            gm.clear();
+            marker = gm.addMarker(new MarkerOptions().position(ln).draggable(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray)));
+            gm.moveCamera(CameraUpdateFactory.newLatLng(ln));
+            gm.animateCamera(CameraUpdateFactory.zoomTo(zoom));
+        }else{
+            map.getController().setCenter(new GeoPoint(pos.latitude, pos.longitude));
+            map.getController().setZoom(8.0);
+            osm_marker.setPosition(new GeoPoint(pos.latitude, pos.longitude));
+            osm_marker.setSnippet("My position");
+            osm_marker.setAnchor(org.osmdroid.views.overlay.Marker.ANCHOR_CENTER, org.osmdroid.views.overlay.Marker.ANCHOR_BOTTOM);
+            osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
+        }
     }
 
     /**
@@ -388,13 +460,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         gm = googleMap;
 
         switch(maps_type){
-            case 1:
+            case 0:
                 gm.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 break;
-            case 0:
+            case 1:
                 gm.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 break;
-            case -1:
+            case 2:
                 gm.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 break;
         }
@@ -446,18 +518,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
         Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
         List<Address> addresses = null;
+
         try {
             addresses = gcd.getFromLocation(ln.latitude, ln.longitude, 1);
             if (addresses.size() > 0) {
                 if(addresses.get(0).getLocality() != null){
-                    if (marker != null) {
-                        marker.setTitle(addresses.get(0).getLocality());
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_red));
-                        marker.showInfoWindow();
-                    }
-
+                    citta = addresses.get(0).getLocality();
+                }else{
+                    citta = "Non trovata!";
                 }
-                citta = addresses.get(0).getLocality();
                 tx.setText("Posizione: " + citta + ", " + addresses.get(0).getCountryName());
             }else{
                 Log.d("Problema address", "Problema");
@@ -465,6 +534,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if (map_id == 0) {
+            marker.setTitle(citta);
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_red));
+            marker.showInfoWindow();
+        }else{
+            map.getController().setCenter(new GeoPoint(ln.latitude, ln.longitude));
+            map.getController().setZoom(8.0);
+            osm_marker.setPosition(new GeoPoint(ln.latitude, ln.longitude));
+            osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_red));
+            osm_marker.setTitle(citta);
+            osm_marker.setSnippet(citta);
         }
 
         dialog.show();
