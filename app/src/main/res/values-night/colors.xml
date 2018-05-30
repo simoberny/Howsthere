@@ -7,6 +7,7 @@
     <color name="buttongrey">#eeeeee</color>
     <color name="background">#000</color>
     <color name="divider">#333</color>
+    <color name="real_background">#090909</color>
 
     <color name="dialog_text">#aaa</color>
 
