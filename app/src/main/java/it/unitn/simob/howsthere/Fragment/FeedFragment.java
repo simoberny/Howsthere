@@ -114,6 +114,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             String descrizione = (String) extras.get("descrizione");
 
             feed_to_db(uri, filename, descrizione, pan_id, posizione);
+
+            getArguments().clear();
         }
     }
 
@@ -338,9 +340,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         nofeed.setVisibility(View.VISIBLE);
                     }
 
+                    recyclerView.getLayoutManager().scrollToPosition(0);
                     adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore
                     mSwipeRefreshLayout.setRefreshing(false);
-                    recyclerView.getLayoutManager().scrollToPosition(0);
                 }
             });
     }
