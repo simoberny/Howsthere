@@ -45,21 +45,21 @@ public class SettingsFragment extends PreferenceFragmentCompat{
         addPreferencesFromResource(R.xml.pref_general);
 
         final SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
-        Integer map_type = pref.getInt("map_type", 2);
+        Integer map_type = pref.getInt("maps_type", 2);
         Integer map_source = pref.getInt("map", 0);
+
         ListPreference maps = (ListPreference) findPreference("maps_type");
         if(map_source == 1){
             maps.setEntries(R.array.pref_maps_list_title_osm);
             maps.setEntryValues(R.array.pref_maps_list_values_osm);
-            maps.setValue(String.valueOf(R.string.pref_maps_type_osm));
+            maps.setDialogTitle(R.string.pref_maps_type_osm);
+            maps.setTitle(R.string.pref_maps_type_osm);
             maps.setValueIndex(map_type);
         }else{
             maps.setEntries(R.array.pref_maps_list_title);
             maps.setEntryValues(R.array.pref_maps_list_values);
             maps.setDialogTitle(R.string.pref_maps_type);
-            maps.setValueIndex(map_type);
         }
-
 
         CheckBoxPreference nightmode = (CheckBoxPreference) findPreference("night_mode");
         nightmode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -101,6 +101,8 @@ public class SettingsFragment extends PreferenceFragmentCompat{
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 Integer map_source = Integer.parseInt(newValue.toString());
                 ListPreference maps = (ListPreference) findPreference("maps_type");
+                SharedPreferences.Editor editor = pref.edit();
+
                 if(map_source == 0){
                     maps.setEntries(R.array.pref_maps_list_title);
                     maps.setEntryValues(R.array.pref_maps_list_values);
@@ -114,7 +116,8 @@ public class SettingsFragment extends PreferenceFragmentCompat{
                     maps.setTitle(R.string.pref_maps_type_osm);
                     maps.setValueIndex(2);
                 }
-                SharedPreferences.Editor editor = pref.edit();
+
+                editor.putInt("maps_type", 2);
                 editor.putInt("map", map_source);
                 editor.apply();
                 return true;
