@@ -251,7 +251,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             IMapController mapController = map.getController();
             mapController.setZoom(5.0);
             //Posizione iniziale (ARCORE)
-            GeoPoint startPoint = new GeoPoint(45.626037, 9.322756);
+            GeoPoint startPoint = new GeoPoint(45.627245, 9.316333);
             mapController.setCenter(startPoint);
 
             final DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
@@ -483,6 +483,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
             gm.moveCamera(update);
             goToLoc(gm.getCameraPosition().target, (int) gm.getCameraPosition().zoom);
+        } else {    //imposto la posizione predefinita da Silvio
+            CameraUpdate point = CameraUpdateFactory.newLatLngZoom(new LatLng(45.627245, 9.316333),4.0f);
+
+            gm.moveCamera(point);
+            gm.animateCamera(point);
         }
 
         gm.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
@@ -527,7 +532,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 if(addresses.get(0).getLocality() != null){
                     citta = addresses.get(0).getLocality();
                 }else{
-                    citta = "Non trovata!";
+                    citta = "Non disponibile";
                 }
                 tx.setText("Posizione: " + citta + ", " + addresses.get(0).getCountryName());
             }else{
