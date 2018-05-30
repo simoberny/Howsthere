@@ -22,6 +22,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -86,6 +87,7 @@ public class Risultati extends AppCompatActivity {
         System.out.println("recuperato panorama" +id);
         System.out.println("panorama NULL? " + p);
         stampaGrafico();
+        stampaValoriBase(); //informazioni sempre conosciute
     }
 
     void stampaGrafico(){
@@ -184,7 +186,7 @@ public class Risultati extends AppCompatActivity {
         }
         dataSetLuna.setCircleColors(coloricerchiLuna);
 
-        chart.getDescription().setText("Profilo montagne con sole e luna");
+        //chart.getDescription().setText("Profilo montagne con sole e luna");
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
         lineData.addDataSet(dataSetSole);
@@ -366,5 +368,17 @@ public class Risultati extends AppCompatActivity {
                 }
                 break;
         }
+    }
+    void stampaValoriBase(){
+        TextView albaTv = (TextView)findViewById(R.id.alba);
+        albaTv.setText("Alba: "+p.getAlba().ora + ":" + p.getAlba().minuto);
+        TextView tramontoTv = (TextView)findViewById(R.id.tramonto);
+        tramontoTv.setText("Tramonto: "+p.getTramonto().ora+ ":" + p.getTramonto().minuto);
+        TextView minSoleTv = (TextView)findViewById(R.id.minutiSole);
+        minSoleTv.setText("Ore di Sole: " + p.minutiSole/60 + " ore, "+ (p.minutiSole-(p.minutiSole/60)*60)+ " minuti");
+        TextView cittaTv = (TextView)findViewById(R.id.citta);
+        cittaTv.setText("città: "+p.citta);
+        TextView dataTv = (TextView)findViewById(R.id.data);
+        dataTv.setText("data: "+p.data);
     }
 }

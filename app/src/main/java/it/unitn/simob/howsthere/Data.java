@@ -140,10 +140,15 @@ public class Data extends AppCompatActivity {
                         String id = response.body().string();
                         if(id != null && id != "") {
                             panorama.ID = id;
-                            System.out.print("ID: " + panorama.ID);
-                            progressDialog.dismiss();
+                            //System.out.print("ID: " + panorama.ID);
                             TextView tx = (TextView)findViewById(R.id.idCheck); //recupero e rendo visibile la conferma ricezione ID
                             tx.setVisibility(TextView.VISIBLE);
+                            try {   //aspetto prima del primo tentativo, il server ci mette sempre almeno un secondo.
+                                Thread.sleep(1000);//
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            progressDialog.dismiss();
                             checkStatus(); //Ottenuto l'ID controllo lo stato della generazione del panorama
                         }else{
                             progressDialog.dismiss();
@@ -443,16 +448,16 @@ public class Data extends AppCompatActivity {
             if(!prev && sopra){ //alba
                 panorama.albe.add(panorama.risultatiSole[i]);
                 //System.out.println("alba: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto );
-                Toast.makeText(getApplicationContext(),"alba: " + panorama.risultatiSole[i].ora + ":"+ panorama.risultatiSole[i].minuto, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"alba: " + panorama.risultatiSole[i].ora + ":"+ panorama.risultatiSole[i].minuto, Toast.LENGTH_LONG).show();
             }
             if(prev && !sopra){ //alba
                 panorama.tramonti.add(panorama.risultatiSole[i]);
                 //System.out.println("tramonto: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto );
-                Toast.makeText(getApplicationContext(),"tramonto: " + panorama.risultatiSole[i].ora + ":"+ panorama.risultatiSole[i].minuto , Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),"tramonto: " + panorama.risultatiSole[i].ora + ":"+ panorama.risultatiSole[i].minuto , Toast.LENGTH_LONG).show();
             }
             prev=sopra;
         }
-        Toast.makeText(getApplicationContext(),"Ore di Sole: " + panorama.minutiSole/60 + " ore, "+ (panorama.minutiSole-(panorama.minutiSole/60)*60)+ " minuti" , Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),"Ore di Sole: " + panorama.minutiSole/60 + " ore, "+ (panorama.minutiSole-(panorama.minutiSole/60)*60)+ " minuti" , Toast.LENGTH_LONG).show();
         progressDialog.dismiss();
         progressDialog.setMessage("Calcolo posizione pianeti...");
         progressDialog.setTitle("Salvo i dati...");
