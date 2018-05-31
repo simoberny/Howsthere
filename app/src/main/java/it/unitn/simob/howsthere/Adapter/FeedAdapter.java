@@ -171,12 +171,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                             }
                         }
                     });
-            if(!currentUser.getUid().equals(feed.getUid())){
-                holder.menu.setVisibility(View.GONE);
-            }
         }else{
             holder.heart.setVisibility(View.GONE);
-            holder.menu.setVisibility(View.GONE);
+            holder.menu.setVisibility(View.INVISIBLE);
         }
 
         holder.menu.setOnClickListener(new View.OnClickListener() {
@@ -233,7 +230,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     private void showPopupMenu(View view,int position, String id) {
         PopupMenu popup = new PopupMenu(view.getContext(),view);
         MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_feed, popup.getMenu());
+        if(currentUser.getUid().equals(feedList.get(position).getUid())){
+            inflater.inflate(R.menu.popup_feed, popup.getMenu());
+        }else{
+            inflater.inflate(R.menu.popup_feed_no_user, popup.getMenu());
+        }
         popup.setGravity(Gravity.END);
         popup.setOnMenuItemClickListener(new FeedItemClickListener(position, id));
         popup.show();
