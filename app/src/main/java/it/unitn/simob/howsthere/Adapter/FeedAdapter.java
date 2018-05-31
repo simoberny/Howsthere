@@ -358,7 +358,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                                     FirebaseStorage storage = FirebaseStorage.getInstance();
                                     StorageReference storageRef = storage.getReference();
 
-                                    String file_name = UUID.randomUUID() + ".jpg";
                                     final StorageReference delRef = storageRef.child("images/" +feedList.get(position).getFile_name());
                                     feedList.remove(position);
                                     notifyItemRemoved(position);

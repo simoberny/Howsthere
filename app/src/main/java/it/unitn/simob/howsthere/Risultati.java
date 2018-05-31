@@ -43,7 +43,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import it.unitn.simob.howsthere.Oggetti.CompassActivity;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 

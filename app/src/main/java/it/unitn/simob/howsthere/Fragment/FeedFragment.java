@@ -103,6 +103,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        feedList = new ArrayList<Feed>();
     }
 
     @Override
@@ -128,9 +130,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
-
-        currentUser = mAuth.getCurrentUser();
-        feedList = new ArrayList<Feed>();
 
         FloatingActionButton add_feed = view.findViewById(R.id.add_feed);
         add_feed.setOnClickListener(new View.OnClickListener() {
@@ -165,8 +164,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 android.R.color.holo_blue_dark);
 
         mSwipeRefreshLayout.setRefreshing(true);
-        loadRecyclerViewData();
 
+        loadRecyclerViewData();
         return view;
     }
 
@@ -312,7 +311,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        ne.setID(documentReference.getId());
                         mSwipeRefreshLayout.setRefreshing(false);
                         editor.putInt("day", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                         editor.putInt("max_daily", pref.getInt("max_daily", 0) + 1);
@@ -342,11 +340,23 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            Feed getFromDb = document.toObject(Feed.class);
-                            if(!feedList.contains(getFromDb)) {
-                                Feed newf = document.toObject(Feed.class);
-                                newf.setID(document.getId());
-                                feedList.add(newf);
+                            final Feed getFromDb = document.toObject(Feed.class);
+                            getFromDb.setID(document.getId());
+
+                            if(feedList.size() == 0){
+                                feedList.add(getFromDb);
+                            }
+
+                            boolean exist = false;
+                            for(int i = 0; i < feedList.size(); i++){
+                                if(feedList.get(i).getID().equals(getFromDb.getID())){
+                                    exist = true;
+                                }
+                            }
+
+                            if(!exist){
+                                System.out.println("NON ESISTE: " + getFromDb.getID());
+                                feedList.add(getFromDb);
                             }
                         }
                     } else {

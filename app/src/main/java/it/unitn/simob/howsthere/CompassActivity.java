@@ -1,4 +1,4 @@
-package it.unitn.simob.howsthere.Oggetti;
+package it.unitn.simob.howsthere;
 
 import android.content.Intent;
 import android.hardware.Sensor;

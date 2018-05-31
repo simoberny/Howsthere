@@ -85,7 +85,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".Oggetti.CompassActivity"
+        <activity android:name=".CompassActivity"
             android:theme="@style/AppThemeNoBar"></activity>
     </application>
 

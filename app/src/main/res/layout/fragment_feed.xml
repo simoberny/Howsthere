@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.unitn.simob.howsthere.Fragment.FeedFragment">
+    tools:context="it.unitn.simob.howsthere.Fragment.FeedFragment"
+    android:transitionGroup="true">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_feed"

@@ -2,6 +2,7 @@ package it.unitn.simob.howsthere.Fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import it.unitn.simob.howsthere.R;
 
@@ -25,12 +27,21 @@ public class UserProfile extends Fragment {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
 
     public UserProfile() { }
 
     public static UserProfile newInstance() {
         UserProfile fragment = new UserProfile();
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
     }
 
     @Override
@@ -45,6 +56,10 @@ public class UserProfile extends Fragment {
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
 
+        if(currentUser == null){
+            tabLayout.setVisibility(View.GONE);
+        }
+
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -57,7 +72,6 @@ public class UserProfile extends Fragment {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });
-
 
         return view;
     }

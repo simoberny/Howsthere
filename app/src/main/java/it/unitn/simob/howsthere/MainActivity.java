@@ -1,12 +1,9 @@
 package it.unitn.simob.howsthere;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,14 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 
-import java.util.Date;
-
 import it.unitn.simob.howsthere.Fragment.FeedFragment;
 import it.unitn.simob.howsthere.Fragment.HistoryFragment;
 import it.unitn.simob.howsthere.Fragment.MapsFragment;
-import it.unitn.simob.howsthere.Fragment.UserFragment;
 import it.unitn.simob.howsthere.Fragment.UserProfile;
-import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 
 public class MainActivity extends AppCompatActivity{
@@ -35,7 +28,6 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         PanoramiStorage.context = this;
         PanoramiStorage.panorami_storage = new PanoramiStorage();
         PanoramiStorage.panorami_storage.initial_load();
@@ -62,10 +54,6 @@ public class MainActivity extends AppCompatActivity{
         i.setFlags(0);
 
         ff = FeedFragment.newInstance(extra);
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, MapsFragment.newInstance());
-        transaction.commit();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -104,7 +92,9 @@ public class MainActivity extends AppCompatActivity{
             }
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
             transaction.replace(R.id.frame_layout, selectedFragment);
+            transaction.addToBackStack(null);
             transaction.commit();
             return true;
         }

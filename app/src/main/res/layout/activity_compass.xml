@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.unitn.simob.howsthere.Oggetti.CompassActivity"
+    tools:context="it.unitn.simob.howsthere.CompassActivity"
     >
+
     <LinearLayout
         android:id="@+id/compassLn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/ap_gray"
+        android:background="@color/real_background"
         android:gravity="center"
         android:orientation="vertical">
 

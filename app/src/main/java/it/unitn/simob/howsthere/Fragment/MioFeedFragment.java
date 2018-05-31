@@ -55,17 +55,16 @@ public class MioFeedFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        feedList = new ArrayList<Feed>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mio_feed, container, false);
-
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
-
-        feedList = new ArrayList<Feed>();
 
         if(currentUser != null){
             adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista

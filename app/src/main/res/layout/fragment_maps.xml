@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    tools:context="it.unitn.simob.howsthere.Fragment.MapsFragment">
+    tools:context="it.unitn.simob.howsthere.Fragment.MapsFragment"
+    android:transitionGroup="true">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
