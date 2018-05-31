@@ -11,15 +11,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/idCheck"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/fui_done_check_mark"
+            android:drawablePadding="10dp"
             android:paddingLeft="5dp"
             android:paddingTop="20dp"
-            android:text="ID ottenuto ✓"
+            android:text="ID ottenuto"
             android:textSize="24sp"
             android:visibility="gone" />
 
@@ -27,9 +30,11 @@
             android:id="@+id/panoramaCheck"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/fui_done_check_mark"
+            android:drawablePadding="10dp"
             android:paddingLeft="5dp"
             android:paddingTop="10dp"
-            android:text="Panorama pronto ✓"
+            android:text="Panorama pronto"
             android:textSize="24sp"
             android:visibility="gone" />
 
@@ -37,9 +42,11 @@
             android:id="@+id/panoramaDownload"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/fui_done_check_mark"
+            android:drawablePadding="10dp"
             android:paddingLeft="5dp"
             android:paddingTop="10dp"
-            android:text="Panorama Scaricato ✓"
+            android:text="Panorama Scaricato"
             android:textSize="24sp"
             android:visibility="gone" />
 

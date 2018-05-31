@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Howsthere</string>
     <string name="fui_default_toolbar_title" translatable="false">Login</string>
     <string name="title_home">Mappa</string>
@@ -97,4 +97,29 @@
     <!-- Other error messages -->
     <string name="fui_error_unknown" translation_description="General error messages for an unknown failure.">Errore sconosciuto</string>
     <string name="fui_error_invalid_password" translation_description="Error message for when the user enters an invalid or wrong password.">Password incorretta!</string>
+
+    <!-- Idp/Email welcome back -->
+    <string name="fui_title_welcome_back_idp_prompt" translatable="false">@string/fui_sign_in_default</string>
+    <string name="fui_title_welcome_back_password_prompt" translatable="false">@string/fui_sign_in_default</string>
+    <string name="fui_welcome_back_idp_header" translation_description="Inline subtitle to users whose signup was interrupted since an existing account was detected">Hai già un account</string>
+    <string name="fui_welcome_back_email_header" translation_description="Message for returning users">Bentornato!</string>
+    <string name="fui_welcome_back_idp_prompt" translation_description="Message to users that need to signin using existing IDP accounts">
+        Hai già utilizzato <xliff:g example="jane.doe@example.com" id="email_addr" translation_description="">%1$s</xliff:g>.
+        Entra con <xliff:g example="Google" id="provider_name" translation_description="">%2$s</xliff:g> per continuare.
+    </string>
+    <string name="fui_welcome_back_password_prompt_body" translation_description="Message to users that need to signin using existing email accounts">
+        Hai già utilizzato <xliff:g example="jane.doe@example.com" id="email_addr" translation_description="">%1$s</xliff:g>
+        per fare il login. Inserisci la password per l'account.
+    </string>
+    <string name="fui_progress_dialog_signing_in" translation_description="Progress dialog text">Eseguendo l\'accesso…</string>
+    <string name="fui_trouble_signing_in" translation_description="Link leading to forgot password flow">Problemi ad entrare?</string>
+
+    <!-- Password recovery -->
+    <string name="fui_title_recover_password_activity" translation_description="Recover password screen title">Recupera password</string>
+    <string name="fui_title_confirm_recover_password" translation_description="Password recovery confirmation message">Controlla l\'email</string>
+    <string name="fui_password_recovery_body" translation_description="Password recovery message body">Controlla le instruzioni inviate a questa mail per recuperare la password</string>
+    <string name="fui_button_text_send" translation_description="Button text to send recovery email">Invia</string>
+    <string name="fui_confirm_recovery_body" translation_description="Alert dialog displayed after password recovery email is sent">Segui le istruzioni inviate a %1$s per recuperare la password.</string>
+    <string name="fui_progress_dialog_sending" translation_description="Progress dialog while password recovery email is being sent">Inviando…</string>
+    <string name="fui_error_email_does_not_exist" translation_description="Inline error when user attempt signin with invalid account">Questa email non risulta con nessun account nel nostro sistema</string>
 </resources>

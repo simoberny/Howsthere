@@ -28,20 +28,17 @@ public class MainActivity extends AppCompatActivity{
 
     private FeedFragment ff;
 
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        this.setIntent(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         PanoramiStorage.context = this;
         PanoramiStorage.panorami_storage = new PanoramiStorage();
         PanoramiStorage.panorami_storage.initial_load();
-
-        for(int i=0; i<0;i++){
-            Panorama p = new Panorama();
-            p.data = new Date();
-            p.citta = "ciao"+ "  "+i;
-            p.ID = ""+i;
-            PanoramiStorage.panorami_storage.addPanorama(p);
-        }
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("SettingsPref", 0);
         SharedPreferences.Editor editor = pref.edit();
@@ -57,6 +54,12 @@ public class MainActivity extends AppCompatActivity{
 
         Intent i = getIntent();
         Bundle extra = i.getExtras();
+        if(extra != null)
+            System.out.println("EXTRA: " + extra.getBoolean("addFeed"));
+        i.replaceExtras(new Bundle());
+        i.setAction("");
+        i.setData(null);
+        i.setFlags(0);
 
         ff = FeedFragment.newInstance(extra);
 
@@ -67,11 +70,13 @@ public class MainActivity extends AppCompatActivity{
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        if(modify){
+        if(modify) {
             navigation.setSelectedItemId(R.id.navigation_user);
             editor.remove("modify");
             editor.commit();
-        }else if(extra != null){
+        }else if(extra != null && extra.getInt("login") == 1){
+            navigation.setSelectedItemId(R.id.navigation_user);
+        }else if(extra != null && extra.getBoolean("addFeed")){
             navigation.setSelectedItemId(R.id.navigation_feed);
         }else{
             navigation.setSelectedItemId(R.id.navigation_home);

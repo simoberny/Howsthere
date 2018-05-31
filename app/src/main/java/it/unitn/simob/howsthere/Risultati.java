@@ -17,10 +17,12 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,6 +40,7 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.google.firebase.auth.FirebaseAuth;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.enums.EPickType;
@@ -60,22 +63,41 @@ public class Risultati extends AppCompatActivity {
     private Panorama p;
     private String id;
 
+    private FirebaseAuth mAuth;
+
     private PickImageDialog dialog;
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int GALLERY_INTENT = 25;
     public static final int CAMERA_INTENT = 26;
     private String mCurrentPhotoPath;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_risultati);
 
+        mAuth = FirebaseAuth.getInstance();
+
         FloatingActionButton take_photo = findViewById(R.id.take_photo);
         take_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getImage();
+                if(mAuth.getCurrentUser() != null){
+                    getImage();
+                }else{
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.risultatiMainLayout), "Devi eseguire il login per poter scattare un panorama!", Snackbar.LENGTH_LONG);
+                    mySnackbar.setAction("Login", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(v.getContext(), MainActivity.class);
+                            intent.putExtra("login", 1);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    });
+                    mySnackbar.show();
+                }
             }
         });
 
@@ -363,7 +385,8 @@ public class Risultati extends AppCompatActivity {
                     Bundle extras = data.getExtras();
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.putExtras(extras);
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("addFeed", true);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
                 break;
@@ -380,5 +403,20 @@ public class Risultati extends AppCompatActivity {
         cittaTv.setText("città: "+p.citta);
         TextView dataTv = (TextView)findViewById(R.id.data);
         dataTv.setText("data: "+p.data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 }

@@ -71,16 +71,16 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private LinearLayoutManager mLayoutManager;
     private FeedAdapter adapter;
     private List<Feed> feedList;
-    private static FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
     private TextView nofeed;
     private PickImageDialog dialog;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private static FirebaseFirestore db;
+    private FirebaseFirestore db;
     private String mCurrentPhotoPath;
     FirebaseUser currentUser;
 
-    Boolean _areLecturesLoaded =false;
+    Boolean _areLecturesLoaded = false;
 
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int GALLERY_INTENT = 25;
@@ -92,29 +92,32 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         FeedFragment fragment = new FeedFragment();
         Bundle args = bun;
         fragment.setArguments(args);
-
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Bundle extras = getArguments();
-        if(extras != null){
+        if(extras != null) {
             String pan_id = (String) extras.get("panoramaid");
             String posizione = (String) extras.get("posizione");
             String uri = (String) extras.get("uri");
             String filename = (String) extras.get("filename");
             String descrizione = (String) extras.get("descrizione");
 
-            feed_to_db(uri, filename, descrizione, pan_id, posizione);
+            if (uri != null) {
+                feed_to_db(uri, filename, descrizione, pan_id, posizione);
 
+
+            }
+            
             getArguments().clear();
         }
     }

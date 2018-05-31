@@ -284,13 +284,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             osm_marker.setTitle("Amata Arcore");
             osm_marker.setSnippet("Amata Arcore");
             osm_marker.setAnchor(org.osmdroid.views.overlay.Marker.ANCHOR_CENTER, org.osmdroid.views.overlay.Marker.ANCHOR_BOTTOM);
-            osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_red));
+            osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
             osm_marker.setDragOffset(5);
             osm_marker.setOnMarkerDragListener(new org.osmdroid.views.overlay.Marker.OnMarkerDragListener() {
                 @Override
-                public void onMarkerDrag(org.osmdroid.views.overlay.Marker marker) {
-
-                }
+                public void onMarkerDrag(org.osmdroid.views.overlay.Marker marker) { }
 
                 @Override
                 public void onMarkerDragEnd(org.osmdroid.views.overlay.Marker marker) {
@@ -298,10 +296,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 }
 
                 @Override
-                public void onMarkerDragStart(org.osmdroid.views.overlay.Marker marker) {
-
-                }
+                public void onMarkerDragStart(org.osmdroid.views.overlay.Marker marker) { }
             });
+
             osm_marker.setOnMarkerClickListener(new org.osmdroid.views.overlay.Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(org.osmdroid.views.overlay.Marker marker, org.osmdroid.views.MapView mapView) {
@@ -309,11 +306,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                     return false;
                 }
             });
-            map.getOverlays().add(osm_marker);
 
+            map.getOverlays().add(osm_marker);
             map.getOverlays().addAll(overlays);
         }
-
        return rootview;
     }
 
