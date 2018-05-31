@@ -176,6 +176,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             }
         }else{
             holder.heart.setVisibility(View.GONE);
+            holder.menu.setVisibility(View.GONE);
         }
 
         holder.menu.setOnClickListener(new View.OnClickListener() {
