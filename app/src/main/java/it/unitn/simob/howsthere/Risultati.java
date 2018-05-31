@@ -1,15 +1,16 @@
 package it.unitn.simob.howsthere;
 
 import android.Manifest;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -17,29 +18,28 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
@@ -47,19 +47,18 @@ import com.vansuita.pickimage.enums.EPickType;
 import com.vansuita.pickimage.listeners.IPickClick;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import it.unitn.simob.howsthere.Oggetti.CompassActivity;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 
-public class Risultati extends AppCompatActivity {
+public class Risultati extends AppCompatActivity  {
     private Panorama p;
     private String id;
 
@@ -70,7 +69,7 @@ public class Risultati extends AppCompatActivity {
     public static final int GALLERY_INTENT = 25;
     public static final int CAMERA_INTENT = 26;
     private String mCurrentPhotoPath;
-
+    float angoloDaSotrarre = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -419,4 +418,27 @@ public class Risultati extends AppCompatActivity {
         }
         return false;
     }
+    public void iniziaCompass(View v){
+        String titolo = "";
+        if(getResources().getResourceEntryName(v.getId()).equals("albaButton")){
+            System.out.println("onclick bottone alba");
+            titolo = "ALBA";
+            angoloDaSotrarre = (float) p.getAlba().azimuth;//prova
+        }
+        if(getResources().getResourceEntryName(v.getId()).equals("tramontoButton")){
+            System.out.println("onclick bottone tramonto");
+            titolo = "TRAMONTO";
+            angoloDaSotrarre = (float) p.getTramonto().azimuth;
+        }
+
+        //faccio partire l'activity
+        Intent i = new Intent(this,CompassActivity.class);
+        System.out.println("angolo Risultati: " + angoloDaSotrarre);
+        i.putExtra("angoloDaSottrarre", angoloDaSotrarre);
+        i.putExtra("titolo", titolo);
+        startActivity(i);
+
+    }
+
+
 }

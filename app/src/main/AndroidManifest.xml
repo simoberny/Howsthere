@@ -13,8 +13,6 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
-
     <uses-feature android:name="android.hardware.location.gps" />
 
     <application
@@ -64,8 +62,8 @@
         </activity>
         <activity
             android:name=".Data"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_data"
+            android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -85,9 +83,10 @@
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"
-                />
+                android:value=".MainActivity" />
         </activity>
+        <activity android:name=".Oggetti.CompassActivity"
+            android:theme="@style/AppThemeNoBar"></activity>
     </application>
 
 </manifest>
