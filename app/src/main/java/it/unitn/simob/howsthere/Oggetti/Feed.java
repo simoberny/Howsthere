@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class Feed {
     private String ID, uid, name, location, imageUrl, panoramaID, timeStamp, descrizione, file_name;
+    private String p;
     private Integer likes;
     private List<String> likes_id;
 
@@ -120,5 +121,13 @@ public class Feed {
 
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
+    }
+
+    public String getP() {
+        return p;
+    }
+
+    public void setP(String p) {
+        this.p = p;
     }
 }

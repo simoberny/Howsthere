@@ -44,8 +44,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,6 +58,7 @@ import java.util.concurrent.TimeUnit;
 
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.Oggetti.Feed;
+import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.R;
 import it.unitn.simob.howsthere.Risultati;
 
@@ -117,14 +120,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         holder.descrizione.setText(feed.getDescrizione());
         holder.likes.setText(feed.getLikes() + " Mi piace");
 
-        holder.panorama.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if(feed.getP() == null){
+            holder.panorama.setVisibility(View.INVISIBLE);
+        }else{
+            holder.panorama.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     Intent i = new Intent(con, Risultati.class);
-                    i.putExtra("ID", feed.getPanoramaID());
+                    i.putExtra("pan", feed.getP());
                     con.startActivity(i);
-            }
-        });
+                }
+            });
+        }
 
         holder.image.setOnTouchListener(new View.OnTouchListener() {
             private GestureDetector gestureDetector = new GestureDetector(con, new GestureDetector.SimpleOnGestureListener() {
