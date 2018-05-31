@@ -22,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -46,9 +47,11 @@ import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.enums.EPickType;
 import com.vansuita.pickimage.listeners.IPickClick;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,14 +74,12 @@ public class Risultati extends AppCompatActivity {
     public static final int CAMERA_INTENT = 26;
     private String mCurrentPhotoPath;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_risultati);
 
         mAuth = FirebaseAuth.getInstance();
-
         FloatingActionButton take_photo = findViewById(R.id.take_photo);
         take_photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,14 +103,40 @@ public class Risultati extends AppCompatActivity {
         });
 
         Intent i = getIntent();
+        Bundle extras = i.getExtras();
+
+        //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
         id = i.getStringExtra("ID");
-        System.out.println("RISULTATI id: " +id);
+        String pFromIntent = (String) extras.get("pan");
+
         PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
-        p = panoramiStorage.getPanoramabyID(id);
-        System.out.println("recuperato panorama" +id);
+        if(id != null){
+            //Intent da tutte le altre parti con ID e panorama salvato in locale
+            p = panoramiStorage.getPanoramabyID(id);
+            System.out.println("recuperato panorama" +id);
+        }else{
+            Panorama obj = null;
+            //Deserializzo stringa
+            try {
+                byte b[] = Base64.decode(pFromIntent.getBytes(), Base64.DEFAULT);
+                ByteArrayInputStream bi = new ByteArrayInputStream(b);
+                ObjectInputStream si = new ObjectInputStream(bi);
+                obj = (Panorama) si.readObject();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            p = obj; //Intent dalla feed con panorama salvato in Firebase
+        }
+
         System.out.println("panorama NULL? " + p);
-        stampaGrafico();
-        stampaValoriBase(); //informazioni sempre conosciute
+
+        //Se per qualche motivo il panorama non è leggibile o non c'è chiudo l'attività
+        if(p != null){
+            stampaGrafico();
+            stampaValoriBase(); //informazioni sempre conosciute
+        }else{
+            finish();
+        }
     }
 
     void stampaGrafico(){
@@ -385,6 +412,7 @@ public class Risultati extends AppCompatActivity {
                     Bundle extras = data.getExtras();
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.putExtras(extras);
+                    intent.putExtra("panorama", p);
                     intent.putExtra("addFeed", true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);

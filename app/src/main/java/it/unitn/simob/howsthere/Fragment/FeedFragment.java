@@ -20,6 +20,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,7 @@ import com.vansuita.pickimage.listeners.IPickResult;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +63,7 @@ import java.util.Map;
 import it.unitn.simob.howsthere.Adapter.FeedAdapter;
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.Oggetti.Feed;
+import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.PostFeed;
 import it.unitn.simob.howsthere.R;
 
@@ -111,13 +114,12 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             String uri = (String) extras.get("uri");
             String filename = (String) extras.get("filename");
             String descrizione = (String) extras.get("descrizione");
+            Panorama p = (Panorama) extras.get("panorama");
 
             if (uri != null) {
-                feed_to_db(uri, filename, descrizione, pan_id, posizione);
-
-
+                feed_to_db(uri, filename, descrizione, pan_id, posizione, p);
             }
-            
+
             getArguments().clear();
         }
     }
@@ -275,18 +277,32 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     String filename = (String) extras.get("filename");
                     String descrizione = (String) extras.get("descrizione");
 
-                    feed_to_db(uri, filename, descrizione, pan_id, posizione);
+                    feed_to_db(uri, filename, descrizione, pan_id, posizione, null);
                 }
         }
     }
 
-    private void feed_to_db(String uri, String filename, String descrizione, String pan_id, String posizione) {
+    private void feed_to_db(String uri, String filename, String descrizione, String pan_id, String posizione, Panorama p) {
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 
         mSwipeRefreshLayout.setRefreshing(true);
 
         final Feed ne = new Feed(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getDisplayName(), posizione, uri, dateFormat.format(date), filename, descrizione, pan_id);
+        if(p != null){
+            String serializedObject = "";
+            try {
+                ByteArrayOutputStream bo = new ByteArrayOutputStream();
+                ObjectOutputStream so = new ObjectOutputStream(bo);
+                so.writeObject(p);
+                so.flush();
+                serializedObject = new String(Base64.encode(bo.toByteArray(), Base64.DEFAULT));
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+            ne.setP(serializedObject);
+        }
 
         final SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("MaxPhotoRef", 0);
         final SharedPreferences.Editor editor = pref.edit();
