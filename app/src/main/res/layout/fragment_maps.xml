@@ -14,7 +14,18 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="it.unitn.simob.howsthere.MainActivity" />
+        tools:context="it.unitn.simob.howsthere.MainActivity" ></fragment>
+
+    <LinearLayout
+        android:id="@+id/focusP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center"
+        android:alpha="0"
+        android:text="Button"
+        android:visibility="invisible"
+        android:orientation="horizontal">
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/r_touch"

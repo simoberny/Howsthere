@@ -7,6 +7,17 @@
     android:animateLayoutChanges="true"
     tools:context="it.unitn.simob.howsthere.Fragment.MapsFragment">
 
+    <LinearLayout
+        android:id="@+id/focusP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center"
+        android:alpha="0"
+        android:text="Button"
+        android:visibility="invisible"
+        android:orientation="horizontal">
+    </LinearLayout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"

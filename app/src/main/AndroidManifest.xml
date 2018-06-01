@@ -87,8 +87,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".CompassActivity"
-            android:theme="@style/AppThemeNoBar"></activity>
+        <activity
+            android:name=".CompassActivity"
+            android:theme="@style/AppThemeNoBar" />
+        <activity
+            android:name=".Presentation"
+            android:label="@string/title_activity_presentation"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

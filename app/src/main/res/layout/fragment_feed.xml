@@ -50,16 +50,6 @@
                     android:layout_height="match_parent"
                     android:gravity="center">
 
-                    <TextView
-                        android:id="@+id/nofeed"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center"
-                        android:text="Ancora nessuna Feed!"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="24sp"
-                        android:visibility="visible" />
-
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
@@ -69,6 +59,16 @@
                         android:visibility="visible">
 
                     </android.support.v7.widget.RecyclerView>
+
+                    <TextView
+                        android:id="@+id/nofeed"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center"
+                        android:text="Ancora nessuna Feed!"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="24sp"
+                        android:visibility="visible" />
                 </RelativeLayout>
 
             </android.support.v4.widget.SwipeRefreshLayout>

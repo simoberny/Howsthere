@@ -80,9 +80,14 @@ import java.util.Locale;
 
 import it.unitn.simob.howsthere.Data;
 import it.unitn.simob.howsthere.MainActivity;
+import it.unitn.simob.howsthere.Presentation;
 import it.unitn.simob.howsthere.R;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetSequence;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
+    boolean isUserFirstTime;
+    public static final String PREF_USER_FIRST_TIME = "tap_first_time";
     private String citta = "";
     private GoogleMap gm = null;
     private LatLng ln = null;
@@ -105,10 +110,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     //open street map
     org.osmdroid.views.MapView map = null;
 
+    MaterialTapTargetSequence seq;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contesto = this;
+
+        isUserFirstTime = Boolean.valueOf(readSharedSetting(getActivity(), PREF_USER_FIRST_TIME, "true"));
 
         SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
         maps_type = pref.getInt("maps_type", 2);
@@ -122,6 +131,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
         Context ctx = getActivity().getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+
+        seq = new MaterialTapTargetSequence();
     }
     public void onResume(){
         super.onResume();
@@ -150,7 +161,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         final View rootview = (map_id == 0) ? inflater.inflate(R.layout.fragment_maps, container, false) : inflater.inflate(R.layout.fragment_maps_osm, container, false);
         //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
        dialog = new BottomSheetDialog(getActivity());
@@ -310,6 +320,33 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             map.getOverlays().add(osm_marker);
             map.getOverlays().addAll(overlays);
         }
+
+
+        if(isUserFirstTime) {
+            seq.addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                    .setTarget(rootview.findViewById(R.id.focusP))
+                    .setPrimaryText("Seleziona un posto sulla mappa")
+                    .setSecondaryText("Seleziona il posto di cui vuoi calcolare il panorama. ")
+                    .create());
+            seq.addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                    .setTarget((getActivity()).findViewById(R.id.navigation_storico))
+                    .setPrimaryText("Sezione Storico")
+                    .setSecondaryText("Qui trovate tutti i panorami che avete calcolato in passato")
+                    .create());
+            seq.addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
+                    .setTarget((getActivity()).findViewById(R.id.navigation_feed))
+                    .setPrimaryText("Sezione Feed")
+                    .setSecondaryText("Questa è la sezione social dell'applicazione, dove trovate tutti i contenuti condivisi dagli utenti!")
+                    .create());
+            seq.setSequenceCompleteListener(new MaterialTapTargetSequence.SequenceCompleteListener() {
+                @Override
+                public void onSequenceComplete() {
+                    saveSharedSetting((MainActivity) getActivity(), PREF_USER_FIRST_TIME, "false");
+                }
+            });
+            seq.show();
+        }
+
        return rootview;
     }
 
@@ -551,8 +588,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             osm_marker.setTitle(citta);
             osm_marker.setSnippet(citta);
         }
-
-        dialog.show();
     }
 
     /**
@@ -607,5 +642,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         public int getSavedMapType() {
             return mapStatePrefs.getInt(MAPTYPE, GoogleMap.MAP_TYPE_NORMAL);
         }
+    }
+
+    public static String readSharedSetting(Context ctx, String settingName, String defaultValue) {
+        SharedPreferences sharedPref = ctx.getSharedPreferences(Presentation.FIRST_TIME_STORAGE, Context.MODE_PRIVATE);
+        return sharedPref.getString(settingName, defaultValue);
+    }
+
+    public static void saveSharedSetting(MainActivity ctx, String settingName, String settingValue) {
+        SharedPreferences sharedPref = ctx.getSharedPreferences(Presentation.FIRST_TIME_STORAGE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(settingName, settingValue);
+        editor.apply();
     }
 }

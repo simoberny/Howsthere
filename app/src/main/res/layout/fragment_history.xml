@@ -29,18 +29,53 @@
                 app:titleTextColor="@color/title_nobar" />
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/storico_lista"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="0dp"
-            android:divider="@null"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false"
-            android:padding="5dp"
-            android:paddingBottom="0dp"
-            android:paddingTop="0dp" />
+            android:gravity="center">
 
+            <ListView
+                android:id="@+id/storico_lista"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:divider="@null"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false"
+                android:padding="5dp"
+                android:paddingBottom="0dp"
+                android:paddingTop="0dp" />
+
+            <LinearLayout
+                android:id="@+id/nofeed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center"
+                    android:paddingEnd="40dp"
+                    android:paddingStart="40dp"
+                    android:text="Non hai ancora generato un panorama!"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="24sp"
+                    android:visibility="visible" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/new_pan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:clickable="true"
+                    app:backgroundTint="@color/background"
+                    app:elevation="2dp"
+                    app:srcCompat="@drawable/baseline_chevron_right_24" />
+
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

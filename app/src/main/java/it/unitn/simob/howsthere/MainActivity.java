@@ -1,5 +1,6 @@
 package it.unitn.simob.howsthere;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 public class MainActivity extends AppCompatActivity{
 
     private FeedFragment ff;
+    public static final String PREF_USER_FIRST_TIME = "user_first_time";
+    boolean isUserFirstTime;
 
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -28,6 +31,14 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        isUserFirstTime = Boolean.valueOf(readSharedSetting(MainActivity.this, PREF_USER_FIRST_TIME, "true"));
+
+        Intent introIntent = new Intent(MainActivity.this, Presentation.class);
+        introIntent.putExtra(PREF_USER_FIRST_TIME, isUserFirstTime);
+
+        if (isUserFirstTime)
+            startActivity(introIntent);
+
         PanoramiStorage.context = this;
         PanoramiStorage.panorami_storage = new PanoramiStorage();
         PanoramiStorage.panorami_storage.initial_load();
@@ -99,4 +110,9 @@ public class MainActivity extends AppCompatActivity{
             return true;
         }
     };
+
+    public static String readSharedSetting(Context ctx, String settingName, String defaultValue) {
+        SharedPreferences sharedPref = ctx.getSharedPreferences(Presentation.FIRST_TIME_STORAGE, Context.MODE_PRIVATE);
+        return sharedPref.getString(settingName, defaultValue);
+    }
 }

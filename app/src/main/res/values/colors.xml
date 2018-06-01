@@ -15,6 +15,13 @@
     <color name="dialog_text">#555</color>
     <color name="dialog_text_sec">#888</color>
 
+    <color name="indicator_un">#20222222</color>
+    <color name="indicator_sel">#fff</color>
+
+    <!-- Presentation color -->
+    <color name="primo_p">#2196f3</color>
+    <color name="secondo_p">#4CAF50</color>
+    <color name="terzo_p">#FB8C00</color>
 
     <color name="material_green_50">#E8F5E9</color>
     <color name="material_green_500">#4CAF50</color>

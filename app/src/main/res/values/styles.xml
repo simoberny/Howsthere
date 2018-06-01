@@ -1,5 +1,5 @@
 <resources>
-    <attr format="reference" name="cardStyle"/>
+    <attr name="cardStyle" format="reference" />
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -58,19 +58,17 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="LoginTheme.Toolbar" parent="Widget.AppCompat.Toolbar">
-    </style>
+    <style name="LoginTheme.Toolbar" parent="Widget.AppCompat.Toolbar"></style>
 
-    <style name="LoginTheme.ToolbarTextStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-    </style>
+    <style name="LoginTheme.ToolbarTextStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title"></style>
 
     <style name="LoginTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="LoginTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="LoginTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="LoginTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="LoginTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

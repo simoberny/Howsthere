@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -99,6 +102,16 @@ public class HistoryFragment extends Fragment{
 
         ((MainActivity)getActivity()).setSupportActionBar(bar);
 
+        FloatingActionButton new_pan = view.findViewById(R.id.new_pan);
+        new_pan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomNavigationView navigation  = (getActivity()).findViewById(R.id.navigation);
+                navigation.setSelectedItemId(R.id.navigation_home);
+            }
+        });
+
+        LinearLayout nofeed = view.findViewById(R.id.nofeed);
         ListView r = (ListView) view.findViewById(R.id.storico_lista);
         List<Panorama> list = PanoramiStorage.panorami_storage.getAllPanorama();
         adapter = new StoricoAdapter(view.getContext(), R.layout.singolo_storico, list);
@@ -148,6 +161,12 @@ public class HistoryFragment extends Fragment{
                 return true;
             }
         });
+
+        if(list.size() > 0){
+            nofeed.setVisibility(View.GONE);
+        }else{
+            nofeed.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
