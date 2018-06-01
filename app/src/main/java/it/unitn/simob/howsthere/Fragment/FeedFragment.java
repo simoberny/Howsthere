@@ -61,9 +61,11 @@ import java.util.List;
 import java.util.Map;
 
 import it.unitn.simob.howsthere.Adapter.FeedAdapter;
+import it.unitn.simob.howsthere.Adapter.MyLinearLayoutManager;
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.Oggetti.Feed;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
+import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.PostFeed;
 import it.unitn.simob.howsthere.R;
 
@@ -116,12 +118,10 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             String uri = (String) extras.get("uri");
             String filename = (String) extras.get("filename");
             String descrizione = (String) extras.get("descrizione");
-            Panorama p = (Panorama) extras.get("panorama");
 
-            if (uri != null) {
-                feed_to_db(uri, filename, descrizione, pan_id, posizione, p);
+            if (pan_id != null) {
+                feed_to_db(uri, filename, descrizione, pan_id, posizione);
             }
-
             getArguments().clear();
         }
     }
@@ -135,20 +135,14 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         add_feed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getImage();
+                //Ottenere l'immagine, ora dalla mappa
             }
         });
-
-        if(currentUser == null){
-            add_feed.setVisibility(View.GONE);
-        }else{
-            add_feed.setVisibility(View.VISIBLE);
-        }
 
         nofeed = view.findViewById(R.id.nofeed);
         adapter = new FeedAdapter(getActivity(), feedList); //Inizializzazione adapter per la lista
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager = new MyLinearLayoutManager(getActivity());
         mLayoutManager.setSmoothScrollbarEnabled(true);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -158,66 +152,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                android.R.color.holo_green_dark,
-                android.R.color.holo_orange_dark,
-                android.R.color.holo_blue_dark);
-
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, android.R.color.holo_green_dark, android.R.color.holo_orange_dark, android.R.color.holo_blue_dark);
         mSwipeRefreshLayout.setRefreshing(true);
 
-        loadRecyclerViewData();
+        onRefresh();
         return view;
-    }
-
-    public void getImage(){
-        dialog = PickImageDialog.build(new PickSetup().setPickTypes(EPickType.GALLERY, EPickType.CAMERA).setGalleryIcon(R.mipmap.gallery_colored).setCameraIcon(R.mipmap.camera_colored))
-            .setOnClick(new IPickClick() {
-                @Override
-                public void onGalleryClick() {
-                    if(checkPermission()) {
-                        openGallery();
-                    }
-                }
-
-                @Override
-                public void onCameraClick() {
-                    if(checkPermission()) {
-                        openCamera();
-                    }
-                }
-            }).show(getActivity());
-    }
-
-    public void openGallery(){
-        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickPhoto, GALLERY_INTENT);
-    }
-
-    public void openCamera(){
-        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePicture.resolveActivity(getActivity().getPackageManager()) != null) {
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-            }
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(getActivity(),
-                        "it.unitn.simob.howsthere.fileprovider",
-                        photoFile);
-                takePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePicture, CAMERA_INTENT);
-            }
-        }
-    }
-
-    public void cropImage(Uri uri) {
-        if(uri != null){
-            Intent i = new Intent(getContext(), PostFeed.class);
-            i.putExtra("photo", uri.toString());
-            startActivityForResult(i, 15);
-        }
     }
 
     public boolean checkPermission(){
@@ -249,69 +188,46 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return image;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode) {
-            case CAMERA_INTENT:
-                if(resultCode == RESULT_OK){
-                    File m_file = new File(mCurrentPhotoPath);
-                    Uri m_imgUri = Uri.fromFile(m_file);
-                    cropImage(m_imgUri);
-                }
-
-                break;
-            case GALLERY_INTENT:
-                if(resultCode == RESULT_OK){
-                    cropImage(data.getData());
-                }
-                break;
-            case 15:
-                if(resultCode == RESULT_OK){
-                    dialog.dismiss();
-                    Bundle extras = data.getExtras();
-
-                    String pan_id = (String) extras.get("panoramaid");
-                    String posizione = (String) extras.get("posizione");
-                    String uri = (String) extras.get("uri");
-                    String filename = (String) extras.get("filename");
-                    String descrizione = (String) extras.get("descrizione");
-
-                    feed_to_db(uri, filename, descrizione, pan_id, posizione, null);
-                }
-        }
-    }
-
-    private void feed_to_db(String uri, String filename, String descrizione, String pan_id, String posizione, Panorama p) {
-        Date date = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-
+    private void feed_to_db(String uri, String filename, String descrizione, String pan_id, String posizione) {
         mSwipeRefreshLayout.setRefreshing(true);
 
-        final Feed ne = new Feed(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getDisplayName(), posizione, uri, dateFormat.format(date), filename, descrizione, pan_id);
-        if(p != null){
-            String serializedObject = "";
-            try {
-                ByteArrayOutputStream bo = new ByteArrayOutputStream();
-                ObjectOutputStream so = new ObjectOutputStream(bo);
-                so.writeObject(p);
-                so.flush();
-                serializedObject = new String(Base64.encode(bo.toByteArray(), Base64.DEFAULT));
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-
-            ne.setP(serializedObject);
-        }
+        Panorama p = null;
+        Date date = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 
         final SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("MaxPhotoRef", 0);
         final SharedPreferences.Editor editor = pref.edit();
 
+        final Feed ne = new Feed(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getDisplayName(), posizione, uri, dateFormat.format(date), filename, descrizione);
+
+        if(pan_id != null){
+            PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
+            p = panoramiStorage.getPanoramabyID(pan_id);
+
+            if(p != null){
+                String serializedObject = "";
+                try {
+                    ByteArrayOutputStream bo = new ByteArrayOutputStream();
+                    ObjectOutputStream so = new ObjectOutputStream(bo);
+                    so.writeObject(p);
+                    so.flush();
+                    serializedObject = new String(Base64.encode(bo.toByteArray(), Base64.DEFAULT));
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+
+                ne.setPanoramaID(pan_id);
+                ne.setP(serializedObject);
+            }
+        }
+
+        //Salvo nel database
         db.collection("feeds")
                 .add(ne)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        mSwipeRefreshLayout.setRefreshing(false);
+                        onRefresh();
                         editor.putInt("day", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                         editor.putInt("max_daily", pref.getInt("max_daily", 0) + 1);
                     }
@@ -326,7 +242,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        feedList.clear();
         loadRecyclerViewData();
     }
 
@@ -349,15 +264,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                             boolean exist = false;
                             for(int i = 0; i < feedList.size(); i++){
-                                if(feedList.get(i).getID().equals(getFromDb.getID())){
-                                    exist = true;
-                                }
+                                if(feedList.get(i).getID().equals(getFromDb.getID())) exist = true;
                             }
-
-                            if(!exist){
-                                System.out.println("NON ESISTE: " + getFromDb.getID());
-                                feedList.add(getFromDb);
-                            }
+                            if(!exist)feedList.add(getFromDb);
                         }
                     } else {
                         Log.w("Errorcloud", "Error getting documents.", task.getException());
@@ -369,7 +278,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                         nofeed.setVisibility(View.VISIBLE);
                     }
 
-                    recyclerView.getLayoutManager().scrollToPosition(0);
+                    recyclerView.getRecycledViewPool().clear();
                     adapter.notifyDataSetChanged(); //Notifico che sono stati inseriti dei dati nell'adattatore
                     mSwipeRefreshLayout.setRefreshing(false);
                 }

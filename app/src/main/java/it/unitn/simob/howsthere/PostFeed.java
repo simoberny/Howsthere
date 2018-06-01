@@ -108,6 +108,7 @@ public class PostFeed extends AppCompatActivity {
 
         crop = findViewById(R.id.cropper_view);
         crop.setImageBitmap(mBitmap);
+        crop.setMakeSquare(false);
         desc = findViewById(R.id.desc);
 
         ImageView rotate = findViewById(R.id.rotate_button);
@@ -194,7 +195,6 @@ public class PostFeed extends AppCompatActivity {
         Intent returnIntent = new Intent();
 
         returnIntent.putExtra("posizione", posizione);
-        returnIntent.putExtra("panoramaid", id);
         returnIntent.putExtra("filename", filename);
         returnIntent.putExtra("uri", down.toString());
         returnIntent.putExtra("descrizione", desc.getText().toString());

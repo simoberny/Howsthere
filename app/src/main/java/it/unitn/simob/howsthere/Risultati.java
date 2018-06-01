@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -59,6 +60,10 @@ public class Risultati extends AppCompatActivity  {
     private String mCurrentPhotoPath;
     float angoloDaSotrarre = 0;
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -381,9 +386,11 @@ public class Risultati extends AppCompatActivity  {
         switch(requestCode) {
             case CAMERA_INTENT:
                 if(resultCode == RESULT_OK){
-                    File m_file = new File(mCurrentPhotoPath);
-                    Uri m_imgUri = Uri.fromFile(m_file);
-                    cropImage(m_imgUri);
+                    if(mCurrentPhotoPath != null) {
+                        File m_file = new File(mCurrentPhotoPath);
+                        Uri m_imgUri = Uri.fromFile(m_file);
+                        cropImage(m_imgUri);
+                    }
                 }
 
                 break;
@@ -397,7 +404,7 @@ public class Risultati extends AppCompatActivity  {
                     Bundle extras = data.getExtras();
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.putExtras(extras);
-                    intent.putExtra("panorama", p);
+                    intent.putExtra("panoramaid", id);
                     intent.putExtra("addFeed", true);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
