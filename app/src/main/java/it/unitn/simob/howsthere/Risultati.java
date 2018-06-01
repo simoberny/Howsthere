@@ -276,7 +276,6 @@ public class Risultati extends AppCompatActivity  {
         chart.invalidate();
     }
 
-
     public void getImage(){
         final SharedPreferences pref = getApplicationContext().getSharedPreferences("MaxPhotoRef", 0);
         final SharedPreferences.Editor editor = pref.edit();
