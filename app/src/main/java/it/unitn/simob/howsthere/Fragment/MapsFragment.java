@@ -592,6 +592,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             osm_marker.setTitle(citta);
             osm_marker.setSnippet(citta);
         }
+
+        dialog.show();
     }
 
     /**
