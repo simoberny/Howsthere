@@ -85,7 +85,9 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
             image = (ImageView) findViewById(R.id.imageViewCompass);
             image.startAnimation(ra);
         }
-        ImageButton ib = (ImageButton) findViewById(R.id.provaImmagine);
+
+        //ROTAZIONE ICONA DIRETTAMENTE NELL' imageButton per mettere l' animazione direttamente in result
+        /*ImageButton ib = (ImageButton) findViewById(R.id.provaImmagine);
         Matrix matrix = new Matrix();
 
         matrix.postRotate(currentDegree+angoloDaSotrarre);
@@ -95,7 +97,7 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
 
         Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), matrix, true);
         BitmapDrawable bdrawable = new BitmapDrawable(getResources(),rotatedBitmap);
-        ib.setBackground(bdrawable);
+        ib.setBackground(bdrawable);*/
 
         currentDegree = -degree;
     }

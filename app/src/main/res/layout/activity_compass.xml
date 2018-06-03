@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TextView"
+            android:text="titolo"
             android:textSize="30sp" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="40dp"
             android:layout_marginTop="50dp"
-            android:text="Heading: 0.0"
+            android:text="Azimuth: 0.0"
             android:textSize="18sp" />
 
 
@@ -55,6 +55,7 @@
             android:layout_width="93dp"
             android:layout_height="33dp"
             android:scaleType="centerInside"
+            android:visibility="gone"
             app:srcCompat="@drawable/compass_icon" />
 
     </LinearLayout>

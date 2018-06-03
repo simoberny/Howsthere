@@ -20,10 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.twitter.sdk.android.core.models.TwitterCollection;
+
 import org.shredzone.commons.suncalc.MoonIllumination;
 import org.shredzone.commons.suncalc.MoonPosition;
 import org.shredzone.commons.suncalc.MoonTimes;
 import org.shredzone.commons.suncalc.SunPosition;
+import org.shredzone.commons.suncalc.SunTimes;
 import org.shredzone.commons.suncalc.util.Moon;
 import org.shredzone.commons.suncalc.util.Sun;
 
@@ -376,6 +379,14 @@ public class Data extends AppCompatActivity {
         progressDialog.setTitle("Scaricamento e Calcolo posizione pianeti");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
 
+        //calcolo Alba e Tramonto senza montagne
+        SunTimes s = SunTimes.compute()
+                .on(panorama.data)       // set a date
+                .at(panorama.lat, panorama.lon)   // set a location
+                .execute();
+        panorama.albaNoMontagne = s.getRise();
+        panorama.tramontoNoMontagne = s.getSet();
+
         //CALCOLO SOLE ogni 5 min
         int indexSole = 0;
         for (int ora = 0; ora<24; ora++) {
@@ -415,13 +426,18 @@ public class Data extends AppCompatActivity {
                             .on(calendar.getTime())       // set a date
                             .at(panorama.lat, panorama.lon)   // set a location
                             .execute();     // get the results
-
                     //luna ieri
                     //calendar.add(Calendar.DATE, -1);
                     //luna domani
                     //MoonTimes m = MoonTimes.compute().on(panorama.data).execute();
                     MoonIllumination m = MoonIllumination.compute().on(panorama.data).execute();
-                    System.out.println("frazione: "+ m.getFraction()+" fase: "+m.getPhase());
+                    //System.out.println("frazione: "+ m.getFraction()+" fase: "+m.getPhase());
+                    panorama.percentualeLuna = m.getFraction()*100;
+                    panorama.faseLuna = m.getPhase();
+                    MoonTimes m1 = MoonTimes.compute().on(panorama.data).execute();
+                    panorama.albaLunaNoMontagne = m1.getRise();
+                    panorama.tramontoLunaNoMontagne = m1.getSet();
+                    System.out.println("informazioni Luna: " + m1.toString());
                     //System.out.println(m.toString());
                     //System.out.println("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
                     panorama.risultatiLuna[indexLuna] = new Posizione();

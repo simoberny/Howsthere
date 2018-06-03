@@ -562,14 +562,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         try {
             addresses = gcd.getFromLocation(ln.latitude, ln.longitude, 1);
             if (addresses.size() > 0) {
-                if(addresses.get(0).getLocality() != null){
-                    citta = addresses.get(0).getLocality();
-                }else if (addresses.get(0).getSubLocality() != null){
-                    citta = addresses.get(0).getSubLocality();
-                }else if (addresses.get(0).getCountryName() != null){
-                    citta = addresses.get(0).getCountryName();
-                }else{
-                    citta = "Non disponibile";
+                if(addresses.get(0).getLocality() == null || addresses.get(0).getLocality().length()==0){//se non viene trovata la città aspetto un attimo e riprovo
+                    Thread.sleep(200);
+                    addresses = gcd.getFromLocation(ln.latitude, ln.longitude, 1);
+                }
+                if (addresses.size() > 0) {
+                    if (addresses.get(0).getLocality() != null && addresses.get(0).getLocality().length() != 0) {
+                        citta = addresses.get(0).getLocality();
+                    } else if (addresses.get(0).getSubLocality() != null && addresses.get(0).getSubLocality().length() != 0) {
+                        citta = addresses.get(0).getSubLocality();
+                    } else if (addresses.get(0).getCountryName() != null && addresses.get(0).getCountryName().length() != 0) {
+                        citta = addresses.get(0).getCountryName();
+                    } else {
+                        citta = "Non disponibile";
+                    }
                 }
                 tx.setText("Posizione: " + citta + ", " + addresses.get(0).getCountryName());
             }else{
@@ -577,6 +583,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 tx.setText("Posizione sconosciuta");
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

@@ -36,6 +36,10 @@ public class Panorama implements Serializable {
     public List<Posizione> albe;
     public List<Posizione> tramonti;
 
+    // lista di posizioni dove la Luna appare e scompare. ANCORA DA IMPLEMENTARE
+    public List<Posizione> albeLuna;
+    public List<Posizione> tramontiLuna;
+
     public String ID;
     public String citta;
     public Date data;
@@ -44,8 +48,14 @@ public class Panorama implements Serializable {
     public int ore_sole;
     public  double lat = 0;
     public  double lon = 0;
-    public Date prossimaLunaPiena;
-    //public
+    public Date prossimaLunaPiena; //non ancora implementato
+    public Date ultimaLunaPiena;
+    public double percentualeLuna = 0;
+    public  double faseLuna = 0;
+    public Date albaNoMontagne;
+    public Date tramontoNoMontagne;
+    public Date albaLunaNoMontagne;
+    public Date tramontoLunaNoMontagne;
     //public
 
     public Panorama(){
@@ -60,7 +70,7 @@ public class Panorama implements Serializable {
     }
     //alba (prima apparizione), tramonto (ultima scomparsa)
     public Posizione getAlba(){
-        if (tramonti.size() != 0){
+        if (albe.size() != 0){
             return albe.get(0);
         }else{
             return null;
@@ -68,6 +78,26 @@ public class Panorama implements Serializable {
 
     }
     public Posizione getTramonto(){
-        return tramonti.get(tramonti.size()-1);
+        if (tramonti.size() != 0) {
+            return tramonti.get(tramonti.size() - 1);
+        }else{
+            return null;
+        }
+    }
+
+    public Posizione getAlbaLuna(){
+        if (albeLuna.size() != 0){
+            return albeLuna.get(0);
+        }else{
+            return null;
+        }
+
+    }
+    public Posizione getTramontoLuna(){
+        if (tramontiLuna.size() != 0) {
+            return tramontiLuna.get(tramontiLuna.size() - 1);
+        }else{
+            return null;
+        }
     }
 }

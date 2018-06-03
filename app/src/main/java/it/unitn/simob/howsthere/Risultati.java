@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,8 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
@@ -38,6 +41,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -132,7 +136,7 @@ public class Risultati extends AppCompatActivity  {
 
     void stampaGrafico(){
         List<Entry> entriesMontagne = new ArrayList<Entry>();
-        List<Entry> entriesSole = new ArrayList<Entry>();
+        final List<Entry> entriesSole = new ArrayList<Entry>();
         List<Entry> entriesLuna = new ArrayList<Entry>();
         //SOLE
         //Arrays.sort(p.risultatiSole); //ordino secondo azimuth
@@ -167,7 +171,7 @@ public class Risultati extends AppCompatActivity  {
 
         System.out.println("Montagne: "+ entriesMontagne.size() + " Sole: " + entriesSole.size() + " Luna: "+ entriesLuna.size());
         //proprietà grafico:
-        LineChart chart = (LineChart) findViewById(R.id.chart);
+        final LineChart chart = (LineChart) findViewById(R.id.chart);
         chart.setDrawGridBackground(false);
         chart.getAxisRight().setEnabled(false);
         chart.getAxisLeft().setEnabled(false);
@@ -175,7 +179,7 @@ public class Risultati extends AppCompatActivity  {
         chart.getAxisRight().setAxisMinValue(-1);
 
         LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Profilo montagne"); // add entries to dataset
-        LineDataSet dataSetSole = new LineDataSet(entriesSole, "sole");
+        final LineDataSet dataSetSole = new LineDataSet(entriesSole, "sole");
         LineDataSet dataSetLuna = new LineDataSet(entriesLuna, "luna");
 
         //proprietà grafico Montagne
@@ -191,28 +195,49 @@ public class Risultati extends AppCompatActivity  {
 
         Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_red);
         dataSetMontagne.setFillDrawable(drawable);
+        dataSetMontagne.setDrawHighlightIndicators(false);
 
         //proprietà grafiche Sole
         dataSetSole.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         dataSetSole.setColor(Color.YELLOW);
         dataSetSole.setLineWidth(1f);
-        dataSetSole.setDrawValues(false);
+        dataSetSole.setDrawValues(true);
         dataSetSole.setDrawCircles(true);
         dataSetSole.setCircleColor(Color.YELLOW);
         dataSetSole.setDrawCircleHole(false);
-        dataSetSole.setDrawValues(false);
         dataSetSole.setDrawFilled(false);
+        dataSetSole.setDrawValues(true);
+        dataSetSole.setDrawHighlightIndicators(false);
+        dataSetSole.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
+                return String.valueOf(idx);
+            }
+        });
 
         //proprietà grafiche Luna
         dataSetLuna.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         dataSetLuna.setColor(Color.LTGRAY);
         dataSetLuna.setLineWidth(1f);
-        dataSetLuna.setDrawValues(false);
+        dataSetLuna.setDrawValues(true);
         dataSetLuna.setDrawCircles(true);
         //dataSetLuna.setCircleColor(Color.GRAY);
         dataSetLuna.setDrawCircleHole(false);
-        dataSetLuna.setDrawValues(false);
+        dataSetLuna.setDrawValues(true);
         dataSetLuna.setDrawFilled(false);
+        dataSetLuna.setDrawHighlightIndicators(false);
+        dataSetLuna.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
+                if (idx>23 && idx <48) {
+                    return String.valueOf(idx % 24);
+                }else{
+                    return "";
+                }
+            }
+        });
 
         int[] coloricerchiLuna = new int[64]; //un colore per ogni dato sul grafico (24 al giorno)
         for(int i = 0; i<24; i++){
@@ -226,7 +251,7 @@ public class Risultati extends AppCompatActivity  {
         }
         dataSetLuna.setCircleColors(coloricerchiLuna);
 
-        //chart.getDescription().setText("Profilo montagne con sole e luna");
+        chart.getDescription().setText("");
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
         lineData.addDataSet(dataSetSole);
@@ -235,6 +260,9 @@ public class Risultati extends AppCompatActivity  {
         chart.getXAxis().setDrawAxisLine(false);
         chart.getAxisLeft().setDrawAxisLine(false);
         chart.getXAxis().setDrawGridLines(false);
+        chart.setMaxVisibleValueCount(Integer.MAX_VALUE);//mostrami tutti i label
+        chart.setScaleEnabled(false);
+        //chart.getData().setHighlightEnabled(false);
 
         //chart.saveToGallery("grafico.jpeg",100);
         /*XAxis left = chart.getXAxis();
@@ -417,12 +445,26 @@ public class Risultati extends AppCompatActivity  {
         albaTv.setText("Alba: "+p.getAlba().ora + ":" + p.getAlba().minuto);
         TextView tramontoTv = (TextView)findViewById(R.id.tramonto);
         tramontoTv.setText("Tramonto: "+p.getTramonto().ora+ ":" + p.getTramonto().minuto);
+        TextView albaNoMontagneTv = (TextView)findViewById(R.id.albaNoMontagne);
+        albaNoMontagneTv.setText("Alba all' orizzonte: ora "+p.albaNoMontagne.getHours() + ":" + p.albaNoMontagne.getMinutes());
+        TextView tramontoNoMontagneTv = (TextView)findViewById(R.id.tramontoNoMontagne);
+        tramontoNoMontagneTv.setText("Tramonto all' orizzonte: ora "+p.tramontoNoMontagne.getHours() + ":" + p.tramontoNoMontagne.getMinutes());
         TextView minSoleTv = (TextView)findViewById(R.id.minutiSole);
         minSoleTv.setText("Ore di Sole: " + p.minutiSole/60 + " ore, "+ (p.minutiSole-(p.minutiSole/60)*60)+ " minuti");
         TextView cittaTv = (TextView)findViewById(R.id.citta);
-        cittaTv.setText("città: "+p.citta);
+        cittaTv.setText("Località: "+p.citta);
+        TextView latitudineTv = (TextView)findViewById(R.id.latitudine);
+        latitudineTv.setText("Latitudine: "+p.lat);
+        TextView longitudineTv = (TextView)findViewById(R.id.longitudine);
+        longitudineTv.setText("Longitudine: "+p.lon);
         TextView dataTv = (TextView)findViewById(R.id.data);
-        dataTv.setText("data: "+p.data);
+        dataTv.setText("data: "+(String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data));
+        TextView frazioneLunaTv = (TextView)findViewById(R.id.frazioneLuna);
+        frazioneLunaTv.setText("percentuale luna: "+(int)p.percentualeLuna +"%");
+        TextView faseLunaTv = (TextView)findViewById(R.id.faseLuna);
+        faseLunaTv.setText("fase luna(0=nuova,50=piena): "+(int)p.faseLuna);
+
+
     }
 
     @Override

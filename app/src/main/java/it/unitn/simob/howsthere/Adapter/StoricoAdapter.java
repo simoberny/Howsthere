@@ -8,6 +8,7 @@ package it.unitn.simob.howsthere.Adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
 
         Panorama p = l.get(position);
         nome_citta.setText(p.citta+ " ");
-        String d = "Giorno: "+p.data.getDay()+"/"+p.data.getMonth()+"/"+p.data.getYear()+"  Ora: "+p.data.getHours()+":"+p.data.getHours();
+        String d = (String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data);
         data.setText(d);
         ID.setText(p.ID);
 
