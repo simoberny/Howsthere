@@ -55,6 +55,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -248,7 +249,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private void loadRecyclerViewData() {
         mSwipeRefreshLayout.setRefreshing(true);
 
-        db.collection("feeds").orderBy("timeStamp", Query.Direction.DESCENDING)
+        db.collection("feeds").orderBy("timeStamp", Query.Direction.ASCENDING)
             .get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -264,9 +265,13 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                             boolean exist = false;
                             for(int i = 0; i < feedList.size(); i++){
-                                if(feedList.get(i).getID().equals(getFromDb.getID())) exist = true;
+                                if(feedList.get(i).getID().equals(getFromDb.getID())){
+                                    feedList.set(i, getFromDb);
+                                    exist = true;
+                                }
                             }
-                            if(!exist)feedList.add(getFromDb);
+
+                            if(!exist)feedList.add(0, getFromDb);
                         }
                     } else {
                         Log.w("Errorcloud", "Error getting documents.", task.getException());

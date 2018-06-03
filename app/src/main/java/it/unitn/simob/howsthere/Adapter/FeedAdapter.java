@@ -361,13 +361,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                                     final StorageReference delRef = storageRef.child("images/" +feedList.get(position).getFile_name());
                                     feedList.remove(position);
                                     notifyItemRemoved(position);
-                                    delRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    //Elimino la foto dal database
+                                    /*delRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Snackbar mySnackbar = Snackbar.make(((MainActivity)mContext).findViewById(R.id.frame_layout), "Feed eliminata!", Snackbar.LENGTH_SHORT);
                                             mySnackbar.show();
                                         }
-                                    });
+                                    });*/
                                 }
                             });
                     return true;

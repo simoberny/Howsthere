@@ -58,6 +58,15 @@
             android:visibility="gone"
             app:srcCompat="@drawable/compass_icon" />
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="20dp"
+            android:text="Nota: Per una misura affidabile bisogna calibrarla facendo ruotare il telefono sui 3 assi 3 volte ognuno" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -94,73 +94,74 @@
 
         </ScrollView>
 
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/background">
+    </LinearLayout>
 
-            <View
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="0px"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <EditText
+                android:id="@+id/desc"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider" />
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Scrivi qualcosa"
+                android:inputType="textPersonName"
+                android:selectAllOnFocus="false"
+                android:textColorHint="@android:color/darker_gray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:layout_width="0px"
-                    android:layout_height="0px"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/desc"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/annulla"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="Scrivi qualcosa"
-                    android:inputType="textPersonName"
-                    android:selectAllOnFocus="false"
-                    android:textColorHint="@android:color/darker_gray" />
+                    android:padding="5dp"
+                    android:text="Annulla" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/invia"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginStart="15dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/annulla"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="5dp"
-                        android:text="Annulla" />
-
-                    <Button
-                        android:id="@+id/invia"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:backgroundTint="@color/colorPrimary"
-                        android:drawableEnd="@android:drawable/ic_menu_send"
-                        android:elevation="1dp"
-                        android:text="Carica"
-                        android:textColor="@android:color/white" />
-                </LinearLayout>
+                    android:layout_weight="2"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:drawableEnd="@android:drawable/ic_menu_send"
+                    android:elevation="1dp"
+                    android:text="Carica"
+                    android:textColor="@android:color/white" />
             </LinearLayout>
+        </LinearLayout>
 
-        </android.support.design.widget.BottomNavigationView>
-
-    </LinearLayout>
+    </android.support.design.widget.BottomNavigationView>
 
 </RelativeLayout>
