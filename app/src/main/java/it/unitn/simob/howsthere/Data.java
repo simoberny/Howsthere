@@ -20,9 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
+import org.shredzone.commons.suncalc.MoonIllumination;
 import org.shredzone.commons.suncalc.MoonPosition;
+import org.shredzone.commons.suncalc.MoonTimes;
 import org.shredzone.commons.suncalc.SunPosition;
+import org.shredzone.commons.suncalc.util.Moon;
+import org.shredzone.commons.suncalc.util.Sun;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -412,10 +415,14 @@ public class Data extends AppCompatActivity {
                             .on(calendar.getTime())       // set a date
                             .at(panorama.lat, panorama.lon)   // set a location
                             .execute();     // get the results
+
                     //luna ieri
                     //calendar.add(Calendar.DATE, -1);
                     //luna domani
-
+                    //MoonTimes m = MoonTimes.compute().on(panorama.data).execute();
+                    MoonIllumination m = MoonIllumination.compute().on(panorama.data).execute();
+                    System.out.println("frazione: "+ m.getFraction()+" fase: "+m.getPhase());
+                    //System.out.println(m.toString());
                     //System.out.println("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
                     panorama.risultatiLuna[indexLuna] = new Posizione();
                     panorama.risultatiLuna[indexLuna].ora = ora;

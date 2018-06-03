@@ -9,9 +9,6 @@ import java.util.List;
 
 import it.unitn.simob.howsthere.Data;
 
-/**
- * Created by matteo on 18/05/18.
- */
 
 public class Panorama implements Serializable {
     /*FORMATO DATI MONTAGNE (7 colonne,e 361 righe di cui una di descrizione)
@@ -47,6 +44,9 @@ public class Panorama implements Serializable {
     public int ore_sole;
     public  double lat = 0;
     public  double lon = 0;
+    public Date prossimaLunaPiena;
+    //public
+    //public
 
     public Panorama(){
         risultatiMontagne = new double[7][360];

@@ -1,6 +1,10 @@
 package it.unitn.simob.howsthere;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,8 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -79,6 +85,18 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
             image = (ImageView) findViewById(R.id.imageViewCompass);
             image.startAnimation(ra);
         }
+        ImageButton ib = (ImageButton) findViewById(R.id.provaImmagine);
+        Matrix matrix = new Matrix();
+
+        matrix.postRotate(currentDegree+angoloDaSotrarre);
+        Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.compass_icon);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(icon,60,60,true);
+
+        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), matrix, true);
+        BitmapDrawable bdrawable = new BitmapDrawable(getResources(),rotatedBitmap);
+        ib.setBackground(bdrawable);
+
         currentDegree = -degree;
     }
     @Override

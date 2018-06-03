@@ -564,6 +564,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             if (addresses.size() > 0) {
                 if(addresses.get(0).getLocality() != null){
                     citta = addresses.get(0).getLocality();
+                }else if (addresses.get(0).getSubLocality() != null){
+                    citta = addresses.get(0).getSubLocality();
+                }else if (addresses.get(0).getCountryName() != null){
+                    citta = addresses.get(0).getCountryName();
                 }else{
                     citta = "Non disponibile";
                 }
