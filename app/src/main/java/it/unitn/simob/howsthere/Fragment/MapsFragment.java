@@ -521,7 +521,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             goToLoc(gm.getCameraPosition().target, (int) gm.getCameraPosition().zoom);
         } else {    //imposto la posizione predefinita da Silvio
             CameraUpdate point = CameraUpdateFactory.newLatLngZoom(new LatLng(45.627245, 9.316333),4.0f);
-
             gm.moveCamera(point);
             gm.animateCamera(point);
         }
