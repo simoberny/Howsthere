@@ -51,6 +51,9 @@ public class MeteoActivity extends AppCompatActivity {
     CustomViewPager viewPager;
     TabLayout tabLayout;
 
+    public static String lat;
+    public static String lon;
+
     AppBarLayout barL;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -77,7 +80,6 @@ public class MeteoActivity extends AppCompatActivity {
         weatherFont = Typeface.createFromAsset(this.getAssets(), "fonts/weather.ttf");
         todayIcon.setTypeface(weatherFont);
 
-        // Load toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -111,14 +113,14 @@ public class MeteoActivity extends AppCompatActivity {
         adapter = new WeatherRecyclerAdapter(this, forecast);
         weatherMap = new WeatherMap(this, OWM_API_KEY);
 
+        /* VALORI TEMPORANEI SU TRENTO E ADESSO */
+        lat = "46.071666";
+        lon = "11.1158428";
+
         updateMeteo();
     }
 
     private void updateMeteo(){
-        /* VALORI TEMPORANEI SU TRENTO E ADESSO */
-        String lat = "46.071666";
-        String lon = "11.1158428";
-
         Date data = Calendar.getInstance().getTime();
 
         weatherMap.getLocationWeather(lat, lon, new WeatherCallback() {

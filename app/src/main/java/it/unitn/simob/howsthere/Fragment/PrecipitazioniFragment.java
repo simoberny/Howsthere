@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
+import it.unitn.simob.howsthere.MeteoActivity;
 import it.unitn.simob.howsthere.R;
 
 import static it.unitn.simob.howsthere.BuildConfig.OWM_API_KEY;
@@ -38,8 +39,8 @@ public class PrecipitazioniFragment extends Fragment {
 
         final WebView webView = (WebView) view.findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("file:///android_asset/map.html?lat=" + 46.071666 + "&lon=" + 11.1158428 + "&appid=" + OWM_API_KEY);
-        webView.loadUrl("javascript:map.removeLayer(rainLayer);map.removeLayer(tempLayer);map.addLayer(windLayer);");
+        webView.loadUrl("file:///android_asset/map.html?lat=" + MeteoActivity.lon + "&lon=" + MeteoActivity.lat + "&appid=" + OWM_API_KEY);
+        webView.loadUrl("javascript:map.removeLayer(windLayer);map.removeLayer(tempLayer);map.addLayer(rainLayer);");
 
         BottomNavigationView bv = view.findViewById(R.id.bv);
         bv.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
