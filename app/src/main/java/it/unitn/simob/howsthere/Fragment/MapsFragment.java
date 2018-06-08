@@ -80,6 +80,7 @@ import java.util.Locale;
 
 import it.unitn.simob.howsthere.Data;
 import it.unitn.simob.howsthere.MainActivity;
+import it.unitn.simob.howsthere.MeteoActivity;
 import it.unitn.simob.howsthere.Presentation;
 import it.unitn.simob.howsthere.R;
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
@@ -194,7 +195,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
        position.setOnClickListener(new View.OnClickListener(){
            @Override
            public void onClick(View view) {
-               getLocation(rootview);
+               Intent i = new Intent(getActivity(), MeteoActivity.class);
+               startActivity(i);
+               //getLocation(rootview);
            }
        });
 
