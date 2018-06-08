@@ -426,6 +426,7 @@ public class Data extends AppCompatActivity {
                             .on(calendar.getTime())       // set a date
                             .at(panorama.lat, panorama.lon)   // set a location
                             .execute();     // get the results
+
                     //luna ieri
                     //calendar.add(Calendar.DATE, -1);
                     //luna domani
