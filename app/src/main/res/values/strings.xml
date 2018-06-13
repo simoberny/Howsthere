@@ -1,14 +1,20 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Howsthere</string>
     <string name="fui_default_toolbar_title" translatable="false">Login</string>
+    <string name="id_web_auth">1038601279559-un0k7omgoi1n4sfq933mifruo4a60kgk.apps.googleusercontent.com</string>
+
+    <!-- Main navigation -->
     <string name="title_home">Mappa</string>
     <string name="title_storico">Storico</string>
     <string name="title_feed">Feed</string>
     <string name="title_user">Utente</string>
-    <string name="id_web_auth">1038601279559-un0k7omgoi1n4sfq933mifruo4a60kgk.apps.googleusercontent.com</string>
-
     <string name="pref_settings">Impostazioni</string>
 
+
+    <!-- Navigation Risultati -->
+    <string name="risultati_home">Grafici</string>
+    <string name="risultati_meteo">Meteo</string>
+    <string name="risultati_bussola">Bussola</string>
 
     <!-- Stringhe presentazione -->
     <string name="title_prima_pre">Sole e Montagne</string>
@@ -18,7 +24,6 @@
     <string name="prima_pre">Incrociamo i dati dei profili delle montagne e della traiettoria del sole per calcolare la presenza o meno di sole in una certa area</string>
     <string name="seconda_pre">Restituiamo tutte le informazioni utili di una data, come l\'alba, il tramonto e le ore di sole in una giornata</string>
     <string name="terza_pre">Una feeed con le foto immortalate grazie alla nostra app. Dopo aver calcolato il panorama, scatta una foto e mostra agli altri la posizione!</string>
-
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Prova fragment per il calcolo sole</string>
@@ -145,4 +150,7 @@
     <string name="weather_snowy" translatable="false">&#xf01b;</string>
     <string name="weather_thunder" translatable="false">&#xf01e;</string>
     <string name="weather_drizzle" translatable="false">&#xf01c;</string>
+    <string name="title_activity_risultati">RisultatiActivity</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

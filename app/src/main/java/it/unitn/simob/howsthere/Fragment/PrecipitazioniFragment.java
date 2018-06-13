@@ -39,7 +39,7 @@ public class PrecipitazioniFragment extends Fragment {
 
         final WebView webView = (WebView) view.findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("file:///android_asset/map.html?lat=" + MeteoActivity.lon + "&lon=" + MeteoActivity.lat + "&appid=" + OWM_API_KEY);
+        webView.loadUrl("file:///android_asset/map.html?lat=" + MeteoFragment.lon + "&lon=" + MeteoFragment.lat + "&appid=" + OWM_API_KEY);
         webView.loadUrl("javascript:map.removeLayer(windLayer);map.removeLayer(tempLayer);map.addLayer(rainLayer);");
 
         BottomNavigationView bv = view.findViewById(R.id.bv);
