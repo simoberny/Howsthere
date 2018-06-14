@@ -102,6 +102,7 @@
         <activity
             android:name=".RisultatiActivity"
             android:label="@string/title_activity_risultati"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

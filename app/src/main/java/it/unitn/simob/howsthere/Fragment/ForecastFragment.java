@@ -17,9 +17,7 @@ import it.unitn.simob.howsthere.Adapter.WeatherRecyclerAdapter;
 import it.unitn.simob.howsthere.R;
 import it.unitn.simob.howsthere.retrofit.models.WeatherCompleto;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class ForecastFragment extends Fragment {
 
     private WeatherRecyclerAdapter adapter;

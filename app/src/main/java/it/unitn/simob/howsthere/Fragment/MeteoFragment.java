@@ -55,11 +55,10 @@ public class MeteoFragment extends Fragment {
     public static String lat;
     public static String lon;
 
-    AppBarLayout barL;
+    private AppBarLayout barL;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-
     private WeatherMap weatherMap;
 
     private List<WeatherCompleto> forecast = new ArrayList<>();
@@ -166,9 +165,7 @@ public class MeteoFragment extends Fragment {
             }
 
             @Override
-            public void failure(String message) {
-
-            }
+            public void failure(String message) {}
         });
     }
 
@@ -250,7 +247,6 @@ public class MeteoFragment extends Fragment {
                     break;
             }
 
-
             return frag;
         }
         @Override
@@ -258,5 +254,4 @@ public class MeteoFragment extends Fragment {
             return 2;
         }
     }
-
 }

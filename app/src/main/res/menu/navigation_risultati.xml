@@ -3,8 +3,13 @@
 
     <item
         android:id="@+id/navigation_risultati"
-        android:icon="@drawable/baseline_bar_chart_24"
+        android:icon="@drawable/ic_wb_sunny_black_24dp"
         android:title="@string/risultati_home" />
+
+    <item
+        android:id="@+id/navigation_luna"
+        android:icon="@drawable/moon"
+        android:title="@string/risultati_luna" />
 
     <item
         android:id="@+id/navigation_bussola"

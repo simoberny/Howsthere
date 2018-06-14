@@ -12,7 +12,8 @@
 
 
     <!-- Navigation Risultati -->
-    <string name="risultati_home">Grafici</string>
+    <string name="risultati_home">Sole</string>
+    <string name="risultati_luna">Luna</string>
     <string name="risultati_meteo">Meteo</string>
     <string name="risultati_bussola">Bussola</string>
 
