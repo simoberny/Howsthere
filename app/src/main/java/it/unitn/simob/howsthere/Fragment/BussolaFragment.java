@@ -22,10 +22,11 @@ import static android.content.Context.SENSOR_SERVICE;
 public class BussolaFragment extends Fragment implements SensorEventListener{
     ImageView compassAlba;
     ImageView compassTramonto;
+    ImageView nord_compass;
     float currentDegree = 0f;
     SensorManager mSensorManager;
 
-    TextView azimuthCompass;
+    TextView gradi_alba, gradi_tramonto, nord;
 
     float angoloDaSotrarreAlba = 0;
     float angoloDaSotrarreTramonto = 0;
@@ -47,10 +48,16 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
         angoloDaSotrarreTramonto = 170;
 
         mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
-        azimuthCompass = view.findViewById(R.id.azimuthCompass);
 
         compassAlba = (ImageView) view.findViewById(R.id.compassAlba);
+        //compass_back_alba = view.findViewById(R.id.compass_back_alba);
         compassTramonto = (ImageView) view.findViewById(R.id.compassTramonto);
+        //compass_back_tram = view.findViewById(R.id.compass_back_tram);
+        nord = view.findViewById(R.id.nord);
+        nord_compass = view.findViewById(R.id.nord_compass);
+
+        gradi_alba = view.findViewById(R.id.gradi_alba);
+        gradi_tramonto = view.findViewById(R.id.gradi_tramonto);
 
         mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
 
@@ -72,14 +79,25 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
     public void onSensorChanged(SensorEvent event) {
         float degree = Math.round(event.values[0]);
 
+        nord.setText((int)degree + "°");
+        RotateAnimation nord = new RotateAnimation(
+                currentDegree,
+                -degree,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+        nord.setDuration(210);
+        nord.setFillAfter(true);
+        nord_compass.startAnimation(nord);
+
         //ALBA
-        if(azimuthCompass != null) {
+        if(compassAlba  != null) {
             if ((currentDegree + angoloDaSotrarreAlba) < 3 && (currentDegree + angoloDaSotrarreAlba) > -3) {
-                azimuthCompass.setText("Azimuth Alba: " + (degree) + " degrees, Direzione Corretta!");
+                gradi_alba.setText("Allineato");
             } else {
-                azimuthCompass.setText("Azimuth: " + (degree) + " degrees");
+                gradi_alba.setText(angoloDaSotrarreAlba + "° N");
             }
-            
+
             RotateAnimation ra = new RotateAnimation(
                     currentDegree+angoloDaSotrarreAlba,
                     -degree,
@@ -89,14 +107,15 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
             ra.setDuration(210);
             ra.setFillAfter(true);
             compassAlba.startAnimation(ra);
+
         }
         
         //Tramonto
-        if(azimuthCompass != null) {
+        if(compassTramonto != null) {
             if ((currentDegree + angoloDaSotrarreTramonto) < 3 && (currentDegree + angoloDaSotrarreTramonto) > -3) {
-                azimuthCompass.setText("Azimuth Tramonto: " + (degree) + " degrees, Direzione Corretta!");
+                gradi_tramonto.setText("Allineato");
             } else {
-                azimuthCompass.setText("Azimuth: " + (degree) + " degrees");
+                gradi_tramonto.setText(angoloDaSotrarreTramonto + "° N");
             }
 
             RotateAnimation ra = new RotateAnimation(

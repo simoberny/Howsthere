@@ -197,6 +197,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
            @Override
            public void onClick(View view) {
                Intent i = new Intent(getActivity(), RisultatiActivity.class);
+               i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                startActivity(i);
                //getLocation(rootview);
            }
