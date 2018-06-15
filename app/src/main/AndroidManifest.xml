@@ -95,9 +95,11 @@
             android:label="@string/title_activity_presentation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MeteoActivity"
+        <activity
+            android:name=".MeteoActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Radar"></activity>
     </application>
 
 </manifest>
