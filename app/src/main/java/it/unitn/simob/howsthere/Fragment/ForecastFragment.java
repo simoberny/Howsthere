@@ -9,23 +9,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import it.unitn.simob.howsthere.Adapter.WeatherRecyclerAdapter;
-import it.unitn.simob.howsthere.MainActivity;
-import it.unitn.simob.howsthere.MeteoActivity;
-import it.unitn.simob.howsthere.R;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+import it.unitn.simob.howsthere.Adapter.WeatherRecyclerAdapter;
+import it.unitn.simob.howsthere.R;
+import it.unitn.simob.howsthere.retrofit.models.WeatherCompleto;
+
+
 public class ForecastFragment extends Fragment {
 
     private WeatherRecyclerAdapter adapter;
+    List<WeatherCompleto> forecast = new ArrayList<>();
+
     public ForecastFragment() {
-        // Required empty public constructor
     }
 
-    public static ForecastFragment newInstance() {
+    public static ForecastFragment newInstance(List<WeatherCompleto> forecast) {
         ForecastFragment fragment = new ForecastFragment();
+        Bundle bd = new Bundle();
+        bd.putSerializable("forecast", (Serializable) forecast);
+        fragment.setArguments(bd);
         return fragment;
     }
 
@@ -34,11 +39,24 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         setRetainInstance(true);
         View view =  inflater.inflate(R.layout.fragment_forecast, container, false);
+
+        Bundle bd = getArguments();
+        forecast  = (List<WeatherCompleto>) bd.getSerializable("forecast");
+
+        adapter = new WeatherRecyclerAdapter(getActivity(), forecast);
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        MeteoActivity met = (MeteoActivity) getActivity();
-        recyclerView.setAdapter(met.adapter);
+        recyclerView.setAdapter(adapter);
+
+        adapter.notifyDataSetChanged();
         return view;
     }
 
+    public void update(List<WeatherCompleto> forecast){
+        this.forecast = forecast;
+        if(adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
 }

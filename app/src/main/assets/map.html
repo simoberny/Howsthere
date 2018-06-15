@@ -49,24 +49,24 @@
     // Wind
     var windLayer = new L.TileLayer("http://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid="+getUrlParameter('appid'), {
         minZoom: 1,
-        maxZoom: 15
+        maxZoom: 10
     });
-    windLayer.setOpacity(0.8);
+    windLayer.setOpacity(1);
 
     // Rain
     var rainLayer = new L.TileLayer("http://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid="+getUrlParameter('appid'), {
         minZoom: 1,
         maxZoom: 15
     });
-    rainLayer.setOpacity(0.9);
+    rainLayer.setOpacity(1);
     map.addLayer(rainLayer);
 
     // Temperature
     var tempLayer = new L.TileLayer("http://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid="+getUrlParameter('appid'), {
         minZoom: 1,
-        maxZoom: 15
+        maxZoom: 10
     });
-    tempLayer.setOpacity(0.8);
+    tempLayer.setOpacity(1);
 </script>
 
 </body>

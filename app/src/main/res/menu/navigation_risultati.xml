@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_risultati"
+        android:icon="@drawable/ic_wb_sunny_black_24dp"
+        android:title="@string/risultati_home" />
+
+    <item
+        android:id="@+id/navigation_luna"
+        android:icon="@drawable/moon"
+        android:title="@string/risultati_luna" />
+
+    <item
+        android:id="@+id/navigation_bussola"
+        android:icon="@drawable/ic_menu_compass"
+        android:title="@string/risultati_bussola" />
+
+    <item
+        android:id="@+id/navigation_meteo"
+        android:icon="@drawable/thermometer"
+        android:title="@string/risultati_meteo" />
+</menu>
