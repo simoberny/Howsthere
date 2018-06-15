@@ -40,9 +40,11 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
     public List<Panorama> l = null;
     private LineChart chart;
     Context context;
+    private List<String> selezionati_id;
 
-    public StoricoAdapter(Context context, int textViewResourceId, List<Panorama> objects) {
+    public StoricoAdapter(Context context, int textViewResourceId, List<Panorama> objects, List<String> selezionati_id) {
         super(context, textViewResourceId, objects);
+        this.selezionati_id = selezionati_id;
         l = objects;
         this.context = context;
     }
@@ -57,6 +59,7 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         TextView nome_citta = (TextView) convertView.findViewById(R.id.nome_citta);
         TextView data = (TextView) convertView.findViewById(R.id.data);
         TextView ID = (TextView) convertView.findViewById(R.id.ID);
+
         chart = (LineChart) convertView.findViewById(R.id.chart_storico);
         stampaGrafico(p,chart);
 
@@ -65,6 +68,10 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         String d = (String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data);
         data.setText(d);
         ID.setText(p.ID);
+
+        if (selezionati_id.contains(ID.getText())){
+            convertView.findViewById(R.id.spunta).setVisibility(View.VISIBLE);
+        }
 
         return convertView;
     }
@@ -105,7 +112,6 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
         }
 
-        System.out.println("Montagne: "+ entriesMontagne.size() + " Sole: " + entriesSole.size() + " Luna: "+ entriesLuna.size());
         //proprietà grafico:
 
         chart.setDrawGridBackground(false);
