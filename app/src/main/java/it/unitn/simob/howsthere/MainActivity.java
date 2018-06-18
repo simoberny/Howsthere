@@ -19,7 +19,6 @@ import it.unitn.simob.howsthere.Fragment.UserProfile;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 
 public class MainActivity extends AppCompatActivity{
-
     private FeedFragment ff;
     public static final String PREF_USER_FIRST_TIME = "user_first_time";
     boolean isUserFirstTime;

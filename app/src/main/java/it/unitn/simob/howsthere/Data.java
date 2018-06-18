@@ -59,7 +59,6 @@ public class Data extends AppCompatActivity {
     private Integer richiestaStato = 0;
     private Integer richiestaDatiMontagne = 0;
     public Panorama panorama = new Panorama();
-    //Le richieste GET vengono gestite dalla libreria RetroFit
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,14 +68,13 @@ public class Data extends AppCompatActivity {
         Intent i = getIntent();
         panorama.lat = i.getDoubleExtra("lat", 0.0);
         panorama.lon = i.getDoubleExtra("long", 0.0);
-        //String data = new SimpleDateFormat("dd/MM/yyyy").format(new Date(i.getLongExtra("data", 0)));
+
         panorama.data.setTime(i.getLongExtra("data", 0));
         if(panorama.data.getTime() == 0){
             Toast.makeText(getApplicationContext(), "Data non selezionata",
                     Toast.LENGTH_LONG).show();
-        }/*else{
-            Toast.makeText(getApplicationContext(), "data: " + data.toString(), Toast.LENGTH_LONG).show();
-        }*/
+        }
+
         panorama.citta = i.getStringExtra("citta");
 
         //Preparo la finestra di caricamento
@@ -101,7 +99,6 @@ public class Data extends AppCompatActivity {
             callsAPI(panorama.lat, panorama.lon);
         }
     }
-
 
     /**
      * Salvataggio dell'istanza
@@ -167,14 +164,6 @@ public class Data extends AppCompatActivity {
                             tx1.setText("Le posizioni consentite includono latitudini da 60N fino a 54S (inclusa parte dell' alaska). Il mare è disponibile solo vicino alle coste.");
                             Button bt = (Button) findViewById(R.id.idErrButton);
                             bt.setVisibility(TextView.GONE);
-
-                            /*try {
-                                Thread.sleep(6000); // ritorno alla mappa dopo 6 secondi
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }*/
-                            /*Intent myIntent = new Intent(getApplication(), MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);;
-                            getApplicationContext().startActivity(myIntent);*/
                         }
                     } catch (IOException e) {
                         System.out.println("errore generico nella lettura id");
@@ -190,9 +179,6 @@ public class Data extends AppCompatActivity {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t)
                 {
-                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa: on failure");
-                    //Toast.makeText(getApplicationContext(), "Impossibile caricare l'ID! ONFAILURE", Toast.LENGTH_SHORT).show();
-                    //Log.d("Errore: ", t.getMessage());
                     richiediID();
                 }
         });
@@ -268,7 +254,6 @@ public class Data extends AppCompatActivity {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d("Errore: ", t.getMessage());
                 richiediStato();
-
             }
         });
     }
@@ -348,13 +333,13 @@ public class Data extends AppCompatActivity {
                 e1.printStackTrace();
             }
             richiestaDatiMontagne++;
-            progressDialog.setMessage("controllo se è pronto il panorama, tentativo n°: " + (richiestaDatiMontagne+1));
+            progressDialog.setMessage("Controllo se è pronto il panorama, tentativo n°: " + (richiestaDatiMontagne+1));
             loadPeakData();
         }else{
-            System.out.println("panorama non pronto, controllare la connessione");
+            System.out.println("Panorama non pronto, controllare la connessione");
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
-            Snackbar.make(findViewById(R.id.dataContainerLayout), "dati non ricevuti, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
+            Snackbar.make(findViewById(R.id.dataContainerLayout), "Dati non ricevuti, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     azzeraTentativiScaricamentoPanorama();
@@ -409,8 +394,6 @@ public class Data extends AppCompatActivity {
             }
         }
 
-
-
         //CALCOLO LUNA ogni 5 min
         int indexLuna = 0;
         Calendar calendar = Calendar.getInstance();
@@ -450,8 +433,6 @@ public class Data extends AppCompatActivity {
                 }
             }
         }
-
-
 
         //PARSING dati
         List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
@@ -498,7 +479,7 @@ public class Data extends AppCompatActivity {
 
         //chiamo la classe Risultati
 
-        Intent i = new Intent(this,Risultati.class);
+        Intent i = new Intent(this,RisultatiActivity.class);
         i.putExtra("ID", panorama.ID);
         startActivity(i);
         finish();

@@ -18,7 +18,7 @@ import it.unitn.simob.howsthere.R;
 import it.unitn.simob.howsthere.retrofit.models.WeatherCompleto;
 
 
-public class ForecastFragment extends Fragment {
+public class ForecastFragment extends Fragment implements Serializable{
 
     private WeatherRecyclerAdapter adapter;
     List<WeatherCompleto> forecast = new ArrayList<>();

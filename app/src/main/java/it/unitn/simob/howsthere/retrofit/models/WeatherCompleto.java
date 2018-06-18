@@ -1,6 +1,8 @@
 package it.unitn.simob.howsthere.retrofit.models;
 
-public class WeatherCompleto {
+import java.io.Serializable;
+
+public class WeatherCompleto implements Serializable{
     private Clouds clouds;
     private String icon;
     private String dt;

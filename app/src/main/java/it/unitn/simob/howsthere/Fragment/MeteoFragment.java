@@ -3,6 +3,8 @@ package it.unitn.simob.howsthere.Fragment;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -11,11 +13,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -28,6 +33,8 @@ import it.unitn.simob.howsthere.CustomViewPager;
 import it.unitn.simob.howsthere.Helper.ForecastCallback;
 import it.unitn.simob.howsthere.Helper.TempUnitConverter;
 import it.unitn.simob.howsthere.Helper.WeatherCallback;
+import it.unitn.simob.howsthere.Oggetti.Panorama;
+import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
 import it.unitn.simob.howsthere.WeatherMap;
 import it.unitn.simob.howsthere.retrofit.models.ForecastResponseModel;
@@ -70,9 +77,28 @@ public class MeteoFragment extends Fragment {
         ff = ForecastFragment.newInstance(forecast);
     }
 
-    public static MeteoFragment newInstance(){
+    public static MeteoFragment newInstance(Bundle bun){
         MeteoFragment mf = new MeteoFragment();
+        Bundle args = bun;
+        mf.setArguments(args);
         return mf;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Bundle extras = getArguments();
+        if(extras != null){
+            //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
+            String id = (String) extras.get("ID");
+
+            PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
+            Panorama p = panoramiStorage.getPanoramabyID(id);
+
+            lat = String.valueOf(p.lat);
+            lon = String.valueOf(p.lon);
+
+            updateMeteo();
+        }
     }
 
     @Override
@@ -121,19 +147,11 @@ public class MeteoFragment extends Fragment {
 
         weatherMap = new WeatherMap(getActivity(), OWM_API_KEY);
 
-        /* VALORI TEMPORANEI SU TRENTO E ADESSO */
-        lat = "46.071666";
-        lon = "11.1158428";
-
-        updateMeteo();
-
         return view;
     }
 
 
     private void updateMeteo(){
-        Date data = Calendar.getInstance().getTime();
-
         weatherMap.getLocationWeather(lat, lon, new WeatherCallback() {
             @Override
             public void success(WeatherResponseModel response) {
@@ -142,7 +160,6 @@ public class MeteoFragment extends Fragment {
 
             @Override
             public void failure(String message) {
-
             }
         });
 
@@ -160,7 +177,6 @@ public class MeteoFragment extends Fragment {
                         forecast.add(temp);
                     }
                 }
-
                 ff.update(forecast);
             }
 
