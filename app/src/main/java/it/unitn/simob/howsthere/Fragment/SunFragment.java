@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -51,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
@@ -229,11 +233,11 @@ public class SunFragment extends Fragment {
 
         //proprietà grafico Montagne
         dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
-        dataSetMontagne.setColor(R.color.pale_green);
+        dataSetMontagne.setColor(Color.GREEN);
         //dataSet.setLineWidth(4f);
         dataSetMontagne.setDrawValues(false);
         dataSetMontagne.setDrawCircles(false);
-        dataSetMontagne.setCircleColor(Color.BLACK);
+        dataSetMontagne.setCircleColor(Color.WHITE);
         dataSetMontagne.setDrawCircleHole(false);
         dataSetMontagne.setDrawValues(false);
         dataSetMontagne.setDrawFilled(true);
@@ -286,13 +290,13 @@ public class SunFragment extends Fragment {
 
         int[] coloricerchiLuna = new int[64]; //un colore per ogni dato sul grafico (24 al giorno)
         for(int i = 0; i<24; i++){
-            coloricerchiLuna[i] = Color.argb(65,88, 88, 88);
+            coloricerchiLuna[i] = Color.argb(65,158, 158, 158);
         }
         for(int i = 24; i<48; i++){
             coloricerchiLuna[i] = Color.GRAY;
         }
         for(int i = 48; i<64; i++){
-            coloricerchiLuna[i] = Color.argb(65,88, 88, 88);
+            coloricerchiLuna[i] = Color.argb(65,158, 158, 158);
         }
         dataSetLuna.setCircleColors(coloricerchiLuna);
 
@@ -311,7 +315,7 @@ public class SunFragment extends Fragment {
         Legend l = chart.getLegend();
         l.setFormSize(10f);
         l.setTextSize(12f);
-        l.setTextColor(Color.BLACK);
+        l.setTextColor(Color.WHITE);
         l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
 
@@ -457,27 +461,24 @@ public class SunFragment extends Fragment {
 
     void stampaValoriBase(View view){
         TextView albaTv = (TextView)view.findViewById(R.id.alba);
-        albaTv.setText("Alba: "+p.getAlba().ora + ":" + p.getAlba().minuto);
+        albaTv.setText(p.getAlba().ora + ":" + p.getAlba().minuto);
         TextView tramontoTv = (TextView)view.findViewById(R.id.tramonto);
-        tramontoTv.setText("Tramonto: "+p.getTramonto().ora+ ":" + p.getTramonto().minuto);
+        tramontoTv.setText(p.getTramonto().ora+ ":" + p.getTramonto().minuto);
         TextView albaNoMontagneTv = (TextView)view.findViewById(R.id.albaNoMontagne);
         albaNoMontagneTv.setText("Alba all' orizzonte: ora "+p.albaNoMontagne.getHours() + ":" + p.albaNoMontagne.getMinutes());
         TextView tramontoNoMontagneTv = (TextView)view.findViewById(R.id.tramontoNoMontagne);
         tramontoNoMontagneTv.setText("Tramonto all' orizzonte: ora "+p.tramontoNoMontagne.getHours() + ":" + p.tramontoNoMontagne.getMinutes());
         TextView minSoleTv = (TextView)view.findViewById(R.id.minutiSole);
         minSoleTv.setText("Ore di Sole: " + p.minutiSole/60 + " ore, "+ (p.minutiSole-(p.minutiSole/60)*60)+ " minuti");
-        TextView cittaTv = (TextView)view.findViewById(R.id.citta);
-        cittaTv.setText("Località: "+p.citta);
         TextView latitudineTv = (TextView)view.findViewById(R.id.latitudine);
         latitudineTv.setText("Latitudine: "+p.lat);
         TextView longitudineTv = (TextView)view.findViewById(R.id.longitudine);
         longitudineTv.setText("Longitudine: "+p.lon);
         TextView dataTv = (TextView)view.findViewById(R.id.data);
-        dataTv.setText("data: "+(String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data));
+        dataTv.setText((String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data));
         TextView frazioneLunaTv = (TextView)view.findViewById(R.id.frazioneLuna);
         frazioneLunaTv.setText("percentuale luna: "+(int)p.percentualeLuna +"%");
         TextView faseLunaTv = (TextView)view.findViewById(R.id.faseLuna);
         faseLunaTv.setText("fase luna(0=nuova,50=piena): "+(int)p.faseLuna);
     }
-
 }

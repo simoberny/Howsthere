@@ -201,7 +201,6 @@ public class MeteoFragment extends Fragment {
         String desc = weather[0].getDescription();
         desc = Character.toUpperCase(desc.charAt(0)) + desc.substring(1);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(location + (response.getSys().getCountry().isEmpty() ? "" : ", " + response.getSys().getCountry()));
         todayTemperature.setText(temp_abb.toString() + " °C");
         todayDescription.setText(desc);
         todayHumidity.setText("Umidità: " + humidity + " %");
