@@ -203,6 +203,8 @@ public class MeteoFragment extends Fragment {
         todaySunrise.setText("Alba" + ": " + timeFormat.format(new Date(Long.parseLong(response.getSys().getSunrise()) * 1000)));
         todaySunset.setText("Tramonto" + ": " + timeFormat.format(new Date(Long.parseLong(response.getSys().getSunset()) * 1000)));
         todayIcon.setText(setWeatherIcon(Integer.parseInt(weather[0].getId()), Calendar.getInstance().get(Calendar.HOUR_OF_DAY)));
+
+        ((RisultatiActivity)getActivity()).getSupportActionBar().setTitle(location + ", " + response.getSys().getCountry());
     }
 
     private String setWeatherIcon(int actualId, int hourOfDay) {

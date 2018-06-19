@@ -37,8 +37,7 @@
                     android:id="@+id/N"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="N"
-                    android:textColor="@android:color/white" />
+                    android:text="N" />
 
                 <Space
                     android:layout_width="wrap_content"
@@ -49,7 +48,6 @@
                     android:id="@+id/E"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
                     android:text="E" />
 
                 <Space
@@ -61,7 +59,6 @@
                     android:id="@+id/S"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
                     android:text="S"
                     android:textAlignment="center" />
 
@@ -74,7 +71,6 @@
                     android:id="@+id/O"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
                     android:text="O" />
 
                 <Space
@@ -86,7 +82,6 @@
                     android:id="@+id/N2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/white"
                     android:text="N"
                     android:textAlignment="viewEnd" />
             </LinearLayout>
@@ -106,7 +101,7 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_weight="4"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="2dp">
@@ -115,10 +110,10 @@
                         android:id="@+id/data"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginBottom="5dp"
                         android:layout_marginEnd="20dp"
                         android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:layout_weight="1"
                         android:text="Data"
                         android:textSize="18sp" />
@@ -264,20 +259,20 @@
 
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/take_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginBottom="15dp"
-                android:layout_marginEnd="15dp"
-                android:clickable="true"
-                app:backgroundTint="@android:color/white"
-                app:srcCompat="@drawable/camera" />
-        </RelativeLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/take_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginEnd="15dp"
+            android:clickable="true"
+            app:backgroundTint="@android:color/white"
+            app:srcCompat="@drawable/camera" />
+    </RelativeLayout>
 </FrameLayout>
