@@ -20,6 +20,7 @@ import android.widget.TextView;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
+import it.unitn.simob.howsthere.RisultatiActivity;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -38,30 +39,21 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
     public BussolaFragment() {
     }
 
-    public static BussolaFragment newInstance(Bundle bun){
+    public static BussolaFragment newInstance(){
         BussolaFragment bs = new BussolaFragment();
-        Bundle args = bun;
-        bs.setArguments(args);
         return bs;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Bundle extras = getArguments();
-        if(extras != null){
-            //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
-            String id = (String) extras.get("ID");
+        //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
+        PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
+        Panorama p = ((RisultatiActivity)getActivity()).p;
 
-            PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
-            Panorama p = panoramiStorage.getPanoramabyID(id);
+        angoloDaSotrarreTramonto = (float)Math.floor((float) p.getAlba().azimuth * 100)/ 100;
+        angoloDaSotrarreAlba = (float)Math.floor((float) p.getTramonto().azimuth * 100)/100;
 
-
-            angoloDaSotrarreTramonto = (float)Math.floor((float) p.getAlba().azimuth * 100)/ 100;
-            angoloDaSotrarreAlba = (float)Math.floor((float) p.getTramonto().azimuth * 100)/100;
-
-            mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
-
-        }
+        mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
     }
 
     @Override

@@ -36,6 +36,7 @@ import it.unitn.simob.howsthere.Helper.WeatherCallback;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
+import it.unitn.simob.howsthere.RisultatiActivity;
 import it.unitn.simob.howsthere.WeatherMap;
 import it.unitn.simob.howsthere.retrofit.models.ForecastResponseModel;
 import it.unitn.simob.howsthere.retrofit.models.Weather;
@@ -77,28 +78,21 @@ public class MeteoFragment extends Fragment {
         ff = ForecastFragment.newInstance(forecast);
     }
 
-    public static MeteoFragment newInstance(Bundle bun){
+    public static MeteoFragment newInstance(){
         MeteoFragment mf = new MeteoFragment();
-        Bundle args = bun;
-        mf.setArguments(args);
         return mf;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Bundle extras = getArguments();
-        if(extras != null){
             //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
-            String id = (String) extras.get("ID");
+        PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
+        Panorama p = ((RisultatiActivity)getActivity()).p;
 
-            PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
-            Panorama p = panoramiStorage.getPanoramabyID(id);
+        lat = String.valueOf(p.lat);
+        lon = String.valueOf(p.lon);
 
-            lat = String.valueOf(p.lat);
-            lon = String.valueOf(p.lon);
-
-            updateMeteo();
-        }
+        updateMeteo();
     }
 
     @Override

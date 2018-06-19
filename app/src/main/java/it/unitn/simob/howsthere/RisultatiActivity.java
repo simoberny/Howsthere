@@ -36,6 +36,7 @@ public class RisultatiActivity extends AppCompatActivity {
     private MeteoFragment mt = null;
     private SunFragment sf = null;
     private BussolaFragment bf = null;
+    public Panorama p = null;
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
@@ -51,16 +52,30 @@ public class RisultatiActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        mt = MeteoFragment.newInstance(extras);
-        sf = SunFragment.newInstance(extras);
-        bf = BussolaFragment.newInstance(extras);
-
         String id = (String) extras.get("ID");
+        String pFromIntent = (String) extras.get("pan");
+
         PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
-        if(id != null) {
-            Panorama p = panoramiStorage.getPanoramabyID(id);
-            getSupportActionBar().setTitle(getLocation(p.lat, p.lon));
+        if(id != null){
+            p = panoramiStorage.getPanoramabyID(id);
+        }else{
+            Panorama obj = null;
+            try {
+                byte b[] = Base64.decode(pFromIntent.getBytes(), Base64.DEFAULT);
+                ByteArrayInputStream bi = new ByteArrayInputStream(b);
+                ObjectInputStream si = new ObjectInputStream(bi);
+                obj = (Panorama) si.readObject();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            p = obj; //Intent dalla feed con panorama salvato in Firebase
         }
+
+        if(p != null) getSupportActionBar().setTitle(getLocation(p.lat, p.lon));
+
+        mt = MeteoFragment.newInstance(extras);
+        sf = SunFragment.newInstance();
+        bf = BussolaFragment.newInstance(extras);
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

@@ -61,6 +61,7 @@ import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.PostFeed;
 import it.unitn.simob.howsthere.R;
+import it.unitn.simob.howsthere.RisultatiActivity;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -87,10 +88,8 @@ public class SunFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SunFragment newInstance(Bundle bun){
+    public static SunFragment newInstance(){
         SunFragment sf = new SunFragment();
-        Bundle args = bun;
-        sf.setArguments(args);
         return sf;
     }
 
@@ -114,30 +113,7 @@ public class SunFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Bundle extras = getArguments();
-        if(extras != null){
-            //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
-            id = (String) extras.get("ID");
-            String pFromIntent = (String) extras.get("pan");
-
-            PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
-            if(id != null){
-                //Intent da tutte le altre parti con ID e panorama salvato in locale
-                p = panoramiStorage.getPanoramabyID(id);
-                System.out.println("recuperato panorama" +id);
-            }else{
-                Panorama obj = null;
-                //Deserializzo stringa
-                try {
-                    byte b[] = Base64.decode(pFromIntent.getBytes(), Base64.DEFAULT);
-                    ByteArrayInputStream bi = new ByteArrayInputStream(b);
-                    ObjectInputStream si = new ObjectInputStream(bi);
-                    obj = (Panorama) si.readObject();
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-                p = obj; //Intent dalla feed con panorama salvato in Firebase
-            }
+            p = ((RisultatiActivity)getActivity()).p;
 
             chart = view.findViewById(R.id.chart);
             main = view.findViewById(R.id.risultatiMainLayout);
@@ -149,7 +125,7 @@ public class SunFragment extends Fragment {
             }else{
                 getActivity().finish();
             }
-        }
+
     }
 
     @Override
@@ -233,11 +209,11 @@ public class SunFragment extends Fragment {
 
         //proprietà grafico Montagne
         dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
-        dataSetMontagne.setColor(Color.GREEN);
+        dataSetMontagne.setColor(R.color.pale_green);
         //dataSet.setLineWidth(4f);
         dataSetMontagne.setDrawValues(false);
         dataSetMontagne.setDrawCircles(false);
-        dataSetMontagne.setCircleColor(Color.WHITE);
+        dataSetMontagne.setCircleColor(Color.BLACK);
         dataSetMontagne.setDrawCircleHole(false);
         dataSetMontagne.setDrawValues(false);
         dataSetMontagne.setDrawFilled(true);
@@ -315,7 +291,7 @@ public class SunFragment extends Fragment {
         Legend l = chart.getLegend();
         l.setFormSize(10f);
         l.setTextSize(12f);
-        l.setTextColor(Color.WHITE);
+        l.setTextColor(Color.BLACK);
         l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
 
