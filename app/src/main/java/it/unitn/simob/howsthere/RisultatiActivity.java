@@ -73,9 +73,9 @@ public class RisultatiActivity extends AppCompatActivity {
 
         if(p != null) getSupportActionBar().setTitle(getLocation(p.lat, p.lon));
 
-        mt = MeteoFragment.newInstance(extras);
+        mt = MeteoFragment.newInstance();
         sf = SunFragment.newInstance();
-        bf = BussolaFragment.newInstance(extras);
+        bf = BussolaFragment.newInstance();
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
