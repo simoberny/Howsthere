@@ -28,6 +28,7 @@ import java.util.Locale;
 import it.unitn.simob.howsthere.Fragment.BussolaFragment;
 import it.unitn.simob.howsthere.Fragment.MapsFragment;
 import it.unitn.simob.howsthere.Fragment.MeteoFragment;
+import it.unitn.simob.howsthere.Fragment.MoonFragment;
 import it.unitn.simob.howsthere.Fragment.SunFragment;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
@@ -36,6 +37,7 @@ public class RisultatiActivity extends AppCompatActivity {
     private MeteoFragment mt = null;
     private SunFragment sf = null;
     private BussolaFragment bf = null;
+    private MoonFragment mf = null;
     public Panorama p = null;
 
     @Override
@@ -71,11 +73,10 @@ public class RisultatiActivity extends AppCompatActivity {
             p = obj; //Intent dalla feed con panorama salvato in Firebase
         }
 
-        if(p != null) getSupportActionBar().setTitle(getLocation(p.lat, p.lon));
-
         mt = MeteoFragment.newInstance();
         sf = SunFragment.newInstance();
         bf = BussolaFragment.newInstance();
+        mf = MoonFragment.newInstance();
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -112,7 +113,7 @@ public class RisultatiActivity extends AppCompatActivity {
                     selectedFragment = sf;
                     break;
                 case R.id.navigation_luna:
-                    selectedFragment = sf;
+                    selectedFragment = mf;
                     break;
                 case R.id.navigation_bussola:
                     selectedFragment = bf;
@@ -130,27 +131,4 @@ public class RisultatiActivity extends AppCompatActivity {
             return true;
         }
     };
-
-    private String getLocation(double lat, double lon){
-        Geocoder gcd = new Geocoder(this, Locale.getDefault());
-        List<Address> addresses = null;
-        String citta = "";
-        try {
-            addresses = gcd.getFromLocation(lat, lon, 1);
-            if (addresses.size() > 0) {
-                if(addresses.get(0).getLocality() != null){
-                    citta = addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName();
-                }else{
-                    citta = lat + ", " + lon;
-                }
-            }else{
-                citta = lat + ", " + lon;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return citta;
-    }
-
 }
