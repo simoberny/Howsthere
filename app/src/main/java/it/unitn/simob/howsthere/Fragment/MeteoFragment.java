@@ -144,7 +144,6 @@ public class MeteoFragment extends Fragment {
         return view;
     }
 
-
     private void updateMeteo(){
         weatherMap.getLocationWeather(lat, lon, new WeatherCallback() {
             @Override

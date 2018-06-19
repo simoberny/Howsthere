@@ -445,9 +445,9 @@ public class Risultati extends AppCompatActivity  {
     }
     void stampaValoriBase(){
         TextView albaTv = (TextView)findViewById(R.id.alba);
-        albaTv.setText("Alba: "+p.getAlba().ora + ":" + p.getAlba().minuto);
+        //albaTv.setText("Alba: "+p.getAlba().ora + ":" + p.getAlba().minuto);
         TextView tramontoTv = (TextView)findViewById(R.id.tramonto);
-        tramontoTv.setText("Tramonto: "+p.getTramonto().ora+ ":" + p.getTramonto().minuto);
+       // tramontoTv.setText("Tramonto: "+p.getTramonto().ora+ ":" + p.getTramonto().minuto);
         TextView albaNoMontagneTv = (TextView)findViewById(R.id.albaNoMontagne);
         albaNoMontagneTv.setText("Alba all' orizzonte: ora "+p.albaNoMontagne.getHours() + ":" + p.albaNoMontagne.getMinutes());
         TextView tramontoNoMontagneTv = (TextView)findViewById(R.id.tramontoNoMontagne);
