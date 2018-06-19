@@ -45,6 +45,7 @@ public class Panorama implements Serializable {
     public Date data;
     //public Bitmap grafico;
     public int minutiSole = 0;
+    public int minutiLuna = 0;
     public int ore_sole;
     public  double lat = 0;
     public  double lon = 0;
@@ -66,6 +67,8 @@ public class Panorama implements Serializable {
         //risultatiLunaGiornoDopo = new Posizione[288];
         albe = new ArrayList<Posizione>();
         tramonti = new ArrayList<Posizione>();
+        albeLuna = new ArrayList<Posizione>();
+        tramontiLuna = new ArrayList<Posizione>();
         data = new Date();
     }
     //alba (prima apparizione), tramonto (ultima scomparsa)
