@@ -180,7 +180,7 @@
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:text="Tramonto"
-                        android:textSize="18sp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/tramonto"
@@ -190,7 +190,7 @@
                         android:layout_weight="1"
                         android:text="00:00"
                         android:textAlignment="textEnd"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -237,22 +237,39 @@
                     android:text="Longitudine"
                     android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/frazioneLuna"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Frazione visibile luna"
-                    android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/faseLuna"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/expandableButton1"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Fase lunare"
-                    android:textSize="18sp" />
+                    android:drawableRight="@android:drawable/arrow_down_float"
+                    android:text="Expandable Layout Example"
+                    android:textColor="#fff" />
+
+                <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+                    android:id="@+id/expandableLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/expandableButton1"
+                    android:padding="16dp"
+                    app:ael_duration="400"
+                    app:ael_expanded="false"
+                    app:ael_interpolator="bounce"
+                    app:ael_orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Expandable Layout provides an easy way to create a view called header with an expandable view. Views are external layout to allow a maximum of customization." />
+
+                </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="4" />
+
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

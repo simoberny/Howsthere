@@ -127,15 +127,8 @@ public class MoonFragment extends Fragment {
 
     void stampaGrafico(){
         List<Entry> entriesMontagne = new ArrayList<Entry>();
-        final List<Entry> entriesSole = new ArrayList<Entry>();
         List<Entry> entriesLuna = new ArrayList<Entry>();
-        //SOLE
-        //Arrays.sort(p.risultatiSole); //ordino secondo azimuth
-        for(int i = 0; i<288; i++) { //passo dati al grafico
-            if(p.risultatiSole[i].minuto == 0) {
-                entriesSole.add(new Entry((float) p.risultatiSole[i].azimuth, (float) p.risultatiSole[i].altezza));
-            }
-        }
+
         //LUNA
         //Arrays.sort(risultatiLuna); //ordino secondo azimuth ATTENZIONE: se vengono ordinati allora si mescolano i dati della mattina dopo quelli della sera
         for(int i = 0; i<864; i++) { //passo dati al grafico
@@ -160,7 +153,7 @@ public class MoonFragment extends Fragment {
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
         }
 
-        System.out.println("Montagne: "+ entriesMontagne.size() + " Sole: " + entriesSole.size() + " Luna: "+ entriesLuna.size());
+        //System.out.println("Montagne: "+ entriesMontagne.size() + " Luna: "+ entriesLuna.size());
         //proprietà grafico:
 
         chart.setDrawGridBackground(false);
@@ -170,7 +163,6 @@ public class MoonFragment extends Fragment {
         chart.getAxisRight().setAxisMinValue(-1);
 
         LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Profilo montagne"); // add entries to dataset
-        final LineDataSet dataSetSole = new LineDataSet(entriesSole, "sole");
         LineDataSet dataSetLuna = new LineDataSet(entriesLuna, "luna");
 
         //proprietà grafico Montagne
@@ -188,24 +180,6 @@ public class MoonFragment extends Fragment {
         dataSetMontagne.setFillDrawable(drawable);
         dataSetMontagne.setDrawHighlightIndicators(false);
 
-        //proprietà grafiche Sole
-        dataSetSole.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        dataSetSole.setColor(Color.YELLOW);
-        dataSetSole.setLineWidth(1f);
-        dataSetSole.setDrawValues(true);
-        dataSetSole.setDrawCircles(true);
-        dataSetSole.setCircleColor(Color.YELLOW);
-        dataSetSole.setDrawCircleHole(false);
-        dataSetSole.setDrawFilled(false);
-        dataSetSole.setDrawValues(true);
-        dataSetSole.setDrawHighlightIndicators(false);
-        dataSetSole.setValueFormatter(new IValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
-                return String.valueOf(idx);
-            }
-        });
 
         //proprietà grafiche Luna
         dataSetLuna.setMode(LineDataSet.Mode.CUBIC_BEZIER);
@@ -245,7 +219,6 @@ public class MoonFragment extends Fragment {
         chart.getDescription().setText("");
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
-        lineData.addDataSet(dataSetSole);
         lineData.addDataSet(dataSetLuna);
         chart.getXAxis().setDrawLabels(false);
         chart.getXAxis().setDrawAxisLine(false);
@@ -278,8 +251,6 @@ public class MoonFragment extends Fragment {
         albaNoMontagneTv.setText("Alba all' orizzonte: ora "+p.albaNoMontagne.getHours() + ":" + p.albaNoMontagne.getMinutes());
         TextView tramontoNoMontagneTv = (TextView)view.findViewById(R.id.tramontoNoMontagne);
         tramontoNoMontagneTv.setText("Tramonto all' orizzonte: ora "+p.tramontoNoMontagne.getHours() + ":" + p.tramontoNoMontagne.getMinutes());
-        TextView minSoleTv = (TextView)view.findViewById(R.id.minutiSole);
-        minSoleTv.setText("Ore di Sole: " + p.minutiSole/60 + " ore, "+ (p.minutiSole-(p.minutiSole/60)*60)+ " minuti");
         TextView latitudineTv = (TextView)view.findViewById(R.id.latitudine);
         latitudineTv.setText("Latitudine: "+p.lat);
         TextView longitudineTv = (TextView)view.findViewById(R.id.longitudine);

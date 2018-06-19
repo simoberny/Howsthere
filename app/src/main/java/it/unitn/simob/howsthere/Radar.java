@@ -8,8 +8,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+
 
 import java.io.IOException;
 
