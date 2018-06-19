@@ -192,8 +192,8 @@ public class SunFragment extends Fragment {
         chart.getAxisLeft().setAxisMinValue(-1);  //faccio partire da -1 le y. non da 0 perchè da una montagna alta è possibile finire leggermente sotto lo 0
         chart.getAxisRight().setAxisMinValue(-1);
 
-        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Profilo montagne"); // add entries to dataset
-        final LineDataSet dataSetSole = new LineDataSet(entriesSole, "sole");
+        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Montagne"); // add entries to dataset
+        final LineDataSet dataSetSole = new LineDataSet(entriesSole, "Sole");
 
         //proprietà grafico Montagne
         dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
@@ -259,7 +259,7 @@ public class SunFragment extends Fragment {
         l.setTextColor(Color.BLACK);
         l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
-
+        l.setPosition(Legend.LegendPosition.ABOVE_CHART_LEFT);
         List<Entry> entrinseo = new ArrayList<Entry>();
         entrinseo.add(new Entry(0,5));
 
