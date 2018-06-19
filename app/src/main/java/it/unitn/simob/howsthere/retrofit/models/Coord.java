@@ -1,6 +1,8 @@
 package it.unitn.simob.howsthere.retrofit.models;
 
-public class Coord {
+import java.io.Serializable;
+
+public class Coord implements Serializable {
     private String lon;
 
     private String lat;

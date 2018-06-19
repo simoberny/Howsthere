@@ -96,13 +96,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MeteoActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Radar"></activity>
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".RisultatiActivity"
             android:label="@string/title_activity_risultati"
             android:screenOrientation="portrait"
@@ -112,5 +105,4 @@
                 android:value="it.unitn.simob.howsthere.MainActivity" />
         </activity>
     </application>
-
 </manifest>

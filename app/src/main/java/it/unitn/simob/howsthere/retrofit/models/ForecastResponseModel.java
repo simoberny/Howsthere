@@ -1,6 +1,8 @@
 package it.unitn.simob.howsthere.retrofit.models;
 
-public class ForecastResponseModel {
+import java.io.Serializable;
+
+public class ForecastResponseModel implements Serializable {
     private String message;
 
     private String cnt;

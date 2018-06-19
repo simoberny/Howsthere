@@ -50,6 +50,12 @@ public class PanoramiStorage {
         save();
     }
 
+    public void delete_all() {
+        load();
+        Panorami.clear();
+        save();
+    }
+
     public void delete_by_id(String id){
         load();
         for (int i = 0; i < Panorami.size(); i++) {

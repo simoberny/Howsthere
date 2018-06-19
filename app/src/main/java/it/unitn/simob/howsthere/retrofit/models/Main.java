@@ -1,6 +1,8 @@
 package it.unitn.simob.howsthere.retrofit.models;
 
-public class Main {
+import java.io.Serializable;
+
+public class Main implements Serializable {
     private String humidity;
 
     private String pressure;

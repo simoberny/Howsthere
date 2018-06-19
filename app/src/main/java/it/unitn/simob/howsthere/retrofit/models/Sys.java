@@ -1,6 +1,8 @@
 package it.unitn.simob.howsthere.retrofit.models;
 
-public class Sys {
+import java.io.Serializable;
+
+public class Sys implements Serializable {
     private String message;
 
     private String id;

@@ -1,6 +1,8 @@
 package it.unitn.simob.howsthere.retrofit.models;
 
-public class Clouds {
+import java.io.Serializable;
+
+public class Clouds implements Serializable {
     private String all;
 
     public String getAll() {

@@ -10,8 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-
-import it.unitn.simob.howsthere.MeteoActivity;
 import it.unitn.simob.howsthere.R;
 
 import static it.unitn.simob.howsthere.BuildConfig.OWM_API_KEY;

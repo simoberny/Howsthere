@@ -7,7 +7,9 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -86,7 +88,7 @@ public class HistoryFragment extends Fragment{
 
         if (id == R.id.delete) {
             if(in_selezione) {
-                System.err.println("jasdklfjjjjjjjjjjjjjjjjjjjjjjjjjjjj numero di item:" + selezionati_id.size() + " adapter:  " + adapter.l.size() + "  panorami: " + PanoramiStorage.panorami_storage.Panorami.size() + "    posizione 0  " + selezionati_id.get(0));
+                //System.err.println("jasdklfjjjjjjjjjjjjjjjjjjjjjjjjjjjj numero di item:" + selezionati_id.size() + " adapter:  " + adapter.l.size() + "  panorami: " + PanoramiStorage.panorami_storage.Panorami.size() + "    posizione 0  " + selezionati_id.get(0));
                 //adapter.onClick_menu();
                 for (int i = 0; i < selezionati_id.size(); i++) {
                     System.err.println("     selezionati:  " + selezionati_id.get(i));
@@ -98,8 +100,18 @@ public class HistoryFragment extends Fragment{
                 in_selezione = false;
                 return true;
             }else{
-                Toast.makeText(getActivity(),"Seleziona card con pressione prolungata",5);
+                Snackbar.make(getActivity().findViewById(R.id.layout_base),
+                        "Nessun elemento selezionato.... long_press per selezionare", Snackbar.LENGTH_LONG).setAction("Elimina Tutto", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        PanoramiStorage.panorami_storage.delete_all();
+                        adapter.notifyDataSetChanged();
+                        selezionati_id.clear();
+                        in_selezione = false;
+                    }
+                }).show();
             }
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -127,7 +139,7 @@ public class HistoryFragment extends Fragment{
         LinearLayout nofeed = view.findViewById(R.id.nofeed);
         ListView r = (ListView) view.findViewById(R.id.storico_lista);
         List<Panorama> list = PanoramiStorage.panorami_storage.getAllPanorama();
-        adapter = new StoricoAdapter(view.getContext(), R.layout.singolo_storico, list);
+        adapter = new StoricoAdapter(view.getContext(), R.layout.singolo_storico, list,selezionati_id);
         r.setAdapter(adapter);
 
         r.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -139,7 +151,6 @@ public class HistoryFragment extends Fragment{
                     Intent i = new Intent(getActivity(), Risultati.class);
                     i.putExtra("ID", idi);
                     startActivity(i);
-                    System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+idi+"   arraysize: "+selezionati_id.size());
 
                 }else if(selezionati_id.contains(idi)){
                     selezionati_id.remove(idi);
@@ -147,12 +158,10 @@ public class HistoryFragment extends Fragment{
                     if(selezionati_id.size()==0){
                         in_selezione = false;
                     }
-                    System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+idi+"   arraysize: "+selezionati_id.size());
 
                 }else{
                     selezionati_id.add(idi);
                     v.setVisibility(View.VISIBLE);
-                    System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+idi+"   arraysize: "+selezionati_id.size());
 
                 }
             }
@@ -169,7 +178,7 @@ public class HistoryFragment extends Fragment{
                 selezionati_id.add(idi);
                 //selezionati_id.add(idi);
 
-                System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+idi+"   arraysize: "+selezionati_id.size());
+                //System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+idi+"   arraysize: "+selezionati_id.size());
                 in_selezione = true;
                 return true;
             }

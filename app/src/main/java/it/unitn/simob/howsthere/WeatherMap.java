@@ -9,16 +9,7 @@ import it.unitn.simob.howsthere.retrofit.models.ForecastResponseModel;
 import it.unitn.simob.howsthere.retrofit.models.WeatherResponseModel;
 import retrofit2.Call;
 
-/**
- * Created by
- * --Vatsal Bajpai under
- * --AppyWare on
- * --22/06/16 at
- * --2:44 AM in
- * --OpenWeatherMapDemo
- */
 public class WeatherMap {
-
     Context context;
     String APP_ID;
 

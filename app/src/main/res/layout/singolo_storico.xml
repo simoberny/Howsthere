@@ -109,7 +109,7 @@
                         android:padding="0dp"
                         android:paddingLeft="0dp"
                         android:visibility="invisible"
-                        app:srcCompat="@drawable/fui_done_check_mark"
+                        app:srcCompat="@drawable/spunta"
                         tools:layout_editor_absoluteX="442dp" />
                 </FrameLayout>
             </RelativeLayout>

@@ -6,6 +6,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,10 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import it.unitn.simob.howsthere.Oggetti.Panorama;
+import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
+import it.unitn.simob.howsthere.RisultatiActivity;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -40,14 +45,21 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
+        PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
+        Panorama p = ((RisultatiActivity)getActivity()).p;
+
+        angoloDaSotrarreTramonto = (float)Math.floor((float) p.getAlba().azimuth * 100)/ 100;
+        angoloDaSotrarreAlba = (float)Math.floor((float) p.getTramonto().azimuth * 100)/100;
+
+        mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bussola, container, false);
-
-        angoloDaSotrarreAlba = 25;
-        angoloDaSotrarreTramonto = 170;
-
-        mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
 
         compassAlba = (ImageView) view.findViewById(R.id.compassAlba);
         //compass_back_alba = view.findViewById(R.id.compass_back_alba);
@@ -58,9 +70,6 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
 
         gradi_alba = view.findViewById(R.id.gradi_alba);
         gradi_tramonto = view.findViewById(R.id.gradi_tramonto);
-
-        mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
-
         return view;
     }
 

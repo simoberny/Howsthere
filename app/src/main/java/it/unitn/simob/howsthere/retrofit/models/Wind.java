@@ -1,6 +1,8 @@
 package it.unitn.simob.howsthere.retrofit.models;
 
-public class Wind {
+import java.io.Serializable;
+
+public class Wind implements Serializable {
     private String speed;
 
     private String deg;
