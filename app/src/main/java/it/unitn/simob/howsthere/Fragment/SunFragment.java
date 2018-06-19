@@ -28,10 +28,12 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -82,6 +84,7 @@ public class SunFragment extends Fragment {
     private FrameLayout main = null;
 
     LineChart chart = null;
+    private View currentView;
 
     public SunFragment() {
         // Required empty public constructor
@@ -111,27 +114,11 @@ public class SunFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            p = ((RisultatiActivity)getActivity()).p;
-
-            chart = view.findViewById(R.id.chart);
-            main = view.findViewById(R.id.risultatiMainLayout);
-
-            //Se per qualche motivo il panorama non è leggibile o non c'è chiudo l'attività
-            if(p != null){
-                stampaGrafico();
-                stampaValoriBase(view); //informazioni sempre conosciute
-            }else{
-                getActivity().finish();
-            }
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sun, container, false);
+        currentView = view;
         ((RisultatiActivity)getActivity()).getSupportActionBar().setTitle("Sole");
 
         FloatingActionButton take_photo = view.findViewById(R.id.take_photo);
@@ -156,36 +143,38 @@ public class SunFragment extends Fragment {
             }
         });
 
+        final Button button = view.findViewById(R.id.expandableButton1);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ExpandableRelativeLayout expandableLayout1 = (ExpandableRelativeLayout) currentView.findViewById(R.id.expandableLayout1);
+                expandableLayout1.toggle(); // toggle expand and collapse
+            }
+        });
+
+        p = ((RisultatiActivity)getActivity()).p;
+
+        chart = view.findViewById(R.id.chart);
+        main = view.findViewById(R.id.risultatiMainLayout);
+
+        //Se per qualche motivo il panorama non è leggibile o non c'è chiudo l'attività
+        if(p != null){
+            stampaGrafico();
+            stampaValoriBase(view); //informazioni sempre conosciute
+        }else{
+            getActivity().finish();
+        }
+
         return view;
     }
 
     void stampaGrafico(){
         List<Entry> entriesMontagne = new ArrayList<Entry>();
         final List<Entry> entriesSole = new ArrayList<Entry>();
-        List<Entry> entriesLuna = new ArrayList<Entry>();
         //SOLE
         //Arrays.sort(p.risultatiSole); //ordino secondo azimuth
         for(int i = 0; i<288; i++) { //passo dati al grafico
             if(p.risultatiSole[i].minuto == 0) {
                 entriesSole.add(new Entry((float) p.risultatiSole[i].azimuth, (float) p.risultatiSole[i].altezza));
-            }
-        }
-        //LUNA
-        //Arrays.sort(risultatiLuna); //ordino secondo azimuth ATTENZIONE: se vengono ordinati allora si mescolano i dati della mattina dopo quelli della sera
-        for(int i = 0; i<864; i++) { //passo dati al grafico
-            if(p.risultatiLuna[i].minuto == 0){
-                if(i<288 && p.risultatiLuna[288].azimuth > p.risultatiLuna[i].azimuth) { //solo le ore del giorno prima che concludono l' arco in cielo
-                    entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) p.risultatiLuna[i].altezza));
-                }
-                else if(i>575 && p.risultatiLuna[575].azimuth < p.risultatiLuna[i].azimuth) { //solo le ore del giorno prima che concludono l' arco in cielo
-                    entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) p.risultatiLuna[i].altezza));
-                }
-                else if(i>=288 && i<576){
-                    entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) p.risultatiLuna[i].altezza));
-
-                }else {
-                    entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) -90));
-                }
             }
         }
         //MONTAGNE
@@ -194,7 +183,7 @@ public class SunFragment extends Fragment {
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
         }
 
-        System.out.println("Montagne: "+ entriesMontagne.size() + " Sole: " + entriesSole.size() + " Luna: "+ entriesLuna.size());
+        //System.out.println("Montagne: "+ entriesMontagne.size() + " Sole: " + entriesSole.size());
         //proprietà grafico:
 
         chart.setDrawGridBackground(false);
@@ -203,9 +192,8 @@ public class SunFragment extends Fragment {
         chart.getAxisLeft().setAxisMinValue(-1);  //faccio partire da -1 le y. non da 0 perchè da una montagna alta è possibile finire leggermente sotto lo 0
         chart.getAxisRight().setAxisMinValue(-1);
 
-        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Profilo montagne"); // add entries to dataset
-        final LineDataSet dataSetSole = new LineDataSet(entriesSole, "sole");
-        LineDataSet dataSetLuna = new LineDataSet(entriesLuna, "luna");
+        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Montagne"); // add entries to dataset
+        final LineDataSet dataSetSole = new LineDataSet(entriesSole, "Sole");
 
         //proprietà grafico Montagne
         dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
@@ -241,28 +229,7 @@ public class SunFragment extends Fragment {
             }
         });
 
-        //proprietà grafiche Luna
-        dataSetLuna.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        dataSetLuna.setColor(Color.LTGRAY);
-        dataSetLuna.setLineWidth(1f);
-        dataSetLuna.setDrawValues(true);
-        dataSetLuna.setDrawCircles(true);
-        //dataSetLuna.setCircleColor(Color.GRAY);
-        dataSetLuna.setDrawCircleHole(false);
-        dataSetLuna.setDrawValues(true);
-        dataSetLuna.setDrawFilled(false);
-        dataSetLuna.setDrawHighlightIndicators(false);
-        dataSetLuna.setValueFormatter(new IValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
-                if (idx>23 && idx <48) {
-                    return String.valueOf(idx % 24);
-                }else{
-                    return "";
-                }
-            }
-        });
+
 
         int[] coloricerchiLuna = new int[64]; //un colore per ogni dato sul grafico (24 al giorno)
         for(int i = 0; i<24; i++){
@@ -274,13 +241,11 @@ public class SunFragment extends Fragment {
         for(int i = 48; i<64; i++){
             coloricerchiLuna[i] = Color.argb(65,158, 158, 158);
         }
-        dataSetLuna.setCircleColors(coloricerchiLuna);
 
         chart.getDescription().setText("");
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
         lineData.addDataSet(dataSetSole);
-        lineData.addDataSet(dataSetLuna);
         chart.getXAxis().setDrawLabels(false);
         chart.getXAxis().setDrawAxisLine(false);
         chart.getAxisLeft().setDrawAxisLine(false);
@@ -294,7 +259,7 @@ public class SunFragment extends Fragment {
         l.setTextColor(Color.BLACK);
         l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
-
+        l.setPosition(Legend.LegendPosition.ABOVE_CHART_LEFT);
         List<Entry> entrinseo = new ArrayList<Entry>();
         entrinseo.add(new Entry(0,5));
 
@@ -436,10 +401,18 @@ public class SunFragment extends Fragment {
     }
 
     void stampaValoriBase(View view){
-        TextView albaTv = (TextView)view.findViewById(R.id.alba);
-        albaTv.setText(p.getAlba().ora + ":" + p.getAlba().minuto);
+        TextView albaTv = (TextView) view.findViewById(R.id.alba);
+        if(p.getAlba() != null) {
+            albaTv.setText(p.getAlba().ora + ":" + (p.getAlba().minuto<10?"0"+p.getAlba().minuto:p.getAlba().minuto));
+        }else{
+            albaTv.setText("nd");
+        }
         TextView tramontoTv = (TextView)view.findViewById(R.id.tramonto);
-        tramontoTv.setText(p.getTramonto().ora+ ":" + p.getTramonto().minuto);
+        if(p.getTramonto() != null) {
+            tramontoTv.setText(p.getTramonto().ora + ":" + (p.getTramonto().minuto<10?"0"+p.getTramonto().minuto:p.getTramonto().minuto));
+        }else{
+            tramontoTv.setText("nd");
+        }
         TextView albaNoMontagneTv = (TextView)view.findViewById(R.id.albaNoMontagne);
         albaNoMontagneTv.setText("Alba all' orizzonte: ora "+p.albaNoMontagne.getHours() + ":" + p.albaNoMontagne.getMinutes());
         TextView tramontoNoMontagneTv = (TextView)view.findViewById(R.id.tramontoNoMontagne);
@@ -452,9 +425,7 @@ public class SunFragment extends Fragment {
         longitudineTv.setText("Longitudine: "+p.lon);
         TextView dataTv = (TextView)view.findViewById(R.id.data);
         dataTv.setText((String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data));
-        TextView frazioneLunaTv = (TextView)view.findViewById(R.id.frazioneLuna);
-        frazioneLunaTv.setText("percentuale luna: "+(int)p.percentualeLuna +"%");
-        TextView faseLunaTv = (TextView)view.findViewById(R.id.faseLuna);
-        faseLunaTv.setText("fase luna(0=nuova,50=piena): "+(int)p.faseLuna);
     }
+
+
 }

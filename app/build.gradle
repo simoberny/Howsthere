@@ -64,6 +64,10 @@ dependencies {
     implementation 'com.romandanylyk:pageindicatorview:1.0.1'
     implementation 'uk.co.samuelwall:material-tap-target-prompt:2.9.0'
     implementation files('libs/commons-suncalc-2.2.jar')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:design:27.1.1'
+    compile 'com.github.aakira:expandable-layout:1.4.2@aar'
 }
 
 apply plugin: 'com.google.gms.google-services'

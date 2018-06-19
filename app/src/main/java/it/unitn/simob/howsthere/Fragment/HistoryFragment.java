@@ -50,8 +50,7 @@ import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
 import it.unitn.simob.howsthere.Risultati;
-
-
+import it.unitn.simob.howsthere.RisultatiActivity;
 
 
 public class HistoryFragment extends Fragment{
@@ -88,7 +87,6 @@ public class HistoryFragment extends Fragment{
 
         if (id == R.id.delete) {
             if(in_selezione) {
-                //System.err.println("jasdklfjjjjjjjjjjjjjjjjjjjjjjjjjjjj numero di item:" + selezionati_id.size() + " adapter:  " + adapter.l.size() + "  panorami: " + PanoramiStorage.panorami_storage.Panorami.size() + "    posizione 0  " + selezionati_id.get(0));
                 //adapter.onClick_menu();
                 for (int i = 0; i < selezionati_id.size(); i++) {
                     System.err.println("     selezionati:  " + selezionati_id.get(i));
@@ -148,7 +146,7 @@ public class HistoryFragment extends Fragment{
                 String idi = (String) ID.getText();
                 ImageView v = view.findViewById(R.id.spunta);
                 if(!in_selezione) {
-                    Intent i = new Intent(getActivity(), Risultati.class);
+                    Intent i = new Intent(getActivity(), RisultatiActivity.class);
                     i.putExtra("ID", idi);
                     startActivity(i);
 

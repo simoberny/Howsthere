@@ -443,25 +443,52 @@ public class Data extends AppCompatActivity {
             }
         }
 
-        //ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne
-        boolean prev = false;
+        //ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne SOLE
+        boolean prevSole = false;
         panorama.minutiSole = 0;
         for(int i = 0; i<288; i++){
             boolean sopra = sopra(i);
             if (sopra) panorama.minutiSole+=5;
             //System.out.println("ora: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto +" sopra? " + sopra);
-            if(!prev && sopra){ //alba
+            if(!prevSole && sopra){ //alba
                 panorama.albe.add(panorama.risultatiSole[i]);
                 //System.out.println("alba: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto );
                 //Toast.makeText(getApplicationContext(),"alba: " + panorama.risultatiSole[i].ora + ":"+ panorama.risultatiSole[i].minuto, Toast.LENGTH_LONG).show();
             }
-            if(prev && !sopra){ //alba
+            if(prevSole && !sopra){ //alba
                 panorama.tramonti.add(panorama.risultatiSole[i]);
                 //System.out.println("tramonto: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto );
                 //Toast.makeText(getApplicationContext(),"tramonto: " + panorama.risultatiSole[i].ora + ":"+ panorama.risultatiSole[i].minuto , Toast.LENGTH_LONG).show();
             }
-            prev=sopra;
+            prevSole=sopra;
         }
+
+        //ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne LUNA
+        boolean prevLuna = false;
+        panorama.minutiLuna = 0;
+        for(int i = 288; i<576; i++){
+            boolean sopraLuna = sopraLuna(i);
+            if (sopraLuna) panorama.minutiLuna+=5;
+            //System.out.println("ora: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto +" sopra? " + sopra);
+            if(!prevLuna && sopraLuna){ //alba
+                panorama.albeLuna.add(panorama.risultatiLuna[i]);
+                //System.out.println("alba: " + risultatiLuna[i].ora + ":"+ risultatiLuna[i].minuto );
+                //Toast.makeText(getApplicationContext(),"alba luna: " + panorama.risultatiLuna[i].ora + ":"+ panorama.risultatiLuna[i].minuto, Toast.LENGTH_LONG).show();
+            }
+            if(prevLuna && !sopraLuna){ //alba
+                panorama.tramontiLuna.add(panorama.risultatiLuna[i]);
+                //System.out.println("tramonto: " + risultatiLuna[i].ora + ":"+ risultatiLuna[i].minuto );
+                //Toast.makeText(getApplicationContext(),"tramonto luna: " + panorama.risultatiLuna[i].ora + ":"+ panorama.risultatiLuna[i].minuto , Toast.LENGTH_LONG).show();
+            }
+            prevLuna=sopraLuna;
+        }
+
+
+
+
+
+
+
         //Toast.makeText(getApplicationContext(),"Ore di Sole: " + panorama.minutiSole/60 + " ore, "+ (panorama.minutiSole-(panorama.minutiSole/60)*60)+ " minuti" , Toast.LENGTH_LONG).show();
         progressDialog.dismiss();
         progressDialog.setMessage("Calcolo posizione pianeti...");
@@ -470,7 +497,7 @@ public class Data extends AppCompatActivity {
         //salvo i dati del panorama con panoramiStorage
         PanoramiStorage p = PanoramiStorage.panorami_storage;
         p.addPanorama(panorama);
-        progressDialog.dismiss();
+
 
         /*progressDialog.setMessage("...");
         progressDialog.setTitle("Carico la pagina dei risultati");
@@ -482,6 +509,7 @@ public class Data extends AppCompatActivity {
         Intent i = new Intent(this,RisultatiActivity.class);
         i.putExtra("ID", panorama.ID);
         startActivity(i);
+        progressDialog.dismiss();
         finish();
 
         //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Data");
@@ -526,6 +554,28 @@ public class Data extends AppCompatActivity {
         }else{ //azimuth intermedio
             if (panorama.risultatiSole[i].altezza > ((panorama.risultatiMontagne[2][j]+panorama.risultatiMontagne[2][j+1])/2)) {
                 //System.out.println("Montangna: " + risultatiMontagne[2][j] + " Sole: " + risultatiSole[i].altezza);
+                //System.out.print(" true "+ risultatiSole[i].ora + ":" + risultatiSole[i].minuto);
+                //System.out.println(" azimut 1 " + risultatiMontagne[0][j-1]+ " azimut 2 " + risultatiMontagne[0][j]+ " azimut sole" + risultatiSole[i].azimuth);
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean sopraLuna(int i){
+        int j = 0;
+        for(int c = 0; c<360 && !(panorama.risultatiMontagne[0][c]>=panorama.risultatiLuna[i].azimuth);c++){ //allineamento Luna montagne
+            //if(i==3)System.out.println(" azimut " + risultatiMontagne[0][c]+ " azimut sole" + risultatiSole[i].azimuth);
+            j = c;
+            //System.out.println(j);
+        }
+
+        if(j==359){ //azimuth maggiore di tutti i dati delle montagne quindi confronto con l' ultimo e il primo
+            if (panorama.risultatiLuna[i].altezza > ((panorama.risultatiMontagne[2][259]+panorama.risultatiMontagne[2][0])/2)) {
+                return true;
+            }
+        }else{ //azimuth intermedio
+            if (panorama.risultatiLuna[i].altezza > ((panorama.risultatiMontagne[2][j]+panorama.risultatiMontagne[2][j+1])/2)) {
+                //System.out.println("Montangna: " + panorama.risultatiMontagne[2][j] + " Luna: " + panorama.risultatiLuna[i].altezza);
                 //System.out.print(" true "+ risultatiSole[i].ora + ":" + risultatiSole[i].minuto);
                 //System.out.println(" azimut 1 " + risultatiMontagne[0][j-1]+ " azimut 2 " + risultatiMontagne[0][j]+ " azimut sole" + risultatiSole[i].azimuth);
                 return true;

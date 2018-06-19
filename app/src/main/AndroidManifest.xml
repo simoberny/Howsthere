@@ -105,5 +105,4 @@
                 android:value="it.unitn.simob.howsthere.MainActivity" />
         </activity>
     </application>
-
 </manifest>
