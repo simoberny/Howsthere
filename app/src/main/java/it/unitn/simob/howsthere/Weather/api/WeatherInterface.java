@@ -1,8 +1,8 @@
-package it.unitn.simob.howsthere.retrofit.api;
+package it.unitn.simob.howsthere.Weather.api;
 
 
-import it.unitn.simob.howsthere.retrofit.models.ForecastResponseModel;
-import it.unitn.simob.howsthere.retrofit.models.WeatherResponseModel;
+import it.unitn.simob.howsthere.Weather.models.ForecastResponseModel;
+import it.unitn.simob.howsthere.Weather.models.WeatherResponseModel;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

@@ -1,6 +1,6 @@
 package it.unitn.simob.howsthere.Helper;
 
-import it.unitn.simob.howsthere.retrofit.models.*;
+import it.unitn.simob.howsthere.Weather.models.*;
 
 /**
  * Created by

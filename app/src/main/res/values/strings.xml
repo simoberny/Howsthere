@@ -1,12 +1,11 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Howsthere</string>
     <string name="fui_default_toolbar_title" translatable="false">Login</string>
-    <string name="id_web_auth">1038601279559-un0k7omgoi1n4sfq933mifruo4a60kgk.apps.googleusercontent.com</string>
+    <string name="id_web_auth" translatable="false">1038601279559-un0k7omgoi1n4sfq933mifruo4a60kgk.apps.googleusercontent.com</string>
 
     <!-- Main navigation -->
-    <string name="title_home">Mappa</string>
     <string name="title_storico">Storico</string>
-    <string name="title_feed">Feed</string>
+    <string name="title_feed">Feeds</string>
     <string name="title_user">Utente</string>
     <string name="pref_settings">Impostazioni</string>
 
@@ -27,20 +26,20 @@
     <string name="terza_pre">Una feeed con le foto immortalate grazie alla nostra app. Dopo aver calcolato il panorama, scatta una foto e mostra agli altri la posizione!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Prova fragment per il calcolo sole</string>
+    <string name="hello_blank_fragment" translatable="false">Prova fragment per il calcolo sole</string>
     <string name="title_activity_data">Data</string>
     <string name="title_activity_add_feed">Aggiungi feed</string>
     <string name="title_activity_registration">Registration</string>
 
     <string name="twitter_consumer_key" translatable="false">YczMt2TxjS8H0JSa0z7xN3TOX</string>
     <string name="twitter_consumer_secret" translatable="false">izpJJ3OHZwFRWSAinvuhMl2A57ygWjxBkZnj3YGZ6k066Dghgz</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_settings" translatable="false">Settings</string>
 
     <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
+    <string name="pref_header_general" translatable="false">General</string>
 
     <string name="pref_title_display_name">Nome visualizzato</string>
-    <string name="pref_default_display_name"></string>
+    <string name="pref_default_display_name" translatable="false"></string>
 
     <string name="pref_maps_type">Tipo mappa</string>
     <string-array name="pref_maps_list_title">
@@ -80,18 +79,18 @@
     <!-- Traduzione schermata di login -->
 
     <string name="fui_progress_dialog_loading" translation_description="Loading text in dialog">Caricamento...</string>
-    <string name="fui_sign_in_default" translation_description="Button text to sign in">Login</string>
+    <string name="fui_sign_in_default" translation_description="Button text to sign in" translatable="false">Login</string>
     <!-- Auth method picker -->
     <string name="fui_sign_in_with_google" translation_description="Sign in button text">Login con Google</string>
     <string name="fui_sign_in_with_facebook" translation_description="Sign in button text">Login con Facebook</string>
     <string name="fui_sign_in_with_twitter" translation_description="Sign in button text">Login con Twitter</string>
     <string name="fui_sign_in_with_email" translation_description="Sign in button text">Login con email</string>
-    <string name="fui_sign_in_with_phone" translation_description="Sign in button text">Login con phone</string>
+    <string name="fui_sign_in_with_phone" translation_description="Sign in button text">Login con telefono</string>
     <!-- Email common-->
     <string name="fui_next_default" translation_description="Button text to continue">Prossimo</string>
-    <string name="fui_email_hint" translation_description="Hint in email input field">Email</string>
+    <string name="fui_email_hint" translation_description="Hint in email input field" translatable="false">Email</string>
     <string name="fui_phone_hint" translation_description="Hint for phone input field">Numero di telefono</string>
-    <string name="fui_password_hint" translation_description="Hint for password input field">Password</string>
+    <string name="fui_password_hint" translation_description="Hint for password input field" translatable="false">Password</string>
     <string name="fui_required_field" translation_description="Inline error for required field">Non può essere vuoto!</string>
     <string name="fui_invalid_email_address" translation_description="Inline error for invalid email address">L\'email non  è valida</string>
     <string name="fui_missing_email_address" translation_description="Inline error for empty email address in input field">Inserisci una email per continuare...</string>
@@ -120,11 +119,11 @@
     <string name="fui_title_welcome_back_password_prompt" translatable="false">@string/fui_sign_in_default</string>
     <string name="fui_welcome_back_idp_header" translation_description="Inline subtitle to users whose signup was interrupted since an existing account was detected">Hai già un account</string>
     <string name="fui_welcome_back_email_header" translation_description="Message for returning users">Bentornato!</string>
-    <string name="fui_welcome_back_idp_prompt" translation_description="Message to users that need to signin using existing IDP accounts">
+    <string name="fui_welcome_back_idp_prompt" translation_description="Message to users that need to signin using existing IDP accounts" translatable="false">
         Hai già utilizzato <xliff:g example="jane.doe@example.com" id="email_addr" translation_description="">%1$s</xliff:g>.
         Entra con <xliff:g example="Google" id="provider_name" translation_description="">%2$s</xliff:g> per continuare.
     </string>
-    <string name="fui_welcome_back_password_prompt_body" translation_description="Message to users that need to signin using existing email accounts">
+    <string name="fui_welcome_back_password_prompt_body" translation_description="Message to users that need to signin using existing email accounts" translatable="false">
         Hai già utilizzato <xliff:g example="jane.doe@example.com" id="email_addr" translation_description="">%1$s</xliff:g>
         per fare il login. Inserisci la password per l'account.
     </string>
@@ -139,9 +138,9 @@
     <string name="fui_confirm_recovery_body" translation_description="Alert dialog displayed after password recovery email is sent">Segui le istruzioni inviate a %1$s per recuperare la password.</string>
     <string name="fui_progress_dialog_sending" translation_description="Progress dialog while password recovery email is being sent">Inviando…</string>
     <string name="fui_error_email_does_not_exist" translation_description="Inline error when user attempt signin with invalid account">Questa email non risulta con nessun account nel nostro sistema</string>
-    <string name="title_activity_presentation">Presentation</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_presentation" translatable="false">Presentation</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="section_format" translatable="false">Hello World from section: %1$d</string>
 
     <string name="weather_sunny" translatable="false">&#xf00d;</string>
     <string name="weather_clear_night" translatable="false">&#xf02e;</string>
@@ -153,6 +152,11 @@
     <string name="weather_drizzle" translatable="false">&#xf01c;</string>
 
     <string name="title_activity_risultati">Risultati</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_dashboard" translatable="false">Dashboard</string>
+    <string name="title_notifications" translatable="false">Notifications</string>
+    <string name="title_home">Mappa</string>
+    <string name="tap_home">Questa è la mappa e la sezione principale dove potete selezionare un posizione ed eseguire il panorama</string>
+    <string name="tap_history">Qui trovate tutti i panorami che avete calcolato in passato</string>
+    <string name="tap_social">Questa è la sezione social dell\'applicazione, dove trovate tutti i contenuti condivisi dagli utenti!</string>
+    <string name="tap_map">"Seleziona il posto di cui vuoi calcolare il panorama. "</string>
 </resources>

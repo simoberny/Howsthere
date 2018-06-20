@@ -1,6 +1,5 @@
 package it.unitn.simob.howsthere.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,7 +9,6 @@ import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,24 +41,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.stfalcon.frescoimageviewer.ImageViewer;
-
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.Oggetti.Feed;
-import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.R;
-import it.unitn.simob.howsthere.Risultati;
+import it.unitn.simob.howsthere.RisultatiActivity;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
     private Context mContext;
@@ -126,7 +119,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             holder.panorama.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(con, Risultati.class);
+                    Intent i = new Intent(con, RisultatiActivity.class);
                     i.putExtra("pan", feed.getP());
                     con.startActivity(i);
                 }

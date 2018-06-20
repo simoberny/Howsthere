@@ -1,4 +1,4 @@
-package it.unitn.simob.howsthere.retrofit.api;
+package it.unitn.simob.howsthere.Weather.api;
 
 
 import android.content.Context;

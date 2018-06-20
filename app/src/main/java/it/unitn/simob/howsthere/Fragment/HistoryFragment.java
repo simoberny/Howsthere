@@ -1,20 +1,11 @@
 package it.unitn.simob.howsthere.Fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,30 +17,15 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.twitter.sdk.android.core.models.TwitterCollection;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.zip.CheckedOutputStream;
 
 import it.unitn.simob.howsthere.Adapter.StoricoAdapter;
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
-import it.unitn.simob.howsthere.Risultati;
 import it.unitn.simob.howsthere.RisultatiActivity;
 
 
@@ -109,7 +85,6 @@ public class HistoryFragment extends Fragment{
                     }
                 }).show();
             }
-
         }
 
         return super.onOptionsItemSelected(item);

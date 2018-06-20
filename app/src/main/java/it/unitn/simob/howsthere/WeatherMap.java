@@ -3,10 +3,10 @@ package it.unitn.simob.howsthere;
 import android.content.Context;
 import it.unitn.simob.howsthere.Helper.ForecastCallback;
 import it.unitn.simob.howsthere.Helper.WeatherCallback;
-import it.unitn.simob.howsthere.retrofit.api.ApiClient;
-import it.unitn.simob.howsthere.retrofit.api.WeatherRetrofitCallback;
-import it.unitn.simob.howsthere.retrofit.models.ForecastResponseModel;
-import it.unitn.simob.howsthere.retrofit.models.WeatherResponseModel;
+import it.unitn.simob.howsthere.Weather.api.ApiClient;
+import it.unitn.simob.howsthere.Weather.api.WeatherRetrofitCallback;
+import it.unitn.simob.howsthere.Weather.models.ForecastResponseModel;
+import it.unitn.simob.howsthere.Weather.models.WeatherResponseModel;
 import retrofit2.Call;
 
 public class WeatherMap {

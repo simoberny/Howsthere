@@ -15,7 +15,7 @@ import java.util.List;
 
 import it.unitn.simob.howsthere.Adapter.WeatherRecyclerAdapter;
 import it.unitn.simob.howsthere.R;
-import it.unitn.simob.howsthere.retrofit.models.WeatherCompleto;
+import it.unitn.simob.howsthere.Weather.models.WeatherCompleto;
 
 
 public class ForecastFragment extends Fragment implements Serializable{

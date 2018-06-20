@@ -15,6 +15,8 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -49,7 +51,7 @@ public class SettingsFragment extends PreferenceFragmentCompat{
         Integer map_source = pref.getInt("map", 0);
 
         ListPreference maps = (ListPreference) findPreference("maps_type");
-        if(map_source == 1){
+        if(map_source == 1 || !isGooglePlayServicesAvailable(getActivity())){
             maps.setEntries(R.array.pref_maps_list_title_osm);
             maps.setEntryValues(R.array.pref_maps_list_values_osm);
             maps.setDialogTitle(R.string.pref_maps_type_osm);
@@ -127,5 +129,11 @@ public class SettingsFragment extends PreferenceFragmentCompat{
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    }
+
+    public boolean isGooglePlayServicesAvailable(Context context){
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
+        return resultCode == ConnectionResult.SUCCESS;
     }
 }

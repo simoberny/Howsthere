@@ -1,4 +1,4 @@
-package it.unitn.simob.howsthere.retrofit.models;
+package it.unitn.simob.howsthere.Weather.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

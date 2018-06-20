@@ -15,8 +15,7 @@ import java.util.List;
 
 import it.unitn.simob.howsthere.Helper.TempUnitConverter;
 import it.unitn.simob.howsthere.R;
-import it.unitn.simob.howsthere.retrofit.models.Weather;
-import it.unitn.simob.howsthere.retrofit.models.WeatherCompleto;
+import it.unitn.simob.howsthere.Weather.models.WeatherCompleto;
 
 public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecyclerAdapter.WeatherViewHolder> {
     private List<WeatherCompleto> itemList;

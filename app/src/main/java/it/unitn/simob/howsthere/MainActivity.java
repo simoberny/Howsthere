@@ -17,11 +17,16 @@ import it.unitn.simob.howsthere.Fragment.HistoryFragment;
 import it.unitn.simob.howsthere.Fragment.MapsFragment;
 import it.unitn.simob.howsthere.Fragment.UserProfile;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetSequence;
 
 public class MainActivity extends AppCompatActivity{
     private FeedFragment ff;
     public static final String PREF_USER_FIRST_TIME = "user_first_time";
-    boolean isUserFirstTime;
+    public static final String PREF_USER_FIRST_TAP = "user_first_tap";
+    boolean isUserFirstTime, isUserFirstTap;
+
+    MaterialTapTargetSequence seq;
 
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -31,12 +36,12 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         isUserFirstTime = Boolean.valueOf(readSharedSetting(MainActivity.this, PREF_USER_FIRST_TIME, "true"));
-
         Intent introIntent = new Intent(MainActivity.this, Presentation.class);
         introIntent.putExtra(PREF_USER_FIRST_TIME, isUserFirstTime);
 
-        if (isUserFirstTime)
+        if (isUserFirstTime) {
             startActivity(introIntent);
+        }
 
         PanoramiStorage.context = this;
         PanoramiStorage.panorami_storage = new PanoramiStorage();
@@ -54,6 +59,34 @@ public class MainActivity extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        seq = new MaterialTapTargetSequence();
+        isUserFirstTap= Boolean.valueOf(readSharedSetting(MainActivity.this, PREF_USER_FIRST_TAP, "true"));
+
+        if(isUserFirstTime){
+            seq.addPrompt(new MaterialTapTargetPrompt.Builder(this)
+                    .setTarget(findViewById(R.id.navigation_storico))
+                    .setPrimaryText("Sezione Storico")
+                    .setSecondaryText(R.string.tap_history)
+                    .create());
+            seq.addPrompt(new MaterialTapTargetPrompt.Builder(this)
+                    .setTarget(findViewById(R.id.navigation_feed))
+                    .setPrimaryText("Sezione Feed")
+                    .setSecondaryText(R.string.tap_social)
+                    .create());
+            seq.addPrompt(new MaterialTapTargetPrompt.Builder(this)
+                    .setTarget(findViewById(R.id.navigation_home))
+                    .setPrimaryText("Sezione Mappa")
+                    .setSecondaryText(R.string.tap_home)
+                    .create());
+            seq.setSequenceCompleteListener(new MaterialTapTargetSequence.SequenceCompleteListener() {
+                @Override
+                public void onSequenceComplete() {
+                    saveSharedSetting(MainActivity.this, PREF_USER_FIRST_TAP, "false");
+                }
+            });
+            seq.show();
+        }
 
         Intent i = getIntent();
         Bundle extra = i.getExtras();
@@ -114,5 +147,12 @@ public class MainActivity extends AppCompatActivity{
     public static String readSharedSetting(Context ctx, String settingName, String defaultValue) {
         SharedPreferences sharedPref = ctx.getSharedPreferences(Presentation.FIRST_TIME_STORAGE, Context.MODE_PRIVATE);
         return sharedPref.getString(settingName, defaultValue);
+    }
+
+    public static void saveSharedSetting(MainActivity ctx, String settingName, String settingValue) {
+        SharedPreferences sharedPref = ctx.getSharedPreferences(Presentation.FIRST_TIME_STORAGE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(settingName, settingValue);
+        editor.apply();
     }
 }

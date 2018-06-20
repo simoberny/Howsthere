@@ -11,25 +11,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import it.unitn.simob.howsthere.Adapter.WeatherRecyclerAdapter;
-import it.unitn.simob.howsthere.CustomViewPager;
 import it.unitn.simob.howsthere.Helper.ForecastCallback;
 import it.unitn.simob.howsthere.Helper.TempUnitConverter;
 import it.unitn.simob.howsthere.Helper.WeatherCallback;
@@ -38,10 +30,10 @@ import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
 import it.unitn.simob.howsthere.RisultatiActivity;
 import it.unitn.simob.howsthere.WeatherMap;
-import it.unitn.simob.howsthere.retrofit.models.ForecastResponseModel;
-import it.unitn.simob.howsthere.retrofit.models.Weather;
-import it.unitn.simob.howsthere.retrofit.models.WeatherCompleto;
-import it.unitn.simob.howsthere.retrofit.models.WeatherResponseModel;
+import it.unitn.simob.howsthere.Weather.models.ForecastResponseModel;
+import it.unitn.simob.howsthere.Weather.models.Weather;
+import it.unitn.simob.howsthere.Weather.models.WeatherCompleto;
+import it.unitn.simob.howsthere.Weather.models.WeatherResponseModel;
 
 import static it.unitn.simob.howsthere.BuildConfig.OWM_API_KEY;
 

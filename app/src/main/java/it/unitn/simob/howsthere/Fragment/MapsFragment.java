@@ -42,7 +42,6 @@ import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragmen
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -56,19 +55,9 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.MinimapOverlay;
 import org.osmdroid.views.overlay.Overlay;
-import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
-import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
-import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay2;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -79,19 +68,12 @@ import java.util.List;
 import java.util.Locale;
 
 import it.unitn.simob.howsthere.Data;
-import it.unitn.simob.howsthere.MainActivity;
-import it.unitn.simob.howsthere.Presentation;
 import it.unitn.simob.howsthere.R;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetSequence;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
-    boolean isUserFirstTime;
-    public static final String PREF_USER_FIRST_TIME = "tap_first_time";
     private String citta = "";
     private GoogleMap gm = null;
     private LatLng ln = null;
-    private int zoomLevel = 0;
     public static MapsFragment contesto;
     private Date dataSelezionata = Calendar.getInstance().getTime();
     private BottomSheetDialog dialog;
@@ -99,7 +81,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     //Marker Google
     private Marker marker;
-
     //Marker OSM
     org.osmdroid.views.overlay.Marker osm_marker;
 
@@ -110,14 +91,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     //open street map
     org.osmdroid.views.MapView map = null;
 
-    MaterialTapTargetSequence seq;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contesto = this;
-
-        isUserFirstTime = Boolean.valueOf(readSharedSetting(getActivity(), PREF_USER_FIRST_TIME, "true"));
 
         SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
         maps_type = pref.getInt("maps_type", 2);
@@ -131,8 +108,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
         Context ctx = getActivity().getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
-
-        seq = new MaterialTapTargetSequence();
     }
     public void onResume(){
         super.onResume();
@@ -155,7 +130,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         //Quando ruoto il dispositivo o quando viene risvegliato salvo e recupero lo stato della mappa
         if(gm != null) {
             MapStateManager mgr = new MapStateManager(getActivity());
-            mgr.saveMapState(gm);
+            mgr.saveMapState(ln, (int)gm.getCameraPosition().zoom);
         }
     }
 
@@ -278,8 +253,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             MapEventsReceiver mReceive = new MapEventsReceiver() {
                 @Override
                 public boolean singleTapConfirmedHelper(GeoPoint p) {
-                    //Toast.makeText(getActivity(), p.getLatitude() + " - "+p.getLongitude(), Toast.LENGTH_LONG).show();
-                    positionAndDialog(p.getLatitude(),p.getLongitude(),null);
+                    ln = new LatLng(p.getLatitude(), p.getLongitude());
+                    positionAndDialog(null);
                     return false;
                 }
                 @Override
@@ -305,7 +280,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
                 @Override
                 public void onMarkerDragEnd(org.osmdroid.views.overlay.Marker marker) {
-                    positionAndDialog(marker.getPosition().getLatitude(), marker.getPosition().getLongitude(), null);
+                    ln = new LatLng(marker.getPosition().getLatitude(), marker.getPosition().getLongitude());
+                    positionAndDialog(null);
                 }
 
                 @Override
@@ -315,39 +291,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             osm_marker.setOnMarkerClickListener(new org.osmdroid.views.overlay.Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(org.osmdroid.views.overlay.Marker marker, org.osmdroid.views.MapView mapView) {
-                    positionAndDialog(marker.getPosition().getLatitude(), marker.getPosition().getLongitude(), null);
+                    ln = new LatLng(marker.getPosition().getLatitude(), marker.getPosition().getLongitude());
+                    positionAndDialog(null);
                     return false;
                 }
             });
 
             map.getOverlays().add(osm_marker);
             map.getOverlays().addAll(overlays);
-        }
-
-
-        if(isUserFirstTime) {
-            seq.addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
-                    .setTarget(rootview.findViewById(R.id.focusP))
-                    .setPrimaryText("Seleziona un posto sulla mappa")
-                    .setSecondaryText("Seleziona il posto di cui vuoi calcolare il panorama. ")
-                    .create());
-            seq.addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
-                    .setTarget((getActivity()).findViewById(R.id.navigation_storico))
-                    .setPrimaryText("Sezione Storico")
-                    .setSecondaryText("Qui trovate tutti i panorami che avete calcolato in passato")
-                    .create());
-            seq.addPrompt(new MaterialTapTargetPrompt.Builder(getActivity())
-                    .setTarget((getActivity()).findViewById(R.id.navigation_feed))
-                    .setPrimaryText("Sezione Feed")
-                    .setSecondaryText("Questa è la sezione social dell'applicazione, dove trovate tutti i contenuti condivisi dagli utenti!")
-                    .create());
-            seq.setSequenceCompleteListener(new MaterialTapTargetSequence.SequenceCompleteListener() {
-                @Override
-                public void onSequenceComplete() {
-                    saveSharedSetting((MainActivity) getActivity(), PREF_USER_FIRST_TIME, "false");
-                }
-            });
-            seq.show();
         }
 
        return rootview;
@@ -436,12 +387,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
      * @param zoom
      */
     private void goToLoc(LatLng pos, int zoom){
-        ln = new LatLng(pos.latitude, pos.longitude);
+        ln = pos;
         if(map_id == 0){
             gm.clear();
-            marker = gm.addMarker(new MarkerOptions().position(ln).draggable(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray)));
-            gm.moveCamera(CameraUpdateFactory.newLatLng(ln));
-            gm.animateCamera(CameraUpdateFactory.zoomTo(zoom));
+            marker = gm.addMarker(new MarkerOptions().position(pos).draggable(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray)));
+            gm.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, zoom, 0,0)));
         }else{
             map.getController().setCenter(new GeoPoint(pos.latitude, pos.longitude));
             map.getController().setZoom(8.0);
@@ -466,7 +416,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             return new DatePickerDialog(contesto.getContext(), (DatePickerDialog.OnDateSetListener) contesto, year, month, day);
         }
     }
-
     /**
      * Gestisco l'evento della data selezionata e la salvo anche nella variabile globale
      * @param datePicker
@@ -515,29 +464,27 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         MapStateManager mgr = new MapStateManager(getActivity());
         final CameraPosition position = mgr.getSavedCameraPosition();
 
-        if (position != null) {
-            CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
-            gm.moveCamera(update);
-            goToLoc(gm.getCameraPosition().target, (int) gm.getCameraPosition().zoom);
-        } else {    //imposto la posizione predefinita da Silvio
-            CameraUpdate point = CameraUpdateFactory.newLatLngZoom(new LatLng(45.627245, 9.316333),4.0f);
-            gm.moveCamera(point);
-            gm.animateCamera(point);
+        if(position != null){
+            ln = position.target;
+            goToLoc(position.target, (int) position.zoom);
+        }else {
+            goToLoc(new LatLng(45.627245, 9.316333), 5);
         }
 
         gm.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
             @Override
             public void onMapClick(LatLng point) {
                 gm.clear();
+                ln = point;
                 marker = gm.addMarker(new MarkerOptions().position(point).draggable(true).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray)));
-                positionAndDialog(point.latitude, point.longitude, marker);
+                positionAndDialog(marker);
             }
         });
 
         gm.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                positionAndDialog(marker.getPosition().latitude, marker.getPosition().longitude, marker);
+                positionAndDialog(marker);
                 return false;
             }
         });
@@ -549,13 +496,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             public void onMarkerDrag(Marker marker) { }
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                positionAndDialog(marker.getPosition().latitude, marker.getPosition().longitude, marker);
+                ln = marker.getPosition();
+                positionAndDialog(marker);
             }
         });
     }
 
-    public void positionAndDialog(Double lat, Double lon, Marker marker){
-        ln = new LatLng(lat, lon);
+    public void positionAndDialog(Marker marker){
         TextView tx = dialogView.findViewById(R.id.info_pre);
 
         Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
@@ -614,61 +561,38 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         private static final String LONGITUDE = "longitude";
         private static final String LATITUDE = "latitude";
         private static final String ZOOM = "zoom";
-        private static final String BEARING = "bearing";
-        private static final String TILT = "tilt";
-        private static final String MAPTYPE = "MAPTYPE";
 
         private static final String PREFS_NAME ="mapCameraState";
 
         private SharedPreferences mapStatePrefs;
 
-        public MapStateManager(Context context) {
+        private MapStateManager(Context context) {
             mapStatePrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         }
 
-        public void saveMapState(GoogleMap mapMie) {
+        private void saveMapState(LatLng saveLn, int zoom) {
             SharedPreferences.Editor editor = mapStatePrefs.edit();
-            CameraPosition position = mapMie.getCameraPosition();
 
-            editor.putFloat(LATITUDE, (float) position.target.latitude);
-            editor.putFloat(LONGITUDE, (float) position.target.longitude);
-            editor.putFloat(ZOOM, position.zoom);
-            editor.putFloat(TILT, position.tilt);
-            editor.putFloat(BEARING, position.bearing);
-            editor.putInt(MAPTYPE, mapMie.getMapType());
+            editor.putLong(LATITUDE, Double.doubleToRawLongBits(saveLn.latitude));
+            editor.putLong(LONGITUDE, Double.doubleToRawLongBits(saveLn.longitude));
+            editor.putInt(ZOOM, zoom);
             editor.commit();
         }
 
-        public CameraPosition getSavedCameraPosition() {
-            double latitude = mapStatePrefs.getFloat(LATITUDE, 0);
-            if (latitude == 0) {
-                return null;
-            }
-            double longitude = mapStatePrefs.getFloat(LONGITUDE, 0);
+        private CameraPosition getSavedCameraPosition() {
+            double latitude = Double.longBitsToDouble(mapStatePrefs.getLong(LATITUDE, 0));
+            double longitude = Double.longBitsToDouble(mapStatePrefs.getLong(LONGITUDE, 0));
+
             LatLng target = new LatLng(latitude, longitude);
+            int zoom = mapStatePrefs.getInt(ZOOM, 5);
 
-            float zoom = mapStatePrefs.getFloat(ZOOM, 0);
-            float bearing = mapStatePrefs.getFloat(BEARING, 0);
-            float tilt = mapStatePrefs.getFloat(TILT, 0);
 
-            CameraPosition position = new CameraPosition(target, zoom, tilt, bearing);
+            CameraPosition position = null;
+
+            if(latitude != 0 && longitude != 0){
+                position = new CameraPosition(target, zoom, 0,0);
+            }
             return position;
         }
-
-        public int getSavedMapType() {
-            return mapStatePrefs.getInt(MAPTYPE, GoogleMap.MAP_TYPE_NORMAL);
-        }
-    }
-
-    public static String readSharedSetting(Context ctx, String settingName, String defaultValue) {
-        SharedPreferences sharedPref = ctx.getSharedPreferences(Presentation.FIRST_TIME_STORAGE, Context.MODE_PRIVATE);
-        return sharedPref.getString(settingName, defaultValue);
-    }
-
-    public static void saveSharedSetting(MainActivity ctx, String settingName, String settingValue) {
-        SharedPreferences sharedPref = ctx.getSharedPreferences(Presentation.FIRST_TIME_STORAGE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(settingName, settingValue);
-        editor.apply();
     }
 }
