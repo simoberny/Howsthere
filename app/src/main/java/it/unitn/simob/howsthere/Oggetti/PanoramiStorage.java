@@ -17,6 +17,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.MAX_PRIORITY;
 import static java.lang.Thread.MIN_PRIORITY;
 import static java.lang.Thread.NORM_PRIORITY;
 
@@ -128,7 +129,7 @@ public class PanoramiStorage {
         };
 
         Thread t = new Thread(r);
-        t.setPriority(MIN_PRIORITY);
+        t.setPriority(MAX_PRIORITY);
         t.start();
     }
 
