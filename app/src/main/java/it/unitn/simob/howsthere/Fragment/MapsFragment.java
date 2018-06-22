@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -140,7 +141,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
        dialog = new BottomSheetDialog(getActivity());
        dialogView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
-       dialog.setContentView(dialogView);
+        dialog.setContentView(dialogView);
        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
            @Override
            public void onDismiss(DialogInterface dialog) {

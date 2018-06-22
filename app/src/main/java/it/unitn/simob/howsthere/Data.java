@@ -469,27 +469,15 @@ public class Data extends AppCompatActivity {
         for(int i = 288; i<576; i++){
             boolean sopraLuna = sopraLuna(i);
             if (sopraLuna) panorama.minutiLuna+=5;
-            //System.out.println("ora: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto +" sopra? " + sopra);
             if(!prevLuna && sopraLuna){ //alba
                 panorama.albeLuna.add(panorama.risultatiLuna[i]);
-                //System.out.println("alba: " + risultatiLuna[i].ora + ":"+ risultatiLuna[i].minuto );
-                //Toast.makeText(getApplicationContext(),"alba luna: " + panorama.risultatiLuna[i].ora + ":"+ panorama.risultatiLuna[i].minuto, Toast.LENGTH_LONG).show();
             }
             if(prevLuna && !sopraLuna){ //alba
                 panorama.tramontiLuna.add(panorama.risultatiLuna[i]);
-                //System.out.println("tramonto: " + risultatiLuna[i].ora + ":"+ risultatiLuna[i].minuto );
-                //Toast.makeText(getApplicationContext(),"tramonto luna: " + panorama.risultatiLuna[i].ora + ":"+ panorama.risultatiLuna[i].minuto , Toast.LENGTH_LONG).show();
             }
             prevLuna=sopraLuna;
         }
 
-
-
-
-
-
-
-        //Toast.makeText(getApplicationContext(),"Ore di Sole: " + panorama.minutiSole/60 + " ore, "+ (panorama.minutiSole-(panorama.minutiSole/60)*60)+ " minuti" , Toast.LENGTH_LONG).show();
         progressDialog.dismiss();
         progressDialog.setMessage("Calcolo posizione pianeti...");
         progressDialog.setTitle("Salvo i dati...");
@@ -498,64 +486,28 @@ public class Data extends AppCompatActivity {
         PanoramiStorage p = PanoramiStorage.panorami_storage;
         p.addPanorama(panorama);
 
-
-        /*progressDialog.setMessage("...");
-        progressDialog.setTitle("Carico la pagina dei risultati");
-        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento*/
-
-
         //chiamo la classe Risultati
-
         Intent i = new Intent(this,RisultatiActivity.class);
         i.putExtra("ID", panorama.ID);
         startActivity(i);
         progressDialog.dismiss();
         finish();
-
-        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Data");
-
-        //SALA STAMPA
-
-        //stampo risultati montagne
-        /*for(int i = 0; i<360; i++){
-            for(int j = 0; j<7; j++){
-                System.out.print(risultatiMontagne[j][i] + "," + '\t');
-            }
-            System.out.println('\n');
-        }*/
-
-        //stampo risultati sole
-        /*for(int i = 0; i<288; i++){
-            System.out.println("SOLE: " + "ora: "+ risultatiSole[i].ora + ":"+ risultatiSole[i].minuto + '\t' +" altitudine: " + risultatiSole[i].altezza + '\t' +" azimuth: " + risultatiSole[i].azimuth);
-        }*/
-
-        //stampo risultati luna
-        /*for(int i = 0; i<288; i++){
-            System.out.println("LUNA: " + "ora: "+ risultatiLuna[i].ora + ":"+ risultatiLuna[i].minuto + '\t' +" altitudine: " + risultatiLuna[i].altezza + '\t' +" azimuth: " + risultatiLuna[i].azimuth);
-        }*/
-
-
     }
     private boolean sopra(int i){
         //todo confronto fra il primo e l' ultimo (0-360)
         //per la posizione i-esima del sole allineo con l' azimuth rispetto alle montagne e confronto l' altezza.
         //nota: ci sono 2 casi limite, uno è che il sole / luna abbia l' azimuth iniziale più basso di tutti i punti del profilo montagne e l' altro è che lo abbia maggiore di tutte le montagne.
         int j = 0;
-        for(int c = 0; c<360 && !(panorama.risultatiMontagne[0][c]>=panorama.risultatiSole[i].azimuth);c++){ //allineamento sole montagne
-            //if(i==3)System.out.println(" azimut " + risultatiMontagne[0][c]+ " azimut sole" + risultatiSole[i].azimuth);
+        for(int c = 0; c<360 && !(panorama.risultatiMontagne[0][c]>=panorama.risultatiSole[i].azimuth); c++){ //allineamento sole montagne
             j = c;
-            //System.out.println(j);
         }
 
         if(j==359){ //azimuth maggiore di tutti i dati delle montagne quindi confronto con l' ultimo e il primo
             if (panorama.risultatiSole[i].altezza > ((panorama.risultatiMontagne[2][259]+panorama.risultatiMontagne[2][0])/2)) {
                 return true;
             }
-        }else{ //azimuth intermedio
+        }else{  //azimuth intermedio
             if (panorama.risultatiSole[i].altezza > ((panorama.risultatiMontagne[2][j]+panorama.risultatiMontagne[2][j+1])/2)) {
-                //System.out.println("Montangna: " + risultatiMontagne[2][j] + " Sole: " + risultatiSole[i].altezza);
-                //System.out.print(" true "+ risultatiSole[i].ora + ":" + risultatiSole[i].minuto);
-                //System.out.println(" azimut 1 " + risultatiMontagne[0][j-1]+ " azimut 2 " + risultatiMontagne[0][j]+ " azimut sole" + risultatiSole[i].azimuth);
                 return true;
             }
         }
@@ -564,9 +516,7 @@ public class Data extends AppCompatActivity {
     private boolean sopraLuna(int i){
         int j = 0;
         for(int c = 0; c<360 && !(panorama.risultatiMontagne[0][c]>=panorama.risultatiLuna[i].azimuth);c++){ //allineamento Luna montagne
-            //if(i==3)System.out.println(" azimut " + risultatiMontagne[0][c]+ " azimut sole" + risultatiSole[i].azimuth);
             j = c;
-            //System.out.println(j);
         }
 
         if(j==359){ //azimuth maggiore di tutti i dati delle montagne quindi confronto con l' ultimo e il primo
@@ -575,14 +525,9 @@ public class Data extends AppCompatActivity {
             }
         }else{ //azimuth intermedio
             if (panorama.risultatiLuna[i].altezza > ((panorama.risultatiMontagne[2][j]+panorama.risultatiMontagne[2][j+1])/2)) {
-                //System.out.println("Montangna: " + panorama.risultatiMontagne[2][j] + " Luna: " + panorama.risultatiLuna[i].altezza);
-                //System.out.print(" true "+ risultatiSole[i].ora + ":" + risultatiSole[i].minuto);
-                //System.out.println(" azimut 1 " + risultatiMontagne[0][j-1]+ " azimut 2 " + risultatiMontagne[0][j]+ " azimut sole" + risultatiSole[i].azimuth);
                 return true;
             }
         }
         return false;
     }
 }
-
-
