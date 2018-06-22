@@ -10,12 +10,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="5dp">
+        android:padding="7dp">
 
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:layout_weight="4"
             app:cardCornerRadius="4dp"
             app:cardElevation="4dp">
@@ -208,15 +209,14 @@
                                     android:orientation="horizontal">
 
                                     <TextView
-                                        android:id="@+id/textView5"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
-                                        android:text="Alba ora"
+                                        android:text="ora"
                                         android:textSize="16sp" />
 
                                     <TextView
-                                        android:id="@+id/alba"
+                                        android:id="@+id/oraAlbaSole"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_margin="0dp"
@@ -235,7 +235,6 @@
                                     android:orientation="horizontal">
 
                                     <TextView
-                                        android:id="@+id/textView5"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
@@ -243,7 +242,7 @@
                                         android:textSize="16sp" />
 
                                     <TextView
-                                        android:id="@+id/azimut"
+                                        android:id="@+id/azimutAlbaSole"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_margin="0dp"
@@ -262,7 +261,6 @@
                                     android:orientation="horizontal">
 
                                     <TextView
-                                        android:id="@+id/textView5"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
@@ -270,7 +268,7 @@
                                         android:textSize="16sp" />
 
                                     <TextView
-                                        android:id="@+id/elevazione"
+                                        android:id="@+id/elevazioneAlbaSole"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_margin="0dp"
@@ -297,7 +295,7 @@
                                         android:textSize="16sp" />
 
                                     <TextView
-                                        android:id="@+id/alba_orizz"
+                                        android:id="@+id/albaOrizzonteSole"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_margin="0dp"
@@ -323,190 +321,6 @@
                     app:cardCornerRadius="4dp"
                     app:cardElevation="2dp">
 
-                    <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        app:cardCornerRadius="4dp"
-                        app:cardElevation="2dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="4"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_margin="6dp"
-                                android:orientation="horizontal">
-
-                                <LinearLayout
-                                    android:layout_width="70dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginEnd="2dp"
-                                    android:layout_marginStart="2dp"
-                                    android:gravity="center_horizontal"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:id="@+id/alba_label"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_above="@+id/take_photo"
-                                        android:layout_alignParentStart="true"
-                                        android:layout_weight="1"
-                                        android:paddingTop="10dp"
-                                        android:text="Tramonto"
-                                        android:textAlignment="center"
-                                        android:textSize="16sp" />
-
-                                    <ImageView
-                                        android:id="@+id/imageView3"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:layout_weight="1"
-                                        android:src="@drawable/sunset"
-                                        android:visibility="visible" />
-
-                                    <Space
-                                        android:layout_width="match_parent"
-                                        android:layout_height="30dp"
-                                        android:layout_weight="1" />
-
-                                </LinearLayout>
-
-                                <View
-                                    android:layout_width="1dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginEnd="5dp"
-                                    android:layout_marginStart="5dp"
-                                    android:background="@color/divider"></View>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginStart="5dp"
-                                    android:orientation="vertical"
-                                    android:paddingEnd="10dp">
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginTop="0dp"
-                                        android:layout_weight="1"
-                                        android:orientation="horizontal">
-
-                                        <TextView
-                                            android:id="@+id/textView5"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="1"
-                                            android:text="Tramonto ora"
-                                            android:textSize="16sp" />
-
-                                        <TextView
-                                            android:id="@+id/alba"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_margin="0dp"
-                                            android:layout_weight="2"
-                                            android:text="00:00"
-                                            android:textAlignment="textEnd"
-                                            android:textSize="16sp"
-                                            android:textStyle="bold" />
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginTop="0dp"
-                                        android:layout_weight="1"
-                                        android:orientation="horizontal">
-
-                                        <TextView
-                                            android:id="@+id/textView5"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="1"
-                                            android:text="Azimut"
-                                            android:textSize="16sp" />
-
-                                        <TextView
-                                            android:id="@+id/azimut"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_margin="0dp"
-                                            android:layout_weight="2"
-                                            android:text='"00"'
-                                            android:textAlignment="textEnd"
-                                            android:textSize="16sp"
-                                            android:textStyle="bold" />
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginTop="0dp"
-                                        android:layout_weight="1"
-                                        android:orientation="horizontal">
-
-                                        <TextView
-                                            android:id="@+id/textView5"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="1"
-                                            android:text="Elevazione"
-                                            android:textSize="16sp" />
-
-                                        <TextView
-                                            android:id="@+id/elevazione"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_margin="0dp"
-                                            android:layout_weight="2"
-                                            android:text='"00"'
-                                            android:textAlignment="textEnd"
-                                            android:textSize="20sp"
-                                            android:textStyle="bold" />
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginTop="0dp"
-                                        android:layout_weight="1"
-                                        android:orientation="horizontal">
-
-                                        <TextView
-                                            android:id="@+id/textView5"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="1"
-                                            android:text="Tram orizzonte"
-                                            android:textSize="16sp" />
-
-                                        <TextView
-                                            android:id="@+id/alba_orizz"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_margin="0dp"
-                                            android:layout_weight="2"
-                                            android:text="00:00"
-                                            android:textAlignment="textEnd"
-                                            android:textSize="16sp"
-                                            android:textStyle="bold" />
-                                    </LinearLayout>
-
-                                </LinearLayout>
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -521,30 +335,29 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="70dp"
                                 android:layout_height="match_parent"
-                                android:layout_marginEnd="10dp"
-                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="2dp"
+                                android:layout_marginStart="2dp"
                                 android:gravity="center_horizontal"
                                 android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/alba_label"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="55dp"
                                     android:layout_height="wrap_content"
                                     android:layout_above="@+id/take_photo"
                                     android:layout_alignParentStart="true"
                                     android:layout_weight="1"
                                     android:paddingTop="10dp"
-                                    android:text="Alba"
-                                    android:textSize="24sp" />
+                                    android:text="Tramonto"
+                                    android:textAlignment="center"
+                                    android:textSize="16sp" />
 
                                 <ImageView
-                                    android:id="@+id/imageView3"
                                     android:layout_width="match_parent"
                                     android:layout_height="50dp"
                                     android:layout_weight="1"
-                                    android:src="@drawable/sunrise"
+                                    android:src="@drawable/sunset"
                                     android:visibility="visible" />
 
                                 <Space
@@ -576,22 +389,21 @@
                                     android:orientation="horizontal">
 
                                     <TextView
-                                        android:id="@+id/textView5"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
-                                        android:text="Alba ora"
+                                        android:text="ora"
                                         android:textSize="16sp" />
 
                                     <TextView
-                                        android:id="@+id/alba"
+                                        android:id="@+id/oraTramontoSole"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_margin="0dp"
                                         android:layout_weight="2"
                                         android:text="00:00"
                                         android:textAlignment="textEnd"
-                                        android:textSize="20sp"
+                                        android:textSize="16sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
 
@@ -603,7 +415,6 @@
                                     android:orientation="horizontal">
 
                                     <TextView
-                                        android:id="@+id/textView5"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
@@ -611,14 +422,14 @@
                                         android:textSize="16sp" />
 
                                     <TextView
-                                        android:id="@+id/azimut"
+                                        android:id="@+id/azimutTramontoSole"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_margin="0dp"
                                         android:layout_weight="2"
                                         android:text='"00"'
                                         android:textAlignment="textEnd"
-                                        android:textSize="20sp"
+                                        android:textSize="16sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
 
@@ -630,7 +441,6 @@
                                     android:orientation="horizontal">
 
                                     <TextView
-                                        android:id="@+id/textView5"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
@@ -638,14 +448,14 @@
                                         android:textSize="16sp" />
 
                                     <TextView
-                                        android:id="@+id/elevazione"
+                                        android:id="@+id/elevazioneTramontoSole"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_margin="0dp"
                                         android:layout_weight="2"
                                         android:text='"00"'
                                         android:textAlignment="textEnd"
-                                        android:textSize="20sp"
+                                        android:textSize="16sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
 
@@ -657,7 +467,6 @@
                                     android:orientation="horizontal">
 
                                     <TextView
-                                        android:id="@+id/textView5"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
@@ -665,14 +474,14 @@
                                         android:textSize="16sp" />
 
                                     <TextView
-                                        android:id="@+id/alba_orizz"
+                                        android:id="@+id/tramontoOrizzonteSole"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_margin="0dp"
                                         android:layout_weight="2"
                                         android:text="00:00"
                                         android:textAlignment="textEnd"
-                                        android:textSize="20sp"
+                                        android:textSize="16sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
 
@@ -692,7 +501,7 @@
                     android:text="Minuti Sole"
                     android:textSize="18sp" />
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/latitudine"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -706,34 +515,67 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="Longitudine"
-                    android:textSize="18sp" />
+                    android:textSize="18sp" /> -->
 
 
                 <Button
-                    android:id="@+id/expandableButton1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableRight="@android:drawable/arrow_down_float"
-                    android:text="Expandable Layout Example"
-                    android:textColor="#fff" />
-
-                <com.github.aakira.expandablelayout.ExpandableRelativeLayout
-                    android:id="@+id/expandableLayout1"
+                    android:id="@+id/apparizioniSoleButton"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/expandableButton1"
-                    android:padding="16dp"
-                    app:ael_duration="400"
-                    app:ael_expanded="false"
-                    app:ael_interpolator="bounce"
-                    app:ael_orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:text="Apparizioni"
+                    android:drawableRight="@android:drawable/arrow_down_float"
+                    android:paddingRight="10dp"
+                    android:visibility="gone"
+                    android:textColor="#fff"/>
+
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:id="@+id/apparizioniSoleLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:el_duration="1000"
+                    app:el_expanded="false"
+                    app:el_parallax="0.5">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/apparizioniSoleTx"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Expandable Layout provides an easy way to create a view called header with an expandable view. Views are external layout to allow a maximum of customization." />
+                        android:padding="10dp"
+                        android:text=" " />
 
-                </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+                </net.cachapa.expandablelayout.ExpandableLayout>
+
+                <Button
+                    android:id="@+id/sparizioniSoleButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:text="Sparizioni"
+                    android:drawableRight="@android:drawable/arrow_down_float"
+                    android:paddingRight="10dp"
+                    android:visibility="gone"
+                    android:textColor="#fff"/>
+
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:id="@+id/sparizioniSoleLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:el_duration="1000"
+                    app:el_expanded="false"
+                    app:el_parallax="0.5">
+
+                    <TextView
+                        android:id="@+id/sparizioniSoleTx"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text=" " />
+
+                </net.cachapa.expandablelayout.ExpandableLayout>
+
+
+
 
                 <Space
                     android:layout_width="match_parent"
@@ -762,5 +604,6 @@
             android:clickable="true"
             app:backgroundTint="@android:color/white"
             app:srcCompat="@drawable/camera" />
+
     </RelativeLayout>
 </FrameLayout>
