@@ -18,6 +18,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
+
+import org.osmdroid.util.GeoPoint;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -72,11 +77,16 @@ public class RisultatiActivity extends AppCompatActivity {
             }
             p = obj; //Intent dalla feed con panorama salvato in Firebase
         }
-
         mt = MeteoFragment.newInstance();
         sf = SunFragment.newInstance();
         bf = BussolaFragment.newInstance();
         mf = MoonFragment.newInstance();
+
+        String posizione = getPosizione(p.lat, p.lon);
+
+        if(posizione != null) {
+            setTitle(posizione);
+        }
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -102,6 +112,34 @@ public class RisultatiActivity extends AppCompatActivity {
         navigation.setSelectedItemId(R.id.navigation_risultati);
     }
 
+    public String getPosizione(Double latitude, Double longitude){
+        Geocoder gcd = new Geocoder(this, Locale.getDefault());
+        String citta = null;
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                if(addresses.get(0).getLocality() == null || addresses.get(0).getLocality().length()==0){//se non viene trovata la città aspetto un attimo e riprovo
+                    addresses = gcd.getFromLocation(latitude, longitude, 1);
+                }
+                if (addresses.size() > 0) {
+                    if (addresses.get(0).getLocality() != null && addresses.get(0).getLocality().length() != 0) {
+                        citta = addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName();
+                    } else if (addresses.get(0).getSubLocality() != null && addresses.get(0).getSubLocality().length() != 0) {
+                        citta = addresses.get(0).getSubLocality() + ", " + addresses.get(0).getCountryName();
+                    }
+                }
+            }else{
+                Log.d("Problema address", "Problema");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return citta;
+    }
+
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -126,7 +164,6 @@ public class RisultatiActivity extends AppCompatActivity {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
             transaction.replace(R.id.frame_layout_risultati, selectedFragment);
-            transaction.addToBackStack(null);
             transaction.commit();
             return true;
         }

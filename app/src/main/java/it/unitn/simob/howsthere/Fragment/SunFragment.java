@@ -121,7 +121,7 @@ public class SunFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sun, container, false);
         currentView = view;
-        ((RisultatiActivity) getActivity()).getSupportActionBar().setTitle("Sole");
+        //((RisultatiActivity) getActivity()).getSupportActionBar().setTitle("Sole");
         FloatingActionButton take_photo = view.findViewById(R.id.take_photo);
         take_photo.setOnClickListener(new View.OnClickListener() {
             @Override

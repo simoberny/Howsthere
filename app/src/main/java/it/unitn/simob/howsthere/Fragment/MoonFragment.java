@@ -119,9 +119,8 @@ public class MoonFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sun, container, false);
-        ((RisultatiActivity)getActivity()).getSupportActionBar().setTitle("Luna");
+        //((RisultatiActivity)getActivity()).getSupportActionBar().setTitle("Luna");
         return view;
     }
 

@@ -60,13 +60,9 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bussola, container, false);
-
-        ((RisultatiActivity)getActivity()).getSupportActionBar().setTitle("Alba e tramonto sole");
-
+        //((RisultatiActivity)getActivity()).getSupportActionBar().setTitle("Alba e tramonto sole");
         compassAlba = (ImageView) view.findViewById(R.id.compassAlba);
-        //compass_back_alba = view.findViewById(R.id.compass_back_alba);
         compassTramonto = (ImageView) view.findViewById(R.id.compassTramonto);
-        //compass_back_tram = view.findViewById(R.id.compass_back_tram);
         nord = view.findViewById(R.id.nord);
         nord_compass = view.findViewById(R.id.nord_compass);
 

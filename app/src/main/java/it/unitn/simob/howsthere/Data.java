@@ -489,6 +489,7 @@ public class Data extends AppCompatActivity {
         //chiamo la classe Risultati
         Intent i = new Intent(this,RisultatiActivity.class);
         i.putExtra("ID", panorama.ID);
+        i.putExtra("citta", panorama.citta);
         startActivity(i);
         progressDialog.dismiss();
         finish();
