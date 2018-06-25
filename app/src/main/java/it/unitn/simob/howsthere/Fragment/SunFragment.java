@@ -17,6 +17,7 @@ import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -26,6 +27,9 @@ import android.support.v4.content.FileProvider;
 import android.text.format.DateFormat;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -85,7 +89,7 @@ public class SunFragment extends Fragment {
     public static final int GALLERY_INTENT = 25;
     public static final int CAMERA_INTENT = 26;
     private String mCurrentPhotoPath;
-    private FrameLayout main = null;
+    private CoordinatorLayout main = null;
     LineChart chart = null;
     static View currentView;
     public SunFragment() {
@@ -112,7 +116,40 @@ public class SunFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.menu_photo, menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.photo) {
+            if (mAuth.getCurrentUser() != null) {
+                getImage();
+            } else {
+                Snackbar mySnackbar = Snackbar.make(currentView.findViewById(R.id.risultatiMainLayout), "Devi eseguire il login per poter scattare un panorama!", Snackbar.LENGTH_LONG);
+                mySnackbar.setAction("Login", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), MainActivity.class);
+                        intent.putExtra("login", 1);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+                mySnackbar.show();
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -121,29 +158,9 @@ public class SunFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sun, container, false);
         currentView = view;
-        //((RisultatiActivity) getActivity()).getSupportActionBar().setTitle("Sole");
-        FloatingActionButton take_photo = view.findViewById(R.id.take_photo);
-        take_photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mAuth.getCurrentUser() != null) {
-                    getImage();
-                } else {
-                    Snackbar mySnackbar = Snackbar.make(view.findViewById(R.id.risultatiMainLayout), "Devi eseguire il login per poter scattare un panorama!", Snackbar.LENGTH_LONG);
-                    mySnackbar.setAction("Login", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(v.getContext(), MainActivity.class);
-                            intent.putExtra("login", 1);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
-                    });
-                    mySnackbar.show();
-                }
-            }
-        });
+
         p = ((RisultatiActivity)getActivity()).p;
+        id = p.ID;
         //menù espandibile apparizioni sole
         if(p!=null) {
             final Button apparizioniSoleButton = currentView.findViewById(R.id.apparizioniSoleButton);
