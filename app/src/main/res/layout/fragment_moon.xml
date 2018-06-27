@@ -1,261 +1,715 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/risultatiMainLayout_m"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/risultatiMainLayout"
+    android:fitsSystemWindows="false"
     tools:context=".Fragment.SunFragment">
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/barlayout_m"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@color/real_background">
 
-        <LinearLayout
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/viewA_m"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.github.mikephil.charting.charts.LineChart
-                android:id="@+id/chart"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_below="@+id/risultatiMainLayout"
-                android:layout_centerHorizontal="true">
-
-            </com.github.mikephil.charting.charts.LineChart>
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:titleEnabled="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:orientation="horizontal">
+                android:background="@color/background"
+                android:orientation="vertical"
+                android:paddingBottom="5dp"
+                app:layout_collapseMode="parallax">
 
-                <TextView
-                    android:id="@+id/N"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="N" />
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart_m"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_below="@+id/risultatiMainLayout"
+                    android:layout_centerHorizontal="true"
+                    android:paddingTop="10dp"
+                    app:layout_collapseMode="parallax">
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                </com.github.mikephil.charting.charts.LineChart>
 
-                <TextView
-                    android:id="@+id/E"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="E" />
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="horizontal">
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    <TextView
+                        android:id="@+id/N"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="N" />
 
-                <TextView
-                    android:id="@+id/S"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="S"
-                    android:textAlignment="center" />
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    <TextView
+                        android:id="@+id/E"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="E" />
 
-                <TextView
-                    android:id="@+id/O"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="O" />
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
 
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    <TextView
+                        android:id="@+id/S"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="S"
+                        android:textAlignment="center" />
 
-                <TextView
-                    android:id="@+id/N2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="N"
-                    android:textAlignment="viewEnd" />
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/O"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="O" />
+
+                    <Space
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/N2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="N"
+                        android:textAlignment="viewEnd" />
+                </LinearLayout>
+
             </LinearLayout>
 
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="15dp"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="7dp"
                     android:layout_weight="4"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="2dp">
+                    app:cardCornerRadius="17dp"
+                    app:cardElevation="4dp">
 
                     <TextView
-                        android:id="@+id/data"
+                        android:id="@+id/data_m"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="5dp"
                         android:layout_weight="1"
                         android:text="Data"
                         android:textSize="18sp" />
+
+                </android.support.v7.widget.CardView>
+            </RelativeLayout>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="false"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="4dp"
+                android:paddingBottom="0dp">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="4"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="6dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="70dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="2dp"
+                                android:layout_marginStart="2dp"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/alba_label_m"
+                                    android:layout_width="55dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_above="@+id/take_photo"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_weight="1"
+                                    android:paddingTop="10dp"
+                                    android:text="@string/alba"
+                                    android:textAlignment="center"
+                                    android:textSize="16sp" />
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:src="@drawable/sunrise"
+                                    android:visibility="visible" />
+
+                                <Space
+                                    android:layout_width="match_parent"
+                                    android:layout_height="30dp"
+                                    android:layout_weight="1" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="5dp"
+                                android:layout_marginStart="5dp"
+                                android:background="@color/divider"></View>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="5dp"
+                                android:orientation="vertical"
+                                android:paddingEnd="10dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/ora"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/oraAlbaLuna"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="0dp"
+                                        android:layout_weight="2"
+                                        android:text="00:00"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="Azimut"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/azimutAlbaLuna"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="0dp"
+                                        android:layout_weight="2"
+                                        android:text='"00"'
+                                        android:textAlignment="textEnd"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/elevazione"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/elevazioneAlbaLuna"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="0dp"
+                                        android:layout_weight="2"
+                                        android:text='"00"'
+                                        android:textAlignment="textEnd"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/textView5"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/ori"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/albaOrizzonteLuna"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="0dp"
+                                        android:layout_weight="2"
+                                        android:text="00:00"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
                 </android.support.v7.widget.CardView>
 
-                <LinearLayout
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="5dp"
                     android:layout_weight="4"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp">
 
-                    <ImageView
-                        android:id="@+id/imageView3"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/sunrise" />
-
-                    <TextView
-                        android:id="@+id/alba_label"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        android:text="Alba"
-                        android:textSize="20sp" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/alba"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        android:text="00:00"
-                        android:textAlignment="textEnd"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="6dp"
+                            android:orientation="horizontal">
 
-                <LinearLayout
+                            <LinearLayout
+                                android:layout_width="70dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="2dp"
+                                android:layout_marginStart="2dp"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="55dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_above="@+id/take_photo"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_weight="1"
+                                    android:paddingTop="10dp"
+                                    android:text="@string/tramonto"
+                                    android:textAlignment="center"
+                                    android:textSize="12sp" />
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:layout_weight="1"
+                                    android:src="@drawable/sunset"
+                                    android:visibility="visible" />
+
+                                <Space
+                                    android:layout_width="match_parent"
+                                    android:layout_height="30dp"
+                                    android:layout_weight="1" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="5dp"
+                                android:layout_marginStart="5dp"
+                                android:background="@color/divider"></View>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="5dp"
+                                android:orientation="vertical"
+                                android:paddingEnd="10dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="Ora"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/oraTramontoLuna"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="0dp"
+                                        android:layout_weight="2"
+                                        android:text="00:00"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="Azimut"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/azimutTramontoLuna"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="0dp"
+                                        android:layout_weight="2"
+                                        android:text='"00"'
+                                        android:textAlignment="textEnd"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="Elevazione"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/elevazioneTramontoLuna"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="0dp"
+                                        android:layout_weight="2"
+                                        android:text='"00"'
+                                        android:textAlignment="textEnd"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="Orizzonte"
+                                        android:textSize="16sp" />
+
+                                    <TextView
+                                        android:id="@+id/tramontoOrizzonteLuna"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="0dp"
+                                        android:layout_weight="2"
+                                        android:text="00:00"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="16sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="5dp"
                     android:layout_weight="4"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp">
 
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="5dp"
-                        android:src="@drawable/sunset" />
-
-                    <TextView
-                        android:id="@+id/tramonto_label"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        android:text="Tramonto"
-                        android:textSize="18sp" />
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tramonto"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/tempolunaconmontagne"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/minutiLunaMontagne"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:text="Minuti Luna"
+                                android:textAlignment="textEnd"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/faseluna"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/faselunare"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:text="Minuti Luna"
+                                android:textAlignment="textEnd"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/luceluna"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/luceluna"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2"
+                                android:text="Minuti Luna"
+                                android:textAlignment="textEnd"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="4"
+                    android:fitsSystemWindows="true"
+                    android:padding="10dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        android:text="00:00"
-                        android:textAlignment="textEnd"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/albaNoMontagne"
+                        <Button
+                            android:id="@+id/apparizioniLunaButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:background="@color/background"
+                            android:drawableRight="@drawable/baseline_chevron_right_24"
+                            android:paddingRight="10dp"
+                            android:text="@string/appa"
+                            android:textColor="@color/place_autocomplete_search_text"
+                            android:visibility="gone" />
+
+                        <net.cachapa.expandablelayout.ExpandableLayout
+                            android:id="@+id/apparizioniLunaLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:minHeight="100dp"
+                            app:el_duration="500"
+                            app:el_expanded="false"
+                            app:el_parallax="0.5">
+
+                            <TextView
+                                android:id="@+id/apparizioniLunaTx"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="15dp"
+                                android:text="Nessuna apparizione"
+                                android:textSize="18sp" />
+
+                        </net.cachapa.expandablelayout.ExpandableLayout>
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Alba senza conto delle montagne"
-                    android:textSize="18sp" />
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="4"
+                    android:fitsSystemWindows="true"
+                    android:padding="10dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp">
 
-                <TextView
-                    android:id="@+id/tramontoNoMontagne"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Tramonto senza conto delle montagna"
-                    android:textSize="18sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/minutiSole"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Minuti Sole"
-                    android:textSize="18sp" />
+                        <Button
+                            android:id="@+id/sparizioniLunaButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:background="@color/background"
+                            android:drawableRight="@drawable/baseline_chevron_right_24"
+                            android:paddingRight="10dp"
+                            android:text="@string/spa"
+                            android:textColor="@color/place_autocomplete_prediction_primary_text"
+                            android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/latitudine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Latitudine"
-                    android:textSize="18sp" />
+                        <net.cachapa.expandablelayout.ExpandableLayout
+                            android:id="@+id/sparizioniLunaLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:minHeight="100dp"
+                            app:el_duration="500"
+                            app:el_expanded="false"
+                            app:el_parallax="0.5">
 
-                <TextView
-                    android:id="@+id/longitudine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Longitudine"
-                    android:textSize="18sp" />
+                            <TextView
+                                android:id="@+id/sparizioniLunaTx"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="15dp"
+                                android:text="Nessuna sparizione"
+                                android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/frazioneLuna"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Frazione visibile luna"
-                    android:textSize="18sp" />
+                        </net.cachapa.expandablelayout.ExpandableLayout>
 
-                <TextView
-                    android:id="@+id/faseLuna"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Fase lunare"
-                    android:textSize="18sp" />
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-
-
-</FrameLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.AppBarLayout>
+</android.support.design.widget.CoordinatorLayout>

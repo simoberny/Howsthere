@@ -42,6 +42,7 @@ import com.vansuita.pickimage.listeners.IPickClick;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -103,7 +104,7 @@ public class MoonFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         p = ((RisultatiActivity)getActivity()).p;
 
-        chart = view.findViewById(R.id.chart);
+        chart = view.findViewById(R.id.chart_m);
         main = view.findViewById(R.id.risultatiMainLayout);
 
         //Se per qualche motivo il panorama non è leggibile o non c'è chiudo l'attività
@@ -119,7 +120,7 @@ public class MoonFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_sun, container, false);
+        final View view = inflater.inflate(R.layout.fragment_moon, container, false);
         //((RisultatiActivity)getActivity()).getSupportActionBar().setTitle("Luna");
         return view;
     }
@@ -161,8 +162,8 @@ public class MoonFragment extends Fragment {
         chart.getAxisLeft().setAxisMinValue(-1);  //faccio partire da -1 le y. non da 0 perchè da una montagna alta è possibile finire leggermente sotto lo 0
         chart.getAxisRight().setAxisMinValue(-1);
 
-        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Profilo montagne"); // add entries to dataset
-        LineDataSet dataSetLuna = new LineDataSet(entriesLuna, "luna");
+        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Montagne"); // add entries to dataset
+        LineDataSet dataSetLuna = new LineDataSet(entriesLuna, "Luna");
 
         //proprietà grafico Montagne
         dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
@@ -232,6 +233,7 @@ public class MoonFragment extends Fragment {
         l.setTextColor(Color.BLACK);
         l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
         l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
+        l.setPosition(Legend.LegendPosition.ABOVE_CHART_LEFT);
 
         List<Entry> entrinseo = new ArrayList<Entry>();
         entrinseo.add(new Entry(0,5));
@@ -242,23 +244,46 @@ public class MoonFragment extends Fragment {
     }
 
     void stampaValoriBase(View view){
-        TextView albaTv = (TextView)view.findViewById(R.id.alba);
+        /*
+        TextView albaTv = (TextView)view.findViewById(R.id.oraAlbaLuna);
         albaTv.setText(p.getAlba().ora + ":" + p.getAlba().minuto);
-        TextView tramontoTv = (TextView)view.findViewById(R.id.tramonto);
+        TextView tramontoTv = (TextView)view.findViewById(R.id.oraTramontoLuna);
         tramontoTv.setText(p.getTramonto().ora+ ":" + p.getTramonto().minuto);
-        TextView albaNoMontagneTv = (TextView)view.findViewById(R.id.albaNoMontagne);
+        TextView albaNoMontagneTv = (TextView)view.findViewById(R.id.albaOrizzonteLuna);
         albaNoMontagneTv.setText("Alba all' orizzonte: ora "+p.albaNoMontagne.getHours() + ":" + p.albaNoMontagne.getMinutes());
         TextView tramontoNoMontagneTv = (TextView)view.findViewById(R.id.tramontoNoMontagne);
         tramontoNoMontagneTv.setText("Tramonto all' orizzonte: ora "+p.tramontoNoMontagne.getHours() + ":" + p.tramontoNoMontagne.getMinutes());
-        TextView latitudineTv = (TextView)view.findViewById(R.id.latitudine);
-        latitudineTv.setText("Latitudine: "+p.lat);
-        TextView longitudineTv = (TextView)view.findViewById(R.id.longitudine);
-        longitudineTv.setText("Longitudine: "+p.lon);
-        TextView dataTv = (TextView)view.findViewById(R.id.data);
+        TextView dataTv = (TextView)view.findViewById(R.id.data_m);
         dataTv.setText((String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data));
         TextView frazioneLunaTv = (TextView)view.findViewById(R.id.frazioneLuna);
         frazioneLunaTv.setText("percentuale luna: "+(int)p.percentualeLuna +"%");
         TextView faseLunaTv = (TextView)view.findViewById(R.id.faseLuna);
         faseLunaTv.setText("fase luna(0=nuova,50=piena): "+(int)p.faseLuna);
+        */
+        TextView albaTv = (TextView) view.findViewById(R.id.oraAlbaLuna);
+        if (p.getAlbaLuna() != null) {
+            albaTv.setText(p.getAlbaLuna().ora + ":" + (p.getAlbaLuna().minuto < 10 ? "0" + p.getAlbaLuna().minuto : p.getAlbaLuna().minuto));
+            ((TextView) view.findViewById(R.id.azimutAlbaLuna)).setText(new DecimalFormat("##.##").format(p.getAlbaLuna().azimuth));
+            ((TextView) view.findViewById(R.id.elevazioneAlbaLuna)).setText(new DecimalFormat("##.##").format(p.getAlbaLuna().altezza));
+        } else {
+            albaTv.setText("nd");
+        }
+        ((TextView) view.findViewById(R.id.albaOrizzonteLuna)).setText((String) DateFormat.format("HH", p.albaLunaNoMontagne) + ":" + (String) DateFormat.format("mm", p.albaLunaNoMontagne)+ ":" + (String) DateFormat.format("dd", p.albaLunaNoMontagne));
+
+
+        //card tramonto sole
+        TextView tramontoTv = (TextView) view.findViewById(R.id.oraTramontoLuna);
+        if (p.getTramonto() != null) {
+            tramontoTv.setText(p.getTramontoLuna().ora + ":" + (p.getTramontoLuna().minuto < 10 ? "0" + p.getTramontoLuna().minuto : p.getTramontoLuna().minuto));
+            ((TextView) view.findViewById(R.id.azimutTramontoLuna)).setText(new DecimalFormat("##.##").format(p.getTramontoLuna().azimuth));
+            ((TextView) view.findViewById(R.id.elevazioneTramontoLuna)).setText(new DecimalFormat("##.##").format(p.getTramontoLuna().altezza));
+        } else {
+            tramontoTv.setText("nd");
+        }
+        ((TextView) view.findViewById(R.id.tramontoOrizzonteLuna)).setText((String) DateFormat.format("HH", p.tramontoLunaNoMontagne) + ":" + (String) DateFormat.format("mm", p.tramontoLunaNoMontagne)+ ":" + (String) DateFormat.format("dd", p.tramontoLunaNoMontagne));
+        ((TextView) view.findViewById(R.id.minutiLunaMontagne)).setText("" + p.minutiLuna/60 + ":"+((p.minutiLuna%60) < 10 ? ("0" + (p.minutiLuna%60)) : (p.minutiLuna%60)));
+        ((TextView) view.findViewById(R.id.data_m)).setText((String) DateFormat.format("dd", p.data) + "/" + (String) DateFormat.format("MM", p.data) + "/" + (String) DateFormat.format("yyyy", p.data));
+        ((TextView) view.findViewById(R.id.faselunare)).setText(p.faseLuna+"");
+        ((TextView) view.findViewById(R.id.luceluna)).setText(p.percentualeLuna +"%");
     }
 }
