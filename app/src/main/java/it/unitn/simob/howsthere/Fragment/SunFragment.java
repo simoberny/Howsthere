@@ -1,6 +1,4 @@
 package it.unitn.simob.howsthere.Fragment;
-
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -75,13 +73,9 @@ import it.unitn.simob.howsthere.RisultatiActivity;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class SunFragment extends Fragment {
     private Panorama p;
     private String id;
-
     private FirebaseAuth mAuth;
 
     private PickImageDialog dialog;
@@ -92,9 +86,8 @@ public class SunFragment extends Fragment {
     private CoordinatorLayout main = null;
     LineChart chart = null;
     static View currentView;
-    public SunFragment() {
-        // Required empty public constructor
-    }
+
+    public SunFragment() { }
 
     public static SunFragment newInstance(){
         SunFragment sf = new SunFragment();
@@ -104,13 +97,11 @@ public class SunFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //outState.putString("dataGotFromServer", dataGotFromServer);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //dataGotFromServer = savedInstanceState.getString("dataGotFromServer");
     }
 
     @Override
@@ -125,7 +116,6 @@ public class SunFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_photo, menu);
-
     }
 
     @Override
@@ -153,9 +143,7 @@ public class SunFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_sun, container, false);
         currentView = view;
 
@@ -183,10 +171,7 @@ public class SunFragment extends Fragment {
                 }
             });
 
-
             //menù espandibile sparizioni sole
-
-
             if (p.tramonti.size() > 1) {
                 sparizioniSoleButton.setVisibility(View.VISIBLE);
             }
@@ -204,9 +189,6 @@ public class SunFragment extends Fragment {
                 }
             });
         }
-
-
-
         chart = view.findViewById(R.id.chart);
         main = view.findViewById(R.id.risultatiMainLayout);
 
@@ -217,7 +199,6 @@ public class SunFragment extends Fragment {
         }else{
             getActivity().finish();
         }
-
         return view;
     }
 
@@ -233,13 +214,10 @@ public class SunFragment extends Fragment {
         }
         //MONTAGNE
         for (int i =0; i<360; i++) {
-
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
         }
 
-        //System.out.println("Montagne: "+ entriesMontagne.size() + " Sole: " + entriesSole.size());
         //proprietà grafico:
-
         chart.setDrawGridBackground(false);
         chart.getAxisRight().setEnabled(false);
         chart.getAxisLeft().setEnabled(false);

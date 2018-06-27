@@ -25,6 +25,18 @@
     <string name="seconda_pre">Restituiamo tutte le informazioni utili di una data, come l\'alba, il tramonto e le ore di sole in una giornata</string>
     <string name="terza_pre">Una feeed con le foto immortalate grazie alla nostra app. Dopo aver calcolato il panorama, scatta una foto e mostra agli altri la posizione!</string>
 
+    <!-- Risultati sole-->
+    <string name="alba">Alba</string>
+    <string name="tramonto">Tramonto</string>
+    <string name="ora">Ora</string>
+    <string name="elevazione">Elevazione</string>
+    <string name="ori">Orizzonte</string>
+    <string name="tempoconmontagne">Tempo sole con montagne</string>
+    <string name="temposenzamontagne">Tempo sole senza montagne</string>
+
+    <string name="appa">Apparizioni</string>
+    <string name="spa">Sparizioni</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Prova fragment per il calcolo sole</string>
     <string name="title_activity_data">Data</string>

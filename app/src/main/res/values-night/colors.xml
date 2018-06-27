@@ -29,6 +29,6 @@
 
 
     <!-- BLACK THEME -->
-    <color name="primaryTextColor">#ddd</color>
-    <color name="secondaryTextColor">#f00</color>
+    <color name="primaryTextColor">#f6f6f6</color>
+    <color name="secondaryTextColor">#ff0000</color>
 </resources>
