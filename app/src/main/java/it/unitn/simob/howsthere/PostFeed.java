@@ -82,6 +82,8 @@ public class PostFeed extends AppCompatActivity {
         Intent data = getIntent();
         id = data.getStringExtra("ID");
 
+        System.out.println("ID: " + id);
+
         lat = data.getDoubleExtra("lat", 0.0);
         lon = data.getDoubleExtra("lon", 0.0);
 
