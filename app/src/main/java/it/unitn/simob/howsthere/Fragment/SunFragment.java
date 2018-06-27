@@ -464,7 +464,7 @@ public class SunFragment extends Fragment {
             } else {
                 albaTv.setText("nd");
             }
-            ((TextView) view.findViewById(R.id.albaOrizzonteSole)).setText((String) DateFormat.format("hh", p.albaNoMontagne) + ":" + (String) DateFormat.format("mm", p.albaNoMontagne));
+            ((TextView) view.findViewById(R.id.albaOrizzonteSole)).setText((String) DateFormat.format("HH", p.albaNoMontagne) + ":" + (String) DateFormat.format("mm", p.albaNoMontagne)+ ":" + (String) DateFormat.format("dd", p.albaNoMontagne));
 
 
         //card tramonto sole
@@ -476,11 +476,12 @@ public class SunFragment extends Fragment {
             } else {
                 tramontoTv.setText("nd");
             }
-            ((TextView) view.findViewById(R.id.tramontoOrizzonteSole)).setText((String) DateFormat.format("hh", p.tramontoNoMontagne) + ":" + (String) DateFormat.format("mm", p.tramontoNoMontagne));
+            ((TextView) view.findViewById(R.id.tramontoOrizzonteSole)).setText((String) DateFormat.format("HH", p.tramontoNoMontagne) + ":" + (String) DateFormat.format("mm", p.tramontoNoMontagne)+ ":" + (String) DateFormat.format("dd", p.tramontoNoMontagne));
 
         //((TextView)view.findViewById(R.id.azimutTramontoSole)).setText(""+p.getTramonto().azimuth);
             ((TextView) view.findViewById(R.id.minutiSoleMontagne)).setText("" + p.minutiSole/60 + ":"+((p.minutiSole%60) < 10 ? ("0" + (p.minutiSole%60)) : (p.minutiSole%60)));
-            int minutiSoleNoMontagne = (int)((Math.abs(p.tramontoNoMontagne.getTime() - p.albaNoMontagne.getTime()))/60000);
+            int minutiSoleNoMontagne = (int)(1440-((Math.abs(p.tramontoNoMontagne.getTime() - p.albaNoMontagne.getTime()))/60000));
+            System.out.println("AAAAAAAAAA: "+p.tramontoNoMontagne.getTime()+"fgsdgd: "+p.albaNoMontagne.getTime()+"dassd: "+((p.tramontoNoMontagne.getTime() - p.albaNoMontagne.getTime())/60000.0));
             ((TextView) view.findViewById(R.id.minutiSoleNoMontagne)).setText("" + minutiSoleNoMontagne/60 + ":"+((minutiSoleNoMontagne%60) < 10 ? ("0" + (minutiSoleNoMontagne%60)) : (minutiSoleNoMontagne%60)));
 
         //((TextView) view.findViewById(R.id.latitudine)).setText("Lat " + p.lat);
