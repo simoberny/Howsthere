@@ -444,64 +444,34 @@ public class SunFragment extends Fragment {
                 albaTv.setText(p.getAlba().ora + ":" + (p.getAlba().minuto < 10 ? "0" + p.getAlba().minuto : p.getAlba().minuto));
                 ((TextView) view.findViewById(R.id.azimutAlbaSole)).setText(new DecimalFormat("##.##").format(p.getAlba().azimuth));
                 ((TextView) view.findViewById(R.id.elevazioneAlbaSole)).setText(new DecimalFormat("##.##").format(p.getAlba().altezza));
-                ((TextView) view.findViewById(R.id.albaOrizzonteSole)).setText((String) DateFormat.format("dd", p.albaNoMontagne) + "/" + (String) DateFormat.format("MM", p.albaNoMontagne) + "/" + (String) DateFormat.format("yyyy", p.albaNoMontagne));
-
             } else {
                 albaTv.setText("nd");
             }
+            ((TextView) view.findViewById(R.id.albaOrizzonteSole)).setText((String) DateFormat.format("hh", p.albaNoMontagne) + ":" + (String) DateFormat.format("mm", p.albaNoMontagne));
 
-            //card tramonto sole
+
+        //card tramonto sole
             TextView tramontoTv = (TextView) view.findViewById(R.id.oraTramontoSole);
             if (p.getTramonto() != null) {
                 tramontoTv.setText(p.getTramonto().ora + ":" + (p.getTramonto().minuto < 10 ? "0" + p.getTramonto().minuto : p.getTramonto().minuto));
                 ((TextView) view.findViewById(R.id.azimutTramontoSole)).setText(new DecimalFormat("##.##").format(p.getTramonto().azimuth));
                 ((TextView) view.findViewById(R.id.elevazioneTramontoSole)).setText(new DecimalFormat("##.##").format(p.getTramonto().altezza));
-                ((TextView) view.findViewById(R.id.tramontoOrizzonteSole)).setText((String) DateFormat.format("dd", p.tramontoNoMontagne) + "/" + (String) DateFormat.format("MM", p.tramontoNoMontagne) + "/" + (String) DateFormat.format("yyyy", p.tramontoNoMontagne));
             } else {
                 tramontoTv.setText("nd");
             }
-            //((TextView)view.findViewById(R.id.azimutTramontoSole)).setText(""+p.getTramonto().azimuth);
-            ((TextView) view.findViewById(R.id.minutiSole)).setText("Tempo Sole " + p.minutiSole/60 + ":"+((p.minutiSole%60) < 10 ? ("0" + (p.minutiSole%60)) : (p.minutiSole%60)));
-            //((TextView) view.findViewById(R.id.latitudine)).setText("Lat " + p.lat);
+            ((TextView) view.findViewById(R.id.tramontoOrizzonteSole)).setText((String) DateFormat.format("hh", p.tramontoNoMontagne) + ":" + (String) DateFormat.format("mm", p.tramontoNoMontagne));
+
+        //((TextView)view.findViewById(R.id.azimutTramontoSole)).setText(""+p.getTramonto().azimuth);
+            ((TextView) view.findViewById(R.id.minutiSoleMontagne)).setText("" + p.minutiSole/60 + ":"+((p.minutiSole%60) < 10 ? ("0" + (p.minutiSole%60)) : (p.minutiSole%60)));
+            int minutiSoleNoMontagne = (int)((Math.abs(p.tramontoNoMontagne.getTime() - p.albaNoMontagne.getTime()))/60000);
+            ((TextView) view.findViewById(R.id.minutiSoleNoMontagne)).setText("" + minutiSoleNoMontagne/60 + ":"+((minutiSoleNoMontagne%60) < 10 ? ("0" + (minutiSoleNoMontagne%60)) : (minutiSoleNoMontagne%60)));
+
+        //((TextView) view.findViewById(R.id.latitudine)).setText("Lat " + p.lat);
             //((TextView) view.findViewById(R.id.longitudine)).setText("Lon " + p.lon);
             ((TextView) view.findViewById(R.id.data)).setText((String) DateFormat.format("dd", p.data) + "/" + (String) DateFormat.format("MM", p.data) + "/" + (String) DateFormat.format("yyyy", p.data));
 
 
 
     }
-    /* void stampaValoriBase(View view){
-            //card alba sole
-            TextView albaTv = (TextView) view.findViewById(R.id.oraAlbaSole);
-            if (p.getAlba() != null) {
-                albaTv.setText(p.getAlba().ora + ":" + (p.getAlba().minuto < 10 ? "0" + p.getAlba().minuto : p.getAlba().minuto));
-            } else {
-                albaTv.setText("nd");
-            }
-            ((TextView) view.findViewById(R.id.azimutAlbaSole)).setText(new DecimalFormat("##.##").format(p.getAlba().azimuth));
-            ((TextView) view.findViewById(R.id.elevazioneAlbaSole)).setText(new DecimalFormat("##.##").format(p.getAlba().altezza));
-            ((TextView) view.findViewById(R.id.albaOrizzonteSole)).setText((String) DateFormat.format("dd", p.albaNoMontagne) + "/" + (String) DateFormat.format("MM", p.albaNoMontagne) + "/" + (String) DateFormat.format("yyyy", p.albaNoMontagne));
-
-            //card tramonto sole
-            TextView tramontoTv = (TextView) view.findViewById(R.id.oraTramontoSole);
-            if (p.getTramonto() != null) {
-                tramontoTv.setText(p.getTramonto().ora + ":" + (p.getTramonto().minuto < 10 ? "0" + p.getTramonto().minuto : p.getTramonto().minuto));
-            } else {
-                tramontoTv.setText("nd");
-            }
-            //((TextView)view.findViewById(R.id.azimutTramontoSole)).setText(""+p.getTramonto().azimuth);
-            ((TextView) view.findViewById(R.id.azimutTramontoSole)).setText(new DecimalFormat("##.##").format(p.getTramonto().azimuth));
-            ((TextView) view.findViewById(R.id.elevazioneTramontoSole)).setText(new DecimalFormat("##.##").format(p.getTramonto().altezza));
-            ((TextView) view.findViewById(R.id.tramontoOrizzonteSole)).setText((String) DateFormat.format("dd", p.tramontoNoMontagne) + "/" + (String) DateFormat.format("MM", p.tramontoNoMontagne) + "/" + (String) DateFormat.format("yyyy", p.tramontoNoMontagne));
-
-            ((TextView) view.findViewById(R.id.minutiSole)).setText("Tempo Sole " + p.minutiSole + " min ");
-            ((TextView) view.findViewById(R.id.latitudine)).setText("Lat " + p.lat);
-            ((TextView) view.findViewById(R.id.longitudine)).setText("Lon " + p.lon);
-
-            ((TextView) view.findViewById(R.id.data)).setText((String) DateFormat.format("dd", p.data) + "/" + (String) DateFormat.format("MM", p.data) + "/" + (String) DateFormat.format("yyyy", p.data));
-
-
-
-    } */
-
 
 }
