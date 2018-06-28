@@ -67,6 +67,9 @@
     <string name="ori" translatable="false">Horizon</string>
     <string name="tempoconmontagne" translatable="false">Time with mountain</string>
     <string name="temposenzamontagne" translatable="false">Time without mountain</string>
+    <string name="tempolunaconmontagne" translatable="false">Time moon with mountain</string>
+    <string name="faseluna" translatable="false">moon phase</string>
+    <string name="luceluna" translatable="false">% moon</string>
     <string name="appa" translatable="false">Apparition</string>
     <string name="spa" translatable="false">Sparition</string>
 </resources>

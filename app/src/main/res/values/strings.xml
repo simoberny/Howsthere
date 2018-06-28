@@ -34,6 +34,10 @@
     <string name="tempoconmontagne">Tempo sole con montagne</string>
     <string name="temposenzamontagne">Tempo sole senza montagne</string>
 
+    <string name="tempolunaconmontagne">Tempo luna con montagne</string>
+    <string name="faseluna">Fase lunare</string>
+    <string name="luceluna">% luna</string>
+
     <string name="appa">Apparizioni</string>
     <string name="spa">Sparizioni</string>
 
