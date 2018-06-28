@@ -5,8 +5,7 @@
     android:id="@+id/risultatiMainLayout_m"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    tools:context=".Fragment.SunFragment">
+    tools:context=".Fragment.MoonFragment">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/barlayout_m"
@@ -17,9 +16,9 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/viewA_m"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/background"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="scroll"
             app:titleEnabled="false">
 
             <LinearLayout
@@ -138,7 +137,6 @@
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout

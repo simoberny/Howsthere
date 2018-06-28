@@ -160,7 +160,6 @@ public class SunFragment extends Fragment {
 
         RecyclerView lista = currentView.findViewById(R.id.lista_montagne);
         LinearLayoutManager mLayoutManager = new MyLinearLayoutManager(getActivity());
-        lista.setNestedScrollingEnabled(true);
         lista.setLayoutManager(mLayoutManager);
         adapter = new PeakAdapter(getActivity(), listItems);
         lista.setAdapter(adapter);
@@ -173,17 +172,16 @@ public class SunFragment extends Fragment {
             final Button apparizioniSoleButton = currentView.findViewById(R.id.apparizioniSoleButton);
             final Button sparizioniSoleButton = currentView.findViewById(R.id.sparizioniSoleButton);
 
+            //Carico la lista dei nomi delle montagne nella lista
+            for(int i = 0; i < p.nomiPeak.size(); i++){
+                listItems.add(p.nomiPeak.get(i).getAzimuth() + " - Nome: " + p.nomiPeak.get(i).getNome_picco());
+            }
+            adapter.notifyDataSetChanged();
+
             openListaMontagne.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ExpandableLayout listaLayout = currentView.findViewById(R.id.lista_montagne_layout);
-                    if (listaLayout.isExpanded() == false && p != null) {
-                        for(int i = 0; i < p.nomiPeak.size(); i++){
-                            listItems.add(p.nomiPeak.get(i).getAzimuth() + " - Nome: " + p.nomiPeak.get(i).getNome_picco());
-                        }
-                        adapter.notifyDataSetChanged();
-                    }
-
                     listaLayout.toggle();
                 }
             });

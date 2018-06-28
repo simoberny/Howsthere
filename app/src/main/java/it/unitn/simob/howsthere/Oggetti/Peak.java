@@ -1,6 +1,8 @@
 package it.unitn.simob.howsthere.Oggetti;
 
-public class Peak {
+import java.io.Serializable;
+
+public class Peak implements Serializable{
     private String nome_picco;
     private Double azimuth;
 
