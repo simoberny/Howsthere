@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -24,6 +25,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.text.format.DateFormat;
 import android.util.Base64;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -189,8 +191,14 @@ public class SunFragment extends Fragment {
                 }
             });
         }
+
         chart = view.findViewById(R.id.chart);
         main = view.findViewById(R.id.risultatiMainLayout);
+
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        main.setMinimumHeight(size.y);
 
         //Se per qualche motivo il panorama non è leggibile o non c'è chiudo l'attività
         if(p != null){

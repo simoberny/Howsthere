@@ -5,8 +5,8 @@
     android:id="@+id/risultatiMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    tools:context=".Fragment.SunFragment">
+    tools:context=".Fragment.SunFragment"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/barlayout"
@@ -17,7 +17,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/viewA"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/background"
             app:layout_scrollFlags="scroll|enterAlways"
             app:titleEnabled="false">
@@ -138,15 +138,16 @@
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="4dp"
-                android:paddingBottom="0dp">
+                android:paddingBottom="100dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="4dp">
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -687,6 +688,6 @@
                 </android.support.v7.widget.CardView>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
-    </android.support.design.widget.AppBarLayout>
 
+    </android.support.design.widget.AppBarLayout>
 </android.support.design.widget.CoordinatorLayout>
