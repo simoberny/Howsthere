@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.facebook.imagepipeline.common.SourceUriType;
 import com.twitter.sdk.android.core.models.TwitterCollection;
 
 import org.shredzone.commons.suncalc.MoonIllumination;
@@ -41,6 +42,7 @@ import java.util.List;
 
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
+import it.unitn.simob.howsthere.Oggetti.Peak;
 import it.unitn.simob.howsthere.Oggetti.Posizione;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -52,6 +54,7 @@ import retrofit2.http.Query;
 
 public class Data extends AppCompatActivity {
     private String gPeak = null;
+    private String gNamePeak = null;
     private Retrofit retrofit = null;
     private ProgressDialog progressDialog;
     private Integer n_tentativi = 4; //+1 iniziale
@@ -71,12 +74,10 @@ public class Data extends AppCompatActivity {
 
         panorama.data.setTime(i.getLongExtra("data", 0));
         if(panorama.data.getTime() == 0){
-            Toast.makeText(getApplicationContext(), "Data non selezionata",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Data non selezionata", Toast.LENGTH_LONG).show();
         }
 
         panorama.citta = i.getStringExtra("citta");
-
         //Preparo la finestra di caricamento
         progressDialog = new ProgressDialog(Data.this);
         progressDialog.setMax(100);
@@ -87,34 +88,30 @@ public class Data extends AppCompatActivity {
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.heywhatsthat.com/")
                 .build();
-
         if (savedInstanceState != null) {
             // Se c'è un istanza salvata non richiedo nuovamente i dati
             String savedID = savedInstanceState.getString("ID");
             String savedPeak = savedInstanceState.getString("peak");
+            String savedNamePeak = savedInstanceState.getString("namePeak");
             panorama.ID = savedID;
             gPeak = savedPeak;
-            setPeak(savedPeak);
+            gNamePeak = savedNamePeak;
+            setPeak(savedPeak, savedNamePeak);
         }else{
             callsAPI(panorama.lat, panorama.lon);
         }
     }
 
-    /**
-     * Salvataggio dell'istanza
-     */
+    /* Salvataggio dell'istanza */
     @Override
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putCharSequence("ID", panorama.ID);
         outState.putCharSequence("peak", gPeak);
+        outState.putCharSequence("namePeak", gNamePeak);
     }
-
-
-    /**
-     * Interfacce per le richieste GET
-     */
-    public interface HeyWhatsID { // http://www.heywhatsthat.com/api/query?src=hows&lat=45.627107&lon= 9.315373
+    /* Interfacce per le richieste GET */
+    public interface HeyWhatsID {
         @GET("api/query?src=hows")
         Call<ResponseBody> getID(@Query("lat") Double lat, @Query("lon") Double lon);
     }
@@ -127,6 +124,11 @@ public class Data extends AppCompatActivity {
     public interface HeyWhatsPeak {
         @GET("api/horizon.csv?resolution=.999")
         Call<ResponseBody> getPeak(@Query("id") String ID);
+    }
+
+    public interface HeyWhatsNamePeak {
+        @GET("api/horizon-peaks?src=hows")
+        Call<ResponseBody> getNamePeak(@Query("id") String ID);
     }
 
     private void callsAPI(final Double lat, final Double lng){
@@ -143,7 +145,6 @@ public class Data extends AppCompatActivity {
                         String id = response.body().string();
                         if(id != null && id != "") {
                             panorama.ID = id;
-                            //System.out.print("ID: " + panorama.ID);
                             TextView tx = (TextView)findViewById(R.id.idCheck); //recupero e rendo visibile la conferma ricezione ID
                             tx.setVisibility(TextView.VISIBLE);
                             try {   //aspetto prima del primo tentativo, il server ci mette sempre almeno un secondo.
@@ -169,7 +170,6 @@ public class Data extends AppCompatActivity {
                         System.out.println("errore generico nella lettura id");
                         e.printStackTrace();
                         richiediID();
-
                     }
                 } else {
                     System.out.println("risposta dal sito fallita");
@@ -194,7 +194,6 @@ public class Data extends AppCompatActivity {
             callsAPI(panorama.lat, panorama.lon);
             richiestaID++;
             progressDialog.setMessage("Richiesta id panorama, tentativo n°: " + (richiestaID+1));
-
         }else{
             System.out.println("ID non ottenuto, controllare la connessione");
             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
@@ -307,7 +306,7 @@ public class Data extends AppCompatActivity {
                         progressDialog.dismiss();
                         TextView tx = (TextView)findViewById(R.id.panoramaDownload); //recupero e rendo visibile la conferma scaricamento dati
                         tx.setVisibility(TextView.VISIBLE);
-                        setPeak(gPeak);
+                        loadNamePeak();
                     } catch (IOException e) {
                         richiediDatiMontagne();
                         e.printStackTrace();
@@ -315,16 +314,48 @@ public class Data extends AppCompatActivity {
                 } else {
                     richiediDatiMontagne();
                 }
-                //progressDialog.dismiss();
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d("Error", t.getMessage());
                 richiediDatiMontagne();
-
             }
         });
     }
+
+    private void loadNamePeak(){
+        progressDialog.setMessage("Scarico nomi montagne...");
+        progressDialog.setTitle("Scaricamento nomi montagne");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
+        HeyWhatsNamePeak service = retrofit.create(HeyWhatsNamePeak.class);
+        Call<ResponseBody> call = service.getNamePeak(panorama.ID);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        gNamePeak = response.body().string();
+                        progressDialog.dismiss();
+                        TextView tx = findViewById(R.id.panoramaName); //recupero e rendo visibile la conferma scaricamento dati
+                        tx.setVisibility(TextView.VISIBLE);
+                        setPeak(gPeak, gNamePeak);
+                    } catch (IOException e) {
+                        richiediDatiMontagne();
+                        e.printStackTrace();
+                    }
+                } else {
+                    richiediDatiMontagne();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("Error", t.getMessage());
+                richiediDatiMontagne();
+            }
+        });
+    }
+
     private void richiediDatiMontagne(){
         if (richiestaDatiMontagne<n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
             try {
@@ -358,8 +389,7 @@ public class Data extends AppCompatActivity {
         azzeraTentativiScaricamentoPanorama();
     }
 
-    private void setPeak(String peak){
-
+    private void setPeak(String peak, String namePeak){
         progressDialog.setMessage("Calcolo posizione pianeti...");
         progressDialog.setTitle("Scaricamento e Calcolo posizione pianeti");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
@@ -410,12 +440,8 @@ public class Data extends AppCompatActivity {
                             .at(panorama.lat, panorama.lon)   // set a location
                             .execute();     // get the results
 
-                    //luna ieri
-                    //calendar.add(Calendar.DATE, -1);
-                    //luna domani
-                    //MoonTimes m = MoonTimes.compute().on(panorama.data).execute();
                     MoonIllumination m = MoonIllumination.compute().on(panorama.data).execute();
-                    //System.out.println("frazione: "+ m.getFraction()+" fase: "+m.getPhase());
+
                     panorama.percentualeLuna = m.getFraction()*100;
                     panorama.faseLuna = m.getPhase();
                     MoonTimes m1 = MoonTimes.compute().on(panorama.data).execute();
@@ -434,6 +460,25 @@ public class Data extends AppCompatActivity {
             }
         }
 
+        //PARSING nome
+        List<String> linee_nomi = Arrays.asList(namePeak.split("[\\r\\n]+"));
+        for(int a = 0; a < linee_nomi.size(); a++){
+            List<String> tempsplit = Arrays.asList(linee_nomi.get(a).split(" "));
+
+            if(tempsplit.size() >= 5){
+                List<String> sublist = tempsplit.subList(4, tempsplit.size());
+
+                StringBuilder b = new StringBuilder();
+                for(int j = 0; j < sublist.size(); j++){
+                    b.append(String.valueOf(sublist.get(j)));
+                    b.append(" ");
+                }
+                System.out.println("Nome monte: " + b);
+                Peak temp = new Peak(b.toString(), Double.parseDouble(tempsplit.get(0)));
+                panorama.nomiPeak.add(temp);
+            }
+        }
+
         //PARSING dati
         List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
         for(int a = 1; a< lines.size(); a++){
@@ -442,7 +487,6 @@ public class Data extends AppCompatActivity {
                 panorama.risultatiMontagne[i][a-1] = Double.parseDouble(tempsplit.get(i));
             }
         }
-
         //ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne SOLE
         boolean prevSole = false;
         panorama.minutiSole = 0;

@@ -50,6 +50,18 @@
             android:textSize="24sp"
             android:visibility="gone" />
 
+        <TextView
+            android:id="@+id/panoramaName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/fui_done_check_mark"
+            android:drawablePadding="10dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="10dp"
+            android:text="Nomi montagne scaricati"
+            android:textSize="24sp"
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/idErrLayout"
             android:layout_width="match_parent"

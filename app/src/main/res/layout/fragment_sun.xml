@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="scroll"
             app:titleEnabled="false">
 
             <LinearLayout
@@ -135,10 +135,9 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -598,6 +597,60 @@
                         android:orientation="vertical">
 
                         <Button
+                            android:id="@+id/open_lista_montagne"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:background="@color/background"
+                            android:drawableRight="@drawable/baseline_chevron_right_24"
+                            android:paddingRight="10dp"
+                            android:text="Lista Montagne"
+                            android:textColor="@color/place_autocomplete_prediction_primary_text" />
+
+                        <net.cachapa.expandablelayout.ExpandableLayout
+                            android:id="@+id/lista_montagne_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:minHeight="100dp"
+                            app:el_duration="500"
+                            app:el_expanded="false"
+                            app:el_parallax="0.5">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp"
+                                android:layout_margin="15dp"
+                                android:orientation="vertical">
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/lista_montagne"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:clipToPadding="false">
+
+                                </android.support.v7.widget.RecyclerView>
+                            </LinearLayout>
+                        </net.cachapa.expandablelayout.ExpandableLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="4"
+                    android:fitsSystemWindows="true"
+                    android:padding="10dp"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <Button
                             android:id="@+id/apparizioniSoleButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -687,7 +740,7 @@
 
                 </android.support.v7.widget.CardView>
             </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+        </LinearLayout>
 
     </android.support.design.widget.AppBarLayout>
 </android.support.design.widget.CoordinatorLayout>

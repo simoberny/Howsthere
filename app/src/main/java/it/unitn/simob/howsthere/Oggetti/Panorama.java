@@ -26,7 +26,7 @@ public class Panorama implements Serializable {
             -altezza (gradi):       inclinazione all' orizzonte
             -azimuth:               0-360 vale 0 a nord e cresce verso est
         */
-
+     public List<Peak> nomiPeak;
     public Posizione[] risultatiSole;
     public Posizione[] risultatiLuna;
     //public Posizione[] risultatiLunaGiornoPrima;
@@ -61,6 +61,7 @@ public class Panorama implements Serializable {
 
     public Panorama(){
         risultatiMontagne = new double[7][360];
+        nomiPeak = new ArrayList<Peak>();
         risultatiSole = new Posizione[288];
         risultatiLuna = new Posizione[864];
         //risultatiLunaGiornoPrima = new Posizione[288];

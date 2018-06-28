@@ -1,5 +1,6 @@
 package it.unitn.simob.howsthere.Fragment;
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -23,6 +24,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Base64;
 import android.view.Display;
@@ -32,6 +35,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -58,6 +62,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,6 +71,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import it.unitn.simob.howsthere.Adapter.MyLinearLayoutManager;
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
@@ -88,6 +94,9 @@ public class SunFragment extends Fragment {
     private CoordinatorLayout main = null;
     LineChart chart = null;
     static View currentView;
+
+    ArrayList<String> listItems=new ArrayList<String>();
+    PeakAdapter adapter;
 
     public SunFragment() { }
 
@@ -149,12 +158,35 @@ public class SunFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_sun, container, false);
         currentView = view;
 
+        RecyclerView lista = currentView.findViewById(R.id.lista_montagne);
+        LinearLayoutManager mLayoutManager = new MyLinearLayoutManager(getActivity());
+        lista.setNestedScrollingEnabled(true);
+        lista.setLayoutManager(mLayoutManager);
+        adapter = new PeakAdapter(getActivity(), listItems);
+        lista.setAdapter(adapter);
+
         p = ((RisultatiActivity)getActivity()).p;
         id = p.ID;
         //menù espandibile apparizioni sole
         if(p!=null) {
+            final Button openListaMontagne = currentView.findViewById(R.id.open_lista_montagne);
             final Button apparizioniSoleButton = currentView.findViewById(R.id.apparizioniSoleButton);
             final Button sparizioniSoleButton = currentView.findViewById(R.id.sparizioniSoleButton);
+
+            openListaMontagne.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ExpandableLayout listaLayout = currentView.findViewById(R.id.lista_montagne_layout);
+                    if (listaLayout.isExpanded() == false && p != null) {
+                        for(int i = 0; i < p.nomiPeak.size(); i++){
+                            listItems.add(p.nomiPeak.get(i).getAzimuth() + " - Nome: " + p.nomiPeak.get(i).getNome_picco());
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    listaLayout.toggle();
+                }
+            });
 
             if (p.albe.size() > 1) {
                 apparizioniSoleButton.setVisibility(View.VISIBLE);
@@ -464,18 +496,49 @@ public class SunFragment extends Fragment {
             }
             ((TextView) view.findViewById(R.id.tramontoOrizzonteSole)).setText((String) DateFormat.format("HH", p.tramontoNoMontagne) + ":" + (String) DateFormat.format("mm", p.tramontoNoMontagne)+ ":" + (String) DateFormat.format("dd", p.tramontoNoMontagne));
 
-        //((TextView)view.findViewById(R.id.azimutTramontoSole)).setText(""+p.getTramonto().azimuth);
             ((TextView) view.findViewById(R.id.minutiSoleMontagne)).setText("" + p.minutiSole/60 + ":"+((p.minutiSole%60) < 10 ? ("0" + (p.minutiSole%60)) : (p.minutiSole%60)));
             int minutiSoleNoMontagne = (int)(1440-((Math.abs(p.tramontoNoMontagne.getTime() - p.albaNoMontagne.getTime()))/60000));
             System.out.println("AAAAAAAAAA: "+p.tramontoNoMontagne.getTime()+"fgsdgd: "+p.albaNoMontagne.getTime()+"dassd: "+((p.tramontoNoMontagne.getTime() - p.albaNoMontagne.getTime())/60000.0));
             ((TextView) view.findViewById(R.id.minutiSoleNoMontagne)).setText("" + minutiSoleNoMontagne/60 + ":"+((minutiSoleNoMontagne%60) < 10 ? ("0" + (minutiSoleNoMontagne%60)) : (minutiSoleNoMontagne%60)));
 
-        //((TextView) view.findViewById(R.id.latitudine)).setText("Lat " + p.lat);
-            //((TextView) view.findViewById(R.id.longitudine)).setText("Lon " + p.lon);
             ((TextView) view.findViewById(R.id.data)).setText((String) DateFormat.format("dd", p.data) + "/" + (String) DateFormat.format("MM", p.data) + "/" + (String) DateFormat.format("yyyy", p.data));
+    }
 
+    public class PeakAdapter extends RecyclerView.Adapter<PeakAdapter.MyViewHolder>{
+        private Context context;
+        ArrayList<String> array;
 
+        public PeakAdapter(Context context, ArrayList<String> array) {
+            this.context = context;
+            this.array = array;
+        }
 
+        @Override
+        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.elemento_peak, parent, false);
+            MyViewHolder holder = new MyViewHolder(view);
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, int position) {
+            holder.element_peak.setText(array.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return array.size();
+        }
+
+        class MyViewHolder extends RecyclerView.ViewHolder
+        {
+            TextView element_peak;
+
+            public MyViewHolder(View itemView) {
+                super(itemView);
+                element_peak = itemView.findViewById(R.id.name);
+            }
+        }
     }
 
 }
