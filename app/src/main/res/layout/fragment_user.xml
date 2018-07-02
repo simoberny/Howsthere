@@ -4,8 +4,8 @@
     android:id="@+id/fragment_sett"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.unitn.simob.howsthere.Fragment.UserFragment"
-    android:transitionGroup="true">
+    android:transitionGroup="true"
+    tools:context="it.unitn.simob.howsthere.Fragment.UserFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -23,10 +23,10 @@
         </FrameLayout>
 
         <android.support.v7.widget.CardView
+            style="?attr/cardStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardElevation="6dp"
-            style="?attr/cardStyle">
+            app:cardElevation="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"

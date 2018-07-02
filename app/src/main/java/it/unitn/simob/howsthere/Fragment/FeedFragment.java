@@ -103,6 +103,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            ((MainActivity)getActivity()).getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();

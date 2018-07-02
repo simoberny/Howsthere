@@ -8,11 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -29,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -69,6 +72,7 @@ import java.util.List;
 import java.util.Locale;
 
 import it.unitn.simob.howsthere.Data;
+import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.R;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
@@ -94,6 +98,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            ((MainActivity)getActivity()).getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+
         super.onCreate(savedInstanceState);
         contesto = this;
 

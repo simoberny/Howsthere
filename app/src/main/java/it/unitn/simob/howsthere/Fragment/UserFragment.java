@@ -1,6 +1,7 @@
 package it.unitn.simob.howsthere.Fragment;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.R;
 
 import static android.app.Activity.RESULT_OK;
@@ -34,6 +36,9 @@ public class UserFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            ((MainActivity)getActivity()).getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+        }
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
     }

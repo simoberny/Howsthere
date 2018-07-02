@@ -20,10 +20,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.CardView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -39,6 +41,8 @@ import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.enums.EPickType;
 import com.vansuita.pickimage.listeners.IPickClick;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,8 +105,55 @@ public class MoonFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_moon, container, false);
+
         p = ((RisultatiActivity)getActivity()).p;
+
+        if(p!=null) {
+            final Button apparizioniLunaButton = view.findViewById(R.id.apparizioniLunaButton);
+            final Button sparizioniLunaButton = view.findViewById(R.id.sparizioniLunaButton);
+
+            final CardView apparizioniCard = view.findViewById(R.id.apparizioniCard_luna);
+            final CardView sparizioniCard = view.findViewById(R.id.sparizioniCard_luna);
+
+            if (p.albeLuna.size() > 1) {
+                apparizioniCard.setVisibility(View.VISIBLE);
+            }
+            apparizioniLunaButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    ExpandableLayout apparizioniLunaLayout = view.findViewById(R.id.apparizioniLunaLayout);
+                    TextView apparizioniLunaTx = view.findViewById(R.id.apparizioniLunaTx);
+
+                    if (apparizioniLunaLayout.isExpanded() == false && p != null) {
+                        apparizioniLunaTx.setText("");
+                        for (int i = 0; i < p.albeLuna.size(); i++) {
+                            apparizioniLunaTx.append("" + p.albeLuna.get(i).ora + ":" + p.albeLuna.get(i).minuto + '\n');
+                        }
+                    }
+                    apparizioniLunaLayout.toggle();
+                }
+            });
+
+            //menù espandibile sparizioni sole
+            if (p.tramontiLuna.size() > 1) {
+                sparizioniCard.setVisibility(View.VISIBLE);
+            }
+            sparizioniLunaButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    ExpandableLayout sparizioniLunaLayout = view.findViewById(R.id.sparizioniLunaLayout);
+                    TextView sparizioniLunaTx = view.findViewById(R.id.sparizioniLunaTx);
+                    if (sparizioniLunaLayout.isExpanded() == false && p != null) {
+                        sparizioniLunaTx.setText("");
+                        for (int i = 0; i < p.tramontiLuna.size(); i++) {
+                            sparizioniLunaTx.append("" + p.tramontiLuna.get(i).ora + ":" + p.tramontiLuna.get(i).minuto + '\n');
+                        }
+                    }
+                    sparizioniLunaLayout.toggle();
+                }
+            });
+        }
 
         chart = view.findViewById(R.id.chart_m);
         main = view.findViewById(R.id.risultatiMainLayout);
@@ -114,13 +165,7 @@ public class MoonFragment extends Fragment {
         }else{
             getActivity().finish();
         }
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_moon, container, false);
-        //((RisultatiActivity)getActivity()).getSupportActionBar().setTitle("Luna");
         return view;
     }
 

@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.unitn.simob.howsthere.Fragment.FeedFragment"
-    android:transitionGroup="true">
+    android:layout_marginTop="@dimen/statusbar_view_height"
+    android:transitionGroup="true"
+    tools:context="it.unitn.simob.howsthere.Fragment.FeedFragment">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_feed"
@@ -39,8 +40,7 @@
             android:fitsSystemWindows="true"
             tools:context="info.androidprime.instagramfeed.activity.MainActivity">
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
+            <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/swipe_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

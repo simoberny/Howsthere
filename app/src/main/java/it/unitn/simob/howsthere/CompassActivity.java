@@ -48,8 +48,6 @@ public class CompassActivity extends AppCompatActivity implements SensorEventLis
         mSensorManager.unregisterListener(this);
     }
     public void onSensorChanged(SensorEvent event) {
-        // get the angle around the z-axis rotated
-        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAA  onsensor changed!!");
         float degree = Math.round(event.values[0]);
         if(findViewById(R.id.azimuthCompass) != null) { //controllo che sia stato creato il popup
             azimuthCompass = (TextView) findViewById(R.id.azimuthCompass);
