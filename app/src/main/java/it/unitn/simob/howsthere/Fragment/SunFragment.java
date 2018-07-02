@@ -280,8 +280,6 @@ public class SunFragment extends Fragment {
             }
         });
 
-
-
         int[] coloricerchiLuna = new int[64]; //un colore per ogni dato sul grafico (24 al giorno)
         for(int i = 0; i<24; i++){
             coloricerchiLuna[i] = Color.argb(65,158, 158, 158);

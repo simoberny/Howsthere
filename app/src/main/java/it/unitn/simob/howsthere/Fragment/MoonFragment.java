@@ -114,7 +114,6 @@ public class MoonFragment extends Fragment {
         }else{
             getActivity().finish();
         }
-
     }
 
     @Override
@@ -128,7 +127,6 @@ public class MoonFragment extends Fragment {
     void stampaGrafico(){
         List<Entry> entriesMontagne = new ArrayList<Entry>();
         List<Entry> entriesLuna = new ArrayList<Entry>();
-
         //LUNA
         //Arrays.sort(risultatiLuna); //ordino secondo azimuth ATTENZIONE: se vengono ordinati allora si mescolano i dati della mattina dopo quelli della sera
         for(int i = 0; i<864; i++) { //passo dati al grafico
@@ -149,12 +147,8 @@ public class MoonFragment extends Fragment {
         }
         //MONTAGNE
         for (int i =0; i<360; i++) {
-
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
         }
-
-        //System.out.println("Montagne: "+ entriesMontagne.size() + " Luna: "+ entriesLuna.size());
-        //proprietà grafico:
 
         chart.setDrawGridBackground(false);
         chart.getAxisRight().setEnabled(false);

@@ -60,17 +60,17 @@
     <string name="tap_social">This is the section where you find the panorama shared by other users</string>
     <string name="tap_home">This is the main section where you can select a place and find its panorama</string>
     <string name="tap_map">Select the place to start the calculation of the panorama</string>
-    <string name="alba" translatable="false">Sunrise</string>
-    <string name="tramonto" translatable="false">Sunset</string>
-    <string name="ora" translatable="false">Time</string>
-    <string name="elevazione" translatable="false">Elevation</string>
-    <string name="ori" translatable="false">Horizon</string>
-    <string name="tempoconmontagne" translatable="false">Time with mountain</string>
-    <string name="temposenzamontagne" translatable="false">Time without mountain</string>
-    <string name="tempolunaconmontagne" translatable="false">Time moon with mountain</string>
-    <string name="faseluna" translatable="false">moon phase</string>
-    <string name="luceluna" translatable="false">% moon</string>
-    <string name="appa" translatable="false">Apparition</string>
-    <string name="spa" translatable="false">Sparition</string>
-    <string name="heightest">Highest peak</string>
+    <string name="alba">Sunrise</string>
+    <string name="tramonto">Sunset</string>
+    <string name="ora">Time</string>
+    <string name="elevazione">Elevation</string>
+    <string name="ori">Horizon</string>
+    <string name="tempoconmontagne">Time with mountain</string>
+    <string name="temposenzamontagne">Time without mountain</string>
+    <string name="tempolunaconmontagne">Time moon with mountain</string>
+    <string name="faseluna">moon phase</string>
+    <string name="luceluna">% moon</string>
+    <string name="appa">Apparition</string>
+    <string name="spa">Sparition</string>
+    <string name="highest">Highest peak</string>
 </resources>

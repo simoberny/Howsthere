@@ -63,7 +63,6 @@ dependencies {
     implementation 'org.osmdroid:osmdroid-android:6.0.1'
     implementation 'com.romandanylyk:pageindicatorview:1.0.1'
     implementation 'uk.co.samuelwall:material-tap-target-prompt:2.9.0'
-    implementation 'com.github.aakira:expandable-layout:1.4.2@aar'
     implementation 'net.cachapa.expandablelayout:expandablelayout:[2.9.2]'
     implementation files('libs/commons-suncalc-2.2.jar')
 }

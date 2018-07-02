@@ -8,45 +8,49 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="Nome"
+                android:textColor="@color/place_autocomplete_search_text"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/altitude"
-                android:layout_width="wrap_content"
+                android:id="@+id/azimuth_peak"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:paddingRight="10dp"
-                android:text="3000"
-                android:textAlignment="textEnd"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="5dp"
+                android:text="100 ° N"
+                android:textColor="@color/dialog_text_sec"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/azimuth_peak"
-            android:layout_width="match_parent"
+            android:id="@+id/altitude"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="5dp"
-            android:text="100 ° N" />
+            android:layout_margin="5dp"
+            android:layout_weight="0"
+            android:text="3000"
+            android:textAlignment="textEnd"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View

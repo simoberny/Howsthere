@@ -610,6 +610,7 @@
                     android:layout_weight="4"
                     android:fitsSystemWindows="true"
                     android:padding="10dp"
+                    android:visibility="gone"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="2dp">
 
@@ -664,6 +665,7 @@
                     android:layout_weight="4"
                     android:fitsSystemWindows="true"
                     android:padding="10dp"
+                    android:visibility="gone"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="2dp">
 

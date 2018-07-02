@@ -41,7 +41,7 @@
     <string name="appa">Apparizioni</string>
     <string name="spa">Sparizioni</string>
 
-    <string name="heightest">Picco più alto</string>
+    <string name="highest">Picco più alto</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Prova fragment per il calcolo sole</string>

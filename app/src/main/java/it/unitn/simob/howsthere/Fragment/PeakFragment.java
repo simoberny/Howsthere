@@ -22,7 +22,6 @@ import it.unitn.simob.howsthere.RisultatiActivity;
 public class PeakFragment extends Fragment {
     ArrayList<Peak> listItems=new ArrayList<Peak>();
     PeakFragment.PeakAdapter adapter;
-
     Panorama p;
 
     public PeakFragment() { }
@@ -35,6 +34,12 @@ public class PeakFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_peak, container, false);
+
+        final TextView high_nome = view.findViewById(R.id.highest_nome);
+        final TextView high_alt = view.findViewById(R.id.highest_alt);
+
+        //Picco temporaneo per salvare quello più alto
+        Peak highest = new Peak("Highest", 0.0, 0.0);
 
         p = ((RisultatiActivity)getActivity()).p;
 
@@ -49,12 +54,22 @@ public class PeakFragment extends Fragment {
         for(int i = 0; i < p.nomiPeak.size(); i++){
             Peak temp = p.nomiPeak.get(i);
             listItems.add(temp);
+
+            if(temp.getAltezza() > highest.getAltezza()){
+                highest = temp;
+            }
         }
+
         adapter.notifyDataSetChanged();
+
+        //Setto i valori della montagna più alta
+        high_nome.setText(highest.getNome_picco());
+        high_alt.setText(highest.getAltezza() + " °");
 
         return view;
     }
 
+    //Adattatore compatto per la lista dei picchi
     public class PeakAdapter extends RecyclerView.Adapter<PeakAdapter.MyViewHolder>{
         private Context context;
         ArrayList<Peak> array;

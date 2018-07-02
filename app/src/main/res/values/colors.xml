@@ -12,8 +12,8 @@
 
     <color name="title_nobar">#2196f3</color>
 
-    <color name="dialog_text">#555</color>
-    <color name="dialog_text_sec">#888</color>
+    <color name="dialog_text">#555555</color>
+    <color name="dialog_text_sec">#888888</color>
 
     <color name="indicator_un">#20222222</color>
     <color name="indicator_sel">#fff</color>
