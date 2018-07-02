@@ -7,6 +7,11 @@
         android:title="@string/risultati_home" />
 
     <item
+        android:id="@+id/navigation_peak"
+        android:icon="@drawable/ic_terrain_black_24dp"
+        android:title="Montagne" />
+
+    <item
         android:id="@+id/navigation_luna"
         android:icon="@drawable/moon"
         android:title="@string/risultati_luna" />

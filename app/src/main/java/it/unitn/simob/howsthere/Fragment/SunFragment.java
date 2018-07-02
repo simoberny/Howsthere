@@ -24,6 +24,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
@@ -33,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -95,9 +97,6 @@ public class SunFragment extends Fragment {
     LineChart chart = null;
     static View currentView;
 
-    ArrayList<String> listItems=new ArrayList<String>();
-    PeakAdapter adapter;
-
     public SunFragment() { }
 
     public static SunFragment newInstance(){
@@ -158,36 +157,18 @@ public class SunFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_sun, container, false);
         currentView = view;
 
-        RecyclerView lista = currentView.findViewById(R.id.lista_montagne);
-        LinearLayoutManager mLayoutManager = new MyLinearLayoutManager(getActivity());
-        lista.setLayoutManager(mLayoutManager);
-        adapter = new PeakAdapter(getActivity(), listItems);
-        lista.setAdapter(adapter);
-
         p = ((RisultatiActivity)getActivity()).p;
         id = p.ID;
         //menù espandibile apparizioni sole
         if(p!=null) {
-            final Button openListaMontagne = currentView.findViewById(R.id.open_lista_montagne);
             final Button apparizioniSoleButton = currentView.findViewById(R.id.apparizioniSoleButton);
             final Button sparizioniSoleButton = currentView.findViewById(R.id.sparizioniSoleButton);
 
-            //Carico la lista dei nomi delle montagne nella lista
-            for(int i = 0; i < p.nomiPeak.size(); i++){
-                listItems.add(p.nomiPeak.get(i).getAzimuth() + " - Nome: " + p.nomiPeak.get(i).getNome_picco());
-            }
-            adapter.notifyDataSetChanged();
-
-            openListaMontagne.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ExpandableLayout listaLayout = currentView.findViewById(R.id.lista_montagne_layout);
-                    listaLayout.toggle();
-                }
-            });
+            final CardView apparizioniCard = currentView.findViewById(R.id.apparizioniCard);
+            final CardView sparizioniCard = currentView.findViewById(R.id.sparizioniCard);
 
             if (p.albe.size() > 1) {
-                apparizioniSoleButton.setVisibility(View.VISIBLE);
+                apparizioniCard.setVisibility(View.VISIBLE);
             }
             apparizioniSoleButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -205,7 +186,7 @@ public class SunFragment extends Fragment {
 
             //menù espandibile sparizioni sole
             if (p.tramonti.size() > 1) {
-                sparizioniSoleButton.setVisibility(View.VISIBLE);
+                sparizioniCard.setVisibility(View.VISIBLE);
             }
             sparizioniSoleButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -501,42 +482,4 @@ public class SunFragment extends Fragment {
 
             ((TextView) view.findViewById(R.id.data)).setText((String) DateFormat.format("dd", p.data) + "/" + (String) DateFormat.format("MM", p.data) + "/" + (String) DateFormat.format("yyyy", p.data));
     }
-
-    public class PeakAdapter extends RecyclerView.Adapter<PeakAdapter.MyViewHolder>{
-        private Context context;
-        ArrayList<String> array;
-
-        public PeakAdapter(Context context, ArrayList<String> array) {
-            this.context = context;
-            this.array = array;
-        }
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.elemento_peak, parent, false);
-            MyViewHolder holder = new MyViewHolder(view);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
-            holder.element_peak.setText(array.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return array.size();
-        }
-
-        class MyViewHolder extends RecyclerView.ViewHolder
-        {
-            TextView element_peak;
-
-            public MyViewHolder(View itemView) {
-                super(itemView);
-                element_peak = itemView.findViewById(R.id.name);
-            }
-        }
-    }
-
 }

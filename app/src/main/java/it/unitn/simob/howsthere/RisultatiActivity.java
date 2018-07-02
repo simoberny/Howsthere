@@ -34,6 +34,7 @@ import it.unitn.simob.howsthere.Fragment.BussolaFragment;
 import it.unitn.simob.howsthere.Fragment.MapsFragment;
 import it.unitn.simob.howsthere.Fragment.MeteoFragment;
 import it.unitn.simob.howsthere.Fragment.MoonFragment;
+import it.unitn.simob.howsthere.Fragment.PeakFragment;
 import it.unitn.simob.howsthere.Fragment.SunFragment;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
@@ -43,6 +44,7 @@ public class RisultatiActivity extends AppCompatActivity {
     private SunFragment sf = null;
     private BussolaFragment bf = null;
     private MoonFragment mf = null;
+    private PeakFragment pf = null;
     public Panorama p = null;
 
     @Override
@@ -81,6 +83,7 @@ public class RisultatiActivity extends AppCompatActivity {
         sf = SunFragment.newInstance();
         bf = BussolaFragment.newInstance();
         mf = MoonFragment.newInstance();
+        pf = PeakFragment.newInstance();
 
         String posizione = getPosizione(p.lat, p.lon);
 
@@ -158,6 +161,9 @@ public class RisultatiActivity extends AppCompatActivity {
                     break;
                 case R.id.navigation_meteo:
                     selectedFragment = mt;
+                    break;
+                case R.id.navigation_peak:
+                    selectedFragment = pf;
                     break;
             }
 

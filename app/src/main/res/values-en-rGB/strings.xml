@@ -72,4 +72,5 @@
     <string name="luceluna" translatable="false">% moon</string>
     <string name="appa" translatable="false">Apparition</string>
     <string name="spa" translatable="false">Sparition</string>
+    <string name="heightest">Highest peak</string>
 </resources>

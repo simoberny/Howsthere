@@ -41,6 +41,8 @@
     <string name="appa">Apparizioni</string>
     <string name="spa">Sparizioni</string>
 
+    <string name="heightest">Picco più alto</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Prova fragment per il calcolo sole</string>
     <string name="title_activity_data">Data</string>
@@ -95,7 +97,7 @@
     <!-- Traduzione schermata di login -->
 
     <string name="fui_progress_dialog_loading" translation_description="Loading text in dialog">Caricamento...</string>
-    <string name="fui_sign_in_default" translation_description="Button text to sign in" translatable="false">Login</string>
+    <string name="fui_sign_in_default" translatable="false" translation_description="Button text to sign in">Login</string>
     <!-- Auth method picker -->
     <string name="fui_sign_in_with_google" translation_description="Sign in button text">Login con Google</string>
     <string name="fui_sign_in_with_facebook" translation_description="Sign in button text">Login con Facebook</string>
@@ -104,9 +106,9 @@
     <string name="fui_sign_in_with_phone" translation_description="Sign in button text">Login con telefono</string>
     <!-- Email common-->
     <string name="fui_next_default" translation_description="Button text to continue">Prossimo</string>
-    <string name="fui_email_hint" translation_description="Hint in email input field" translatable="false">Email</string>
+    <string name="fui_email_hint" translatable="false" translation_description="Hint in email input field">Email</string>
     <string name="fui_phone_hint" translation_description="Hint for phone input field">Numero di telefono</string>
-    <string name="fui_password_hint" translation_description="Hint for password input field" translatable="false">Password</string>
+    <string name="fui_password_hint" translatable="false" translation_description="Hint for password input field">Password</string>
     <string name="fui_required_field" translation_description="Inline error for required field">Non può essere vuoto!</string>
     <string name="fui_invalid_email_address" translation_description="Inline error for invalid email address">L\'email non  è valida</string>
     <string name="fui_missing_email_address" translation_description="Inline error for empty email address in input field">Inserisci una email per continuare...</string>
@@ -135,11 +137,11 @@
     <string name="fui_title_welcome_back_password_prompt" translatable="false">@string/fui_sign_in_default</string>
     <string name="fui_welcome_back_idp_header" translation_description="Inline subtitle to users whose signup was interrupted since an existing account was detected">Hai già un account</string>
     <string name="fui_welcome_back_email_header" translation_description="Message for returning users">Bentornato!</string>
-    <string name="fui_welcome_back_idp_prompt" translation_description="Message to users that need to signin using existing IDP accounts" translatable="false">
+    <string name="fui_welcome_back_idp_prompt" translatable="false" translation_description="Message to users that need to signin using existing IDP accounts">
         Hai già utilizzato <xliff:g example="jane.doe@example.com" id="email_addr" translation_description="">%1$s</xliff:g>.
         Entra con <xliff:g example="Google" id="provider_name" translation_description="">%2$s</xliff:g> per continuare.
     </string>
-    <string name="fui_welcome_back_password_prompt_body" translation_description="Message to users that need to signin using existing email accounts" translatable="false">
+    <string name="fui_welcome_back_password_prompt_body" translatable="false" translation_description="Message to users that need to signin using existing email accounts">
         Hai già utilizzato <xliff:g example="jane.doe@example.com" id="email_addr" translation_description="">%1$s</xliff:g>
         per fare il login. Inserisci la password per l'account.
     </string>

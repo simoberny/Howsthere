@@ -474,7 +474,7 @@ public class Data extends AppCompatActivity {
                     b.append(" ");
                 }
                 System.out.println("Nome monte: " + b);
-                Peak temp = new Peak(b.toString(), Double.parseDouble(tempsplit.get(0)));
+                Peak temp = new Peak(b.toString(), Double.parseDouble(tempsplit.get(0)), Double.parseDouble(tempsplit.get(1)));
                 panorama.nomiPeak.add(temp);
             }
         }
