@@ -108,6 +108,7 @@ public class Presentation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                saveSharedSetting(Presentation.this, MainActivity.PREF_USER_FIRST_TIME, "false");
             }
         });
 
