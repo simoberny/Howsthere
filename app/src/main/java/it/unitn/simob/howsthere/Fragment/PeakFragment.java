@@ -1,8 +1,8 @@
 package it.unitn.simob.howsthere.Fragment;
 
-
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,13 +42,14 @@ public class PeakFragment extends Fragment implements SensorEventListener {
     ArrayList<Peak> listItems=new ArrayList<Peak>();
     PeakFragment.PeakAdapter adapter;
     Panorama p;
-    Dialog builder;
+    AlertDialog.Builder builder;
+    private Boolean isShowing = false;
 
     float currentDegree = 0f;
     SensorManager mSensorManager;
     float angoloDaSotrarre = 0;
 
-    ImageView compass_img  = null;
+    private ImageView compass_img  = null;
 
     public PeakFragment() { }
 
@@ -80,25 +82,6 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         adapter = new PeakFragment.PeakAdapter(getActivity(), listItems);
         lista.setAdapter(adapter);
 
-        lista.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                if(e.getAction() == MotionEvent.ACTION_UP)
-                    hideQuickView();
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
-
         //Carico la lista dei nomi delle montagne nella lista
         for(int i = 0; i < p.nomiPeak.size(); i++){
             Peak temp = p.nomiPeak.get(i);
@@ -118,15 +101,11 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         return view;
     }
 
-    public void hideQuickView(){
-        if(builder != null) builder.dismiss();
-    }
-
     @Override
     public void onSensorChanged(SensorEvent event) {
         float degree = Math.round(event.values[0]);
 
-        if(builder != null && builder.isShowing()){
+        if(builder != null && isShowing){
             RotateAnimation ra = new RotateAnimation(
                     currentDegree+angoloDaSotrarre,
                     -degree,
@@ -157,7 +136,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.elemento_peak, parent, false);
-            MyViewHolder holder = new MyViewHolder(view, builder);
+            MyViewHolder holder = new MyViewHolder(view);
             return holder;
         }
 
@@ -167,27 +146,34 @@ public class PeakFragment extends Fragment implements SensorEventListener {
             holder.peak_name.setText(temp.getNome_picco());
             holder.peak_altitude.setText(temp.getAltezza() + "°");
             holder.azimuth.setText(temp.getAzimuth() + "° N");
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
-                    create_dialog(temp.getAzimuth());
-                    return false;
+                public void onClick(View v) {
+                    create_dialog(temp.getAzimuth(), temp.getNome_picco());
                 }
             });
         }
 
-        public void create_dialog(double azimuth){
+        public void create_dialog(double azimuth, String nome){
             View view = getLayoutInflater().inflate(R.layout.compass_dialog, null);
             angoloDaSotrarre = (float) azimuth;
             TextView textazi = view.findViewById(R.id.azimuth);
             textazi.setText(azimuth + " °");
 
+            TextView peak = view.findViewById(R.id.name_peak);
+            peak.setText(nome);
+
             compass_img = view.findViewById(R.id.dialog_compass);
 
-            builder = new AppCompatDialog(getActivity());
-            builder.setTitle("Direzione picco");
-            builder.setContentView(view);
+            builder = new AlertDialog.Builder(context);
+            builder.setCancelable(true);
+            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) { dialog.dismiss(); isShowing=false;}
+            });
+            builder.setView(view);
             builder.show();
+            isShowing = true;
         }
 
         @Override
@@ -199,7 +185,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         {
             TextView peak_name, peak_altitude, azimuth;
 
-            public MyViewHolder(View itemView, Dialog build) {
+            public MyViewHolder(View itemView) {
                 super(itemView);
                 peak_name = itemView.findViewById(R.id.name);
                 peak_altitude = itemView.findViewById(R.id.altitude);
