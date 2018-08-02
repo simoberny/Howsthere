@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,6 +13,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,8 +29,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.gestures.GestureDetector;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import it.unitn.simob.howsthere.Adapter.MyLinearLayoutManager;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
@@ -44,6 +54,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
     Panorama p;
     AlertDialog.Builder builder;
     private Boolean isShowing = false;
+    LineChart chart = null;
 
     float currentDegree = 0f;
     SensorManager mSensorManager;
@@ -68,6 +79,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_peak, container, false);
 
+
         final TextView high_nome = view.findViewById(R.id.highest_nome);
         final TextView high_alt = view.findViewById(R.id.highest_alt);
 
@@ -75,6 +87,14 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         Peak highest = new Peak("Highest", 0.0, 0.0);
 
         p = ((RisultatiActivity)getActivity()).p;
+
+        //chiamo grafico
+        chart = view.findViewById(R.id.chart_peak);
+        if(p != null){
+            stampaGrafico();
+        }else{
+            getActivity().finish();
+        }
 
         RecyclerView lista = view.findViewById(R.id.lista_montagne);
         LinearLayoutManager mLayoutManager = new MyLinearLayoutManager(getActivity());
@@ -123,6 +143,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) { }
 
+    //!!!!!!!!inizio peak adapter classe
     //Adattatore compatto per la lista dei picchi
     public class PeakAdapter extends RecyclerView.Adapter<PeakAdapter.MyViewHolder>{
         private Context context;
@@ -194,6 +215,8 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         }
     }
 
+    //!!!!!!!!fine peak adapter classe
+
     @Override
     public void onResume() {
         super.onResume();
@@ -205,5 +228,95 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         super.onPause();
         mSensorManager.unregisterListener(this);
     }
+
+    void stampaGrafico() {
+        List<Entry> entriesMontagne = new ArrayList<Entry>();
+        final List<Entry> entriesNum = new ArrayList<Entry>();
+        //SOLE
+        //Arrays.sort(p.risultatiSole); //ordino secondo azimuth
+        for (int i = 0; i < p.nomiPeak.size(); i++) { //passo dati al grafico
+            entriesNum.add(new Entry((float) p.nomiPeak.get(i).getAzimuth(), (float) p.nomiPeak.get(i).getAltezza()));
+
+        }
+        //MONTAGNE
+        for (int i = 0; i < 360; i++) {
+            entriesMontagne.add(new Entry((float) p.risultatiMontagne[0][i], (float) p.risultatiMontagne[2][i]));
+        }
+
+        //proprietà grafico:
+        chart.setDrawGridBackground(false);
+        chart.getAxisRight().setEnabled(false);
+        chart.getAxisLeft().setEnabled(false);
+        chart.getAxisLeft().setAxisMinValue(-1);  //faccio partire da -1 le y. non da 0 perchè da una montagna alta è possibile finire leggermente sotto lo 0
+        chart.getAxisRight().setAxisMinValue(-1);
+
+        chart.setVisibleXRangeMaximum(20); // allow 20 values to be displayed at once on the x-axis, not more
+        chart.moveViewToX(10); // set the left edge of the chart to x-index 10
+
+        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Montagne"); // add entries to dataset
+        final LineDataSet dataSetNum = new LineDataSet(entriesNum, "Num");
+
+        //proprietà grafico Montagne
+        dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
+        dataSetMontagne.setColor(R.color.pale_green);
+        //dataSet.setLineWidth(4f);
+        dataSetMontagne.setDrawValues(false);
+        dataSetMontagne.setDrawCircles(false);
+        dataSetMontagne.setCircleColor(Color.BLACK);
+        dataSetMontagne.setDrawCircleHole(false);
+        dataSetMontagne.setDrawValues(false);
+        dataSetMontagne.setDrawFilled(true);
+
+        Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.fade_red);
+        dataSetMontagne.setFillDrawable(drawable);
+        dataSetMontagne.setDrawHighlightIndicators(false);
+
+        //proprietà grafiche numeri
+        dataSetNum.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        dataSetNum.setColor(Color.YELLOW);
+        dataSetNum.setLineWidth(0);
+        dataSetNum.setDrawValues(true);
+        dataSetNum.setDrawCircles(false);
+        dataSetNum.setCircleColor(Color.YELLOW);
+        dataSetNum.setDrawCircleHole(false);
+        dataSetNum.setDrawFilled(false);
+        dataSetNum.setDrawValues(true);
+        dataSetNum.setDrawHighlightIndicators(false);
+        dataSetNum.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
+                return String.valueOf(idx);
+            }
+        });
+
+
+        chart.getDescription().setText("");
+        LineData lineData = new LineData();
+        lineData.addDataSet(dataSetMontagne);
+        lineData.addDataSet(dataSetNum);
+        chart.getXAxis().setDrawLabels(false);
+        chart.getXAxis().setDrawAxisLine(false);
+        chart.getAxisLeft().setDrawAxisLine(false);
+        chart.getXAxis().setDrawGridLines(false);
+        chart.setMaxVisibleValueCount(Integer.MAX_VALUE);//mostrami tutti i label
+        chart.setScaleEnabled(false);
+
+        Legend l = chart.getLegend();
+        l.setFormSize(10f);
+        l.setTextSize(12f);
+        l.setTextColor(Color.BLACK);
+        l.setXEntrySpace(5f); // set the space between the legend entries on the x-axis
+        l.setYEntrySpace(5f); // set the space between the legend entries on the y-axis
+        l.setPosition(Legend.LegendPosition.ABOVE_CHART_LEFT);
+        List<Entry> entrinseo = new ArrayList<Entry>();
+        entrinseo.add(new Entry(0, 5));
+
+        chart.setData(lineData);
+        chart.animateX(3500);
+        chart.invalidate();
+
+    }
+
 
 }
