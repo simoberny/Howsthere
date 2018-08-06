@@ -100,8 +100,6 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
             SupportMapFragment mapFragmentTramonto = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_tram);
             mapFragmentTramonto.getMapAsync(onMapReadyCallbackTramonto());
         }
-
-
         return view;
     }
 
@@ -181,10 +179,13 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
 
     private void updateCameraBearing(GoogleMap googleMap, float bearing) {
         if ( googleMap == null) return;
-        CameraPosition currentPlace = new CameraPosition.Builder()
-                .target(googleMap.getCameraPosition().target)
-                .bearing(bearing).build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPlace));
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(lat, lon))             // Sets the center of the map to current location
+                .zoom(8)                   // Sets the zoom
+                .bearing(bearing) // Sets the orientation of the camera to east
+                .tilt(0)                   // Sets the tilt of the camera to 0 degrees
+                .build();                   // Creates a CameraPosition from the builder
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     public OnMapReadyCallback onMapReadyCallbackAlba(){
@@ -193,14 +194,13 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
             public void onMapReady(GoogleMap googleMap) {
                 mapAlba = googleMap;
                 mapAlba.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                LatLng vannes = new LatLng(lat, lon);
-                mapAlba.addMarker(new MarkerOptions().position(vannes).title("Posizione selezionata"));
-                CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(vannes, 20);
-                mapAlba.animateCamera(yourLocation);
-                mapAlba.getUiSettings().setRotateGesturesEnabled(false);
-                mapAlba.getUiSettings().setTiltGesturesEnabled(false);
-                mapAlba.getUiSettings().setAllGesturesEnabled(false);
-                mapAlba.getUiSettings().setCompassEnabled(false);
+                LatLng pos = new LatLng(lat, lon);
+                googleMap.addMarker(new MarkerOptions().position(pos));
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 8, 0,0)));
+                mapTramonto.getUiSettings().setRotateGesturesEnabled(false);
+                mapTramonto.getUiSettings().setTiltGesturesEnabled(false);
+                mapTramonto.getUiSettings().setAllGesturesEnabled(false);
+                mapTramonto.getUiSettings().setCompassEnabled(false);
             }
         };
     }
@@ -210,11 +210,10 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mapTramonto = googleMap;
-                LatLng vannes = new LatLng(lat, lon);
                 mapTramonto.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                mapTramonto.addMarker(new MarkerOptions().position(vannes).title("Posizione selezionata"));
-                CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(vannes, 20);
-                mapTramonto.animateCamera(yourLocation);
+                LatLng pos = new LatLng(lat, lon);
+                googleMap.addMarker(new MarkerOptions().position(pos));
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 8, 0,0)));
                 mapTramonto.getUiSettings().setRotateGesturesEnabled(false);
                 mapTramonto.getUiSettings().setTiltGesturesEnabled(false);
                 mapTramonto.getUiSettings().setAllGesturesEnabled(false);

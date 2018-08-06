@@ -27,6 +27,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.List;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class StoricoAdapter extends ArrayAdapter<Panorama>{
 
@@ -62,7 +64,9 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
 
         chart = (LineChart) convertView.findViewById(R.id.chart_storico);
         stampaGrafico(p,chart);
+        ImageView anteprima = (ImageView) convertView.findViewById(R.id.anteprima);
 
+        Picasso.get().load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=200x200&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon).placeholder(R.drawable.nomap).into(anteprima);
 
         nome_citta.setText(p.citta+ " ");
         String d = (String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data);

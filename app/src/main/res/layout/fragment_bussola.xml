@@ -22,13 +22,26 @@
             app:cardCornerRadius="0dp"
             app:cardElevation="0dp">
 
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/map_alba"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="it.unitn.simob.howsthere.MainActivity"></fragment>
+                android:layout_height="match_parent">
+
+                <fragment
+                    android:id="@+id/map_alba"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context="it.unitn.simob.howsthere.MainActivity"></fragment>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.7"
+                    android:background="@android:color/white">
+
+                </RelativeLayout>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -77,7 +90,7 @@
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
                     android:text="Alba"
-                    android:textSize="22sp" />
+                    android:textSize="26sp" />
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -97,13 +110,25 @@
             app:cardCornerRadius="0dp"
             app:cardElevation="0dp">
 
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/map_tram"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="it.unitn.simob.howsthere.MainActivity"></fragment>
+                android:layout_height="match_parent">
+
+                <fragment
+                    android:id="@+id/map_tram"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context="it.unitn.simob.howsthere.MainActivity"></fragment>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.7"
+                    android:background="@android:color/white">
+
+                </RelativeLayout>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -155,7 +180,7 @@
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
                     android:text="Tramonto"
-                    android:textSize="22sp" />
+                    android:textSize="23sp" />
 
                 <ImageView
                     android:id="@+id/trm"

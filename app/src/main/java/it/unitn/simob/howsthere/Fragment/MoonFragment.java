@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -154,6 +155,44 @@ public class MoonFragment extends Fragment {
                 }
             });
         }
+
+        Button saveAlbaLuna = view.findViewById(R.id.saveAlbaLuna);
+        saveAlbaLuna.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                cal.set(p.data.getYear(), p.data.getMonth(), p.data.getDay(), p.getAlbaLuna().ora, p.getAlbaLuna().minuto);
+                long startmillis = cal.getTimeInMillis();
+                Intent intent = new Intent(Intent.ACTION_INSERT);
+                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "" + p.lat + "," + p.lon);
+                intent.setType("vnd.android.cursor.item/event");
+                intent.putExtra("beginTime", startmillis);
+                intent.putExtra("allDay", false);
+                intent.putExtra("rrule", "FREQ=YEARLY");
+                intent.putExtra("endTime", startmillis+60*60*1000);
+                intent.putExtra("title", "Scatto foto luna all'alba");
+                startActivity(intent);
+            }
+        });
+
+        Button saveTramontoLuna = view.findViewById(R.id.saveTramontoLuna);
+        saveTramontoLuna.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                cal.set(p.data.getYear(), p.data.getMonth(), p.data.getDay(), p.getTramontoLuna().ora, p.getTramontoLuna().minuto);
+                long startmillis = cal.getTimeInMillis();
+                Intent intent = new Intent(Intent.ACTION_INSERT);
+                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "" + p.lat + "," + p.lon);
+                intent.setType("vnd.android.cursor.item/event");
+                intent.putExtra("beginTime", startmillis);
+                intent.putExtra("allDay", true);
+                intent.putExtra("rrule", "FREQ=YEARLY");
+                intent.putExtra("endTime", startmillis+60*60*1000);
+                intent.putExtra("title", "Scatto foto luna al tramonto");
+                startActivity(intent);
+            }
+        });
 
         chart = view.findViewById(R.id.chart_m);
         main = view.findViewById(R.id.risultatiMainLayout);

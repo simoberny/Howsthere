@@ -1,6 +1,8 @@
 package it.unitn.simob.howsthere.Fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,10 @@ import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
 import it.unitn.simob.howsthere.RisultatiActivity;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 
 public class HistoryFragment extends Fragment{
@@ -176,8 +184,4 @@ public class HistoryFragment extends Fragment{
     public void onDetach() {
         super.onDetach();
     }
-
-
-
-
 }

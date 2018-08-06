@@ -34,135 +34,148 @@
 
 
         <LinearLayout
-            android:id="@+id/card_L"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="0dp"
-            android:background="@android:color/white"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:orientation="vertical"
-            android:padding="3dp">
+            android:orientation="horizontal">
 
-            <RelativeLayout
+            <ImageView
+                android:id="@+id/anteprima"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/nomap" />
+
+            <LinearLayout
+                android:id="@+id/card_L"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:background="@android:color/white"
                 android:clickable="false"
                 android:focusable="false"
-                android:focusableInTouchMode="false">
+                android:focusableInTouchMode="false"
+                android:orientation="vertical"
+                android:padding="3dp">
 
-                <com.github.mikephil.charting.charts.LineChart
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:id="@+id/chart_storico"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_below="@+id/risultatiMainLayout"
-                    android:layout_centerHorizontal="true">
-                    </com.github.mikephil.charting.charts.LineChart>
-
-                <ImageView
-                    android:id="@+id/grafico"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_weight="2"
-                    android:background="@android:color/white"
+                    android:layout_height="wrap_content"
                     android:clickable="false"
                     android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/placeholder" />
+                    android:focusableInTouchMode="false">
 
-                <FrameLayout
-                    android:id="@+id/chiudi_container"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:padding="0dp"
-                    android:paddingBottom="0dp"
-                    android:paddingEnd="0dp"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:paddingStart="0dp"
-                    android:paddingTop="0dp">
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/chart_storico"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_below="@+id/risultatiMainLayout"
+                        android:layout_centerHorizontal="true"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"></com.github.mikephil.charting.charts.LineChart>
 
                     <ImageView
-                        android:id="@+id/spunta"
+                        android:id="@+id/grafico"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_weight="2"
+                        android:background="@android:color/white"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/placeholder" />
+
+                    <FrameLayout
+                        android:id="@+id/chiudi_container"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft="0dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_weight="1"
-                        android:alpha="50"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:clickable="false"
-                        android:elevation="1dp"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
                         android:padding="0dp"
+                        android:paddingBottom="0dp"
+                        android:paddingEnd="0dp"
                         android:paddingLeft="0dp"
-                        android:visibility="invisible"
-                        app:srcCompat="@drawable/spunta"
-                        tools:layout_editor_absoluteX="442dp" />
-                </FrameLayout>
-            </RelativeLayout>
+                        android:paddingRight="0dp"
+                        android:paddingStart="0dp"
+                        android:paddingTop="0dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:orientation="horizontal">
+                        <ImageView
+                            android:id="@+id/spunta"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_weight="1"
+                            android:alpha="50"
+                            android:clickable="false"
+                            android:elevation="1dp"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:padding="0dp"
+                            android:paddingLeft="0dp"
+                            android:visibility="invisible"
+                            app:srcCompat="@drawable/spunta"
+                            tools:layout_editor_absoluteX="442dp" />
+                    </FrameLayout>
+                </RelativeLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/nome_citta"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:autoText="false"
-                    android:background="@android:color/white"
                     android:clickable="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:gravity="bottom|left"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textSize="19sp" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/data"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:clickable="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:gravity="bottom|right|center_horizontal"
-                    android:padding="5dp"
-                    android:text="TextView"
-                    android:textSize="12sp" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/nome_citta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:autoText="false"
+                        android:background="@android:color/white"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:gravity="bottom|left"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textSize="19sp" />
+
+                    <TextView
+                        android:id="@+id/data"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/white"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:gravity="bottom|right|center_horizontal"
+                        android:padding="5dp"
+                        android:text="TextView"
+                        android:textSize="12sp" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
