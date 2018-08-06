@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class Peak implements Serializable{
     private String nome_picco;
-    private Double azimuth;
-    private Double altezza;
+    private double azimuth;
+    private double altezza;
 
     public Peak(){ }
 
@@ -23,7 +23,7 @@ public class Peak implements Serializable{
         this.nome_picco = nome_picco;
     }
 
-    public Double getAzimuth() {
+    public double getAzimuth() {
         return azimuth;
     }
 
@@ -31,11 +31,11 @@ public class Peak implements Serializable{
         this.azimuth = azimuth;
     }
 
-    public Double getAltezza() {
+    public double getAltezza() {
         return altezza;
     }
 
-    public void setAltezza(Double altezza) {
+    public void setAltezza(double altezza) {
         this.altezza = altezza;
     }
 }
