@@ -187,7 +187,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         long diff = 0;
         try {
             Date date = format.parse(feed.getTimeStamp());
-            System.out.println(date);
             long diffInMillies = Math.abs(new Date().getTime() - date.getTime());
             diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
         } catch (ParseException e) {

@@ -29,8 +29,12 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
@@ -66,11 +70,33 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         stampaGrafico(p,chart);
         ImageView anteprima = (ImageView) convertView.findViewById(R.id.anteprima);
 
-        Picasso.get().load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=200x200&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon).placeholder(R.drawable.nomap).into(anteprima);
+        Picasso.get().load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=250x350&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon).placeholder(R.drawable.nomap).into(anteprima);
 
         nome_citta.setText(p.citta+ " ");
         String d = (String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data);
-        data.setText(d);
+
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        long diff = 0;
+        try {
+            Date date = format.parse(d);
+            long diffInMillies = Math.abs(new Date().getTime() - date.getTime());
+            diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        String tempo = "";
+
+        if(diff >= 60 && (diff/60) < 24){
+            tempo = "oggi";
+        }else if(diff >= 60 && (diff/60) > 24 && diff >= 60 && (diff/60) < 48) {
+            tempo = "ieri";
+        }else{
+            long temp = (diff / 60 / 24);
+            tempo = temp + " giorn" + (((int)temp == 1) ? "o" : "i") + " fa";
+        }
+
+        data.setText(tempo);
         ID.setText(p.ID);
 
         if (selezionati_id.contains(ID.getText())){
