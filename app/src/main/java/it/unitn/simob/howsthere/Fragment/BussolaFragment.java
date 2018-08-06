@@ -197,10 +197,10 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
                 LatLng pos = new LatLng(lat, lon);
                 googleMap.addMarker(new MarkerOptions().position(pos));
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 8, 0,0)));
-                mapTramonto.getUiSettings().setRotateGesturesEnabled(false);
-                mapTramonto.getUiSettings().setTiltGesturesEnabled(false);
-                mapTramonto.getUiSettings().setAllGesturesEnabled(false);
-                mapTramonto.getUiSettings().setCompassEnabled(false);
+                mapAlba.getUiSettings().setRotateGesturesEnabled(false);
+                mapAlba.getUiSettings().setTiltGesturesEnabled(false);
+                mapAlba.getUiSettings().setAllGesturesEnabled(false);
+                mapAlba.getUiSettings().setCompassEnabled(false);
             }
         };
     }
