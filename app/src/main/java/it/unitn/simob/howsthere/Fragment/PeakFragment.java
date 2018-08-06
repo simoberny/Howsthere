@@ -1,10 +1,8 @@
 package it.unitn.simob.howsthere.Fragment;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -15,20 +13,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.facebook.drawee.gestures.GestureDetector;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -59,6 +52,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
     float currentDegree = 0f;
     SensorManager mSensorManager;
     float angoloDaSotrarre = 0;
+    Peak highest = new Peak("Highest", 0.0, 0.0);
 
     private ImageView compass_img  = null;
 
@@ -79,13 +73,10 @@ public class PeakFragment extends Fragment implements SensorEventListener {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_peak, container, false);
 
-
         final TextView high_nome = view.findViewById(R.id.highest_nome);
         final TextView high_alt = view.findViewById(R.id.highest_alt);
 
         //Picco temporaneo per salvare quello più alto
-        Peak highest = new Peak("Highest", 0.0, 0.0);
-
         p = ((RisultatiActivity)getActivity()).p;
 
         //chiamo grafico
@@ -103,6 +94,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         lista.setAdapter(adapter);
 
         //Carico la lista dei nomi delle montagne nella lista
+        listItems.clear();
         for(int i = 0; i < p.nomiPeak.size(); i++){
             Peak temp = p.nomiPeak.get(i);
             listItems.add(temp);
@@ -111,12 +103,12 @@ public class PeakFragment extends Fragment implements SensorEventListener {
                 highest = temp;
             }
         }
-
         adapter.notifyDataSetChanged();
 
         //Setto i valori della montagna più alta
         high_nome.setText(highest.getNome_picco());
         high_alt.setText(highest.getAltezza() + " °");
+
 
         return view;
     }
