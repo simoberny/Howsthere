@@ -1,6 +1,7 @@
 package it.unitn.simob.howsthere.Fragment;
 
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -17,6 +18,18 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import it.unitn.simob.howsthere.Oggetti.Panorama;
 import it.unitn.simob.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.simob.howsthere.R;
@@ -30,18 +43,27 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
     ImageView nord_compass;
     float currentDegree = 0f;
     SensorManager mSensorManager;
+    Double lat, lon;
+
+    private GoogleMap mapTramonto = null;
+    private GoogleMap mapAlba = null;
 
     TextView gradi_alba, gradi_tramonto, nord;
 
     float angoloDaSotrarreAlba = 0;
     float angoloDaSotrarreTramonto = 0;
 
-    public BussolaFragment() {
-    }
+    public BussolaFragment() { }
 
     public static BussolaFragment newInstance(){
         BussolaFragment bs = new BussolaFragment();
         return bs;
+    }
+
+    public boolean isGooglePlayServicesAvailable(Context context){
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
+        return resultCode == ConnectionResult.SUCCESS;
     }
 
     @Override
@@ -49,6 +71,9 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
         //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
         PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
         Panorama p = ((RisultatiActivity)getActivity()).p;
+
+        lat = p.lat;
+        lon = p.lon;
 
         angoloDaSotrarreTramonto = (float)Math.floor((float) p.getAlba().azimuth * 100)/ 100;
         angoloDaSotrarreAlba = (float)Math.floor((float) p.getTramonto().azimuth * 100)/100;
@@ -68,6 +93,15 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
 
         gradi_alba = view.findViewById(R.id.gradi_alba);
         gradi_tramonto = view.findViewById(R.id.gradi_tramonto);
+
+        if(isGooglePlayServicesAvailable(getContext())){
+            SupportMapFragment mapFragmentAlba = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_alba);
+            mapFragmentAlba.getMapAsync(onMapReadyCallbackAlba());
+            SupportMapFragment mapFragmentTramonto = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_tram);
+            mapFragmentTramonto.getMapAsync(onMapReadyCallbackTramonto());
+        }
+
+
         return view;
     }
 
@@ -136,10 +170,56 @@ public class BussolaFragment extends Fragment implements SensorEventListener{
             compassTramonto.startAnimation(ra);
         }
 
+        updateCameraBearing(mapAlba, currentDegree);
+        updateCameraBearing(mapTramonto, currentDegree);
+
         currentDegree = -degree;
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) { }
 
+    private void updateCameraBearing(GoogleMap googleMap, float bearing) {
+        if ( googleMap == null) return;
+        CameraPosition currentPlace = new CameraPosition.Builder()
+                .target(googleMap.getCameraPosition().target)
+                .bearing(bearing).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPlace));
+    }
+
+    public OnMapReadyCallback onMapReadyCallbackAlba(){
+        return new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mapAlba = googleMap;
+                mapAlba.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                LatLng vannes = new LatLng(lat, lon);
+                mapAlba.addMarker(new MarkerOptions().position(vannes).title("Posizione selezionata"));
+                CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(vannes, 20);
+                mapAlba.animateCamera(yourLocation);
+                mapAlba.getUiSettings().setRotateGesturesEnabled(false);
+                mapAlba.getUiSettings().setTiltGesturesEnabled(false);
+                mapAlba.getUiSettings().setAllGesturesEnabled(false);
+                mapAlba.getUiSettings().setCompassEnabled(false);
+            }
+        };
+    }
+
+    public OnMapReadyCallback onMapReadyCallbackTramonto(){
+        return new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mapTramonto = googleMap;
+                LatLng vannes = new LatLng(lat, lon);
+                mapTramonto.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                mapTramonto.addMarker(new MarkerOptions().position(vannes).title("Posizione selezionata"));
+                CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(vannes, 20);
+                mapTramonto.animateCamera(yourLocation);
+                mapTramonto.getUiSettings().setRotateGesturesEnabled(false);
+                mapTramonto.getUiSettings().setTiltGesturesEnabled(false);
+                mapTramonto.getUiSettings().setAllGesturesEnabled(false);
+                mapTramonto.getUiSettings().setCompassEnabled(false);
+            }
+        };
+    }
 }

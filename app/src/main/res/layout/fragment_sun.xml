@@ -156,175 +156,201 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="6dp"
+                            android:layout_weight="4"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="70dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="2dp"
-                                android:layout_marginStart="2dp"
-                                android:gravity="center_horizontal"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/alba_label"
-                                    android:layout_width="55dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_above="@+id/take_photo"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_weight="1"
-                                    android:paddingTop="10dp"
-                                    android:text="@string/alba"
-                                    android:textAlignment="center"
-                                    android:textSize="16sp" />
-
-                                <ImageView
-                                    android:id="@+id/imageView3"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="50dp"
-                                    android:layout_weight="1"
-                                    android:src="@drawable/sunrise"
-                                    android:visibility="visible" />
-
-                                <Space
-                                    android:layout_width="match_parent"
-                                    android:layout_height="30dp"
-                                    android:layout_weight="1" />
-
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="1dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="5dp"
-                                android:layout_marginStart="5dp"
-                                android:background="@color/divider"></View>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginStart="5dp"
-                                android:orientation="vertical"
-                                android:paddingEnd="10dp">
+                                android:layout_margin="6dp"
+                                android:orientation="horizontal">
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
+                                    android:layout_width="70dp"
                                     android:layout_height="match_parent"
-                                    android:layout_marginTop="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal">
+                                    android:layout_marginEnd="2dp"
+                                    android:layout_marginStart="2dp"
+                                    android:gravity="center_horizontal"
+                                    android:orientation="vertical">
 
                                     <TextView
-                                        android:layout_width="match_parent"
+                                        android:id="@+id/alba_label"
+                                        android:layout_width="55dp"
                                         android:layout_height="wrap_content"
+                                        android:layout_above="@+id/take_photo"
+                                        android:layout_alignParentStart="true"
                                         android:layout_weight="1"
-                                        android:text="@string/ora"
+                                        android:paddingTop="10dp"
+                                        android:text="@string/alba"
+                                        android:textAlignment="center"
                                         android:textSize="16sp" />
 
-                                    <TextView
-                                        android:id="@+id/oraAlbaSole"
+                                    <ImageView
+                                        android:id="@+id/imageView3"
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="0dp"
-                                        android:layout_weight="2"
-                                        android:text="00:00"
-                                        android:textAlignment="textEnd"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
+                                        android:layout_height="50dp"
+                                        android:layout_weight="1"
+                                        android:src="@drawable/sunrise"
+                                        android:visibility="visible" />
+
+                                    <Space
+                                        android:layout_width="match_parent"
+                                        android:layout_height="30dp"
+                                        android:layout_weight="1" />
+
                                 </LinearLayout>
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <View
+                                    android:layout_width="1dp"
                                     android:layout_height="match_parent"
-                                    android:layout_marginTop="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="Azimut"
-                                        android:textSize="16sp" />
-
-                                    <TextView
-                                        android:id="@+id/azimutAlbaSole"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="0dp"
-                                        android:layout_weight="2"
-                                        android:text='"00"'
-                                        android:textAlignment="textEnd"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
+                                    android:layout_marginEnd="5dp"
+                                    android:layout_marginStart="5dp"
+                                    android:background="@color/divider"></View>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_marginTop="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal">
+                                    android:layout_marginStart="5dp"
+                                    android:orientation="vertical"
+                                    android:paddingEnd="10dp">
 
-                                    <TextView
+                                    <LinearLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
                                         android:layout_weight="1"
-                                        android:text="@string/elevazione"
-                                        android:textSize="16sp" />
+                                        android:orientation="horizontal">
 
-                                    <TextView
-                                        android:id="@+id/elevazioneAlbaSole"
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="@string/ora"
+                                            android:textSize="16sp" />
+
+                                        <TextView
+                                            android:id="@+id/oraAlbaSole"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="0dp"
+                                            android:layout_weight="2"
+                                            android:text="00:00"
+                                            android:textAlignment="textEnd"
+                                            android:textSize="16sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="0dp"
-                                        android:layout_weight="2"
-                                        android:text='"00"'
-                                        android:textAlignment="textEnd"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginTop="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:id="@+id/textView5"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
                                         android:layout_weight="1"
-                                        android:text="@string/ori"
-                                        android:textSize="16sp" />
+                                        android:orientation="horizontal">
 
-                                    <TextView
-                                        android:id="@+id/albaOrizzonteSole"
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="Azimut"
+                                            android:textSize="16sp" />
+
+                                        <TextView
+                                            android:id="@+id/azimutAlbaSole"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="0dp"
+                                            android:layout_weight="2"
+                                            android:text='"00"'
+                                            android:textAlignment="textEnd"
+                                            android:textSize="16sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="0dp"
-                                        android:layout_weight="2"
-                                        android:text="00:00"
-                                        android:textAlignment="textEnd"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
+                                        android:layout_weight="1"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="@string/elevazione"
+                                            android:textSize="16sp" />
+
+                                        <TextView
+                                            android:id="@+id/elevazioneAlbaSole"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="0dp"
+                                            android:layout_weight="2"
+                                            android:text='"00"'
+                                            android:textAlignment="textEnd"
+                                            android:textSize="16sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
+                                        android:layout_weight="1"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:id="@+id/textView5"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="@string/ori"
+                                            android:textSize="16sp" />
+
+                                        <TextView
+                                            android:id="@+id/albaOrizzonteSole"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="0dp"
+                                            android:layout_weight="2"
+                                            android:text="00:00"
+                                            android:textAlignment="textEnd"
+                                            android:textSize="16sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
                                 </LinearLayout>
 
                             </LinearLayout>
 
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@color/divider"></View>
+
+                        <Button
+                            android:id="@+id/saveAlba"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:background="@color/ap_white"
+                            android:drawablePadding="15dp"
+                            android:drawableStart="@drawable/ic_notifications_black_24dp"
+                            android:paddingStart="20dp"
+                            android:text="Salva nel calendario" />
+
                     </LinearLayout>
+
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
@@ -338,171 +364,197 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="6dp"
+                            android:layout_weight="4"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="70dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="2dp"
-                                android:layout_marginStart="2dp"
-                                android:gravity="center_horizontal"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="55dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_above="@+id/take_photo"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_weight="1"
-                                    android:paddingTop="10dp"
-                                    android:text="@string/tramonto"
-                                    android:textAlignment="center"
-                                    android:textSize="12sp" />
-
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="50dp"
-                                    android:layout_weight="1"
-                                    android:src="@drawable/sunset"
-                                    android:visibility="visible" />
-
-                                <Space
-                                    android:layout_width="match_parent"
-                                    android:layout_height="30dp"
-                                    android:layout_weight="1" />
-
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="1dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="5dp"
-                                android:layout_marginStart="5dp"
-                                android:background="@color/divider"></View>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginStart="5dp"
-                                android:orientation="vertical"
-                                android:paddingEnd="10dp">
+                                android:layout_margin="6dp"
+                                android:orientation="horizontal">
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
+                                    android:layout_width="70dp"
                                     android:layout_height="match_parent"
-                                    android:layout_marginTop="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal">
+                                    android:layout_marginEnd="2dp"
+                                    android:layout_marginStart="2dp"
+                                    android:gravity="center_horizontal"
+                                    android:orientation="vertical">
 
                                     <TextView
-                                        android:layout_width="match_parent"
+                                        android:layout_width="55dp"
                                         android:layout_height="wrap_content"
+                                        android:layout_above="@+id/take_photo"
+                                        android:layout_alignParentStart="true"
                                         android:layout_weight="1"
-                                        android:text="Ora"
-                                        android:textSize="16sp" />
+                                        android:paddingTop="10dp"
+                                        android:text="@string/tramonto"
+                                        android:textAlignment="center"
+                                        android:textSize="12sp" />
 
-                                    <TextView
-                                        android:id="@+id/oraTramontoSole"
+                                    <ImageView
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="0dp"
-                                        android:layout_weight="2"
-                                        android:text="00:00"
-                                        android:textAlignment="textEnd"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
+                                        android:layout_height="50dp"
+                                        android:layout_weight="1"
+                                        android:src="@drawable/sunset"
+                                        android:visibility="visible" />
+
+                                    <Space
+                                        android:layout_width="match_parent"
+                                        android:layout_height="30dp"
+                                        android:layout_weight="1" />
+
                                 </LinearLayout>
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <View
+                                    android:layout_width="1dp"
                                     android:layout_height="match_parent"
-                                    android:layout_marginTop="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:text="Azimut"
-                                        android:textSize="16sp" />
-
-                                    <TextView
-                                        android:id="@+id/azimutTramontoSole"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="0dp"
-                                        android:layout_weight="2"
-                                        android:text='"00"'
-                                        android:textAlignment="textEnd"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
+                                    android:layout_marginEnd="5dp"
+                                    android:layout_marginStart="5dp"
+                                    android:background="@color/divider"></View>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_marginTop="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal">
+                                    android:layout_marginStart="5dp"
+                                    android:orientation="vertical"
+                                    android:paddingEnd="10dp">
 
-                                    <TextView
+                                    <LinearLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
                                         android:layout_weight="1"
-                                        android:text="Elevazione"
-                                        android:textSize="16sp" />
+                                        android:orientation="horizontal">
 
-                                    <TextView
-                                        android:id="@+id/elevazioneTramontoSole"
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="Ora"
+                                            android:textSize="16sp" />
+
+                                        <TextView
+                                            android:id="@+id/oraTramontoSole"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="0dp"
+                                            android:layout_weight="2"
+                                            android:text="00:00"
+                                            android:textAlignment="textEnd"
+                                            android:textSize="16sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="0dp"
-                                        android:layout_weight="2"
-                                        android:text='"00"'
-                                        android:textAlignment="textEnd"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginTop="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
                                         android:layout_weight="1"
-                                        android:text="Orizzonte"
-                                        android:textSize="16sp" />
+                                        android:orientation="horizontal">
 
-                                    <TextView
-                                        android:id="@+id/tramontoOrizzonteSole"
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="Azimut"
+                                            android:textSize="16sp" />
+
+                                        <TextView
+                                            android:id="@+id/azimutTramontoSole"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="0dp"
+                                            android:layout_weight="2"
+                                            android:text='"00"'
+                                            android:textAlignment="textEnd"
+                                            android:textSize="16sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="0dp"
-                                        android:layout_weight="2"
-                                        android:text="00:00"
-                                        android:textAlignment="textEnd"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
+                                        android:layout_weight="1"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="Elevazione"
+                                            android:textSize="16sp" />
+
+                                        <TextView
+                                            android:id="@+id/elevazioneTramontoSole"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="0dp"
+                                            android:layout_weight="2"
+                                            android:text='"00"'
+                                            android:textAlignment="textEnd"
+                                            android:textSize="16sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
+                                        android:layout_weight="1"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="Orizzonte"
+                                            android:textSize="16sp" />
+
+                                        <TextView
+                                            android:id="@+id/tramontoOrizzonteSole"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="0dp"
+                                            android:layout_weight="2"
+                                            android:text="00:00"
+                                            android:textAlignment="textEnd"
+                                            android:textSize="16sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
                                 </LinearLayout>
 
                             </LinearLayout>
-
                         </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@color/divider"></View>
+
+                        <Button
+                            android:id="@+id/saveTramonto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:background="@color/ap_white"
+                            android:drawablePadding="15dp"
+                            android:drawableStart="@drawable/ic_notifications_black_24dp"
+                            android:paddingStart="20dp"
+                            android:text="Salva nel calendario" />
+
                     </LinearLayout>
+
                 </android.support.v7.widget.CardView>
 
 
