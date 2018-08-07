@@ -31,6 +31,7 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import it.unitn.simob.howsthere.Adapter.MyLinearLayoutManager;
@@ -95,6 +96,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
 
         //Carico la lista dei nomi delle montagne nella lista
         listItems.clear();
+
         for(int i = 0; i < p.nomiPeak.size(); i++){
             Peak temp = p.nomiPeak.get(i);
             listItems.add(temp);
@@ -156,6 +158,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
             final Peak temp = array.get(position);
+            holder.pos.setText(Character.toString((char)('A'+ position)));
             holder.peak_name.setText(temp.getNome_picco());
             holder.peak_altitude.setText(temp.getAltezza() + "°");
             holder.azimuth.setText(temp.getAzimuth() + "° N");
@@ -196,13 +199,14 @@ public class PeakFragment extends Fragment implements SensorEventListener {
 
         class MyViewHolder extends RecyclerView.ViewHolder
         {
-            TextView peak_name, peak_altitude, azimuth;
+            TextView peak_name, peak_altitude, azimuth, pos;
 
             public MyViewHolder(View itemView) {
                 super(itemView);
                 peak_name = itemView.findViewById(R.id.name);
                 peak_altitude = itemView.findViewById(R.id.altitude);
                 azimuth = itemView.findViewById(R.id.azimuth_peak);
+                pos = itemView.findViewById(R.id.pos);
             }
         }
     }
@@ -224,10 +228,13 @@ public class PeakFragment extends Fragment implements SensorEventListener {
     void stampaGrafico() {
         List<Entry> entriesMontagne = new ArrayList<Entry>();
         final List<Entry> entriesNum = new ArrayList<Entry>();
-        //SOLE
-        //Arrays.sort(p.risultatiSole); //ordino secondo azimuth
+
         for (int i = 0; i < p.nomiPeak.size(); i++) { //passo dati al grafico
-            entriesNum.add(new Entry((float) p.nomiPeak.get(i).getAzimuth(), (float) p.nomiPeak.get(i).getAltezza()));
+            double k = 0.4;
+            if(i%2==0){
+                k=0;
+            }
+            entriesNum.add(new Entry((float) p.nomiPeak.get(i).getAzimuth(), (float) (p.nomiPeak.get(i).getAltezza()+k)));
 
         }
         //MONTAGNE
@@ -241,9 +248,6 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         chart.getAxisLeft().setEnabled(false);
         chart.getAxisLeft().setAxisMinValue(-1);  //faccio partire da -1 le y. non da 0 perchè da una montagna alta è possibile finire leggermente sotto lo 0
         chart.getAxisRight().setAxisMinValue(-1);
-
-        chart.setVisibleXRangeMaximum(20); // allow 20 values to be displayed at once on the x-axis, not more
-        chart.moveViewToX(10); // set the left edge of the chart to x-index 10
 
         LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Montagne"); // add entries to dataset
         final LineDataSet dataSetNum = new LineDataSet(entriesNum, "Num");
@@ -264,13 +268,11 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         dataSetMontagne.setDrawHighlightIndicators(false);
 
         //proprietà grafiche numeri
-        dataSetNum.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        dataSetNum.setColor(Color.YELLOW);
-        dataSetNum.setLineWidth(0);
+        dataSetNum.setMode(LineDataSet.Mode.LINEAR);
+        dataSetNum.setColor(Color.TRANSPARENT);
+        dataSetNum.setLineWidth(0f);
         dataSetNum.setDrawValues(true);
         dataSetNum.setDrawCircles(false);
-        dataSetNum.setCircleColor(Color.YELLOW);
-        dataSetNum.setDrawCircleHole(false);
         dataSetNum.setDrawFilled(false);
         dataSetNum.setDrawValues(true);
         dataSetNum.setDrawHighlightIndicators(false);
@@ -278,10 +280,10 @@ public class PeakFragment extends Fragment implements SensorEventListener {
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
                 int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
-                return String.valueOf(idx);
+                //return String.valueOf(idx);
+                return Character.toString((char)('A'+ idx));
             }
         });
-
 
         chart.getDescription().setText("");
         LineData lineData = new LineData();
@@ -309,6 +311,5 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         chart.invalidate();
 
     }
-
 
 }
