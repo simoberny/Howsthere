@@ -12,15 +12,29 @@
         android:background="@color/background"
         android:orientation="vertical">
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart_peak"
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="175dp"
-            android:layout_below="@+id/risultatiMainLayout"
-            android:layout_centerHorizontal="true"
-            android:paddingTop="10dp">
+            android:layout_height="wrap_content"
+            android:fillViewport="false">
 
-        </com.github.mikephil.charting.charts.LineChart>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart_peak"
+                    android:layout_width="1500dp"
+                    android:layout_height="150dp"
+                    android:layout_below="@+id/risultatiMainLayout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_weight="1"
+                    android:paddingTop="10dp">
+
+                </com.github.mikephil.charting.charts.LineChart>
+            </LinearLayout>
+
+        </HorizontalScrollView>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
