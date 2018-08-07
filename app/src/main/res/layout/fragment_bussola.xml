@@ -36,7 +36,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:alpha="0.7"
+                    android:alpha="0.35"
                     android:background="@android:color/white">
 
                 </RelativeLayout>
@@ -52,10 +52,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false"
                     android:layout_marginStart="10dp"
                     android:padding="10dp"
                     android:text="150°"
+                    android:textColor="@color/ap_white"
                     android:textSize="20sp" />
             </RelativeLayout>
 
@@ -68,7 +70,7 @@
 
                 <ImageView
                     android:id="@+id/compassAlba"
-                    android:layout_width="75dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerInParent="true"
@@ -90,6 +92,7 @@
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
                     android:text="Alba"
+                    android:textColor="@color/ap_white"
                     android:textSize="26sp" />
 
                 <ImageView
@@ -124,7 +127,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:alpha="0.7"
+                    android:alpha="0.35"
                     android:background="@android:color/white">
 
                 </RelativeLayout>
@@ -139,10 +142,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false"
                     android:layout_marginStart="10dp"
                     android:padding="10dp"
                     android:text="150°"
+                    android:textColor="@color/ap_white"
                     android:textSize="20sp" />
             </RelativeLayout>
 
@@ -155,7 +160,7 @@
 
                 <ImageView
                     android:id="@+id/compassTramonto"
-                    android:layout_width="75dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/azimuthCompass"
                     android:layout_centerHorizontal="true"
@@ -180,6 +185,7 @@
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
                     android:text="Tramonto"
+                    android:textColor="@color/ap_white"
                     android:textSize="23sp" />
 
                 <ImageView
