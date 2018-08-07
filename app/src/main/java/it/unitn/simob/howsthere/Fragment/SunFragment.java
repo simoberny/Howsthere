@@ -207,12 +207,17 @@ public class SunFragment extends Fragment {
         chart = view.findViewById(R.id.chart);
         main = view.findViewById(R.id.risultatiMainLayout);
 
+        final String yyyy = (String) DateFormat.format("yyyy",p.data);
+        final String mm = (String)DateFormat.format("MM",p.data);
+        final String gg = (String)DateFormat.format("dd",p.data);
+
+
         Button saveAlba = view.findViewById(R.id.saveAlba);
         saveAlba.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
-                cal.set(p.data.getYear(), p.data.getMonth(), p.data.getDay(), p.getAlba().ora, p.getAlba().minuto);
+                cal.set(Integer.valueOf(yyyy), Integer.valueOf(mm), Integer.valueOf(gg), p.getAlba().ora, p.getAlba().minuto);
                 long startmillis = cal.getTimeInMillis();
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.setData(CalendarContract.Events.CONTENT_URI);
@@ -230,7 +235,7 @@ public class SunFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
-                cal.set(p.data.getYear(), p.data.getMonth(), p.data.getDay(), p.getTramonto().ora, p.getTramonto().minuto);
+                cal.set(Integer.valueOf(yyyy), Integer.valueOf(mm), Integer.valueOf(gg), p.getAlba().ora, p.getAlba().minuto);
                 long startmillis = cal.getTimeInMillis();
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.setType("vnd.android.cursor.item/event");
