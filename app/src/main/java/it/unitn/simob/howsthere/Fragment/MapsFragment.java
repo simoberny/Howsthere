@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
@@ -34,6 +35,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +77,8 @@ import it.unitn.simob.howsthere.Data;
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.R;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener {
     private String citta = "";
     private GoogleMap gm = null;
@@ -83,6 +87,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     private Date dataSelezionata = Calendar.getInstance().getTime();
     private BottomSheetDialog dialog;
     private View dialogView;
+
+    SupportPlaceAutocompleteFragment placeAutoComplete = null;
 
     //Marker Google
     private Marker marker;
@@ -178,12 +184,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
        position.setOnClickListener(new View.OnClickListener(){
            @Override
            public void onClick(View view) {
-               /*Intent i = new Intent(getActivity(), RisultatiActivity.class);
-               i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-               startActivity(i);*/
                getLocation(rootview);
            }
        });
+
+       ImageView reco = rootview.findViewById(R.id.recognition);
+       reco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displaySpeechRecognizer();
+            }
+        });
 
        Button date = (Button) dialogView.findViewById(R.id.dataselect);
        date.setOnClickListener(new View.OnClickListener(){
@@ -210,7 +221,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
         if (map_id == 0) {
             //Carico il cerca di google
-            SupportPlaceAutocompleteFragment placeAutoComplete = (SupportPlaceAutocompleteFragment) this.getChildFragmentManager().findFragmentById(R.id.place_autocomplete);
+            placeAutoComplete = (SupportPlaceAutocompleteFragment) this.getChildFragmentManager().findFragmentById(R.id.place_autocomplete);
+
             placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
                 public void onPlaceSelected(Place place) {
@@ -372,6 +384,39 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
+    }
+
+    private static final int SPEECH_REQUEST_CODE = 0;
+
+    private void displaySpeechRecognizer() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(
+                    RecognizerIntent.EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
+            try {
+                List<Address> locs = gcd.getFromLocationName(spokenText, 1);
+                if(locs.size() > 0 && locs.get(0) != null){
+                    placeAutoComplete.setText(spokenText);
+                    goToLoc(new LatLng(locs.get(0).getLatitude(), locs.get(0).getLongitude()), 10);
+                }else{
+                    Toast.makeText(getContext(), "Nessun risultato per " + spokenText + "!", Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     //Listener per la posizione GPS

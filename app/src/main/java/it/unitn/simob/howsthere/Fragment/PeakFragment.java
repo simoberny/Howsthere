@@ -41,6 +41,9 @@ import it.unitn.simob.howsthere.RisultatiActivity;
 
 import static android.content.Context.SENSOR_SERVICE;
 
+//TODO COntrollo se nessun picco
+//TODO Gestire le zone in cui non riesce a generare la mappa
+
 public class PeakFragment extends Fragment implements SensorEventListener {
     ArrayList<Peak> listItems=new ArrayList<Peak>();
     PeakFragment.PeakAdapter adapter;
