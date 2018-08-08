@@ -177,4 +177,5 @@
     <string name="tap_history">Qui trovate tutti i panorami che avete calcolato in passato</string>
     <string name="tap_social">Questa è la sezione social dell\'applicazione, dove trovate tutti i contenuti condivisi dagli utenti!</string>
     <string name="tap_map">"Seleziona il posto di cui vuoi calcolare il panorama. "</string>
+    <string name="nopeak">Nessun picco rilevato!</string>
 </resources>

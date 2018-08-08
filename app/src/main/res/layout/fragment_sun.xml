@@ -347,6 +347,7 @@
                             android:drawablePadding="15dp"
                             android:drawableStart="@drawable/ic_notifications_black_24dp"
                             android:paddingStart="20dp"
+                            style="?android:attr/borderlessButtonStyle"
                             android:text="Salva nel calendario" />
 
                     </LinearLayout>
@@ -551,6 +552,7 @@
                             android:drawablePadding="15dp"
                             android:drawableStart="@drawable/ic_notifications_black_24dp"
                             android:paddingStart="20dp"
+                            style="?android:attr/borderlessButtonStyle"
                             android:text="Salva nel calendario" />
 
                     </LinearLayout>

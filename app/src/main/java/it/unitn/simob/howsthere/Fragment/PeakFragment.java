@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -46,19 +47,19 @@ import static android.content.Context.SENSOR_SERVICE;
 //TODO Gestire le zone in cui non riesce a generare la mappa
 
 public class PeakFragment extends Fragment implements SensorEventListener {
-    ArrayList<Peak> listItems=new ArrayList<Peak>();
-    PeakFragment.PeakAdapter adapter;
-    Panorama p;
-    AlertDialog.Builder builder;
+    private ArrayList<Peak> listItems=new ArrayList<Peak>();
+    private PeakFragment.PeakAdapter adapter;
+    private Panorama p;
+    private AlertDialog.Builder builder;
     private Boolean isShowing = false;
-    LineChart chart = null;
+    private LineChart chart = null;
 
     float currentDegree = 0f;
-    SensorManager mSensorManager;
+    private SensorManager mSensorManager;
     float angoloDaSotrarre = 0;
-    Peak highest = new Peak("Highest", 0.0, 0.0);
-
+    private Peak highest = new Peak("Highest", 0.0, 0.0);
     private ImageView compass_img  = null;
+
 
     public PeakFragment() { }
 
@@ -70,6 +71,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
+        p = ((RisultatiActivity)getActivity()).p;
     }
 
     @Override
@@ -80,15 +82,12 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         final TextView high_nome = view.findViewById(R.id.highest_nome);
         final TextView high_alt = view.findViewById(R.id.highest_alt);
 
-        //Picco temporaneo per salvare quello più alto
-        p = ((RisultatiActivity)getActivity()).p;
-
         //chiamo grafico
         chart = view.findViewById(R.id.chart_peak);
-        if(p != null){
-            stampaGrafico();
-        }else{
-            getActivity().finish();
+        RelativeLayout nopeak = view.findViewById(R.id.nopeak);
+
+        if(p.nomiPeak.size() > 0){
+            nopeak.setVisibility(View.GONE);
         }
 
         RecyclerView lista = view.findViewById(R.id.lista_montagne);
@@ -108,6 +107,12 @@ public class PeakFragment extends Fragment implements SensorEventListener {
                 highest = temp;
             }
         }
+
+        if(p != null && p.nomiPeak.size() > 0){
+            stampaGrafico();
+        }
+
+
         adapter.notifyDataSetChanged();
 
         //Setto i valori della montagna più alta
