@@ -41,7 +41,6 @@ import retrofit2.http.Query;
 
 
 public class HistoryFragment extends Fragment{
-
     //static List selezionati_posiz = new ArrayList();
     List<String> selezionati_id = new ArrayList<String>();
     boolean in_selezione = false;
@@ -68,7 +67,6 @@ public class HistoryFragment extends Fragment{
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.bar_storico, menu);
-
     }
 
     @Override
@@ -163,9 +161,6 @@ public class HistoryFragment extends Fragment{
                 String idi = (String) ID.getText();
 
                 selezionati_id.add(idi);
-                //selezionati_id.add(idi);
-
-                //System.err.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE posizione : "+idi+"   arraysize: "+selezionati_id.size());
                 in_selezione = true;
                 return true;
             }

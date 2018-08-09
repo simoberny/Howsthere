@@ -257,7 +257,7 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
         if ( googleMap == null) return;
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(lat, lon))             // Sets the center of the map to current location
-                .zoom(13)                   // Sets the zoom
+                .zoom(14)                   // Sets the zoom
                 .bearing(bearing) // Sets the orientation of the camera to east
                 .tilt(0)                   // Sets the tilt of the camera to 0 degrees
                 .build();                   // Creates a CameraPosition from the builder
@@ -271,7 +271,7 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
                 mapAlba = googleMap;
                 mapAlba.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 LatLng pos = new LatLng(lat, lon);
-                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 13, 0,0)));
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 14, 0,0)));
                 mapAlba.getUiSettings().setRotateGesturesEnabled(false);
                 mapAlba.getUiSettings().setTiltGesturesEnabled(false);
                 mapAlba.getUiSettings().setAllGesturesEnabled(false);
@@ -287,7 +287,7 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
                 mapTramonto = googleMap;
                 mapTramonto.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 LatLng pos = new LatLng(lat, lon);
-                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 13, 0,0)));
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 14, 0,0)));
                 mapTramonto.getUiSettings().setRotateGesturesEnabled(false);
                 mapTramonto.getUiSettings().setTiltGesturesEnabled(false);
                 mapTramonto.getUiSettings().setAllGesturesEnabled(false);

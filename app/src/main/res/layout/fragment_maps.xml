@@ -42,11 +42,31 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
 
-            <fragment
-                android:id="@+id/place_autocomplete"
-                class="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@color/ap_white"
+                android:gravity="center_vertical">
+
+                <fragment
+                    android:id="@+id/place_autocomplete"
+                    class="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp" />
+
+                <ImageView
+                    android:id="@+id/recognition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/baseline_mic_black_24" />
+            </RelativeLayout>
+
         </android.support.v7.widget.CardView>
 
         <android.support.design.widget.FloatingActionButton

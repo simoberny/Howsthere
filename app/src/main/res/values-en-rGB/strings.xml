@@ -73,4 +73,5 @@
     <string name="appa">Apparition</string>
     <string name="spa">Sparition</string>
     <string name="highest">Highest peak</string>
+    <string name="nopeak">Nessun picco rilevato!</string>
 </resources>
