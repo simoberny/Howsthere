@@ -166,7 +166,8 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
             final Peak temp = array.get(position);
-            holder.pos.setText(Character.toString((char)('A'+ position)));
+            //holder.pos.setText(Character.toString((char)('A'+ position)));
+            holder.pos.setText(""+position);
             holder.peak_name.setText(temp.getNome_picco());
             holder.peak_altitude.setText(temp.getAltezza() + "°");
             holder.azimuth.setText(temp.getAzimuth() + "° N");
@@ -280,7 +281,10 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         dataSetNum.setColor(Color.TRANSPARENT);
         dataSetNum.setLineWidth(0f);
         dataSetNum.setDrawValues(true);
-        dataSetNum.setDrawCircles(false);
+        dataSetNum.setDrawCircles(true);
+        dataSetNum.setDrawCircleHole(false);
+        dataSetNum.setCircleColor(Color.parseColor("#2E7D32"));
+        dataSetNum.setCircleRadius(1f);
         dataSetNum.setDrawFilled(false);
         dataSetNum.setDrawValues(true);
         dataSetNum.setDrawHighlightIndicators(false);
@@ -288,8 +292,14 @@ public class PeakFragment extends Fragment implements SensorEventListener {
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
                 int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
-                //return String.valueOf(idx);
-                return Character.toString((char)('A'+ idx));
+                String s = ""+idx;
+                if(idx>0) {
+                    if((p.nomiPeak.get(idx).getAzimuth()) - (p.nomiPeak.get(idx - 1).getAzimuth()) < 3){
+                        s="";
+                    }
+                }
+                return String.valueOf(s);
+                //return Character.toString((char)('A'+ idx));
             }
         });
 

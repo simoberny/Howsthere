@@ -24,8 +24,8 @@
 
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/chart_peak"
-                    android:layout_width="1500dp"
-                    android:layout_height="150dp"
+                    android:layout_width="800dp"
+                    android:layout_height="200dp"
                     android:layout_below="@+id/risultatiMainLayout"
                     android:layout_centerHorizontal="true"
                     android:layout_weight="1"

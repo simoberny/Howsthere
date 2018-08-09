@@ -87,7 +87,7 @@ public class HistoryFragment extends Fragment{
                 return true;
             }else{
                 Snackbar.make(getActivity().findViewById(R.id.layout_base),
-                        "Nessun elemento selezionato.... long_press per selezionare", Snackbar.LENGTH_LONG).setAction("Elimina Tutto", new View.OnClickListener() {
+                        "Tenere premuto per selezionare", Snackbar.LENGTH_LONG).setAction("Elimina Tutto", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         PanoramiStorage.panorami_storage.delete_all();
