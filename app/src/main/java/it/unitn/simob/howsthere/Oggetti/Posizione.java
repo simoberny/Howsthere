@@ -7,6 +7,14 @@ import java.io.Serializable;
  */
 public class Posizione implements Comparable, Serializable
 {
+    public Posizione(){}
+    public Posizione(int ora, int minuto, double altezza, double azimuth){
+        this.ora = ora;
+        this.minuto = minuto;
+        this.altezza = altezza;
+        this.azimuth = azimuth;
+    }
+
     public int compareTo(Object x) {
 
         if(x == null) System.out.println("dati sole/luna mancanti!");;

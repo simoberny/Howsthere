@@ -4,22 +4,21 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
-
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Marker;
+import android.view.View;
 
 import org.osmdroid.util.GeoPoint;
 
@@ -61,58 +60,72 @@ public class RisultatiActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
-        String id = (String) extras.get("ID");
-        String pFromIntent = (String) extras.get("pan");
+            String id = (String) extras.get("ID");
+            String pFromIntent = (String) extras.get("pan");
 
-        PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
-        if(id != null){
-            p = panoramiStorage.getPanoramabyID(id);
-        }else{
-            Panorama obj = null;
+            PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
+            if (id != null) {
+                p = panoramiStorage.getPanoramabyID(id);
+            } else {
+                Panorama obj = null;
+                try {
+                    byte b[] = Base64.decode(pFromIntent.getBytes(), Base64.DEFAULT);
+                    ByteArrayInputStream bi = new ByteArrayInputStream(b);
+                    ObjectInputStream si = new ObjectInputStream(bi);
+                    obj = (Panorama) si.readObject();
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                p = obj; //Intent dalla feed con panorama salvato in Firebase
+            }
+            mt = MeteoFragment.newInstance();
+            sf = SunFragment.newInstance();
+            bf = BussolaFragment.newInstance();
+            mf = MoonFragment.newInstance();
+            pf = PeakFragment.newInstance();
+
+            String posizione = getPosizione(p.lat, p.lon);
+
+            if (posizione != null) {
+                setTitle(posizione);
+            }
+
+
+            FloatingActionButton share = findViewById(R.id.share);
+            share.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Howsthere: \nhttps://howsthere.page.link/panorama?date=" + p.data.getTime() + "&lat=" + p.lat + "&lon=" + p.lon + "&citta=" + p.citta);
+                    sendIntent.setType("text/plain");
+                    startActivity(sendIntent);
+                }
+            });
+
+            BottomNavigationView navigation = findViewById(R.id.navigation);
+            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+            BottomNavigationMenuView menuview = (BottomNavigationMenuView) navigation.getChildAt(0);
             try {
-                byte b[] = Base64.decode(pFromIntent.getBytes(), Base64.DEFAULT);
-                ByteArrayInputStream bi = new ByteArrayInputStream(b);
-                ObjectInputStream si = new ObjectInputStream(bi);
-                obj = (Panorama) si.readObject();
-            } catch (Exception e) {
-                System.out.println(e);
+                Field shiftingMode = menuview.getClass().getDeclaredField("mShiftingMode");
+                shiftingMode.setAccessible(true);
+                shiftingMode.setBoolean(menuview, false);
+                shiftingMode.setAccessible(false);
+                for (int i = 0; i < menuview.getChildCount(); i++) {
+                    BottomNavigationItemView item = (BottomNavigationItemView) menuview.getChildAt(i);
+                    item.setShiftingMode(false);
+                    // set once again checked value, so view will be updated
+                    item.setChecked(item.getItemData().isChecked());
+                }
+            } catch (NoSuchFieldException e) {
+                Log.e("ERROR NO SUCH FIELD", "Unable to get shift mode field");
+            } catch (IllegalAccessException e) {
+                Log.e("ERROR ILLEGAL ALG", "Unable to change value of shift mode");
             }
-            p = obj; //Intent dalla feed con panorama salvato in Firebase
-        }
-        mt = MeteoFragment.newInstance();
-        sf = SunFragment.newInstance();
-        bf = BussolaFragment.newInstance();
-        mf = MoonFragment.newInstance();
-        pf = PeakFragment.newInstance();
 
-        String posizione = getPosizione(p.lat, p.lon);
+            navigation.setSelectedItemId(R.id.navigation_risultati);
 
-        if(posizione != null) {
-            setTitle(posizione);
-        }
-
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        BottomNavigationMenuView menuview = (BottomNavigationMenuView) navigation.getChildAt(0);
-        try {
-            Field shiftingMode = menuview.getClass().getDeclaredField("mShiftingMode");
-            shiftingMode.setAccessible(true);
-            shiftingMode.setBoolean(menuview, false);
-            shiftingMode.setAccessible(false);
-            for (int i = 0; i < menuview.getChildCount(); i++) {
-                BottomNavigationItemView item = (BottomNavigationItemView) menuview.getChildAt(i);
-                item.setShiftingMode(false);
-                // set once again checked value, so view will be updated
-                item.setChecked(item.getItemData().isChecked());
-            }
-        } catch (NoSuchFieldException e) {
-            Log.e("ERROR NO SUCH FIELD", "Unable to get shift mode field");
-        } catch (IllegalAccessException e) {
-            Log.e("ERROR ILLEGAL ALG", "Unable to change value of shift mode");
-        }
-
-        navigation.setSelectedItemId(R.id.navigation_risultati);
     }
 
     public String getPosizione(Double latitude, Double longitude){
