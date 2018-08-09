@@ -118,24 +118,7 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
                 entriesSole.add(new Entry((float) p.risultatiSole[i].azimuth, (float) p.risultatiSole[i].altezza));
             }
         }
-        //LUNA
-        //Arrays.sort(risultatiLuna); //ordino secondo azimuth ATTENZIONE: se vengono ordinati allora si mescolano i dati della mattina dopo quelli della sera
-        for(int i = 0; i<864; i++) { //passo dati al grafico
-            if(p.risultatiLuna[i].minuto == 0){
-                if(i<288 && p.risultatiLuna[288].azimuth > p.risultatiLuna[i].azimuth) { //solo le ore del giorno prima che concludono l' arco in cielo
-                    entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) p.risultatiLuna[i].altezza));
-                }
-                else if(i>575 && p.risultatiLuna[575].azimuth < p.risultatiLuna[i].azimuth) { //solo le ore del giorno prima che concludono l' arco in cielo
-                    entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) p.risultatiLuna[i].altezza));
-                }
-                else if(i>=288 && i<576){
-                    entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) p.risultatiLuna[i].altezza));
 
-                }else {
-                    entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) -90));
-                }
-            }
-        }
         //MONTAGNE
         for (int i =0; i<360; i++) {
 
@@ -159,7 +142,6 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
 
         LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Profilo montagne"); // add entries to dataset
         final LineDataSet dataSetSole = new LineDataSet(entriesSole, "sole");
-        LineDataSet dataSetLuna = new LineDataSet(entriesLuna, "luna");
 
         //proprietà grafico Montagne
         dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
@@ -195,46 +177,12 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
             }
         });
 
-        //proprietà grafiche Luna
-        dataSetLuna.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        dataSetLuna.setColor(Color.LTGRAY);
-        dataSetLuna.setLineWidth(1f);
-        dataSetLuna.setDrawValues(true);
-        dataSetLuna.setDrawCircles(true);
-        //dataSetLuna.setCircleColor(Color.GRAY);
-        dataSetLuna.setDrawCircleHole(false);
-        dataSetLuna.setDrawValues(true);
-        dataSetLuna.setDrawFilled(false);
-        dataSetLuna.setDrawHighlightIndicators(false);
-        dataSetLuna.setValueFormatter(new IValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
-                if (idx>23 && idx <48) {
-                    return String.valueOf(idx % 24);
-                }else{
-                    return "";
-                }
-            }
-        });
 
-        int[] coloricerchiLuna = new int[64]; //un colore per ogni dato sul grafico (24 al giorno)
-        for(int i = 0; i<24; i++){
-            coloricerchiLuna[i] = Color.argb(65,88, 88, 88);
-        }
-        for(int i = 24; i<48; i++){
-            coloricerchiLuna[i] = Color.GRAY;
-        }
-        for(int i = 48; i<64; i++){
-            coloricerchiLuna[i] = Color.argb(65,88, 88, 88);
-        }
-        dataSetLuna.setCircleColors(coloricerchiLuna);
 
         chart.getDescription().setText("");
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
         lineData.addDataSet(dataSetSole);
-        lineData.addDataSet(dataSetLuna);
         chart.getXAxis().setDrawLabels(false);
         chart.getXAxis().setDrawAxisLine(false);
         chart.getAxisLeft().setDrawAxisLine(false);
