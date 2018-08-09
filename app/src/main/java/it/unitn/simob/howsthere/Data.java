@@ -61,6 +61,7 @@ public class Data extends AppCompatActivity {
     private Integer richiestaID = 0;
     private Integer richiestaStato = 0;
     private Integer richiestaDatiMontagne = 0;
+    private Integer richiestaNomiMontagne = 0;
     public Panorama panorama = new Panorama();
 
     @Override
@@ -306,6 +307,7 @@ public class Data extends AppCompatActivity {
                         progressDialog.dismiss();
                         TextView tx = (TextView)findViewById(R.id.panoramaDownload); //recupero e rendo visibile la conferma scaricamento dati
                         tx.setVisibility(TextView.VISIBLE);
+                        progressDialog.setMessage("Scarico nomi montagne...");
                         loadNamePeak();
                     } catch (IOException e) {
                         richiediDatiMontagne();
@@ -317,44 +319,11 @@ public class Data extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("Error", t.getMessage());
                 richiediDatiMontagne();
             }
         });
     }
 
-    private void loadNamePeak(){
-        progressDialog.setMessage("Scarico nomi montagne...");
-        progressDialog.setTitle("Scaricamento nomi montagne");
-        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
-        HeyWhatsNamePeak service = retrofit.create(HeyWhatsNamePeak.class);
-        Call<ResponseBody> call = service.getNamePeak(panorama.ID);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        gNamePeak = response.body().string();
-                        progressDialog.dismiss();
-                        TextView tx = findViewById(R.id.panoramaName); //recupero e rendo visibile la conferma scaricamento dati
-                        tx.setVisibility(TextView.VISIBLE);
-                        setPeak(gPeak, gNamePeak);
-                    } catch (IOException e) {
-                        richiediDatiMontagne();
-                        e.printStackTrace();
-                    }
-                } else {
-                    richiediDatiMontagne();
-                }
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("Error", t.getMessage());
-                richiediDatiMontagne();
-            }
-        });
-    }
 
     private void richiediDatiMontagne(){
         if (richiestaDatiMontagne<n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
@@ -388,6 +357,78 @@ public class Data extends AppCompatActivity {
     public void azzeraTentativiScaricamentoPanorama(View view) { //wrapper chiamato dal pulsante riprova
         azzeraTentativiScaricamentoPanorama();
     }
+
+
+    private void loadNamePeak(){
+        progressDialog.setTitle("Scaricamento nomi montagne");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
+        HeyWhatsNamePeak service = retrofit.create(HeyWhatsNamePeak.class);
+        Call<ResponseBody> call = service.getNamePeak(panorama.ID);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        gNamePeak = response.body().string();
+                        if(gNamePeak == null || gNamePeak == ""){
+                            richiediNomiMontagne();
+                        }else{
+                            progressDialog.dismiss();
+                            TextView tx = findViewById(R.id.panoramaName); //recupero e rendo visibile la conferma scaricamento dati
+                            tx.setVisibility(TextView.VISIBLE);
+                            setPeak(gPeak, gNamePeak);
+                        }
+                    } catch (IOException e) {
+                        richiediNomiMontagne();
+                        e.printStackTrace();
+                    }
+                } else {
+                    richiediNomiMontagne();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                richiediNomiMontagne();
+            }
+        });
+    }
+
+    private void richiediNomiMontagne(){
+        if (richiestaNomiMontagne<n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+            richiestaNomiMontagne++;
+            progressDialog.setMessage("Controllo se sono disponibili i nomi delle montagne, tentativo n°: " + (richiestaNomiMontagne+1));
+            System.out.println("Tentativo: " + richiestaNomiMontagne);
+            loadNamePeak();
+        }else{
+            System.out.println("Nomi montagne non disponibili, controllare la connessione");
+            LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoNomiErrLayout);
+            ln.setVisibility(TextView.VISIBLE);
+            Snackbar.make(findViewById(R.id.dataContainerLayout), "Dati non ricevuti, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    azzeraTentativiNomiMontagne();
+                }
+            }).show();
+            progressDialog.dismiss();
+        }
+    }
+
+    public void azzeraTentativiNomiMontagne(){
+        LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoNomiErrLayout);
+        ln.setVisibility(TextView.GONE);
+        richiestaNomiMontagne = 0;
+        loadNamePeak();
+    }
+    public void azzeraTentativiNomiMontagne(View view) { //wrapper chiamato dal pulsante riprova
+        azzeraTentativiNomiMontagne();
+    }
+
 
     private void setPeak(String peak, String namePeak){
         progressDialog.setMessage("Calcolo posizione pianeti...");
@@ -473,7 +514,6 @@ public class Data extends AppCompatActivity {
                     b.append(String.valueOf(sublist.get(j)));
                     b.append(" ");
                 }
-                System.out.println("Nome monte: " + b);
                 Peak temp = new Peak(b.toString(), Double.parseDouble(tempsplit.get(0)), Double.parseDouble(tempsplit.get(1)));
                 panorama.nomiPeak.add(temp);
             }
