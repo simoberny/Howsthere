@@ -2,6 +2,7 @@ package it.unitn.simob.howsthere.Fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -27,13 +28,8 @@ import io.grpc.internal.SharedResourceHolder;
 import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class SettingsFragment extends PreferenceFragmentCompat{
-    public SettingsFragment() {
-        // Required empty public constructor
-    }
+    public SettingsFragment() {}
 
     public static SettingsFragment newInstance() {
         SettingsFragment fragment = new SettingsFragment();
@@ -81,7 +77,9 @@ public class SettingsFragment extends PreferenceFragmentCompat{
                     ((MainActivity) getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 }
                 ((MainActivity) getActivity()).getDelegate().applyDayNight();
-                ((MainActivity) getActivity()).recreate();
+                Intent i = new Intent(getActivity(), MainActivity.class);
+                startActivity(i);
+                ((MainActivity) getActivity()).finish();
                 return true;
             }
         });
@@ -130,7 +128,6 @@ public class SettingsFragment extends PreferenceFragmentCompat{
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     }
-
     public boolean isGooglePlayServicesAvailable(Context context){
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);

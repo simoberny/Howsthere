@@ -1,6 +1,7 @@
 package it.unitn.simob.howsthere.Adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,13 +39,13 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
 
         public WeatherViewHolder(View view) {
             super(view);
-            this.itemDate = (TextView) view.findViewById(R.id.itemDate);
-            this.itemTemperature = (TextView) view.findViewById(R.id.itemTemperature);
-            this.itemDescription = (TextView) view.findViewById(R.id.itemDescription);
-            this.itemyWind = (TextView) view.findViewById(R.id.itemWind);
-            this.itemPressure = (TextView) view.findViewById(R.id.itemPressure);
-            this.itemHumidity = (TextView) view.findViewById(R.id.itemHumidity);
-            this.itemIcon = (TextView) view.findViewById(R.id.itemIcon);
+            this.itemDate = view.findViewById(R.id.itemDate);
+            this.itemTemperature = view.findViewById(R.id.itemTemperature);
+            this.itemDescription = view.findViewById(R.id.itemDescription);
+            this.itemyWind = view.findViewById(R.id.itemWind);
+            this.itemPressure = view.findViewById(R.id.itemPressure);
+            this.itemHumidity = view.findViewById(R.id.itemHumidity);
+            this.itemIcon = view.findViewById(R.id.itemIcon);
             this.lineView = view.findViewById(R.id.lineView);
         }
     }
@@ -63,13 +64,15 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
         String desc = weatherItem.getWeather()[0].getDescription();
         desc = Character.toUpperCase(desc.charAt(0)) + desc.substring(1);
 
+        Resources res = context.getResources();
+
         customViewHolder.itemDescription.setText(desc);
-        customViewHolder.itemHumidity.setText("Umidità: " + weatherItem.getMain().getHumidity() + " %");
-        customViewHolder.itemPressure.setText("Pressione: " + weatherItem.getMain().getPressure() + " hPa");
+        customViewHolder.itemHumidity.setText(res.getString(R.string.humidity) + ": " + weatherItem.getMain().getHumidity() + " %");
+        customViewHolder.itemPressure.setText(res.getString(R.string.pressure) + ": " + weatherItem.getMain().getPressure() + " hPa");
         Double temperature = TempUnitConverter.convertToCelsius(weatherItem.getMain().getTemp());
         Long temp_abb = Math.round(temperature);
         customViewHolder.itemTemperature.setText(temp_abb + " °C");
-        customViewHolder.itemyWind.setText("Vento: " + weatherItem.getWind().getSpeed() + " m/s");
+        customViewHolder.itemyWind.setText(res.getString(R.string.wind) + ": " + weatherItem.getWind().getSpeed() + " m/s");
 
         DateFormat time = new SimpleDateFormat("HH:mm");
         customViewHolder.itemDate.setText(time.format(new Date(Long.parseLong(weatherItem.getDt()) * 1000)));
@@ -83,5 +86,4 @@ public class WeatherRecyclerAdapter extends RecyclerView.Adapter<WeatherRecycler
     public int getItemCount() {
         return (null != itemList ? itemList.size() : 0);
     }
-
 }

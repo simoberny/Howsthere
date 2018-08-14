@@ -6,7 +6,7 @@
             android:entryValues="@array/pref_maps_op_values"
             android:key="map"
             android:summary="%s"
-            android:title="Sorgente mappa" />
+            android:title="@string/sorgente" />
         <ListPreference
             android:defaultValue="2"
             android:entries="@array/pref_maps_list_title"
@@ -19,6 +19,6 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="night_mode"
-            android:summary="Risparmia batteria su schermi Amoled"
-            android:title="Tema scuro" />
+            android:summary="@string/theme_summary"
+            android:title="@string/theme" />
 </PreferenceScreen>

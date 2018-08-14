@@ -59,12 +59,12 @@ public class WeatherMap {
         }
     }
 
-    public void getLocationWeather(String latitude, String longitude, final WeatherCallback weatherCallback) {
+    public void getLocationWeather(String latitude, String longitude, String lang, final WeatherCallback weatherCallback) {
         final ApiClient objApi = ApiClient.getInstance();
         try {
             Call objCall = null;
 
-            objCall = objApi.getApi(context).getLocationWeather(APP_ID, latitude, longitude, "it");
+            objCall = objApi.getApi(context).getLocationWeather(APP_ID, latitude, longitude, lang);
 
             if (objCall != null) {
                 objCall.enqueue(new WeatherRetrofitCallback<WeatherResponseModel>(context) {
@@ -141,12 +141,12 @@ public class WeatherMap {
         }
     }
 
-    public void getLocationForecast(String latitude, String longitude, final ForecastCallback forecastCallback) {
+    public void getLocationForecast(String latitude, String longitude, String lang, final ForecastCallback forecastCallback) {
         final ApiClient objApi = ApiClient.getInstance();
         try {
             Call objCall = null;
 
-            objCall = objApi.getApi(context).getLocationForecast(APP_ID, latitude, longitude, "it");
+            objCall = objApi.getApi(context).getLocationForecast(APP_ID, latitude, longitude, lang);
 
             if (objCall != null) {
                 objCall.enqueue(new WeatherRetrofitCallback<ForecastResponseModel>(context) {

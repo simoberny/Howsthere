@@ -111,7 +111,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         holder.name.setText(feed.getName());
         holder.location.setText(feed.getLocation());
         holder.descrizione.setText(feed.getDescrizione());
-        holder.likes.setText(feed.getLikes() + " Mi piace");
+        holder.likes.setText(feed.getLikes() + " " + con.getResources().getString(R.string.like));
 
         if(feed.getP() == null){
             holder.panorama.setVisibility(View.INVISIBLE);

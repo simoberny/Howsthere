@@ -5,143 +5,144 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragment.MeteoFragment">
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/barlayout"
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/barlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:titleEnabled="false">
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:titleEnabled="false">
-
-                <!--<android.support.v7.widget.Toolbar
+            <!--<android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="?attr/colorPrimary"
                     app:layout_scrollFlags="scroll|enterAlways" />-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="6dp"
-                    android:baselineAligned="false"
-                    android:paddingTop="20dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="6dp"
+                android:baselineAligned="false"
+                android:paddingTop="20dp">
 
-                    <LinearLayout
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/todayTemperature"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:text="0 °C"
+                        android:textColor="@color/indicator_sel"
+                        android:textSize="36dp" />
 
-                        <TextView
-                            android:id="@+id/todayTemperature"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0 °C"
-                            android:textColor="@color/indicator_sel"
-                            android:textSize="36dp" />
+                    <TextView
+                        android:id="@+id/todayDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No data"
+                        android:textColor="@color/indicator_sel"
+                        android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/todayDescription"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="No data"
-                            android:textColor="@color/indicator_sel"
-                            android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/todayWind"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Wind: 0 m/s"
+                        android:textColor="@color/indicator_sel"
+                        android:textSize="16dp" />
 
-                        <TextView
-                            android:id="@+id/todayWind"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Wind: 0 m/s"
-                            android:textColor="@color/indicator_sel"
-                            android:textSize="16dp" />
+                    <TextView
+                        android:id="@+id/todayPressure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pressure: 0 hpa"
+                        android:textColor="@color/indicator_sel"
+                        android:textSize="16dp" />
 
-                        <TextView
-                            android:id="@+id/todayPressure"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pressure: 0 hpa"
-                            android:textColor="@color/indicator_sel"
-                            android:textSize="16dp" />
+                    <TextView
+                        android:id="@+id/todayHumidity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Humidity: 0 %"
+                        android:textColor="@color/indicator_sel"
+                        android:textSize="16dp" />
 
-                        <TextView
-                            android:id="@+id/todayHumidity"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Humidity: 0 %"
-                            android:textColor="@color/indicator_sel"
-                            android:textSize="16dp" />
+                    <TextView
+                        android:id="@+id/todaySunrise"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sunrise: 00:00"
+                        android:textColor="@color/indicator_sel"
+                        android:textSize="16dp" />
 
-                        <TextView
-                            android:id="@+id/todaySunrise"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Sunrise: 00:00"
-                            android:textColor="@color/indicator_sel"
-                            android:textSize="16dp" />
+                    <TextView
+                        android:id="@+id/todaySunset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sunset: 00:00"
+                        android:textColor="@color/indicator_sel"
+                        android:textSize="16dp" />
+                </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/todaySunset"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Sunset: 00:00"
-                            android:textColor="@color/indicator_sel"
-                            android:textSize="16dp" />
-                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                    <TextView
+                        android:id="@+id/todayIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/todayIcon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:paddingRight="42dp"
-                            android:text=""
-                            android:textAlignment="viewEnd"
-                            android:textSize="72dp" />
-
-                    </LinearLayout>
-
+                        android:paddingRight="42dp"
+                        android:text=""
+                        android:textAlignment="viewEnd"
+                        android:textSize="72dp" />
 
                 </LinearLayout>
 
-            </android.support.design.widget.CollapsingToolbarLayout>
 
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
+            </LinearLayout>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/indicator_sel"
+            app:tabMode="fixed">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tabMode="fixed"
-                app:tabGravity="fill"
-                app:tabIndicatorColor="@color/indicator_sel">
+                android:text="@string/today" />
 
-                <android.support.design.widget.TabItem
-                    android:id="@+id/tabItem"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Oggi" />
+            <android.support.design.widget.TabItem
+                android:id="@+id/tabItem2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rain" />
+        </android.support.design.widget.TabLayout>
 
-                <android.support.design.widget.TabItem
-                    android:id="@+id/tabItem2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Precipitazioni" />
-            </android.support.design.widget.TabLayout>
-
-        </android.support.design.widget.AppBarLayout>
+    </android.support.design.widget.AppBarLayout>
 
         <it.unitn.simob.howsthere.CustomViewPager
             android:id="@+id/viewPager"

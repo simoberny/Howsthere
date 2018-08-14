@@ -1,6 +1,5 @@
 package it.unitn.simob.howsthere.Fragment;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,14 +16,11 @@ import it.unitn.simob.howsthere.Adapter.WeatherRecyclerAdapter;
 import it.unitn.simob.howsthere.R;
 import it.unitn.simob.howsthere.Weather.models.WeatherCompleto;
 
-
 public class ForecastFragment extends Fragment implements Serializable{
-
     private WeatherRecyclerAdapter adapter;
     List<WeatherCompleto> forecast = new ArrayList<>();
 
-    public ForecastFragment() {
-    }
+    public ForecastFragment() { }
 
     public static ForecastFragment newInstance(List<WeatherCompleto> forecast) {
         ForecastFragment fragment = new ForecastFragment();
@@ -45,7 +41,7 @@ public class ForecastFragment extends Fragment implements Serializable{
 
         adapter = new WeatherRecyclerAdapter(getActivity(), forecast);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.rc_forecast);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
 

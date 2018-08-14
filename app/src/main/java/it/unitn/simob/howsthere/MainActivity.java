@@ -23,6 +23,7 @@ import android.view.WindowManager;
 import com.facebook.imagepipeline.common.SourceUriType;
 
 import java.util.Date;
+import java.util.Objects;
 
 import it.unitn.simob.howsthere.Fragment.FeedFragment;
 import it.unitn.simob.howsthere.Fragment.HistoryFragment;
@@ -34,10 +35,10 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetSequence;
 
 public class MainActivity extends AppCompatActivity{
     private FeedFragment ff;
+    private MapsFragment mf;
     public static final String PREF_USER_FIRST_TIME = "user_first_time";
     public static final String PREF_USER_FIRST_TAP = "user_first_tap";
     boolean isUserFirstTime, isUserFirstTap;
-
     MaterialTapTargetSequence seq;
 
     protected void onNewIntent(Intent intent) {
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity{
 
         if(night_mode == 2){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
 
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
@@ -86,21 +86,21 @@ public class MainActivity extends AppCompatActivity{
         isUserFirstTap= Boolean.valueOf(readSharedSetting(MainActivity.this, PREF_USER_FIRST_TAP, "true"));
 
         if(isUserFirstTime){
-            seq.addPrompt(new MaterialTapTargetPrompt.Builder(this)
+            seq.addPrompt(Objects.requireNonNull(new MaterialTapTargetPrompt.Builder(this)
                     .setTarget(findViewById(R.id.navigation_storico))
                     .setPrimaryText("Sezione Storico")
                     .setSecondaryText(R.string.tap_history)
-                    .create());
-            seq.addPrompt(new MaterialTapTargetPrompt.Builder(this)
+                    .create()));
+            seq.addPrompt(Objects.requireNonNull(new MaterialTapTargetPrompt.Builder(this)
                     .setTarget(findViewById(R.id.navigation_feed))
                     .setPrimaryText("Sezione Feed")
                     .setSecondaryText(R.string.tap_social)
-                    .create());
-            seq.addPrompt(new MaterialTapTargetPrompt.Builder(this)
+                    .create()));
+            seq.addPrompt(Objects.requireNonNull(new MaterialTapTargetPrompt.Builder(this)
                     .setTarget(findViewById(R.id.navigation_home))
                     .setPrimaryText("Sezione Mappa")
                     .setSecondaryText(R.string.tap_home)
-                    .create());
+                    .create()));
             seq.setSequenceCompleteListener(new MaterialTapTargetSequence.SequenceCompleteListener() {
                 @Override
                 public void onSequenceComplete() {
@@ -113,13 +113,9 @@ public class MainActivity extends AppCompatActivity{
         Intent i = getIntent();
         Bundle extra = i.getExtras();
         String action = i.getAction();
-        String type = i.getType();
         Uri appLinkData = i.getData();
 
         if (Intent.ACTION_VIEW.equals(action) && appLinkData != null){
-            String recipeId = appLinkData.getLastPathSegment();
-            Uri appData = Uri.parse("https://howsthere.page.link/panorama").buildUpon()
-                    .appendPath(recipeId).build();
             String date = appLinkData.getQueryParameter("date");
             String lat_query = appLinkData.getQueryParameter("lat").toString();
             String lon_query = appLinkData.getQueryParameter("lon").toString();
@@ -133,8 +129,6 @@ public class MainActivity extends AppCompatActivity{
             data.putExtra("data", date_query);
             data.putExtra("citta", citta_query);
             startActivity(data);
-
-            System.out.println("Position: " + appLinkData.getEncodedQuery() + " - Date: " + date);
         }
 
         i.replaceExtras(new Bundle());
@@ -143,6 +137,7 @@ public class MainActivity extends AppCompatActivity{
         i.setFlags(0);
 
         ff = FeedFragment.newInstance(extra);
+        mf = MapsFragment.newInstance();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -158,7 +153,6 @@ public class MainActivity extends AppCompatActivity{
         } else {
             navigation.setSelectedItemId(R.id.navigation_home);
         }
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -168,7 +162,7 @@ public class MainActivity extends AppCompatActivity{
             Fragment selectedFragment = null;
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    selectedFragment = MapsFragment.newInstance();
+                    selectedFragment = mf;
                     break;
                 case R.id.navigation_storico:
                     selectedFragment = HistoryFragment.newInstance();
@@ -184,26 +178,10 @@ public class MainActivity extends AppCompatActivity{
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
             transaction.replace(R.id.frame_layout, selectedFragment);
-            transaction.addToBackStack(null);
             transaction.commit();
             return true;
         }
     };
-
-
-    void handleSendText(Intent intent) {
-        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-        if (sharedText != null) {
-            System.out.println("Ricevuto: " + sharedText);
-        }
-    }
-
-    void handleSendImage(Intent intent) {
-        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        if (imageUri != null) {
-
-        }
-    }
 
     public static String readSharedSetting(Context ctx, String settingName, String defaultValue) {
         SharedPreferences sharedPref = ctx.getSharedPreferences(Presentation.FIRST_TIME_STORAGE, Context.MODE_PRIVATE);

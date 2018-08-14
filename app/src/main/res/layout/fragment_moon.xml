@@ -111,6 +111,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_margin="7dp"
                     android:layout_weight="4"
+                    android:background="@color/background"
                     app:cardCornerRadius="17dp"
                     app:cardElevation="4dp">
 
@@ -135,6 +136,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="4"
+                app:cardBackgroundColor="@color/background"
                 app:cardCornerRadius="4dp"
                 app:cardElevation="2dp">
 
@@ -174,7 +176,7 @@
                                     android:paddingTop="10dp"
                                     android:text="@string/alba"
                                     android:textAlignment="center"
-                                    android:textSize="16sp" />
+                                    android:textSize="12sp" />
 
                                 <ImageView
                                     android:layout_width="match_parent"
@@ -328,11 +330,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
-                        android:background="@color/ap_white"
                         android:drawablePadding="15dp"
-                        android:drawableStart="@drawable/ic_notifications_black_24dp"
+                        android:drawableStart="@drawable/baseline_notifications_24"
                         android:paddingStart="20dp"
-                        android:text="Salva nel calendario" />
+                        android:text="@string/save_cal" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -342,6 +343,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="4"
+                app:cardBackgroundColor="@color/background"
                 app:cardCornerRadius="4dp"
                 app:cardElevation="2dp">
 
@@ -421,7 +423,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
-                                        android:text="Ora"
+                                        android:text="@string/ora"
                                         android:textSize="16sp" />
 
                                     <TextView
@@ -473,7 +475,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
-                                        android:text="Elevazione"
+                                        android:text="@string/elevazione"
                                         android:textSize="16sp" />
 
                                     <TextView
@@ -499,7 +501,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
-                                        android:text="Orizzonte"
+                                        android:text="@string/ori"
                                         android:textSize="16sp" />
 
                                     <TextView
@@ -532,11 +534,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
-                        android:background="@color/ap_white"
                         android:drawablePadding="15dp"
-                        android:drawableStart="@drawable/ic_notifications_black_24dp"
+                        android:drawableStart="@drawable/baseline_notifications_24"
                         android:paddingStart="20dp"
-                        android:text="Salva nel calendario" />
+                        android:text="@string/save_cal" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -549,6 +550,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_margin="5dp"
                 android:layout_weight="4"
+                app:cardBackgroundColor="@color/background"
                 app:cardCornerRadius="4dp"
                 app:cardElevation="2dp">
 

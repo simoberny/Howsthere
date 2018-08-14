@@ -1,6 +1,6 @@
 package it.unitn.simob.howsthere.Fragment;
 
-
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import it.unitn.simob.howsthere.Helper.ForecastCallback;
 import it.unitn.simob.howsthere.Helper.TempUnitConverter;
@@ -37,9 +38,6 @@ import it.unitn.simob.howsthere.Weather.models.WeatherResponseModel;
 
 import static it.unitn.simob.howsthere.BuildConfig.OWM_API_KEY;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MeteoFragment extends Fragment {
     Typeface weatherFont;
     TextView todayTemperature;
@@ -56,6 +54,7 @@ public class MeteoFragment extends Fragment {
     public static String lon;
 
     private AppBarLayout barL;
+    private String locale = "en";
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -66,7 +65,6 @@ public class MeteoFragment extends Fragment {
     ForecastFragment ff;
 
     public MeteoFragment() {
-        // Required empty public constructor
         ff = ForecastFragment.newInstance(forecast);
     }
 
@@ -77,9 +75,8 @@ public class MeteoFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
-        PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
-        Panorama p = ((RisultatiActivity)getActivity()).p;
+        //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
+        Panorama p = ((RisultatiActivity) Objects.requireNonNull(getActivity())).p;
 
         lat = String.valueOf(p.lat);
         lon = String.valueOf(p.lon);
@@ -92,25 +89,24 @@ public class MeteoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meteo, container, false);
 
-        todayTemperature = (TextView) view.findViewById(R.id.todayTemperature);
-        todayDescription = (TextView) view.findViewById(R.id.todayDescription);
-        todayWind = (TextView) view.findViewById(R.id.todayWind);
-        todayPressure = (TextView) view.findViewById(R.id.todayPressure);
-        todayHumidity = (TextView) view.findViewById(R.id.todayHumidity);
-        todaySunrise = (TextView) view.findViewById(R.id.todaySunrise);
-        todaySunset = (TextView) view.findViewById(R.id.todaySunset);
-        todayIcon = (TextView) view.findViewById(R.id.todayIcon);
+        todayTemperature = view.findViewById(R.id.todayTemperature);
+        todayDescription = view.findViewById(R.id.todayDescription);
+        todayWind = view.findViewById(R.id.todayWind);
+        todayPressure = view.findViewById(R.id.todayPressure);
+        todayHumidity = view.findViewById(R.id.todayHumidity);
+        todaySunrise = view.findViewById(R.id.todaySunrise);
+        todaySunset = view.findViewById(R.id.todaySunset);
+        todayIcon = view.findViewById(R.id.todayIcon);
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
         todayIcon.setTypeface(weatherFont);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
 
-        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        mViewPager = view.findViewById(R.id.viewPager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         barL = view.findViewById(R.id.barlayout);
-
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        tabLayout = view.findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -131,13 +127,14 @@ public class MeteoFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {}
         });
 
+        locale = getResources().getConfiguration().locale.getLanguage();
         weatherMap = new WeatherMap(getActivity(), OWM_API_KEY);
 
         return view;
     }
 
     private void updateMeteo(){
-        weatherMap.getLocationWeather(lat, lon, new WeatherCallback() {
+        weatherMap.getLocationWeather(lat, lon, locale, new WeatherCallback() {
             @Override
             public void success(WeatherResponseModel response) {
                 updateUI(response);
@@ -148,7 +145,7 @@ public class MeteoFragment extends Fragment {
             }
         });
 
-        weatherMap.getLocationForecast(lat, lon, new ForecastCallback() {
+        weatherMap.getLocationForecast(lat, lon,locale, new ForecastCallback() {
             @Override
             public void success(ForecastResponseModel response) {
                 for(int i = 0; i < response.getList().length; i++){
@@ -172,10 +169,7 @@ public class MeteoFragment extends Fragment {
 
     private void updateUI(WeatherResponseModel response){
         DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getActivity());
-
         Weather weather[] = response.getWeather();
-
-        String location = response.getName();
         String humidity= response.getMain().getHumidity();
         String pressure = response.getMain().getPressure();
         String windSpeed = response.getWind().getSpeed();
@@ -186,16 +180,15 @@ public class MeteoFragment extends Fragment {
         String desc = weather[0].getDescription();
         desc = Character.toUpperCase(desc.charAt(0)) + desc.substring(1);
 
+        Resources res = getContext().getResources();
         todayTemperature.setText(temp_abb.toString() + " °C");
         todayDescription.setText(desc);
-        todayHumidity.setText("Umidità: " + humidity + " %");
-        todayPressure.setText("Pressione: " + pressure + " hPa");
-        todayWind.setText("Vento: " + windSpeed + " m/s");
-        todaySunrise.setText("Alba" + ": " + timeFormat.format(new Date(Long.parseLong(response.getSys().getSunrise()) * 1000)));
-        todaySunset.setText("Tramonto" + ": " + timeFormat.format(new Date(Long.parseLong(response.getSys().getSunset()) * 1000)));
+        todayHumidity.setText(res.getString(R.string.humidity) + ": " + humidity + " %");
+        todayPressure.setText(res.getString(R.string.pressure) + ": " + pressure + " hPa");
+        todayWind.setText(res.getString(R.string.wind) + ": " + windSpeed + " m/s");
+        todaySunrise.setText(res.getString(R.string.alba) + ": " + timeFormat.format(new Date(Long.parseLong(response.getSys().getSunrise()) * 1000)));
+        todaySunset.setText(res.getString(R.string.tramonto) + ": " + timeFormat.format(new Date(Long.parseLong(response.getSys().getSunset()) * 1000)));
         todayIcon.setText(setWeatherIcon(Integer.parseInt(weather[0].getId()), Calendar.getInstance().get(Calendar.HOUR_OF_DAY)));
-
-        ((RisultatiActivity)getActivity()).getSupportActionBar().setTitle(location + ", " + response.getSys().getCountry());
     }
 
     private String setWeatherIcon(int actualId, int hourOfDay) {
@@ -233,7 +226,7 @@ public class MeteoFragment extends Fragment {
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        public SectionsPagerAdapter(FragmentManager fm) {
+        SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -248,7 +241,6 @@ public class MeteoFragment extends Fragment {
                     frag = PrecipitazioniFragment.newInstance();
                     break;
             }
-
             return frag;
         }
         @Override

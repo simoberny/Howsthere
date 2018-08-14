@@ -89,7 +89,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     private View dialogView;
 
     SupportPlaceAutocompleteFragment placeAutoComplete = null;
-
     //Marker Google
     private Marker marker;
     //Marker OSM
@@ -98,7 +97,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     //Gestione Mappe
     private Integer maps_type = -1;
     private Integer map_id = 0;
-
     //open street map
     org.osmdroid.views.MapView map = null;
 

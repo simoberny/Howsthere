@@ -40,7 +40,6 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:text="Nome"
-                android:textColor="@color/place_autocomplete_search_text"
                 android:textSize="16sp" />
 
             <TextView

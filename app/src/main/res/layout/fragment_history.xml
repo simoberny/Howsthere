@@ -61,7 +61,7 @@
                     android:gravity="center_vertical|center"
                     android:paddingEnd="40dp"
                     android:paddingStart="40dp"
-                    android:text="Non hai ancora generato un panorama!"
+                    android:text="@string/nopan"
                     android:textColor="@color/colorPrimary"
                     android:textSize="24sp"
                     android:visibility="visible" />
@@ -72,6 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:clickable="true"
+                    android:rotation="180"
                     app:backgroundTint="@color/background"
                     app:elevation="2dp"
                     app:srcCompat="@drawable/baseline_chevron_right_24" />

@@ -3,11 +3,11 @@
     <item
         android:id="@+id/map_rain"
         android:icon="@drawable/water"
-        android:title="Precipitazioni" />
+        android:title="@string/rain" />
     <item
         android:id="@+id/map_wind"
         android:icon="@drawable/weather_windy"
-        android:title="Vento" />
+        android:title="@string/wind" />
     <item
         android:id="@+id/map_temperature"
         android:icon="@drawable/thermometer"

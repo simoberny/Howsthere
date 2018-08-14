@@ -4,10 +4,10 @@
     <item
         android:id="@+id/view_image"
         android:orderInCategory="100"
-        android:title="Visualizza immagine" />
+        android:title="@string/vis_image" />
 
     <item
         android:id="@+id/download"
         android:orderInCategory="100"
-        android:title="Download immagine" />
+        android:title="@string/down_image" />
 </menu>
