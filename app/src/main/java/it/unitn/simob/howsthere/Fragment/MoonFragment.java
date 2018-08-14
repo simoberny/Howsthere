@@ -156,12 +156,17 @@ public class MoonFragment extends Fragment {
             });
         }
 
+        final String yyyy = (String) DateFormat.format("yyyy",p.data);
+        final String mm = (String)DateFormat.format("MM",p.data);
+        final String gg = (String)DateFormat.format("dd",p.data);
+
+
         Button saveAlbaLuna = view.findViewById(R.id.saveAlbaLuna);
         saveAlbaLuna.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
-                cal.set(p.data.getYear(), p.data.getMonth(), p.data.getDay(), p.getAlbaLuna().ora, p.getAlbaLuna().minuto);
+                cal.set(Integer.valueOf(yyyy), Integer.valueOf(mm), Integer.valueOf(gg), p.getAlbaLuna().ora, p.getAlbaLuna().minuto);
                 long startmillis = cal.getTimeInMillis();
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "" + p.lat + "," + p.lon);
@@ -180,7 +185,7 @@ public class MoonFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
-                cal.set(p.data.getYear(), p.data.getMonth(), p.data.getDay(), p.getTramontoLuna().ora, p.getTramontoLuna().minuto);
+                cal.set(Integer.valueOf(yyyy), Integer.valueOf(mm), Integer.valueOf(gg), p.getAlbaLuna().ora, p.getAlbaLuna().minuto);
                 long startmillis = cal.getTimeInMillis();
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "" + p.lat + "," + p.lon);

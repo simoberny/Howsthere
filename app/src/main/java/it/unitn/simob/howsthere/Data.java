@@ -57,10 +57,11 @@ public class Data extends AppCompatActivity {
     private String gNamePeak = null;
     private Retrofit retrofit = null;
     private ProgressDialog progressDialog;
-    private Integer n_tentativi = 4; //+1 iniziale
+    private final Integer n_tentativi = 4; //+1 iniziale
     private Integer richiestaID = 0;
     private Integer richiestaStato = 0;
     private Integer richiestaDatiMontagne = 0;
+    private Integer richiestaNomiMontagne = 0;
     public Panorama panorama = new Panorama();
 
     @Override
@@ -110,6 +111,7 @@ public class Data extends AppCompatActivity {
         outState.putCharSequence("peak", gPeak);
         outState.putCharSequence("namePeak", gNamePeak);
     }
+
     /* Interfacce per le richieste GET */
     public interface HeyWhatsID {
         @GET("api/query?src=hows")
@@ -156,7 +158,6 @@ public class Data extends AppCompatActivity {
                             checkStatus(); //Ottenuto l'ID controllo lo stato della generazione del panorama
                         }else{
                             progressDialog.dismiss();
-                            System.out.println("id vuoto: Le posizioni consentite includono latitudini da 60N fino a 54S (disponibile anche parte dell' alaska). Il mare è disponibile solo vicino alle coste.");
                             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
                             ln.setVisibility(TextView.VISIBLE);
                             TextView tx = (TextView)findViewById(R.id.idErrTitolo);
@@ -167,12 +168,10 @@ public class Data extends AppCompatActivity {
                             bt.setVisibility(TextView.GONE);
                         }
                     } catch (IOException e) {
-                        System.out.println("errore generico nella lettura id");
                         e.printStackTrace();
                         richiediID();
                     }
                 } else {
-                    System.out.println("risposta dal sito fallita");
                     richiediID();
                 }
             }
@@ -185,17 +184,16 @@ public class Data extends AppCompatActivity {
     }
 
     private void richiediID(){
-        if (richiestaID<n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
+        if (richiestaID < n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
             callsAPI(panorama.lat, panorama.lon);
-            richiestaID++;
             progressDialog.setMessage("Richiesta id panorama, tentativo n°: " + (richiestaID+1));
-        }else{
-            System.out.println("ID non ottenuto, controllare la connessione");
+            richiestaID++;
+        }else{ //ID non ottenuto
             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
             ln.setVisibility(TextView.VISIBLE);
             Snackbar.make(findViewById(R.id.dataContainerLayout), "ID non ottenuto, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
@@ -207,6 +205,7 @@ public class Data extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
+
     public void azzeraTentativiID(View view) { //wrapper chiamato dal pulsante riprova
         azzeraTentativiID();
     }
@@ -239,7 +238,6 @@ public class Data extends AppCompatActivity {
                             richiediStato();
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
                         richiediStato();
                     }
                 } else {
@@ -248,27 +246,25 @@ public class Data extends AppCompatActivity {
                     richiediStato();
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("Errore: ", t.getMessage());
                 richiediStato();
             }
         });
     }
 
     private void richiediStato(){
-        if (richiestaStato<n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
+        if (richiestaStato < n_tentativi){ //richiedo l' id se non lì ho già fatto troppe volte
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
+
             checkStatus();
             richiestaStato++;
             progressDialog.setMessage("controllo se è pronto il panorama, tentativo n°: " + (richiestaStato+1));
         }else{
-            System.out.println("panorama non pronto, controllare la connessione");
             LinearLayout ln = (LinearLayout) findViewById(R.id.prontoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
             Snackbar.make(findViewById(R.id.dataContainerLayout), "panorama non pronto, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
@@ -306,10 +302,10 @@ public class Data extends AppCompatActivity {
                         progressDialog.dismiss();
                         TextView tx = (TextView)findViewById(R.id.panoramaDownload); //recupero e rendo visibile la conferma scaricamento dati
                         tx.setVisibility(TextView.VISIBLE);
+                        progressDialog.setMessage("Scarico nomi montagne...");
                         loadNamePeak();
                     } catch (IOException e) {
                         richiediDatiMontagne();
-                        e.printStackTrace();
                     }
                 } else {
                     richiediDatiMontagne();
@@ -317,57 +313,23 @@ public class Data extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("Error", t.getMessage());
-                richiediDatiMontagne();
-            }
-        });
-    }
-
-    private void loadNamePeak(){
-        progressDialog.setMessage("Scarico nomi montagne...");
-        progressDialog.setTitle("Scaricamento nomi montagne");
-        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
-        HeyWhatsNamePeak service = retrofit.create(HeyWhatsNamePeak.class);
-        Call<ResponseBody> call = service.getNamePeak(panorama.ID);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    try {
-                        gNamePeak = response.body().string();
-                        progressDialog.dismiss();
-                        TextView tx = findViewById(R.id.panoramaName); //recupero e rendo visibile la conferma scaricamento dati
-                        tx.setVisibility(TextView.VISIBLE);
-                        setPeak(gPeak, gNamePeak);
-                    } catch (IOException e) {
-                        richiediDatiMontagne();
-                        e.printStackTrace();
-                    }
-                } else {
-                    richiediDatiMontagne();
-                }
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("Error", t.getMessage());
                 richiediDatiMontagne();
             }
         });
     }
 
     private void richiediDatiMontagne(){
-        if (richiestaDatiMontagne<n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
+        if (richiestaDatiMontagne < n_tentativi){ //richiedo l'id se non lì ho già fatto troppe volte
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
+
             richiestaDatiMontagne++;
             progressDialog.setMessage("Controllo se è pronto il panorama, tentativo n°: " + (richiestaDatiMontagne+1));
             loadPeakData();
         }else{
-            System.out.println("Panorama non pronto, controllare la connessione");
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
             Snackbar.make(findViewById(R.id.dataContainerLayout), "Dati non ricevuti, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
@@ -379,16 +341,91 @@ public class Data extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
+
     public void azzeraTentativiScaricamentoPanorama(){
         LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
         ln.setVisibility(TextView.GONE);
         richiestaDatiMontagne = 0;
         loadPeakData();
     }
+
     public void azzeraTentativiScaricamentoPanorama(View view) { //wrapper chiamato dal pulsante riprova
         azzeraTentativiScaricamentoPanorama();
     }
 
+    private void loadNamePeak(){
+        progressDialog.setTitle("Scaricamento nomi montagne");
+        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
+        HeyWhatsNamePeak service = retrofit.create(HeyWhatsNamePeak.class);
+        Call<ResponseBody> call = service.getNamePeak(panorama.ID);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        gNamePeak = response.body().string();
+                        if(gNamePeak == null || gNamePeak == ""){
+                            richiediNomiMontagne();
+                        }else{
+                            progressDialog.dismiss();
+                            TextView tx = findViewById(R.id.panoramaName); //recupero e rendo visibile la conferma scaricamento dati
+                            tx.setVisibility(TextView.VISIBLE);
+                            setPeak(gPeak, gNamePeak);
+                        }
+                    } catch (IOException e) {
+                        richiediNomiMontagne();
+                    }
+                } else {
+                    richiediNomiMontagne();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                richiediNomiMontagne();
+            }
+        });
+    }
+
+    private void richiediNomiMontagne(){
+        if (richiestaNomiMontagne < n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+
+            richiestaNomiMontagne++;
+            progressDialog.setMessage("Controllo se sono disponibili i nomi delle montagne, tentativo n°: " + (richiestaNomiMontagne+1));
+            loadNamePeak();
+        }else{
+            LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoNomiErrLayout);
+            ln.setVisibility(TextView.VISIBLE);
+            Snackbar.make(findViewById(R.id.dataContainerLayout), "Dati non ricevuti, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    azzeraTentativiNomiMontagne();
+                }
+            }).show();
+            progressDialog.dismiss();
+        }
+    }
+
+    public void azzeraTentativiNomiMontagne(){
+        LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoNomiErrLayout);
+        ln.setVisibility(TextView.GONE);
+        richiestaNomiMontagne = 0;
+        loadNamePeak();
+    }
+    public void azzeraTentativiNomiMontagne(View view) { //wrapper chiamato dal pulsante riprova
+        azzeraTentativiNomiMontagne();
+    }
+
+    /**
+     * Funzione per il salvataggio panorama e dati
+     * @param peak profilo montagne
+     * @param namePeak nome picchi più importanti
+     */
     private void setPeak(String peak, String namePeak){
         progressDialog.setMessage("Calcolo posizione pianeti...");
         progressDialog.setTitle("Scaricamento e Calcolo posizione pianeti");
@@ -414,7 +451,7 @@ public class Data extends AppCompatActivity {
                         .on(calendar.getTime())       // set a date
                         .at(panorama.lat, panorama.lon)   // set a location
                         .execute();     // get the results
-                //System.out.println("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
+
                 panorama.risultatiSole[indexSole] = new Posizione();
                 panorama.risultatiSole[indexSole].ora=ora;
                 panorama.risultatiSole[indexSole].minuto=min;
@@ -436,25 +473,20 @@ public class Data extends AppCompatActivity {
                     calendar.set(Calendar.HOUR_OF_DAY, ora);
                     calendar.set(Calendar.MINUTE, min);
                     MoonPosition position = MoonPosition.compute()
-                            .on(calendar.getTime())       // set a date
-                            .at(panorama.lat, panorama.lon)   // set a location
-                            .execute();     // get the results
+                            .on(calendar.getTime()) //set a date
+                            .at(panorama.lat, panorama.lon) //set a location
+                            .execute(); //get the results
 
                     MoonIllumination m = MoonIllumination.compute().on(panorama.data).execute();
-
                     panorama.percentualeLuna = m.getFraction()*100;
                     panorama.faseLuna = m.getPhase();
+
                     MoonTimes m1 = MoonTimes.compute().on(panorama.data).execute();
                     panorama.albaLunaNoMontagne = m1.getRise();
                     panorama.tramontoLunaNoMontagne = m1.getSet();
-                    System.out.println("informazioni Luna: " + m1.toString());
-                    //System.out.println(m.toString());
-                    //System.out.println("ora: " + ora + " Elevazione: " + position.getAltitude() + "Azimuth: " + position.getAzimuth()+'\n');
-                    panorama.risultatiLuna[indexLuna] = new Posizione();
-                    panorama.risultatiLuna[indexLuna].ora = ora;
-                    panorama.risultatiLuna[indexLuna].minuto = min;
-                    panorama.risultatiLuna[indexLuna].altezza = position.getAltitude();
-                    panorama.risultatiLuna[indexLuna].azimuth = position.getAzimuth();
+
+                    panorama.risultatiLuna[indexLuna] = new Posizione(ora, min, position.getAltitude(), position.getAzimuth());
+
                     indexLuna++;
                 }
             }
@@ -473,7 +505,6 @@ public class Data extends AppCompatActivity {
                     b.append(String.valueOf(sublist.get(j)));
                     b.append(" ");
                 }
-                System.out.println("Nome monte: " + b);
                 Peak temp = new Peak(b.toString(), Double.parseDouble(tempsplit.get(0)), Double.parseDouble(tempsplit.get(1)));
                 panorama.nomiPeak.add(temp);
             }
@@ -487,61 +518,65 @@ public class Data extends AppCompatActivity {
                 panorama.risultatiMontagne[i][a-1] = Double.parseDouble(tempsplit.get(i));
             }
         }
-        //ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne SOLE
+
+        //Ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne SOLE
         boolean prevSole = false;
         panorama.minutiSole = 0;
         for(int i = 0; i<288; i++){
-            boolean sopra = sopra(i);
-            if (sopra) panorama.minutiSole+=5;
-            //System.out.println("ora: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto +" sopra? " + sopra);
-            if(!prevSole && sopra){ //alba
+            boolean is_sopra = sopra(i);
+            if (is_sopra) panorama.minutiSole+=5;
+            if(!prevSole && is_sopra){ //alba
                 panorama.albe.add(panorama.risultatiSole[i]);
-                //System.out.println("alba: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto );
-                //Toast.makeText(getApplicationContext(),"alba: " + panorama.risultatiSole[i].ora + ":"+ panorama.risultatiSole[i].minuto, Toast.LENGTH_LONG).show();
             }
-            if(prevSole && !sopra){ //alba
+            if(prevSole && !is_sopra){ //alba
                 panorama.tramonti.add(panorama.risultatiSole[i]);
-                //System.out.println("tramonto: " + risultatiSole[i].ora + ":"+ risultatiSole[i].minuto );
-                //Toast.makeText(getApplicationContext(),"tramonto: " + panorama.risultatiSole[i].ora + ":"+ panorama.risultatiSole[i].minuto , Toast.LENGTH_LONG).show();
             }
-            prevSole=sopra;
+            prevSole=is_sopra;
         }
 
         //ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne LUNA
         boolean prevLuna = false;
         panorama.minutiLuna = 0;
         for(int i = 288; i<576; i++){
-            boolean sopraLuna = sopraLuna(i);
-            if (sopraLuna) panorama.minutiLuna+=5;
-            if(!prevLuna && sopraLuna){ //alba
-                panorama.albeLuna.add(panorama.risultatiLuna[i]);
-            }
-            if(prevLuna && !sopraLuna){ //alba
-                panorama.tramontiLuna.add(panorama.risultatiLuna[i]);
-            }
-            prevLuna=sopraLuna;
+            boolean is_sopra_luna = sopraLuna(i);
+            if (is_sopra_luna) panorama.minutiLuna+=5;
+            //alba
+            if(!prevLuna && is_sopra_luna) panorama.albeLuna.add(panorama.risultatiLuna[i]);
+            //tramonto
+            if(prevLuna && !is_sopra_luna) panorama.tramontiLuna.add(panorama.risultatiLuna[i]);
+
+            prevLuna=is_sopra_luna;
         }
 
-        progressDialog.dismiss();
-        progressDialog.setMessage("Calcolo posizione pianeti...");
+        progressDialog.setMessage("Calcolo posizione sole e luna...");
         progressDialog.setTitle("Salvo i dati...");
-        progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
-        //salvo i dati del panorama con panoramiStorage
-        PanoramiStorage p = PanoramiStorage.panorami_storage;
+        progressDialog.show();
+
+        PanoramiStorage p = PanoramiStorage.panorami_storage; //salvo i dati del panorama con panoramiStorage
         p.addPanorama(panorama);
 
-        //chiamo la classe Risultati
-        Intent i = new Intent(this,RisultatiActivity.class);
+        progressDialog.dismiss();
+
+        Intent i = new Intent(this,RisultatiActivity.class); //chiamo la classe Risultati
         i.putExtra("ID", panorama.ID);
         i.putExtra("citta", panorama.citta);
         startActivity(i);
-        progressDialog.dismiss();
+        //Finish così l'attività non resta nello stack e quando nei risultati si premerà indietro tornerà direttamente nella main page
         finish();
     }
+
+    /**
+     *
+     * @param i posizione i-esima del sole
+     * @return se il sole è sopra o sotto il profilo
+     *
+     * Per la posizione i-esima del sole allineo con l' azimuth rispetto alle montagne e confronto l' altezza.
+     * nota: ci sono 2 casi limite, uno è che il sole / luna abbia l' azimuth iniziale più basso di tutti i punti del profilo montagne e l' altro è che lo abbia maggiore di tutte le montagne.
+     *
+     */
+
     private boolean sopra(int i){
         //todo confronto fra il primo e l' ultimo (0-360)
-        //per la posizione i-esima del sole allineo con l' azimuth rispetto alle montagne e confronto l' altezza.
-        //nota: ci sono 2 casi limite, uno è che il sole / luna abbia l' azimuth iniziale più basso di tutti i punti del profilo montagne e l' altro è che lo abbia maggiore di tutte le montagne.
         int j = 0;
         for(int c = 0; c<360 && !(panorama.risultatiMontagne[0][c]>=panorama.risultatiSole[i].azimuth); c++){ //allineamento sole montagne
             j = c;
@@ -558,6 +593,14 @@ public class Data extends AppCompatActivity {
         }
         return false;
     }
+
+    /**
+     *
+     * @param i posizione i-esima della luna
+     * @return se la luna è sopra o sotto il profilo
+     *
+     */
+
     private boolean sopraLuna(int i){
         int j = 0;
         for(int c = 0; c<360 && !(panorama.risultatiMontagne[0][c]>=panorama.risultatiLuna[i].azimuth);c++){ //allineamento Luna montagne

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -31,6 +32,7 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import it.unitn.simob.howsthere.Adapter.MyLinearLayoutManager;
@@ -41,20 +43,23 @@ import it.unitn.simob.howsthere.RisultatiActivity;
 
 import static android.content.Context.SENSOR_SERVICE;
 
+//TODO COntrollo se nessun picco
+//TODO Gestire le zone in cui non riesce a generare la mappa
+
 public class PeakFragment extends Fragment implements SensorEventListener {
-    ArrayList<Peak> listItems=new ArrayList<Peak>();
-    PeakFragment.PeakAdapter adapter;
-    Panorama p;
-    AlertDialog.Builder builder;
+    private ArrayList<Peak> listItems=new ArrayList<Peak>();
+    private PeakFragment.PeakAdapter adapter;
+    private Panorama p;
+    private AlertDialog.Builder builder;
     private Boolean isShowing = false;
-    LineChart chart = null;
+    private LineChart chart = null;
 
     float currentDegree = 0f;
-    SensorManager mSensorManager;
+    private SensorManager mSensorManager;
     float angoloDaSotrarre = 0;
-    Peak highest = new Peak("Highest", 0.0, 0.0);
-
+    private Peak highest = new Peak("Highest", 0.0, 0.0);
     private ImageView compass_img  = null;
+
 
     public PeakFragment() { }
 
@@ -66,6 +71,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
+        p = ((RisultatiActivity)getActivity()).p;
     }
 
     @Override
@@ -76,15 +82,12 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         final TextView high_nome = view.findViewById(R.id.highest_nome);
         final TextView high_alt = view.findViewById(R.id.highest_alt);
 
-        //Picco temporaneo per salvare quello più alto
-        p = ((RisultatiActivity)getActivity()).p;
-
         //chiamo grafico
         chart = view.findViewById(R.id.chart_peak);
-        if(p != null){
-            stampaGrafico();
-        }else{
-            getActivity().finish();
+        RelativeLayout nopeak = view.findViewById(R.id.nopeak);
+
+        if(p.nomiPeak.size() > 0){
+            nopeak.setVisibility(View.GONE);
         }
 
         RecyclerView lista = view.findViewById(R.id.lista_montagne);
@@ -95,6 +98,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
 
         //Carico la lista dei nomi delle montagne nella lista
         listItems.clear();
+
         for(int i = 0; i < p.nomiPeak.size(); i++){
             Peak temp = p.nomiPeak.get(i);
             listItems.add(temp);
@@ -103,6 +107,12 @@ public class PeakFragment extends Fragment implements SensorEventListener {
                 highest = temp;
             }
         }
+
+        if(p != null && p.nomiPeak.size() > 0){
+            stampaGrafico();
+        }
+
+
         adapter.notifyDataSetChanged();
 
         //Setto i valori della montagna più alta
@@ -156,6 +166,8 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         @Override
         public void onBindViewHolder(MyViewHolder holder, final int position) {
             final Peak temp = array.get(position);
+            //holder.pos.setText(Character.toString((char)('A'+ position)));
+            holder.pos.setText(""+position);
             holder.peak_name.setText(temp.getNome_picco());
             holder.peak_altitude.setText(temp.getAltezza() + "°");
             holder.azimuth.setText(temp.getAzimuth() + "° N");
@@ -196,13 +208,14 @@ public class PeakFragment extends Fragment implements SensorEventListener {
 
         class MyViewHolder extends RecyclerView.ViewHolder
         {
-            TextView peak_name, peak_altitude, azimuth;
+            TextView peak_name, peak_altitude, azimuth, pos;
 
             public MyViewHolder(View itemView) {
                 super(itemView);
                 peak_name = itemView.findViewById(R.id.name);
                 peak_altitude = itemView.findViewById(R.id.altitude);
                 azimuth = itemView.findViewById(R.id.azimuth_peak);
+                pos = itemView.findViewById(R.id.pos);
             }
         }
     }
@@ -224,10 +237,13 @@ public class PeakFragment extends Fragment implements SensorEventListener {
     void stampaGrafico() {
         List<Entry> entriesMontagne = new ArrayList<Entry>();
         final List<Entry> entriesNum = new ArrayList<Entry>();
-        //SOLE
-        //Arrays.sort(p.risultatiSole); //ordino secondo azimuth
+
         for (int i = 0; i < p.nomiPeak.size(); i++) { //passo dati al grafico
-            entriesNum.add(new Entry((float) p.nomiPeak.get(i).getAzimuth(), (float) p.nomiPeak.get(i).getAltezza()));
+            double k = 0.4;
+            if(i%2==0){
+                k=0;
+            }
+            entriesNum.add(new Entry((float) p.nomiPeak.get(i).getAzimuth(), (float) (p.nomiPeak.get(i).getAltezza()+k)));
 
         }
         //MONTAGNE
@@ -241,9 +257,6 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         chart.getAxisLeft().setEnabled(false);
         chart.getAxisLeft().setAxisMinValue(-1);  //faccio partire da -1 le y. non da 0 perchè da una montagna alta è possibile finire leggermente sotto lo 0
         chart.getAxisRight().setAxisMinValue(-1);
-
-        chart.setVisibleXRangeMaximum(20); // allow 20 values to be displayed at once on the x-axis, not more
-        chart.moveViewToX(10); // set the left edge of the chart to x-index 10
 
         LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Montagne"); // add entries to dataset
         final LineDataSet dataSetNum = new LineDataSet(entriesNum, "Num");
@@ -264,13 +277,14 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         dataSetMontagne.setDrawHighlightIndicators(false);
 
         //proprietà grafiche numeri
-        dataSetNum.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        dataSetNum.setColor(Color.YELLOW);
-        dataSetNum.setLineWidth(0);
+        dataSetNum.setMode(LineDataSet.Mode.LINEAR);
+        dataSetNum.setColor(Color.TRANSPARENT);
+        dataSetNum.setLineWidth(0f);
         dataSetNum.setDrawValues(true);
-        dataSetNum.setDrawCircles(false);
-        dataSetNum.setCircleColor(Color.YELLOW);
+        dataSetNum.setDrawCircles(true);
         dataSetNum.setDrawCircleHole(false);
+        dataSetNum.setCircleColor(Color.parseColor("#2E7D32"));
+        dataSetNum.setCircleRadius(1f);
         dataSetNum.setDrawFilled(false);
         dataSetNum.setDrawValues(true);
         dataSetNum.setDrawHighlightIndicators(false);
@@ -278,10 +292,16 @@ public class PeakFragment extends Fragment implements SensorEventListener {
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
                 int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
-                return String.valueOf(idx);
+                String s = ""+idx;
+                if(idx>0) {
+                    if((p.nomiPeak.get(idx).getAzimuth()) - (p.nomiPeak.get(idx - 1).getAzimuth()) < 3){
+                        s="";
+                    }
+                }
+                return String.valueOf(s);
+                //return Character.toString((char)('A'+ idx));
             }
         });
-
 
         chart.getDescription().setText("");
         LineData lineData = new LineData();
@@ -309,6 +329,5 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         chart.invalidate();
 
     }
-
 
 }

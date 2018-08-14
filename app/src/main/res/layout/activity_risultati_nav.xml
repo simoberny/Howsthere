@@ -7,12 +7,27 @@
     android:layout_height="match_parent"
     tools:context="it.unitn.simob.howsthere.MainActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="15dp"
+        android:clickable="true"
+        app:backgroundTint="@color/ap_white"
+        app:srcCompat="@drawable/ic_menu_share" />
+
     <FrameLayout
         android:id="@+id/frame_layout_risultati"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/navigation"
-        android:animateLayoutChanges="true"></FrameLayout>
+        android:animateLayoutChanges="true">
+
+    </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
@@ -20,5 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/background"
-        app:menu="@menu/navigation_risultati" />
+        app:menu="@menu/navigation_risultati" >
+
+    </android.support.design.widget.BottomNavigationView>
 </RelativeLayout>
