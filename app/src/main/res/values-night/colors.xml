@@ -9,6 +9,8 @@
     <color name="divider">#333</color>
     <color name="real_background">#111</color>
 
+    <color name="status">#000</color>
+
     <color name="dialog_text">#aaa</color>
 
     <color name="title_nobar">#ddd</color>

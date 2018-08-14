@@ -10,26 +10,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="2dp">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/history_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/history_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/background"
-                android:minHeight="?attr/actionBarSize"
-                android:padding="3dp"
-                android:theme="?attr/actionBarTheme"
-                app:title="History"
-                app:titleTextColor="@color/title_nobar" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:title="History"
+            app:titleTextColor="@color/title_nobar" />
 
         <RelativeLayout
             android:layout_width="match_parent"

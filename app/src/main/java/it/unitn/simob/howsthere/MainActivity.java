@@ -65,10 +65,6 @@ public class MainActivity extends AppCompatActivity{
         Integer night_mode = pref.getInt("night_mode", 0);
         Boolean modify = pref.getBoolean("modify", false);
 
-        if(night_mode == 2){
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
-
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
         }
@@ -160,28 +156,41 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFragment = null;
+            String tag = "";
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     selectedFragment = mf;
+                    tag = "maps";
                     break;
                 case R.id.navigation_storico:
                     selectedFragment = HistoryFragment.newInstance();
+                    tag = "storico";
                     break;
                 case R.id.navigation_feed:
                     selectedFragment = ff;
+                    tag = "feed";
                     break;
                 case R.id.navigation_user:
                     selectedFragment = UserProfile.newInstance();
+                    tag = "user";
                     break;
             }
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-            transaction.replace(R.id.frame_layout, selectedFragment);
+            transaction.replace(R.id.frame_layout, selectedFragment, tag);
+            transaction.addToBackStack(null);
             transaction.commit();
             return true;
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentByTag("maps") != null && getSupportFragmentManager().findFragmentByTag("maps").isVisible()) {
+            finish();
+        }
+    }
 
     public static String readSharedSetting(Context ctx, String settingName, String defaultValue) {
         SharedPreferences sharedPref = ctx.getSharedPreferences(Presentation.FIRST_TIME_STORAGE, Context.MODE_PRIVATE);

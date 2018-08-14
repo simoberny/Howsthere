@@ -102,15 +102,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            ((MainActivity)getActivity()).getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
-
         super.onCreate(savedInstanceState);
         contesto = this;
 
         SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
         maps_type = pref.getInt("maps_type", 2);
+
         if(isGooglePlayServicesAvailable(getContext())){
             map_id = pref.getInt("map", 0);
         }else{
@@ -124,12 +121,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     }
     public void onResume(){
         super.onResume();
-        if (map != null) map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+        if (map != null) map.onResume();
     }
 
     public void onPause(){
         super.onPause();
-        if (map != null) map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+        if (map != null) map.onPause();
     }
 
     public boolean isGooglePlayServicesAvailable(Context context){
@@ -183,6 +180,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
            @Override
            public void onClick(View view) {
                getLocation(rootview);
+           }
+       });
+
+       final FloatingActionButton next = rootview.findViewById(R.id.go_next);
+       next.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               positionAndDialog(marker);
            }
        });
 
