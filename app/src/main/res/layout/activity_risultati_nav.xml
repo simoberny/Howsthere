@@ -12,7 +12,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="it.unitn.simob.howsthere.MainActivity">
+        tools:context="it.unitn.lpmt.howsthere.MainActivity">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/risultati_tool"

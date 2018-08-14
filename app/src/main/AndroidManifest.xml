@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="it.unitn.simob.howsthere">
+    package="it.unitn.lpmt.howsthere">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -37,7 +37,7 @@
         </provider>
         <provider
             android:name=".FileProvider"
-            android:authorities="it.unitn.simob.howsthere.fileprovider"
+            android:authorities="it.unitn.lpmt.howsthere.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -125,7 +125,7 @@
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="it.unitn.simob.howsthere.MainActivity" />
+                android:value="it.unitn.lpmt.howsthere.MainActivity" />
         </activity>
     </application>
 </manifest>

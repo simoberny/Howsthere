@@ -9,22 +9,11 @@
     <color name="divider">#333</color>
     <color name="real_background">#111</color>
 
-    <color name="status">#000</color>
-
-    <color name="dialog_text">#aaa</color>
-
     <color name="title_nobar">#ddd</color>
     <color name="indicator_un">#20222222</color>
     <color name="indicator_sel">#fff</color>
 
     <color name="text_se">#fff</color>
-
-    <color name="material_green_50">#E8F5E9</color>
-    <color name="material_green_500">#4CAF50</color>
-    <color name="material_green_700">#388E3C</color>
-    <color name="material_green_a200">#69F0AE</color>
-    <color name="material_lime_a700">#AEEA00</color>
-    <color name="material_purple_a700">#AA00FF</color>
 
     <color name="primo_p">#2196f3</color>
     <color name="secondo_p">#4CAF50</color>
@@ -32,6 +21,4 @@
 
 
     <!-- BLACK THEME -->
-    <color name="primaryTextColor">#f6f6f6</color>
-    <color name="secondaryTextColor">#ff0000</color>
 </resources>

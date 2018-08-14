@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    tools:context="it.unitn.simob.howsthere.Fragment.MapsFragment">
+    tools:context="it.unitn.lpmt.howsthere.Fragment.MapsFragment">
 
     <LinearLayout
         android:id="@+id/focusP"

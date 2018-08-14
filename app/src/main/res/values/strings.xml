@@ -1,20 +1,17 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Howsthere</string>
     <string name="fui_default_toolbar_title" translatable="false">Login</string>
-    <string name="id_web_auth" translatable="false">1038601279559-un0k7omgoi1n4sfq933mifruo4a60kgk.apps.googleusercontent.com</string>
 
     <!-- Main navigation -->
     <string name="title_storico">History</string>
     <string name="title_feed">Feeds</string>
     <string name="title_user">User</string>
-    <string name="pref_settings">Settings</string>
 
 
     <!-- Navigation Risultati -->
     <string name="risultati_home">Sun</string>
     <string name="risultati_luna">Moon</string>
     <string name="risultati_meteo">Weather</string>
-    <string name="risultati_bussola">Compass</string>
 
     <!-- Stringhe presentazione -->
     <string name="title_prima_pre">Sun and Mountain</string>
@@ -42,23 +39,13 @@
     <string name="spa">Sparition</string>
 
     <string name="highest">Highest peak</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment" translatable="false">Prova fragment per il calcolo sole</string>
     <string name="title_activity_data">Data</string>
     <string name="title_activity_add_feed">Add feed</string>
-    <string name="title_activity_registration">Registration</string>
 
     <string name="twitter_consumer_key" translatable="false">YczMt2TxjS8H0JSa0z7xN3TOX</string>
     <string name="twitter_consumer_secret" translatable="false">izpJJ3OHZwFRWSAinvuhMl2A57ygWjxBkZnj3YGZ6k066Dghgz</string>
-    <string name="title_activity_settings" translatable="false">Settings</string>
 
-    <!-- Example General settings -->
-    <string name="pref_header_general" translatable="false">General</string>
-
-    <string name="pref_title_display_name">Displayed Name</string>
-    <string name="pref_default_display_name" translatable="false"></string>
-
+    <!-- Settings string -->
     <string name="pref_maps_type">Map type</string>
     <string-array name="pref_maps_list_title">
         <item>Classica</item>
@@ -83,7 +70,6 @@
         <item>2</item>
     </string-array>
 
-    <string name="pref_maps_op">Map source</string>
     <string-array name="pref_maps_op_title">
         <item>Open Street Maps</item>
         <item>Google Maps</item>
@@ -158,7 +144,6 @@
     <string name="fui_error_email_does_not_exist" translation_description="Inline error when user attempt signin with invalid account">This email not resulting in our database</string>
     <string name="title_activity_presentation" translatable="false">Presentation</string>
     <string name="action_settings" translatable="false">Settings</string>
-    <string name="section_format" translatable="false">Hello World from section: %1$d</string>
 
     <string name="weather_sunny" translatable="false">&#xf00d;</string>
     <string name="weather_clear_night" translatable="false">&#xf02e;</string>
@@ -170,13 +155,10 @@
     <string name="weather_drizzle" translatable="false">&#xf01c;</string>
 
     <string name="title_activity_risultati">Risultati</string>
-    <string name="title_dashboard" translatable="false">Dashboard</string>
-    <string name="title_notifications" translatable="false">Notifications</string>
     <string name="title_home">Maps</string>
     <string name="tap_home">This is the main section where you can select a place and find its panorama</string>
     <string name="tap_history">Qui trovate tutti i panorami che avete calcolato in passato</string>
     <string name="tap_social">This is the section where you find the panorama shared by other users</string>
-    <string name="tap_map">Select the place to start the calculation of the panorama</string>
     <string name="nopeak">No peak detected!</string>
     <string name="theme">Dark mode</string>
     <string name="theme_summary">Save battery with dark mode</string>
@@ -184,7 +166,6 @@
     <string name="nolog">Not logged</string>
     <string name="nopan">No panorama generated!</string>
     <string name="data_selection">Pick a date</string>
-    <string name="pos_sel">Position</string>
     <string name="today">Today</string>
     <string name="select_date">Select a date</string>
     <string name="next">Next</string>

@@ -7,14 +7,14 @@
     android:layout_height="match_parent"
     android:background="@color/real_background"
     android:fitsSystemWindows="false"
-    tools:context="it.unitn.simob.howsthere.MainActivity">
+    tools:context="it.unitn.lpmt.howsthere.MainActivity">
 
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/navigation"
-        android:animateLayoutChanges="true"></FrameLayout>
+        android:animateLayoutChanges="true" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"

@@ -25,7 +25,7 @@
                     android:name="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:context="it.unitn.simob.howsthere.MainActivity"></fragment>
+                    tools:context="it.unitn.lpmt.howsthere.MainActivity"></fragment>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -128,7 +128,7 @@
                     android:name="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:context="it.unitn.simob.howsthere.MainActivity"></fragment>
+                    tools:context="it.unitn.lpmt.howsthere.MainActivity"></fragment>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

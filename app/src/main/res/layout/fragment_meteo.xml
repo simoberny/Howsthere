@@ -144,7 +144,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-        <it.unitn.simob.howsthere.CustomViewPager
+        <it.unitn.lpmt.howsthere.CustomViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

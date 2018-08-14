@@ -5,16 +5,13 @@
     <color name="colorAccent">#2196F3</color>
     <color name="background">#ffffff</color>
     <color name="real_background">#f6f6f6</color>
-    <color name="traslucentmaps">#80222222</color>
     <color name="pale_green">#6bf3ad</color>
     <color name="buttongrey">#eeeeee</color>
     <color name="divider">#dedede</color>
     <color name="text_se">#000</color>
-    <color name="status">#fff</color>
 
     <color name="title_nobar">#2196f3</color>
 
-    <color name="dialog_text">#555555</color>
     <color name="dialog_text_sec">#888888</color>
 
     <color name="indicator_un">#20222222</color>
@@ -24,12 +21,5 @@
     <color name="primo_p">#55aef6</color>
     <color name="secondo_p">#59c05c</color>
     <color name="terzo_p">#ffaf4d</color>
-
-    <color name="material_green_50">#E8F5E9</color>
-    <color name="material_green_500">#4CAF50</color>
-    <color name="material_green_700">#388E3C</color>
-    <color name="material_green_a200">#69F0AE</color>
-    <color name="material_lime_a700">#AEEA00</color>
-    <color name="material_purple_a700">#AA00FF</color>
 
 </resources>

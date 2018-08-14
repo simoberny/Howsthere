@@ -12,15 +12,12 @@
     <string name="tempolunaconmontagne">Tempo luna con montagne</string>
     <string name="title_storico">Storico</string>
     <string name="spa">Sparizioni</string>
-    <string name="pref_maps_op">Sorgente mappa</string>
     <string name="title_prima_pre">Sole e Montagne</string>
     <string name="risultati_home">Sole</string>
-    <string name="tap_map">"Seleziona il posto di cui vuoi calcolare il panorama. "</string>
     <string name="fui_confirm_recovery_body">Segui le istruzioni inviate a %1$s per recuperare la password.</string>
     <string name="fui_button_text_save">Salva</string>
     <string name="title_activity_risultati">Risultati</string>
     <string name="seconda_pre">Restituiamo tutte le informazioni utili di una data, come l\'alba, il tramonto e le ore di sole in una giornata</string>
-    <string name="title_activity_registration">Registrazione</string>
     <string name="fui_title_register_email">Registrati</string>
     <string name="fui_progress_dialog_signing_up">Registrandoti...</string>
     <string name="fui_title_recover_password_activity">Recupera password</string>
@@ -38,7 +35,6 @@
     <string name="ora">Ora</string>
     <string name="fui_phone_hint">Numero di telefono</string>
     <string name="fui_required_field">Non può essere vuoto!</string>
-    <string name="pref_title_display_name">Nome visualizzato</string>
     <string name="fui_name_hint">Nome e cognome</string>
     <string name="nopeak">Nessun picco rilevato!</string>
     <string name="risultati_meteo">Meteo</string>
@@ -54,7 +50,6 @@
     <string name="fui_button_text_send">Invia</string>
     <string name="fui_missing_email_address">Inserisci una email per continuare...</string>
     <string name="prima_pre">Incrociamo i dati dei profili delle montagne e della traiettoria del sole per calcolare la presenza o meno di sole in una certa area</string>
-    <string name="pref_settings">Impostazioni</string>
     <string name="fui_welcome_back_idp_header">Hai già un account</string>
     <string name="title_seconda_pre">Grafico dettagliato</string>
     <string name="title_feed">Feeds</string>
@@ -67,7 +62,6 @@
     <string name="fui_password_recovery_body">Controlla le instruzioni inviate a questa mail per recuperare la password</string>
     <string name="fui_title_confirm_recover_password">Controlla l\'email</string>
     <string name="fui_progress_dialog_loading">Caricamento...</string>
-    <string name="risultati_bussola">Bussola</string>
     <string name="fui_welcome_back_email_header">Bentornato!</string>
     <string name="appa">Apparizioni</string>
     <string name="alba">Alba</string>
@@ -80,7 +74,6 @@
     <string name="nolog">Login non effettuato</string>
     <string name="nopan">Non hai ancora generato un panorama!</string>
     <string name="data_selection">Seleziona data</string>
-    <string name="pos_sel">Posizione</string>
     <string name="today">Oggi</string>
     <string name="select_date">Seleziona data</string>
     <string name="next">Avanti</string>

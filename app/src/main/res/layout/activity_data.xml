@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.unitn.simob.howsthere.Data"
+    tools:context="it.unitn.lpmt.howsthere.Data"
     android:id="@+id/dataContainerLayout">
 
 
