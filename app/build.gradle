@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "it.unitn.simob.howsthere"
+        applicationId "it.unitn.lpmt.howsthere"
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
@@ -22,6 +22,7 @@ android {
     buildTypes.each {
         it.buildConfigField 'String', 'OWM_API_KEY', "\"d52769a03723b332fc98beb0f9a6abc6\""
     }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {
@@ -48,7 +49,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:16.0.0'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.firebaseui:firebase-ui-auth:3.2.2'
-    implementation("com.twitter.sdk.android:twitter-core:3.1.1@aar") { transitive = true }
+    implementation('com.twitter.sdk.android:twitter-core:3.1.1@aar') { transitive = true }
     implementation 'com.android.support:preference-v7:27.1.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
@@ -56,7 +57,7 @@ dependencies {
     implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
     implementation 'com.facebook.fresco:fresco:1.9.0'
     implementation 'com.fenchtose.nocropper:nocropper:0.3.0'
-    implementation "com.androidplot:androidplot-core:1.5.4"
+    implementation 'com.androidplot:androidplot-core:1.5.4'
     implementation 'org.osmdroid:osmdroid-android:6.0.1'
     implementation 'com.romandanylyk:pageindicatorview:1.0.1'
     implementation 'uk.co.samuelwall:material-tap-target-prompt:2.9.0'

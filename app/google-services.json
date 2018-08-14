@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1038601279559:android:fa5cf16d41ae0316",
         "android_client_info": {
-          "package_name": "it.unitn.simob.howsthere"
+          "package_name": "it.unitn.lpmt.howsthere"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "1038601279559-18bhct45rho738cblo9q1a0qgbmjegpm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "it.unitn.simob.howsthere",
+            "package_name": "it.unitn.lpmt.howsthere",
             "certificate_hash": "549017c4f35b4fcb1a2c2935df690c6e3bcd38bd"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "1038601279559-l5jm66bdosvhgh68lqtrqa8qklpv6qau.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "it.unitn.simob.howsthere",
+            "package_name": "it.unitn.lpmt.howsthere",
             "certificate_hash": "4b4efc8abb7e6ebecc6fdc2b69412e175e741be7"
           }
         },
@@ -34,7 +34,7 @@
           "client_id": "1038601279559-htcrkogjdj6thiab037nt81temfsd3ol.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "it.unitn.simob.howsthere",
+            "package_name": "it.unitn.lpmt.howsthere",
             "certificate_hash": "cb1f35d0eb55b26905801e33030c41c58702f8f2"
           }
         },

@@ -86,6 +86,13 @@ public class RisultatiActivity extends AppCompatActivity {
 
         main = findViewById(R.id.coord_risultati);
         Toolbar tl = findViewById(R.id.risultati_tool);
+        tl.setNavigationIcon(R.drawable.baseline_arrow_back_24);
+        tl.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         tl.inflateMenu(R.menu.menu_photo);
         tl.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
