@@ -144,7 +144,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
        dialog = new BottomSheetDialog(getActivity());
        dialogView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
-        dialog.setContentView(dialogView);
+       dialog.setContentView(dialogView);
        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
            @Override
            public void onDismiss(DialogInterface dialog) {
@@ -169,31 +169,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
            }
        });
 
-       final FloatingActionButton position = (FloatingActionButton) rootview.findViewById(R.id.position);
-       position.setOnClickListener(new View.OnClickListener(){
-           @Override
-           public void onClick(View view) {
-               getLocation(rootview);
-           }
-       });
-
-       final FloatingActionButton next = rootview.findViewById(R.id.go_next);
-       next.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               positionAndDialog(marker);
-           }
-       });
-
-       ImageView reco = rootview.findViewById(R.id.recognition);
-       reco.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton position = rootview.findViewById(R.id.position);
+        position.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                displaySpeechRecognizer();
+                getLocation(rootview);
             }
         });
 
-       Button date = (Button) dialogView.findViewById(R.id.dataselect);
+       Button date = dialogView.findViewById(R.id.dataselect);
        date.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -203,7 +187,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             }
        });
 
-       Button send = (Button) dialogView.findViewById(R.id.send);
+       Button send = dialogView.findViewById(R.id.send);
        send.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -217,6 +201,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
        });
 
         if (map_id == 0) {
+            ImageView reco = rootview.findViewById(R.id.recognition);
+            reco.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    displaySpeechRecognizer();
+                }
+            });
+
+            FloatingActionButton next = rootview.findViewById(R.id.go_next);
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(marker != null){
+                        positionAndDialog(marker);
+                    }
+                }
+            });
+
             //Carico il cerca di google
             placeAutoComplete = (SupportPlaceAutocompleteFragment) this.getChildFragmentManager().findFragmentById(R.id.place_autocomplete);
 
