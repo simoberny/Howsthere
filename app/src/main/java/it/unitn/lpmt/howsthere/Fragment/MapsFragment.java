@@ -102,7 +102,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         if (Build.VERSION.SDK_INT >= 21) {
             ((MainActivity)getActivity()).getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
-
         super.onCreate(savedInstanceState);
         contesto = this;
 
@@ -121,6 +120,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
     }
     public void onResume(){
+        if (Build.VERSION.SDK_INT >= 21) {
+            ((MainActivity)getActivity()).getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         super.onResume();
         if (map != null) map.onResume();
     }
@@ -571,30 +573,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
         try {
             addresses = gcd.getFromLocation(ln.latitude, ln.longitude, 1);
-            if (addresses.size() > 0) {
-                if(addresses.get(0).getLocality() == null || addresses.get(0).getLocality().length()==0){//se non viene trovata la città aspetto un attimo e riprovo
-                    Thread.sleep(200);
-                    addresses = gcd.getFromLocation(ln.latitude, ln.longitude, 1);
-                }
-                if (addresses.size() > 0) {
-                    if (addresses.get(0).getLocality() != null && addresses.get(0).getLocality().length() != 0) {
-                        citta = addresses.get(0).getLocality();
-                    } else if (addresses.get(0).getSubLocality() != null && addresses.get(0).getSubLocality().length() != 0) {
-                        citta = addresses.get(0).getSubLocality();
-                    } else if (addresses.get(0).getCountryName() != null && addresses.get(0).getCountryName().length() != 0) {
-                        citta = addresses.get(0).getCountryName();
-                    } else {
-                        citta = "Non disponibile";
+            if (addresses != null && addresses.size() > 0) {
+                for (Address adr : addresses) {
+                    if (adr.getLocality() != null && adr.getLocality().length() > 0) {
+                        citta = adr.getLocality() + ", " + adr.getCountryName();
+                    }else{
+                        citta = adr.getAdminArea() + ", " + adr.getCountryName();
                     }
                 }
-                tx.setText("Posizione: " + citta + ", " + addresses.get(0).getCountryName());
-            }else{
-                Log.d("Problema address", "Problema");
-                tx.setText("Posizione sconosciuta");
             }
+            if(citta == null) citta = "Non disponibile!";
+            tx.setText(getResources().getString(R.string.position) + ": " + citta);
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

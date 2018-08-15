@@ -194,20 +194,16 @@ public class RisultatiActivity extends AppCompatActivity {
         List<Address> addresses = null;
         try {
             addresses = gcd.getFromLocation(latitude, longitude, 1);
-            if (addresses.size() > 0) {
-                if(addresses.get(0).getLocality() == null || addresses.get(0).getLocality().length()==0){//se non viene trovata la città aspetto un attimo e riprovo
-                    addresses = gcd.getFromLocation(latitude, longitude, 1);
-                }
-                if (addresses.size() > 0) {
-                    if (addresses.get(0).getLocality() != null && addresses.get(0).getLocality().length() != 0) {
-                        citta = addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName();
-                    } else if (addresses.get(0).getSubLocality() != null && addresses.get(0).getSubLocality().length() != 0) {
-                        citta = addresses.get(0).getSubLocality() + ", " + addresses.get(0).getCountryName();
+            if (addresses != null && addresses.size() > 0) {
+                for (Address adr : addresses) {
+                    if (adr.getLocality() != null && adr.getLocality().length() > 0) {
+                        citta = adr.getLocality() + ", " + adr.getCountryName();
+                    }else{
+                        citta = adr.getAdminArea() + ", " + adr.getCountryName();
                     }
                 }
-            }else{
-                Log.d("Problema address", "Problema");
             }
+            if(citta == null) citta = "Non disponibile!";
         } catch (IOException e) {
             e.printStackTrace();
         }

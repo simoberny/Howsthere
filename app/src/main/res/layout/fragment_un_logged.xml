@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragment.UnLoggedFragment">
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
+        app:cardBackgroundColor="@color/background"
         app:cardElevation="5dp">
 
         <LinearLayout

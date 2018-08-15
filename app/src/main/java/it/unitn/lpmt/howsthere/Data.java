@@ -1,9 +1,9 @@
 package it.unitn.lpmt.howsthere;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -38,13 +38,14 @@ public class Data extends AppCompatActivity {
     private String gPeak = null;
     private String gNamePeak = null;
     private Retrofit retrofit = null;
-    private ProgressDialog progressDialog;
+    private AlertDialog progressDialog;
     private final Integer n_tentativi = 4; //+1 iniziale
     private Integer richiestaID = 0;
     private Integer richiestaStato = 0;
     private Integer richiestaDatiMontagne = 0;
     private Integer richiestaNomiMontagne = 0;
     public Panorama panorama = new Panorama();
+    private TextView loadingMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +60,22 @@ public class Data extends AppCompatActivity {
         if(panorama.data.getTime() == 0){
             Toast.makeText(getApplicationContext(), "Data non selezionata", Toast.LENGTH_LONG).show();
         }
-
         panorama.citta = i.getStringExtra("citta");
+
         //Preparo la finestra di caricamento
-        progressDialog = new ProgressDialog(Data.this);
-        progressDialog.setMax(100);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog = new AlertDialog.Builder(this).create();
+        progressDialog.setCancelable(false);
+        View view = getLayoutInflater().inflate(R.layout.loading, null);
+        progressDialog.setView(view);
+        loadingMessage = view.findViewById(R.id.loading_message);
 
         //Variabile Retrofit per gestire tutte le richieste GET
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.heywhatsthat.com/")
                 .build();
+
+        // Se c'è un istanza salvata non richiedo nuovamente i dati
         if (savedInstanceState != null) {
-            // Se c'è un istanza salvata non richiedo nuovamente i dati
             String savedID = savedInstanceState.getString("ID");
             String savedPeak = savedInstanceState.getString("peak");
             String savedNamePeak = savedInstanceState.getString("namePeak");
@@ -118,7 +121,7 @@ public class Data extends AppCompatActivity {
     private void callsAPI(final Double lat, final Double lng){
         HeyWhatsID service = retrofit.create(HeyWhatsID.class);
         Call<ResponseBody> call = service.getID(lat, lng);
-        progressDialog.setMessage("Generazione id panorama...");
+        loadingMessage.setText("Generazione id panorama...");
         progressDialog.setTitle("Richiesta id panorama");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         call.enqueue(new Callback<ResponseBody>() {
@@ -173,7 +176,7 @@ public class Data extends AppCompatActivity {
                 e1.printStackTrace();
             }
             callsAPI(panorama.lat, panorama.lon);
-            progressDialog.setMessage("Richiesta id panorama, tentativo n°: " + (richiestaID+1));
+            loadingMessage.setText("Richiesta id panorama, tentativo n°: " + (richiestaID+1));
             richiestaID++;
         }else{ //ID non ottenuto
             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
@@ -199,7 +202,7 @@ public class Data extends AppCompatActivity {
     }
 
     private void checkStatus(){
-        progressDialog.setMessage("Aspettando il panorama...");
+        loadingMessage.setText("Aspettando il panorama...");
         progressDialog.setTitle("Attesa dati Panorama");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsReady service = retrofit.create(HeyWhatsReady.class);
@@ -245,7 +248,7 @@ public class Data extends AppCompatActivity {
 
             checkStatus();
             richiestaStato++;
-            progressDialog.setMessage("controllo se è pronto il panorama, tentativo n°: " + (richiestaStato+1));
+            loadingMessage.setText("controllo se è pronto il panorama, tentativo n°: " + (richiestaStato+1));
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.prontoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
@@ -269,7 +272,7 @@ public class Data extends AppCompatActivity {
     }
 
     private void loadPeakData(){
-        progressDialog.setMessage("Scarico dati Montagne...");
+        loadingMessage.setText("Scarico dati Montagne...");
         progressDialog.setTitle("Scaricamento e Calcolo posizione pianeti");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsPeak service = retrofit.create(HeyWhatsPeak.class);
@@ -284,7 +287,7 @@ public class Data extends AppCompatActivity {
                         progressDialog.dismiss();
                         TextView tx = (TextView)findViewById(R.id.panoramaDownload); //recupero e rendo visibile la conferma scaricamento dati
                         tx.setVisibility(TextView.VISIBLE);
-                        progressDialog.setMessage("Scarico nomi montagne...");
+                        loadingMessage.setText("Scarico nomi montagne...");
                         loadNamePeak();
                     } catch (IOException e) {
                         richiediDatiMontagne();
@@ -309,7 +312,7 @@ public class Data extends AppCompatActivity {
             }
 
             richiestaDatiMontagne++;
-            progressDialog.setMessage("Controllo se è pronto il panorama, tentativo n°: " + (richiestaDatiMontagne+1));
+            loadingMessage.setText("Controllo se è pronto il panorama, tentativo n°: " + (richiestaDatiMontagne+1));
             loadPeakData();
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
@@ -378,7 +381,7 @@ public class Data extends AppCompatActivity {
             }
 
             richiestaNomiMontagne++;
-            progressDialog.setMessage("Controllo se sono disponibili i nomi delle montagne, tentativo n°: " + (richiestaNomiMontagne+1));
+            loadingMessage.setText("Controllo se sono disponibili i nomi delle montagne, tentativo n°: " + (richiestaNomiMontagne+1));
             loadNamePeak();
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoNomiErrLayout);
@@ -409,7 +412,7 @@ public class Data extends AppCompatActivity {
      * @param namePeak nome picchi più importanti
      */
     private void setPeak(String peak, String namePeak){
-        progressDialog.setMessage("Calcolo posizione pianeti...");
+        loadingMessage.setText("Calcolo posizione pianeti...");
         progressDialog.setTitle("Scaricamento e Calcolo posizione pianeti");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
 
@@ -530,7 +533,7 @@ public class Data extends AppCompatActivity {
             prevLuna=is_sopra_luna;
         }
 
-        progressDialog.setMessage("Calcolo posizione sole e luna...");
+        loadingMessage.setText("Calcolo posizione sole e luna...");
         progressDialog.setTitle("Salvo i dati...");
         progressDialog.show();
 

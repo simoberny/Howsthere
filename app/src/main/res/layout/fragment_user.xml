@@ -23,21 +23,13 @@
             style="?attr/cardStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:cardBackgroundColor="@color/background"
             app:cardElevation="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/impostazioni"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:text="@string/sett"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp" />
 
                 <FrameLayout
                     android:id="@+id/settings"

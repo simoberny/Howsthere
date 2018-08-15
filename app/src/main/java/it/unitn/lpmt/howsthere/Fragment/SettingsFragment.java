@@ -1,15 +1,22 @@
 package it.unitn.lpmt.howsthere.Fragment;
 
-
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -26,9 +33,15 @@ public class SettingsFragment extends PreferenceFragmentCompat{
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setDivider(new ColorDrawable(Color.TRANSPARENT));
+        setDividerHeight(0);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         addPreferencesFromResource(R.xml.pref_general);
 
         final SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
@@ -77,7 +90,6 @@ public class SettingsFragment extends PreferenceFragmentCompat{
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 SharedPreferences.Editor editor = pref.edit();
-                System.out.println(newValue);
                 editor.putInt("maps_type", Integer.parseInt(newValue.toString()));
                 editor.apply();
                 return true;
@@ -112,11 +124,34 @@ public class SettingsFragment extends PreferenceFragmentCompat{
                 return true;
             }
         });
+
+        Preference info = (Preference) findPreference("info");
+        info.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                openHWTinfo();
+                return false;
+            }
+        });
+    }
+
+    private void openHWTinfo(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        builder.setView(inflater.inflate(R.layout.hwt_dialog, null))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.show();
     }
 
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-    }
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) { }
+
     public boolean isGooglePlayServicesAvailable(Context context){
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);

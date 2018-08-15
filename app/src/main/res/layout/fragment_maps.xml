@@ -75,8 +75,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginEnd="12dp"
             android:orientation="vertical">
 
             <android.support.design.widget.FloatingActionButton
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="false"
                 android:layout_alignParentEnd="false"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="18dp"
                 android:clickable="true"
                 android:src="@drawable/ic_arrow_forward_white_24dp"
                 app:backgroundTint="@color/colorPrimary" />

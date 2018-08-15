@@ -92,4 +92,6 @@
     <string name="humidity">Pressione</string>
     <string name="pressure">Pressione</string>
     <string name="myfeed">Mie feed</string>
+    <string name="hwt_info">"Ti arrampichi sulla cima di una montagna e ti trovi di fronte ad un panorama. Vedi le montagne nella distanza. Ma che montagne sono? Heywhatsthat ti dirà proprio questo, dando una visione a 360° di tutti i picchi disponibili e a cui stai guardando. Da quasi ogni zona nel mondo. Questa app usa le potenzialità di questa API per ottenere le informazioni necessarie da incrociare con i dati di sole e luna. "</string>
+    <string name="position">Posizione</string>
 </resources>

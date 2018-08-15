@@ -4,16 +4,33 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/PreferenceStyle</item>
         <item name="android:windowBackground">@color/real_background</item>
         <item name="android:colorBackground">@color/background</item>
+    </style>
+
+    <style name="PreferenceStyle" parent="@style/PreferenceThemeOverlay.v14.Material">
+        <item name="preferenceCategoryStyle">@style/CustomPreferenceCategory</item>
+    </style>
+
+    <style name="CustomPreferenceCategory" parent="@style/Preference.Category">
+        <item name="android:layout">@layout/custom_preference_category</item>
+    </style>
+
+    <style name="CustomPreferenceCategoryText" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
     </style>
 
     <style name="AppThemeNoBar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/PreferenceStyle</item>
         <item name="android:windowBackground">@color/real_background</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="cardStyle">@color/background</item>
@@ -22,7 +39,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <item name="preferenceTheme">@style/PreferenceStyle</item>
     </style>
 
     <style name="LoginTheme" parent="Theme.AppCompat.Light.DarkActionBar">

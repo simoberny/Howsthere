@@ -184,4 +184,6 @@
     <string name="humidity">Humidity</string>
     <string name="pressure">Pressure</string>
     <string name="myfeed">My feed</string>
+    <string name="hwt_info">"You hike to the top of a mountain or pull off at a scenic overlook. You see mountains in the distance. Which mountains are they? HeyWhatsThat will tell you, providing a 360° panoramic sketch labeled with the names of the peaks you're looking at. From almost anywhere in the world. This app use the Heywhatsthat API to gather the information about the peak around the user and cross it with the sun positions. "</string>
+    <string name="position">Position</string>
 </resources>

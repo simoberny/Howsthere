@@ -50,17 +50,17 @@
                     android:textColor="@color/ap_white"
                     android:textSize="20sp" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:paddingTop="15dp">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/compassAlba"
-                    android:layout_width="90dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
@@ -160,18 +160,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:gravity="center"
-                android:paddingTop="15dp">
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/compassTramonto"
-                    android:layout_width="90dp"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/azimuthCompass"
                     android:layout_centerHorizontal="true"
                     android:layout_centerInParent="true"
                     android:layout_centerVertical="true"
-                    android:layout_margin="20dp"
                     android:src="@drawable/compass_aff" />
 
             </RelativeLayout>
