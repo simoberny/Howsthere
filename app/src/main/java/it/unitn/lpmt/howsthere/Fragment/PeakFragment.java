@@ -197,7 +197,7 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         dataSetNum.setDrawCircles(true);
         dataSetNum.setDrawCircleHole(false);
         dataSetNum.setCircleColor(Color.parseColor("#2E7D32"));
-        dataSetNum.setCircleRadius(1f);
+        dataSetNum.setCircleRadius(2f);
         dataSetNum.setDrawFilled(false);
         dataSetNum.setDrawValues(true);
         dataSetNum.setDrawHighlightIndicators(false);
@@ -206,8 +206,8 @@ public class PeakFragment extends Fragment implements SensorEventListener {
             public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
                 int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
                 String s = ""+idx;
-                if(idx>0) {
-                    if((p.nomiPeak.get(idx).getAzimuth()) - (p.nomiPeak.get(idx - 1).getAzimuth()) < 3){
+                if(idx>0 && idx < p.nomiPeak.size()-1) {
+                    if((((p.nomiPeak.get(idx).getAzimuth()) - (p.nomiPeak.get(idx - 1).getAzimuth()) < 1)||((p.nomiPeak.get(idx+1).getAzimuth()) - (p.nomiPeak.get(idx).getAzimuth()) > 1))&&idx%2>0){
                         s="";
                     }
                 }
