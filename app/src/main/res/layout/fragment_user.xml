@@ -34,11 +34,11 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/impostazioni"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="20dp"
-                    android:text="Impostazioni"
+                    android:text="@string/sett"
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
 

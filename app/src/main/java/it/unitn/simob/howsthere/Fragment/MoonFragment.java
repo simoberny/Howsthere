@@ -1,26 +1,13 @@
 package it.unitn.simob.howsthere.Fragment;
 
-
-import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.CalendarContract;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -38,29 +25,14 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.firebase.auth.FirebaseAuth;
-import com.vansuita.pickimage.bundle.PickSetup;
-import com.vansuita.pickimage.dialog.PickImageDialog;
-import com.vansuita.pickimage.enums.EPickType;
-import com.vansuita.pickimage.listeners.IPickClick;
-
 import net.cachapa.expandablelayout.ExpandableLayout;
-
-import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import it.unitn.simob.howsthere.MainActivity;
 import it.unitn.simob.howsthere.Oggetti.Panorama;
-import it.unitn.simob.howsthere.PostFeed;
 import it.unitn.simob.howsthere.R;
 import it.unitn.simob.howsthere.RisultatiActivity;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -160,7 +132,6 @@ public class MoonFragment extends Fragment {
         final String mm = (String)DateFormat.format("MM",p.data);
         final String gg = (String)DateFormat.format("dd",p.data);
 
-
         Button saveAlbaLuna = view.findViewById(R.id.saveAlbaLuna);
         saveAlbaLuna.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,7 +187,7 @@ public class MoonFragment extends Fragment {
     void stampaGrafico(){
         List<Entry> entriesMontagne = new ArrayList<Entry>();
         List<Entry> entriesLuna = new ArrayList<Entry>();
-        //LUNA
+
         //Arrays.sort(risultatiLuna); //ordino secondo azimuth ATTENZIONE: se vengono ordinati allora si mescolano i dati della mattina dopo quelli della sera
         for(int i = 0; i<864; i++) { //passo dati al grafico
             if(p.risultatiLuna[i].minuto == 0){
@@ -234,6 +205,7 @@ public class MoonFragment extends Fragment {
                 }
             }
         }
+
         //MONTAGNE
         for (int i =0; i<360; i++) {
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
@@ -245,8 +217,8 @@ public class MoonFragment extends Fragment {
         chart.getAxisLeft().setAxisMinValue(-1);  //faccio partire da -1 le y. non da 0 perchè da una montagna alta è possibile finire leggermente sotto lo 0
         chart.getAxisRight().setAxisMinValue(-1);
 
-        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Montagne"); // add entries to dataset
-        LineDataSet dataSetLuna = new LineDataSet(entriesLuna, "Luna");
+        LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, getContext().getResources().getString(R.string.mountain)); // add entries to dataset
+        LineDataSet dataSetLuna = new LineDataSet(entriesLuna, getContext().getResources().getString(R.string.risultati_luna));
 
         //proprietà grafico Montagne
         dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
@@ -262,7 +234,6 @@ public class MoonFragment extends Fragment {
         Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.fade_red);
         dataSetMontagne.setFillDrawable(drawable);
         dataSetMontagne.setDrawHighlightIndicators(false);
-
 
         //proprietà grafiche Luna
         dataSetLuna.setMode(LineDataSet.Mode.CUBIC_BEZIER);

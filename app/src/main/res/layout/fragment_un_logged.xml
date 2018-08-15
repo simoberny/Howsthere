@@ -42,7 +42,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:gravity="center_vertical"
-                        android:text="Login non effettuato"
+                        android:text="@string/nolog"
                         android:textSize="24sp" />
                 </TableRow>
             </TableLayout>
@@ -65,7 +65,7 @@
                     android:layout_margin="8dp"
                     android:padding="0dp"
                     android:text="Log In"
-                    android:textColor="@color/colorPrimaryDark" />
+                    android:textColor="@color/colorAccent" />
             </RelativeLayout>
 
         </LinearLayout>

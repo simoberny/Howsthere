@@ -15,8 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/background"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:title="Profilo  utente"
+            app:title="@string/title_user"
             app:titleTextColor="@color/title_nobar"></android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
@@ -28,12 +27,12 @@
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Utente" />
+                android:text="@string/title_user" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mie Feed" />
+                android:text="@string/myfeed" />
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
 

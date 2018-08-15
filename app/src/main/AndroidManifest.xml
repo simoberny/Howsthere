@@ -113,9 +113,6 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".CompassActivity"
-            android:theme="@style/AppThemeNoBar" />
-        <activity
             android:name=".Presentation"
             android:label="@string/title_activity_presentation"
             android:screenOrientation="portrait"
@@ -124,6 +121,7 @@
             android:name=".RisultatiActivity"
             android:label="@string/title_activity_risultati"
             android:screenOrientation="portrait"
+            android:theme="@style/AppThemeNoBar"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

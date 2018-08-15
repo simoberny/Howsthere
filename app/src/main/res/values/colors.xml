@@ -9,6 +9,7 @@
     <color name="pale_green">#6bf3ad</color>
     <color name="buttongrey">#eeeeee</color>
     <color name="divider">#dedede</color>
+    <color name="text_se">#000</color>
 
     <color name="title_nobar">#2196f3</color>
 
@@ -19,9 +20,9 @@
     <color name="indicator_sel">#fff</color>
 
     <!-- Presentation color -->
-    <color name="primo_p">#2196f3</color>
-    <color name="secondo_p">#4CAF50</color>
-    <color name="terzo_p">#FB8C00</color>
+    <color name="primo_p">#55aef6</color>
+    <color name="secondo_p">#59c05c</color>
+    <color name="terzo_p">#ffaf4d</color>
 
     <color name="material_green_50">#E8F5E9</color>
     <color name="material_green_500">#4CAF50</color>

@@ -14,28 +14,20 @@ import it.unitn.simob.howsthere.R;
 
 import static it.unitn.simob.howsthere.BuildConfig.OWM_API_KEY;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PrecipitazioniFragment extends Fragment {
-
-    public PrecipitazioniFragment() {
-        // Required empty public constructor
-    }
+    public PrecipitazioniFragment() {}
 
     public static PrecipitazioniFragment newInstance(){
         PrecipitazioniFragment pc = new PrecipitazioniFragment();
         return pc;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_precipitazioni, container, false);
 
-        final WebView webView = (WebView) view.findViewById(R.id.webView);
+        final WebView webView = view.findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("file:///android_asset/map.html?lat=" + MeteoFragment.lon + "&lon=" + MeteoFragment.lat + "&appid=" + OWM_API_KEY);
         webView.loadUrl("javascript:map.removeLayer(windLayer);map.removeLayer(tempLayer);map.addLayer(rainLayer);");
