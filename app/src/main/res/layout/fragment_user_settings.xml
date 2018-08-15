@@ -14,15 +14,18 @@
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/background"
+            android:background="@color/toolbar"
             app:title="@string/title_user"
-            app:titleTextColor="@color/title_nobar"></android.support.v7.widget.Toolbar>
+            app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background">
+            android:background="@color/toolbar"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@color/tw__light_gray">
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"

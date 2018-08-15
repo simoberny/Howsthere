@@ -16,11 +16,11 @@
             android:id="@+id/history_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background"
+            android:background="@color/toolbar"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:title="History"
-            app:titleTextColor="@color/title_nobar" />
+            app:title="@string/title_storico"
+            app:titleTextColor="@android:color/white" />
 
         <RelativeLayout
             android:layout_width="match_parent"

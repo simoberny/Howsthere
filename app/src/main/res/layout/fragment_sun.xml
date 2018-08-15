@@ -14,13 +14,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="4dp">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="4">
+                android:layout_weight="4"
+                android:paddingBottom="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -137,7 +137,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="4"
                 app:cardBackgroundColor="@color/background"
-                app:cardCornerRadius="4dp"
+                app:cardCornerRadius="@dimen/roundness_card"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -346,7 +346,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="4"
                 app:cardBackgroundColor="@color/background"
-                app:cardCornerRadius="4dp"
+                app:cardCornerRadius="@dimen/roundness_card"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -554,7 +554,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="4"
                 app:cardBackgroundColor="@color/background"
-                app:cardCornerRadius="4dp"
+                app:cardCornerRadius="@dimen/roundness_card"
                 app:cardElevation="2dp">
 
                 <LinearLayout

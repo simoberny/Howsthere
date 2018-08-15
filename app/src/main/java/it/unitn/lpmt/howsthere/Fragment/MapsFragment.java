@@ -8,11 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
@@ -69,6 +71,7 @@ import java.util.List;
 import java.util.Locale;
 
 import it.unitn.lpmt.howsthere.Data;
+import it.unitn.lpmt.howsthere.MainActivity;
 import it.unitn.lpmt.howsthere.R;
 
 import static android.app.Activity.RESULT_OK;
@@ -96,6 +99,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            ((MainActivity)getActivity()).getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+
         super.onCreate(savedInstanceState);
         contesto = this;
 
@@ -145,6 +152,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
        dialog = new BottomSheetDialog(getActivity());
        dialogView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
        dialog.setContentView(dialogView);
+       ((View) dialogView.getParent()).setBackgroundColor(getResources().getColor(android.R.color.transparent));
        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
            @Override
            public void onDismiss(DialogInterface dialog) {
