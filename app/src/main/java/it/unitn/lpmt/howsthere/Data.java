@@ -1,6 +1,7 @@
 package it.unitn.lpmt.howsthere;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -58,7 +59,7 @@ public class Data extends AppCompatActivity {
 
         panorama.data.setTime(i.getLongExtra("data", 0));
         if(panorama.data.getTime() == 0){
-            Toast.makeText(getApplicationContext(), "Data non selezionata", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.date_no, Toast.LENGTH_LONG).show();
         }
         panorama.citta = i.getStringExtra("citta");
 
@@ -121,8 +122,8 @@ public class Data extends AppCompatActivity {
     private void callsAPI(final Double lat, final Double lng){
         HeyWhatsID service = retrofit.create(HeyWhatsID.class);
         Call<ResponseBody> call = service.getID(lat, lng);
-        loadingMessage.setText("Generazione id panorama...");
-        progressDialog.setTitle("Richiesta id panorama");
+        loadingMessage.setText(R.string.id_pan);
+        progressDialog.setTitle("ID panorama");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -176,12 +177,12 @@ public class Data extends AppCompatActivity {
                 e1.printStackTrace();
             }
             callsAPI(panorama.lat, panorama.lon);
-            loadingMessage.setText("Richiesta id panorama, tentativo n°: " + (richiestaID+1));
+            loadingMessage.setText(R.string.loop_id + " n°: " + (richiestaID+1));
             richiestaID++;
         }else{ //ID non ottenuto
             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
             ln.setVisibility(TextView.VISIBLE);
-            Snackbar.make(findViewById(R.id.dataContainerLayout), "ID non ottenuto, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
+            Snackbar.make(findViewById(R.id.dataContainerLayout), "Check the connection and retry", Snackbar.LENGTH_LONG).setAction(R.string.retry, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     azzeraTentativiID();
@@ -202,8 +203,8 @@ public class Data extends AppCompatActivity {
     }
 
     private void checkStatus(){
-        loadingMessage.setText("Aspettando il panorama...");
-        progressDialog.setTitle("Attesa dati Panorama");
+        loadingMessage.setText(R.string.waiting_pan);
+        progressDialog.setTitle("Panorama");
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsReady service = retrofit.create(HeyWhatsReady.class);
         Call<ResponseBody> call = service.getStatus(panorama.ID);
@@ -226,7 +227,7 @@ public class Data extends AppCompatActivity {
                         richiediStato();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "La mappa non è stata generata!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Map not generated!", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                     richiediStato();
                 }
@@ -248,11 +249,11 @@ public class Data extends AppCompatActivity {
 
             checkStatus();
             richiestaStato++;
-            loadingMessage.setText("controllo se è pronto il panorama, tentativo n°: " + (richiestaStato+1));
+            loadingMessage.setText(R.string.check_panorama + " n°: " + (richiestaStato+1));
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.prontoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
-            Snackbar.make(findViewById(R.id.dataContainerLayout), "panorama non pronto, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
+            Snackbar.make(findViewById(R.id.dataContainerLayout), "Check connection and retry!", Snackbar.LENGTH_LONG).setAction(R.string.retry, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     azzeraTentativiStato();
@@ -272,8 +273,8 @@ public class Data extends AppCompatActivity {
     }
 
     private void loadPeakData(){
-        loadingMessage.setText("Scarico dati Montagne...");
-        progressDialog.setTitle("Scaricamento e Calcolo posizione pianeti");
+        loadingMessage.setText(R.string.mountain_data);
+        progressDialog.setTitle(R.string.mountain_data);
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsPeak service = retrofit.create(HeyWhatsPeak.class);
         Call<ResponseBody> call = service.getPeak(panorama.ID);
@@ -287,7 +288,7 @@ public class Data extends AppCompatActivity {
                         progressDialog.dismiss();
                         TextView tx = (TextView)findViewById(R.id.panoramaDownload); //recupero e rendo visibile la conferma scaricamento dati
                         tx.setVisibility(TextView.VISIBLE);
-                        loadingMessage.setText("Scarico nomi montagne...");
+                        loadingMessage.setText(R.string.mountain_data);
                         loadNamePeak();
                     } catch (IOException e) {
                         richiediDatiMontagne();
@@ -312,12 +313,12 @@ public class Data extends AppCompatActivity {
             }
 
             richiestaDatiMontagne++;
-            loadingMessage.setText("Controllo se è pronto il panorama, tentativo n°: " + (richiestaDatiMontagne+1));
+            loadingMessage.setText(R.string.check_panorama + " n°: " + (richiestaDatiMontagne+1));
             loadPeakData();
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
-            Snackbar.make(findViewById(R.id.dataContainerLayout), "Dati non ricevuti, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
+            Snackbar.make(findViewById(R.id.dataContainerLayout), "Check connection and retry!", Snackbar.LENGTH_LONG).setAction(R.string.retry, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     azzeraTentativiScaricamentoPanorama();
@@ -339,7 +340,7 @@ public class Data extends AppCompatActivity {
     }
 
     private void loadNamePeak(){
-        progressDialog.setTitle("Scaricamento nomi montagne");
+        progressDialog.setTitle(R.string.name_mounatin);
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsNamePeak service = retrofit.create(HeyWhatsNamePeak.class);
         Call<ResponseBody> call = service.getNamePeak(panorama.ID);
@@ -381,12 +382,12 @@ public class Data extends AppCompatActivity {
             }
 
             richiestaNomiMontagne++;
-            loadingMessage.setText("Controllo se sono disponibili i nomi delle montagne, tentativo n°: " + (richiestaNomiMontagne+1));
+            loadingMessage.setText(R.string.check_name + " n°: " + (richiestaNomiMontagne+1));
             loadNamePeak();
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoNomiErrLayout);
             ln.setVisibility(TextView.VISIBLE);
-            Snackbar.make(findViewById(R.id.dataContainerLayout), "Dati non ricevuti, controllare la connessione e riprovare", Snackbar.LENGTH_LONG).setAction("Riprova", new View.OnClickListener() {
+            Snackbar.make(findViewById(R.id.dataContainerLayout), "Check connection and retry", Snackbar.LENGTH_LONG).setAction(R.string.retry, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     azzeraTentativiNomiMontagne();
@@ -412,8 +413,8 @@ public class Data extends AppCompatActivity {
      * @param namePeak nome picchi più importanti
      */
     private void setPeak(String peak, String namePeak){
-        loadingMessage.setText("Calcolo posizione pianeti...");
-        progressDialog.setTitle("Scaricamento e Calcolo posizione pianeti");
+        loadingMessage.setText(R.string.calculus);
+        progressDialog.setTitle(R.string.calculus);
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
 
         //calcolo Alba e Tramonto senza montagne
@@ -533,8 +534,8 @@ public class Data extends AppCompatActivity {
             prevLuna=is_sopra_luna;
         }
 
-        loadingMessage.setText("Calcolo posizione sole e luna...");
-        progressDialog.setTitle("Salvo i dati...");
+        loadingMessage.setText(R.string.sun_moon_math);
+        progressDialog.setTitle("Saving...");
         progressDialog.show();
 
         PanoramiStorage p = PanoramiStorage.panorami_storage; //salvo i dati del panorama con panoramiStorage

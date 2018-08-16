@@ -10,12 +10,11 @@
         style="?attr/cardStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
         android:clipToPadding="false"
         app:cardBackgroundColor="@color/background"
         app:cardCornerRadius="0dp"
-        app:cardElevation="2dp">
+        app:cardElevation="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -47,10 +46,10 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentRight="false"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/icon_dots" />
 
             <com.facebook.drawee.view.SimpleDraweeView

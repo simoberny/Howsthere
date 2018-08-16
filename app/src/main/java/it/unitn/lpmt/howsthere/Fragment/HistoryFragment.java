@@ -68,7 +68,7 @@ public class HistoryFragment extends Fragment{
             if(in_selezione) {
                 //adapter.onClick_menu();
                 for (int i = 0; i < selezionati_id.size(); i++) {
-                    System.err.println("     selezionati:  " + selezionati_id.get(i));
+                    System.err.println("     Selected:  " + selezionati_id.get(i));
                     PanoramiStorage p = PanoramiStorage.panorami_storage;
                     p.delete_by_id(selezionati_id.get(i));
                 }
@@ -78,7 +78,7 @@ public class HistoryFragment extends Fragment{
                 return true;
             }else{
                 Snackbar.make(getActivity().findViewById(R.id.layout_base),
-                        "Tenere premuto per selezionare", Snackbar.LENGTH_LONG).setAction("Elimina Tutto", new View.OnClickListener() {
+                        R.string.long_press, Snackbar.LENGTH_LONG).setAction(R.string.del_every, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         PanoramiStorage.panorami_storage.delete_all();

@@ -94,4 +94,20 @@
     <string name="myfeed">Mie feed</string>
     <string name="hwt_info">"Ti arrampichi sulla cima di una montagna e ti trovi di fronte ad un panorama. Vedi le montagne nella distanza. Ma che montagne sono? Heywhatsthat ti dirà proprio questo, dando una visione a 360° di tutti i picchi disponibili e a cui stai guardando. Da quasi ogni zona nel mondo. Questa app usa le potenzialità di questa API per ottenere le informazioni necessarie da incrociare con i dati di sole e luna. "</string>
     <string name="position">Posizione</string>
+    <string name="date_no">Data non selezionata</string>
+    <string name="id_pan">Generando id panorama</string>
+    <string name="loop_id">Richiesta id panorama, tentativo</string>
+    <string name="retry">Riprova</string>
+    <string name="waiting_pan">Aspettando il panorama...</string>
+    <string name="check_panorama">controllo se è pronto il panorama, tentativo</string>
+    <string name="mountain_data">Scarico dati Montagne</string>
+    <string name="name_mounatin">Scaricamento nomi montagne</string>
+    <string name="check_name">ontrollo se sono disponibili i nomi delle montagne, tentativo</string>
+    <string name="calculus">Calcolando...</string>
+    <string name="sun_moon_math">Calcolo posizione sole e luna...</string>
+    <string name="no_login">Devi eseguire il login per poter scattare un panorama!</string>
+    <string name="unavailable">Non disponibile!</string>
+    <string name="max_photo">Superato il limite massimo di foto in un giorno, torna domani</string>
+    <string name="long_press">Tenere premuto per selezionare</string>
+    <string name="del_every">Elimina Tutto</string>
 </resources>

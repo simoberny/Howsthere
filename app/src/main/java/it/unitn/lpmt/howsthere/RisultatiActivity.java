@@ -103,7 +103,7 @@ public class RisultatiActivity extends AppCompatActivity {
                     if (mAuth.getCurrentUser() != null) {
                         getImage();
                     } else {
-                        Snackbar mySnackbar = Snackbar.make(findViewById(R.id.risultatiMainLayout), "Devi eseguire il login per poter scattare un panorama!", Snackbar.LENGTH_LONG);
+                        Snackbar mySnackbar = Snackbar.make(findViewById(R.id.risultatiMainLayout), R.string.no_login, Snackbar.LENGTH_LONG);
                         mySnackbar.setAction("Login", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -203,7 +203,7 @@ public class RisultatiActivity extends AppCompatActivity {
                     }
                 }
             }
-            if(citta == null) citta = "Non disponibile!";
+            if(citta == null) citta = getResources().getString(R.string.unavailable);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -213,7 +213,6 @@ public class RisultatiActivity extends AppCompatActivity {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         Fragment selectedFragment = null;
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -266,7 +265,7 @@ public class RisultatiActivity extends AppCompatActivity {
                             }
                         }).show(this);
             }else{
-                Snackbar mySnackbar = Snackbar.make(main, "Superato il limite massimo di foto in un giorno, torna domani!", Snackbar.LENGTH_LONG);
+                Snackbar mySnackbar = Snackbar.make(main, R.string.max_photo, Snackbar.LENGTH_LONG);
                 mySnackbar.show();
             }
         }

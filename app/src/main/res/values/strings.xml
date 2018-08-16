@@ -186,4 +186,20 @@
     <string name="myfeed">My feed</string>
     <string name="hwt_info">"You hike to the top of a mountain or pull off at a scenic overlook. You see mountains in the distance. Which mountains are they? HeyWhatsThat will tell you, providing a 360° panoramic sketch labeled with the names of the peaks you're looking at. From almost anywhere in the world. This app use the Heywhatsthat API to gather the information about the peak around the user and cross it with the sun positions. "</string>
     <string name="position">Position</string>
+    <string name="date_no">Date not selected</string>
+    <string name="id_pan">Generating id panorama</string>
+    <string name="loop_id">"ID panorama request, try "</string>
+    <string name="retry">Retry</string>
+    <string name="waiting_pan">Waiting panorama data</string>
+    <string name="check_panorama">Checking if panorama is ready, try</string>
+    <string name="mountain_data">Downloading mountain data</string>
+    <string name="name_mounatin">Gathering mountain name</string>
+    <string name="check_name">Check if mountain name is avaiable, try</string>
+    <string name="calculus">Calculating...</string>
+    <string name="sun_moon_math">Big math on sun and moon</string>
+    <string name="no_login">You have to sign-in to shot a Panorama!</string>
+    <string name="unavailable">Not found</string>
+    <string name="max_photo">You have reached the max number of photo per day</string>
+    <string name="long_press">Long press to select</string>
+    <string name="del_every">Delete all</string>
 </resources>
