@@ -202,4 +202,5 @@
     <string name="max_photo">You have reached the max number of photo per day</string>
     <string name="long_press">Long press to select</string>
     <string name="del_every">Delete all</string>
+    <string name="no_weather">No weather data available</string>
 </resources>

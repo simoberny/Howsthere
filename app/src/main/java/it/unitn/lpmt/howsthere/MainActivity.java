@@ -1,5 +1,6 @@
 package it.unitn.lpmt.howsthere;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,15 +9,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 import it.unitn.lpmt.howsthere.Fragment.FeedFragment;
@@ -34,12 +39,14 @@ public class MainActivity extends AppCompatActivity{
     public static final String PREF_USER_FIRST_TAP = "user_first_tap";
     boolean isUserFirstTime, isUserFirstTap;
     MaterialTapTargetSequence seq;
+    BottomNavigationView navigation = null;
 
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         this.setIntent(intent);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         isUserFirstTime = Boolean.valueOf(readSharedSetting(MainActivity.this, PREF_USER_FIRST_TIME, "true"));
@@ -128,9 +135,27 @@ public class MainActivity extends AppCompatActivity{
 
         ff = FeedFragment.newInstance(extra);
         mf = MapsFragment.newInstance();
+        mf.setRetainInstance(true);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        BottomNavigationMenuView menuview = (BottomNavigationMenuView) navigation.getChildAt(0);
+        try {
+            Field shiftingMode = menuview.getClass().getDeclaredField("mShiftingMode");
+            shiftingMode.setAccessible(true);
+            shiftingMode.setBoolean(menuview, false);
+            shiftingMode.setAccessible(false);
+            for (int a = 0; a < menuview.getChildCount(); a++) {
+                BottomNavigationItemView item = (BottomNavigationItemView) menuview.getChildAt(a);
+                item.setShiftingMode(false);
+                item.setChecked(item.getItemData().isChecked());
+            }
+        } catch (NoSuchFieldException e) {
+            Log.e("ERROR NO SUCH FIELD", "Unable to get shift mode field");
+        } catch (IllegalAccessException e) {
+            Log.e("ERROR ILLEGAL ALG", "Unable to change value of shift mode");
+        }
 
         if (modify) {
             navigation.setSelectedItemId(R.id.navigation_user);
@@ -173,7 +198,7 @@ public class MainActivity extends AppCompatActivity{
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
             transaction.replace(R.id.frame_layout, selectedFragment, tag);
-            transaction.addToBackStack(null);
+            transaction.addToBackStack(tag);
             transaction.commit();
             return true;
         }
@@ -183,6 +208,12 @@ public class MainActivity extends AppCompatActivity{
     public void onBackPressed() {
         if (getSupportFragmentManager().findFragmentByTag("maps") != null && getSupportFragmentManager().findFragmentByTag("maps").isVisible()) {
             finish();
+        }else{
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            navigation.setSelectedItemId(R.id.navigation_home);
+            transaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+            transaction.replace(R.id.frame_layout, mf, "maps");
+            transaction.commit();
         }
     }
 

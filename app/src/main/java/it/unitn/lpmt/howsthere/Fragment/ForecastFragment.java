@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import it.unitn.lpmt.howsthere.Weather.models.WeatherCompleto;
 public class ForecastFragment extends Fragment implements Serializable{
     private WeatherRecyclerAdapter adapter;
     List<WeatherCompleto> forecast = new ArrayList<>();
+    RelativeLayout no_data;
 
     public ForecastFragment() { }
 
@@ -38,6 +40,7 @@ public class ForecastFragment extends Fragment implements Serializable{
 
         Bundle bd = getArguments();
         forecast  = (List<WeatherCompleto>) bd.getSerializable("forecast");
+        no_data = view.findViewById(R.id.no_forecast);
 
         adapter = new WeatherRecyclerAdapter(getActivity(), forecast);
 
@@ -51,6 +54,11 @@ public class ForecastFragment extends Fragment implements Serializable{
 
     public void update(List<WeatherCompleto> forecast){
         this.forecast = forecast;
+
+        if(forecast.size() == 0){
+            no_data.setVisibility(View.VISIBLE);
+        }
+
         if(adapter != null) {
             adapter.notifyDataSetChanged();
         }

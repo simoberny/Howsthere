@@ -130,7 +130,7 @@
             app:tabMode="fixed">
 
             <android.support.design.widget.TabItem
-                android:id="@+id/tabItem"
+                android:id="@+id/weather_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/today" />

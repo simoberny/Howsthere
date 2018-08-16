@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,14 +15,18 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import it.unitn.lpmt.howsthere.Helper.ForecastCallback;
 import it.unitn.lpmt.howsthere.Helper.TempUnitConverter;
@@ -48,19 +53,18 @@ public class MeteoFragment extends Fragment {
     TextView todaySunset;
     TextView todayIcon;
     TabLayout tabLayout;
-
     public static String lat;
     public static String lon;
 
     private AppBarLayout barL;
     private String locale = "en";
+    Panorama p = null;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private WeatherMap weatherMap;
 
     private List<WeatherCompleto> forecast = new ArrayList<>();
-
     ForecastFragment ff;
 
     public MeteoFragment() {
@@ -74,9 +78,6 @@ public class MeteoFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
-        Panorama p = ((RisultatiActivity) Objects.requireNonNull(getActivity())).p;
-
         lat = String.valueOf(p.lat);
         lon = String.valueOf(p.lon);
 
@@ -87,6 +88,9 @@ public class MeteoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meteo, container, false);
+
+        //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
+        p = ((RisultatiActivity) Objects.requireNonNull(getActivity())).p;
 
         todayTemperature = view.findViewById(R.id.todayTemperature);
         todayDescription = view.findViewById(R.id.todayDescription);
@@ -106,6 +110,19 @@ public class MeteoFragment extends Fragment {
 
         barL = view.findViewById(R.id.barlayout);
         tabLayout = view.findViewById(R.id.tabs);
+
+        String d = (String) android.text.format.DateFormat.format("dd",p.data)+"/"+ (String) android.text.format.DateFormat.format("MM",p.data)+"/"+ (String) android.text.format.DateFormat.format("yyyy",p.data);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        long diff = 0;
+        try {
+            Date date = format.parse(d);
+            long diffInMillies = Math.abs(new Date().getTime() - date.getTime());
+            diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        tabLayout.getTabAt(0).setText((diff == 0) ? getResources().getString(R.string.today) : d);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -152,7 +169,19 @@ public class MeteoFragment extends Fragment {
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(Long.parseLong(dateMsString));
                     Calendar today = Calendar.getInstance();
-                    if (cal.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
+
+                    String d = (String) android.text.format.DateFormat.format("dd",p.data)+"/"+ (String) android.text.format.DateFormat.format("MM",p.data)+"/"+ (String) android.text.format.DateFormat.format("yyyy",p.data);
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+                    Date date = null;
+                    try {
+                        date = format.parse(d);
+                        today.setTime(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    if(today.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)){
                         WeatherCompleto temp = response.getList()[i];
                         temp.setIcon(setWeatherIcon(Integer.parseInt(temp.getWeather()[0].getId()), Calendar.getInstance().get(Calendar.HOUR_OF_DAY)));
                         forecast.add(temp);

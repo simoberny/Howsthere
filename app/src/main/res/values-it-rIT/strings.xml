@@ -110,4 +110,5 @@
     <string name="max_photo">Superato il limite massimo di foto in un giorno, torna domani</string>
     <string name="long_press">Tenere premuto per selezionare</string>
     <string name="del_every">Elimina Tutto</string>
+    <string name="no_weather">Nessun dato disponibile in questa data</string>
 </resources>

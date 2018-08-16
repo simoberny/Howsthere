@@ -81,14 +81,15 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         }
 
         String tempo = "";
-
         if(diff >= 60 && (diff/60) < 24){
             tempo = "oggi";
-        }else if(diff >= 60 && (diff/60) > 24 && diff >= 60 && (diff/60) < 48) {
+        }else if(diff >= 60 && (diff/60) > 24 && (diff/60) < 48) {
             tempo = "ieri";
-        }else{
+        }else if(diff >= 60 && (diff/60) > 48 && (diff/60) < 3*30*24){
             long temp = (diff / 60 / 24);
             tempo = temp + " giorn" + (((int)temp == 1) ? "o" : "i") + " fa";
+        }else{
+            tempo = d;
         }
 
         data.setText(tempo);
