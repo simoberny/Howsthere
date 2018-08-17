@@ -113,4 +113,5 @@
     <string name="no_weather">Nessun dato disponibile in questa data</string>
     <string name="pos_not_valid">Posizione non valida</string>
     <string name="permitted_location">Le posizioni consentite includono latitudini da 60N fino a 54S (inclusa parte dell\' alaska). Il mare è disponibile solo vicino alle coste.</string>
+    <string name="powered">Profili montagne powered by</string>
 </resources>

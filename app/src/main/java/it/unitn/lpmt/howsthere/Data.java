@@ -341,6 +341,7 @@ public class Data extends AppCompatActivity {
 
     private void loadNamePeak(){
         progressDialog.setTitle(R.string.name_mounatin);
+        loadingMessage.setText(R.string.name_mounatin);
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsNamePeak service = retrofit.create(HeyWhatsNamePeak.class);
         Call<ResponseBody> call = service.getNamePeak(panorama.ID);
@@ -354,7 +355,6 @@ public class Data extends AppCompatActivity {
                         if(gNamePeak == null || gNamePeak == ""){
                             richiediNomiMontagne();
                         }else{
-                            progressDialog.dismiss();
                             TextView tx = findViewById(R.id.panoramaName); //recupero e rendo visibile la conferma scaricamento dati
                             tx.setVisibility(TextView.VISIBLE);
                             setPeak(gPeak, gNamePeak);
@@ -413,6 +413,7 @@ public class Data extends AppCompatActivity {
      * @param namePeak nome picchi più importanti
      */
     private void setPeak(String peak, String namePeak){
+        progressDialog.dismiss();
         loadingMessage.setText(R.string.calculus);
         progressDialog.setTitle(R.string.calculus);
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
@@ -534,7 +535,7 @@ public class Data extends AppCompatActivity {
             prevLuna=is_sopra_luna;
         }
 
-        loadingMessage.setText(R.string.sun_moon_math);
+        loadingMessage.setText(getResources().getString(R.string.sun_moon_math));
         progressDialog.setTitle("Saving...");
         progressDialog.show();
 
