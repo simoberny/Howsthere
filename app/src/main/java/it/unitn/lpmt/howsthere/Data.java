@@ -147,9 +147,9 @@ public class Data extends AppCompatActivity {
                             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
                             ln.setVisibility(TextView.VISIBLE);
                             TextView tx = (TextView)findViewById(R.id.idErrTitolo);
-                            tx.setText("Posizione scelta non valida!");
+                            tx.setText(getResources().getString(R.string.pos_not_valid));
                             TextView tx1 = (TextView)findViewById(R.id.idErrDescrizione);
-                            tx1.setText("Le posizioni consentite includono latitudini da 60N fino a 54S (inclusa parte dell' alaska). Il mare è disponibile solo vicino alle coste.");
+                            tx1.setText(getResources().getString(R.string.permitted_location));
                             Button bt = (Button) findViewById(R.id.idErrButton);
                             bt.setVisibility(TextView.GONE);
                         }
@@ -177,7 +177,7 @@ public class Data extends AppCompatActivity {
                 e1.printStackTrace();
             }
             callsAPI(panorama.lat, panorama.lon);
-            loadingMessage.setText(R.string.loop_id + " n°: " + (richiestaID+1));
+            loadingMessage.setText(getResources().getString(R.string.loop_id) + " n°: " + (richiestaID+1));
             richiestaID++;
         }else{ //ID non ottenuto
             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
@@ -249,7 +249,7 @@ public class Data extends AppCompatActivity {
 
             checkStatus();
             richiestaStato++;
-            loadingMessage.setText(R.string.check_panorama + " n°: " + (richiestaStato+1));
+            loadingMessage.setText(getResources().getString(R.string.check_panorama) + " n°: " + (richiestaStato+1));
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.prontoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
@@ -313,7 +313,7 @@ public class Data extends AppCompatActivity {
             }
 
             richiestaDatiMontagne++;
-            loadingMessage.setText(R.string.check_panorama + " n°: " + (richiestaDatiMontagne+1));
+            loadingMessage.setText(getResources().getString(R.string.check_panorama) + " n°: " + (richiestaDatiMontagne+1));
             loadPeakData();
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
@@ -382,7 +382,7 @@ public class Data extends AppCompatActivity {
             }
 
             richiestaNomiMontagne++;
-            loadingMessage.setText(R.string.check_name + " n°: " + (richiestaNomiMontagne+1));
+            loadingMessage.setText(getResources().getString(R.string.check_name) + " n°: " + (richiestaNomiMontagne+1));
             loadNamePeak();
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoNomiErrLayout);
