@@ -2,6 +2,7 @@ package it.unitn.lpmt.howsthere;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -418,6 +419,42 @@ public class Data extends AppCompatActivity {
         progressDialog.setTitle(R.string.calculus);
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
 
+        Calc c = new Calc(peak, namePeak);
+        c.execute();
+    }
+
+    public void showResult(){
+        progressDialog.dismiss();
+        Intent i = new Intent(this,RisultatiActivity.class); //chiamo la classe Risultati
+        i.putExtra("ID", panorama.ID);
+        i.putExtra("citta", panorama.citta);
+        startActivity(i);
+        //Finish così l'attività non resta nello stack e quando nei risultati si premerà indietro tornerà direttamente nella main page
+        finish();
+    }
+
+    public class Calc extends AsyncTask<Void, Void, Void> {
+        String peak = "";
+        String namePeak = "";
+        public Calc(String peak, String namePeak){
+            this.peak = peak;
+            this.namePeak = namePeak;
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            calc(peak, namePeak);
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            showResult();
+        }
+
+    }
+
+    public void calc(String peak, String namePeak){
         //calcolo Alba e Tramonto senza montagne
         SunTimes s = SunTimes.compute()
                 .on(panorama.data)       // set a date
@@ -425,6 +462,7 @@ public class Data extends AppCompatActivity {
                 .execute();
         panorama.albaNoMontagne = s.getRise();
         panorama.tramontoNoMontagne = s.getSet();
+
 
         //CALCOLO SOLE ogni 5 min
         int indexSole = 0;
@@ -535,22 +573,10 @@ public class Data extends AppCompatActivity {
             prevLuna=is_sopra_luna;
         }
 
-        loadingMessage.setText(getResources().getString(R.string.sun_moon_math));
-        progressDialog.setTitle("Saving...");
-        progressDialog.show();
-
         PanoramiStorage p = PanoramiStorage.panorami_storage; //salvo i dati del panorama con panoramiStorage
         p.addPanorama(panorama);
-
-        progressDialog.dismiss();
-
-        Intent i = new Intent(this,RisultatiActivity.class); //chiamo la classe Risultati
-        i.putExtra("ID", panorama.ID);
-        i.putExtra("citta", panorama.citta);
-        startActivity(i);
-        //Finish così l'attività non resta nello stack e quando nei risultati si premerà indietro tornerà direttamente nella main page
-        finish();
     }
+
 
     /**
      *
@@ -561,7 +587,6 @@ public class Data extends AppCompatActivity {
      * nota: ci sono 2 casi limite, uno è che il sole / luna abbia l' azimuth iniziale più basso di tutti i punti del profilo montagne e l' altro è che lo abbia maggiore di tutte le montagne.
      *
      */
-
     private boolean sopra(int i){
         //todo confronto fra il primo e l' ultimo (0-360)
         int j = 0;

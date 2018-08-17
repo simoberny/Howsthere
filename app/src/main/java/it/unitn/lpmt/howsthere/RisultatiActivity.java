@@ -103,7 +103,7 @@ public class RisultatiActivity extends AppCompatActivity {
                     if (mAuth.getCurrentUser() != null) {
                         getImage();
                     } else {
-                        Snackbar mySnackbar = Snackbar.make(findViewById(R.id.risultatiMainLayout), R.string.no_login, Snackbar.LENGTH_LONG);
+                        Snackbar mySnackbar = Snackbar.make(findViewById(R.id.coord_risultati), getResources().getString(R.string.no_login), Snackbar.LENGTH_LONG);
                         mySnackbar.setAction("Login", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
