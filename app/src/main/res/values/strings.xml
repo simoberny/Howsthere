@@ -206,4 +206,5 @@
     <string name="pos_not_valid">Position not valid!</string>
     <string name="permitted_location">Permitted locations include latitudes from 60N up to 54S (including part of Alaska). The sea is available only near the coasts.</string>
     <string name="powered">Peaks profile powered by</string>
+    <string name="aligned">Aligned</string>
 </resources>

@@ -6,116 +6,123 @@
     android:layout_height="match_parent"
     android:background="@color/real_background"
     tools:context=".Fragment.BussolaFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <android.support.v7.widget.CardView
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="0dp">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <fragment
-                    android:id="@+id/map_alba"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    tools:context="it.unitn.lpmt.howsthere.MainActivity"></fragment>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:alpha="0.30"
-                    android:background="@android:color/white"></RelativeLayout>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/gradi_alba"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="false"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentStart="false"
-                    android:layout_alignParentTop="true"
-                    android:padding="10dp"
-                    android:text="150°"
-                    android:textColor="@color/ap_white"
-                    android:textSize="20sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/compassAlba"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerInParent="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/compass_aff_alba" />
-
-            </RelativeLayout>
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                android:background="@color/background"
+                android:orientation="vertical">
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="22dp"
-                    app:cardElevation="9dp">
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/sunrise" />
+
+                    <TextView
+                        android:id="@+id/alba"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@string/alba"
+                        android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/alba"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                    <TextView
+                        android:id="@+id/gradi_alba"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:text="20°"
+                        android:textSize="22sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:paddingLeft="10dp"
-                            android:text="@string/alba"
-                            android:textSize="22sp" />
+                            app:cardBackgroundColor="@android:color/holo_orange_light"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp" />
+                    </RelativeLayout>
 
-                        <ImageView
-                            android:id="@+id/imageView2"
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/trm"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="5dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="5dp"
+                        android:src="@drawable/sunset" />
+
+                    <TextView
+                        android:id="@+id/tramonto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@string/tramonto"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/gradi_tramonto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:text="50°"
+                        android:textSize="22sp" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:src="@drawable/sunrise" />
-                    </LinearLayout>
+                            app:cardBackgroundColor="@android:color/holo_orange_dark"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp" />
+                    </RelativeLayout>
 
-                </android.support.v7.widget.CardView>
+                </LinearLayout>
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </RelativeLayout>
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             app:cardCornerRadius="0dp"
             app:cardElevation="0dp">
 
@@ -124,7 +131,7 @@
                 android:layout_height="match_parent">
 
                 <fragment
-                    android:id="@+id/map_tram"
+                    android:id="@+id/map_bussola"
                     android:name="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -133,142 +140,43 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:alpha="0.30"
-                    android:background="@android:color/white">
-
-                </RelativeLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/gradi_tramonto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="false"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentStart="false"
-                    android:padding="10dp"
-                    android:text="150°"
-                    android:textColor="@color/ap_white"
-                    android:textSize="20sp" />
+                    android:alpha="0.20"
+                    android:background="@android:color/white"></RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center">
+                android:layout_gravity="center">
 
                 <ImageView
                     android:id="@+id/compassTramonto"
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/azimuthCompass"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerInParent="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/compass_aff" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/compass_aff_2" />
+
+                <ImageView
+                    android:id="@+id/compassAlba"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="false"
+                    android:layout_centerInParent="false"
+                    android:layout_centerVertical="false"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/compass_aff_alba_2" />
+
+                <ImageView
+                    android:id="@+id/nord"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/nord" />
 
             </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    app:cardCornerRadius="22dp"
-                    app:cardElevation="10dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tramonto"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:layout_weight="1"
-                            android:paddingLeft="10dp"
-                            android:text="@string/tramonto"
-                            android:textSize="22sp" />
-
-                        <ImageView
-                            android:id="@+id/trm"
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_margin="5dp"
-                            android:layout_marginRight="15dp"
-                            android:layout_marginTop="5dp"
-                            android:src="@drawable/sunset" />
-                    </LinearLayout>
-
-                </android.support.v7.widget.CardView>
-
-            </LinearLayout>
-
 
         </android.support.v7.widget.CardView>
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
-
-        <android.support.v7.widget.CardView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            app:cardBackgroundColor="@color/real_background"
-            app:cardCornerRadius="60dp"
-            app:cardElevation="0dp">
-
-            <android.support.v7.widget.CardView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_margin="15dp"
-                app:cardCornerRadius="45dp"
-                app:cardElevation="13dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/nord"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="360°"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="25sp" />
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
-
-        </android.support.v7.widget.CardView>
-
-        <ImageView
-            android:id="@+id/nord_compass"
-            android:layout_width="115dp"
-            android:layout_height="115dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="false"
-            android:layout_centerVertical="true"
-            android:src="@drawable/layer_bottom_compass" />
-    </RelativeLayout>
 </FrameLayout>
