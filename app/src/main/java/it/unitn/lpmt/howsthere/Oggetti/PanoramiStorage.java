@@ -108,7 +108,7 @@ public class PanoramiStorage {
                     in = new ObjectInputStream(new FileInputStream(inFile));
                     Panorami = (List<Panorama>) in.readObject();
                     in.close();
-                    System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL: Fatto initial load");
+                    //System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL: Fatto initial load");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

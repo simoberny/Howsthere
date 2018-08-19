@@ -152,7 +152,12 @@ public class PeakFragment extends Fragment implements SensorEventListener {
 
     void stampaGrafico() {
         List<Entry> entriesMontagne = new ArrayList<Entry>();
+        List<Entry> entrieAlba = new ArrayList<Entry>();
+        List<Entry> entrieTramonto = new ArrayList<Entry>();
         final List<Entry> entriesNum = new ArrayList<Entry>();
+
+        entrieAlba.add(new Entry((float) p.getAlba().azimuth, (float) p.getAlba().altezza));
+        entrieTramonto.add(new Entry((float) p.getTramonto().azimuth, (float) p.getTramonto().altezza));
 
         for (int i = 0; i < p.nomiPeak.size(); i++) { //passo dati al grafico
             double k = 0.4;
@@ -172,7 +177,25 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         chart.getAxisRight().setAxisMinValue(-1);
 
         LineDataSet dataSetMontagne = new LineDataSet(entriesMontagne, "Montagne"); // add entries to dataset
-        final LineDataSet dataSetNum = new LineDataSet(entriesNum, "Num");
+        LineDataSet dataSetNum = new LineDataSet(entriesNum, "");
+        LineDataSet dataSetAlba = new LineDataSet(entrieAlba, "Alba"); // add entries to dataset
+        LineDataSet dataSetTramonto = new LineDataSet(entrieTramonto, "Tramonto"); // add entries to dataset
+
+        //proprietà alba:
+        dataSetAlba.setColor(Color.parseColor("#fff176"));
+        dataSetAlba.setDrawValues(false);
+        dataSetAlba.setDrawCircles(true);
+        dataSetAlba.setDrawCircleHole(false);
+        dataSetAlba.setCircleColor(Color.parseColor("#fff176"));
+        dataSetAlba.setCircleRadius(5f);
+
+        //proprietà Tramonto:
+        dataSetTramonto.setColor(Color.parseColor("#ffb74d"));
+        dataSetTramonto.setDrawValues(false);
+        dataSetTramonto.setDrawCircles(true);
+        dataSetTramonto.setDrawCircleHole(false);
+        dataSetTramonto.setCircleColor(Color.parseColor("#ffb74d"));
+        dataSetTramonto.setCircleRadius(5f);
 
         //proprietà grafico Montagne
         dataSetMontagne.setMode(LineDataSet.Mode.LINEAR);
@@ -220,6 +243,8 @@ public class PeakFragment extends Fragment implements SensorEventListener {
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
         lineData.addDataSet(dataSetNum);
+        lineData.addDataSet(dataSetAlba);
+        lineData.addDataSet(dataSetTramonto);
         chart.getXAxis().setDrawLabels(false);
         chart.getXAxis().setDrawAxisLine(false);
         chart.getAxisLeft().setDrawAxisLine(false);
