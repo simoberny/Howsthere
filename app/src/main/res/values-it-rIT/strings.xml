@@ -104,7 +104,6 @@
     <string name="name_mounatin">Scaricamento nomi montagne</string>
     <string name="check_name">ontrollo se sono disponibili i nomi delle montagne, tentativo</string>
     <string name="calculus">Calcolando...</string>
-    <string name="sun_moon_math">Calcolo posizione sole e luna...</string>
     <string name="no_login">Devi eseguire il login per poter scattare un panorama!</string>
     <string name="unavailable">Non disponibile!</string>
     <string name="max_photo">Superato il limite massimo di foto in un giorno, torna domani</string>
@@ -115,4 +114,6 @@
     <string name="permitted_location">Le posizioni consentite includono latitudini da 60N fino a 54S (inclusa parte dell\' alaska). Il mare è disponibile solo vicino alle coste.</string>
     <string name="powered">Profili montagne powered by</string>
     <string name="aligned">Allineato</string>
+    <string name="select_to_share">Seleziona almeno un panorama da condividere!</string>
+    <string name="checkout">Guarda questi panorami da Howsthere!</string>
 </resources>

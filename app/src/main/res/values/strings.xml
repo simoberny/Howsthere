@@ -196,7 +196,6 @@
     <string name="name_mounatin">Gathering mountain name</string>
     <string name="check_name">Check if mountain name is avaiable, try</string>
     <string name="calculus">Calculating...</string>
-    <string name="sun_moon_math">Big math on sun and moon</string>
     <string name="no_login">You have to sign-in to shot a Panorama!</string>
     <string name="unavailable">Not found</string>
     <string name="max_photo">You have reached the max number of photo per day</string>
@@ -207,4 +206,6 @@
     <string name="permitted_location">Permitted locations include latitudes from 60N up to 54S (including part of Alaska). The sea is available only near the coasts.</string>
     <string name="powered">Peaks profile powered by</string>
     <string name="aligned">Aligned</string>
+    <string name="select_to_share">Select at least one panorama to share it!</string>
+    <string name="checkout">Check out this panorama from Howsthere!</string>
 </resources>

@@ -133,38 +133,7 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
     }
 
     public void onSensorChanged(SensorEvent event) {
-        LocationListener ll = new mylocationlistener();
-        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        boolean gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        if (gps_enabled) {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, ll);
-        }
-
-        if (network_enabled) {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-
-            currentLoc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        }
-
         float azimuth = event.values[0];
-        if(currentLoc != null) {
-            azimuth = azimuth * 180 / (float) Math.PI;
-            GeomagneticField geoField = new GeomagneticField(
-                    (float) currentLoc.getLatitude(),
-                    (float) currentLoc.getLongitude(),
-                    (float) currentLoc.getAltitude(),
-                    System.currentTimeMillis());
-            azimuth += geoField.getDeclination();
-        }
-
         RotateAnimation nord = new RotateAnimation(
                 currentDegree,
                 -azimuth,
@@ -220,29 +189,14 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) { }
 
-    private class mylocationlistener implements LocationListener {
-        @Override
-        public void onLocationChanged(Location location) {
-            if (location != null) {
-                currentLoc = location;
-            }
-        }
-        @Override
-        public void onProviderDisabled(String provider) {}
-        @Override
-        public void onProviderEnabled(String provider) {}
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-    }
-
     private void updateCameraBearing(GoogleMap googleMap, float bearing) {
         if ( googleMap == null) return;
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(lat, lon))             // Sets the center of the map to current location
-                .zoom(12)                   // Sets the zoom
-                .bearing(bearing) // Sets the orientation of the camera to east
-                .tilt(0)                   // Sets the tilt of the camera to 0 degrees
-                .build();                   // Creates a CameraPosition from the builder
+                .target(new LatLng(lat, lon))
+                .zoom(12)
+                .bearing(bearing)
+                .tilt(0)
+                .build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 

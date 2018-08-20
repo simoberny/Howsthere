@@ -33,10 +33,7 @@
                 android:layout_margin="0dp"
                 android:divider="@null"
                 android:footerDividersEnabled="false"
-                android:headerDividersEnabled="false"
-                android:padding="5dp"
-                android:paddingBottom="0dp"
-                android:paddingTop="0dp" />
+                android:headerDividersEnabled="false" />
 
             <LinearLayout
                 android:id="@+id/nofeed"

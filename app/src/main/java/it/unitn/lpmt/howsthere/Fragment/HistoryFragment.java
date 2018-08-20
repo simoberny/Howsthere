@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,7 +30,6 @@ import it.unitn.lpmt.howsthere.Oggetti.Panorama;
 import it.unitn.lpmt.howsthere.Oggetti.PanoramiStorage;
 import it.unitn.lpmt.howsthere.R;
 import it.unitn.lpmt.howsthere.RisultatiActivity;
-
 
 public class HistoryFragment extends Fragment{
     //static List selezionati_posiz = new ArrayList();
@@ -88,6 +88,19 @@ public class HistoryFragment extends Fragment{
                     }
                 }).show();
             }
+        }else if(id == R.id.share){
+            if(in_selezione){
+                for(int i = 0; i < selezionati_id.size(); i++){
+                    Panorama p = PanoramiStorage.panorami_storage.getPanoramabyID(selezionati_id.get(i));
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.checkout) + "\nPanorama " + i + " https://howsthere.page.link/panorama?date=" + p.data.getTime() + "&lat=" + p.lat + "&lon=" + p.lon);
+                    sendIntent.setType("text/plain");
+                    startActivity(sendIntent);
+                }
+            }else{
+                Snackbar.make(getActivity().findViewById(R.id.layout_base), R.string.select_to_share, Snackbar.LENGTH_LONG).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -113,32 +126,37 @@ public class HistoryFragment extends Fragment{
         });
 
         LinearLayout nofeed = view.findViewById(R.id.nofeed);
-        ListView r = (ListView) view.findViewById(R.id.storico_lista);
+        final ListView r = (ListView) view.findViewById(R.id.storico_lista);
         List<Panorama> list = PanoramiStorage.panorami_storage.getAllPanorama();
         adapter = new StoricoAdapter(view.getContext(), R.layout.singolo_storico, list,selezionati_id);
         r.setAdapter(adapter);
 
         r.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                TextView ID = view.findViewById(R.id.ID);
-                String idi = (String) ID.getText();
-                ImageView v = view.findViewById(R.id.spunta);
+                String selected_id = ((Panorama)parent.getAdapter().getItem(position)).ID;
+                CheckBox v = view.findViewById(R.id.selectable);
                 if(!in_selezione) {
                     Intent i = new Intent(getActivity(), RisultatiActivity.class);
-                    i.putExtra("ID", idi);
+                    i.putExtra("ID", selected_id);
                     startActivity(i);
+                }else if(selezionati_id.contains(selected_id)){
+                    selezionati_id.remove(selected_id);
+                    view.findViewById(R.id.overlay).setVisibility(View.GONE);
+                    //view.findViewById(R.id.spunta).setVisibility(View.GONE); //Spunta Matteo
+                    v.setChecked(false);
 
-                }else if(selezionati_id.contains(idi)){
-                    selezionati_id.remove(idi);
-                    v.setVisibility(View.INVISIBLE);
                     if(selezionati_id.size()==0){
+                        for(int i = 0; i < parent.getAdapter().getCount(); i++){
+                            CheckBox cb = r.getChildAt(i).findViewById(R.id.selectable);
+                            cb.setVisibility(View.GONE);
+                        }
                         in_selezione = false;
                     }
-
                 }else{
-                    selezionati_id.add(idi);
-                    v.setVisibility(View.VISIBLE);
-
+                    view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+                    //view.findViewById(R.id.spunta).setVisibility(View.VISIBLE); //Spunta Matteo
+                    v.setChecked(true);
+                    selezionati_id.add(selected_id);
                 }
             }
         });
@@ -146,13 +164,23 @@ public class HistoryFragment extends Fragment{
         r.setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener(){
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id){
-                ImageView v = view.findViewById(R.id.spunta);
-                v.setVisibility(View.VISIBLE);
-                TextView ID = view.findViewById(R.id.ID);
-                String idi = (String) ID.getText();
+                String selected_id = ((Panorama)parent.getAdapter().getItem(position)).ID;
+                if(!selezionati_id.contains(selected_id)) {
+                    CheckBox v = view.findViewById(R.id.selectable);
+                    if(!in_selezione){
+                        for (int i = 0; i < parent.getAdapter().getCount(); i++) {
+                            CheckBox cb = r.getChildAt(i).findViewById(R.id.selectable);
+                            cb.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    v.setChecked(true);
+                    selezionati_id.add(selected_id);
 
-                selezionati_id.add(idi);
-                in_selezione = true;
+                    view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+                    //view.findViewById(R.id.spunta).setVisibility(View.VISIBLE); //Spunta Matteo
+
+                    in_selezione = true;
+                }
                 return true;
             }
         });

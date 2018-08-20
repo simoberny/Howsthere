@@ -85,6 +85,12 @@ public class MeteoFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        forecast.clear();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meteo, container, false);
@@ -187,6 +193,7 @@ public class MeteoFragment extends Fragment {
                         forecast.add(temp);
                     }
                 }
+
                 ff.update(forecast);
             }
 

@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity{
             String date = appLinkData.getQueryParameter("date");
             String lat_query = appLinkData.getQueryParameter("lat").toString();
             String lon_query = appLinkData.getQueryParameter("lon").toString();
-            String citta_query = appLinkData.getQueryParameter("citta");
 
             long date_query = Long.parseLong(date);
 
@@ -124,7 +123,6 @@ public class MainActivity extends AppCompatActivity{
             data.putExtra("lat", Double.valueOf(lat_query));
             data.putExtra("long", Double.valueOf(lon_query));
             data.putExtra("data", date_query);
-            data.putExtra("citta", citta_query);
             startActivity(data);
         }
 
