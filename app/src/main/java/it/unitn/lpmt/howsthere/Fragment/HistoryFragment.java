@@ -90,14 +90,17 @@ public class HistoryFragment extends Fragment{
             }
         }else if(id == R.id.share){
             if(in_selezione){
+                String sharing = getResources().getString(R.string.checkout);
                 for(int i = 0; i < selezionati_id.size(); i++){
                     Panorama p = PanoramiStorage.panorami_storage.getPanoramabyID(selezionati_id.get(i));
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.checkout) + "\nPanorama " + i + " https://howsthere.page.link/panorama?date=" + p.data.getTime() + "&lat=" + p.lat + "&lon=" + p.lon);
-                    sendIntent.setType("text/plain");
-                    startActivity(sendIntent);
+                    sharing += "\nPanorama " + i + " https://howsthere.page.link/panorama?date=" + p.data.getTime() + "&lat=" + p.lat + "&lon=" + p.lon + "\n";
                 }
+
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, sharing);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
             }else{
                 Snackbar.make(getActivity().findViewById(R.id.layout_base), R.string.select_to_share, Snackbar.LENGTH_LONG).show();
             }

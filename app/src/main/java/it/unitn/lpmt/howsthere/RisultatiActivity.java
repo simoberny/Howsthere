@@ -159,6 +159,7 @@ public class RisultatiActivity extends AppCompatActivity {
         pf = PeakFragment.newInstance();
 
         String posizione = getPosizione(p.lat, p.lon);
+        p.citta = posizione;
 
         if (posizione != null) {
             tl.setTitle(posizione);
@@ -287,7 +288,7 @@ public class RisultatiActivity extends AppCompatActivity {
             }
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "it.unitn.simob.howsthere.fileprovider",
+                        "it.unitn.lpmt.howsthere.fileprovider",
                         photoFile);
                 takePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePicture, CAMERA_INTENT);

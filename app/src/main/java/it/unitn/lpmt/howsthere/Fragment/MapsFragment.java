@@ -151,6 +151,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("SettingsPref", 0);
         map_id = pref.getInt("map", 0);
+        maps_type = pref.getInt("maps_type", 2);
 
         final View rootview = (map_id == 0) ? inflater.inflate(R.layout.fragment_maps, container, false) : inflater.inflate(R.layout.fragment_maps_osm, container, false);
         //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
