@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import com.bumptech.glide.util.MarkEnforcingInputStream;
+
 import java.util.List;
 
 import it.unitn.lpmt.howsthere.Oggetti.Panorama;
@@ -23,21 +25,18 @@ public class CustomExHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
+
         PanoramiStorage p = PanoramiStorage.panorami_storage;
         List<Panorama> list = p.getAllPanorama();
         if(list.size() > 0){
-            p.delete(list.size() - 1);
+            p.delete_by_id(list.get(0).ID);
+            System.out.println("DELETE: " + list.get(0).ID + list.get(0).citta);
         }
 
-        Intent intent = new Intent(activity, MainActivity.class);
+        Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
         intent.putExtra("crash", true);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(App.INSTANCE.getBaseContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager mgr = (AlarmManager) App.INSTANCE.getBaseContext().getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 50, pendingIntent);
-        System.exit(2);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.startActivity(intent);
     }
 
 }

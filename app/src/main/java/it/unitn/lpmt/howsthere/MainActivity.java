@@ -112,6 +112,11 @@ public class MainActivity extends AppCompatActivity{
         String action = i.getAction();
         Uri appLinkData = i.getData();
 
+        if(extra != null && extra.getBoolean("crash")){
+            Intent crashAc = new Intent(this, CrashActivity.class);
+            startActivity(crashAc);
+        }
+
         if (Intent.ACTION_VIEW.equals(action) && appLinkData != null){
             String date = appLinkData.getQueryParameter("date");
             String lat_query = appLinkData.getQueryParameter("lat").toString();

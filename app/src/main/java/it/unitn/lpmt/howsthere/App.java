@@ -14,7 +14,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Thread.setDefaultUncaughtExceptionHandler(new CustomExHandler(this));
+        //Thread.setDefaultUncaughtExceptionHandler(new CustomExHandler(this));
         Fresco.initialize(this);
         INSTANCE = this;
     }

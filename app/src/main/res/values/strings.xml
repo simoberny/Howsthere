@@ -210,4 +210,7 @@
     <string name="select_to_share">Select at least one panorama to share it!</string>
     <string name="checkout">Check out this panorama from Howsthere!</string>
     <string name="position">Position</string>
+    <string name="restart">Restart</string>
+    <string name="error_un">Chart error</string>
+    <string name="error_chart">Missing information of sun or moon. Retry in another position</string>
 </resources>

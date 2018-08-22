@@ -116,4 +116,7 @@
     <string name="aligned">Allineato</string>
     <string name="select_to_share">Seleziona almeno un panorama da condividere!</string>
     <string name="checkout">Guarda questi panorami da Howsthere!</string>
+    <string name="restart">Riavvia</string>
+    <string name="error_un">Errore grafico</string>
+    <string name="error_chart">Informazioni mancanti sole e luna, riprovare in un altra posizione. L\'applicazione verrà riavviata</string>
 </resources>
