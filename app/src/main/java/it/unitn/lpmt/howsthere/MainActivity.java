@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity{
             startActivity(introIntent);
         }
 
-        /*PanoramiStorage.context = this;
+        PanoramiStorage.context = this;
         PanoramiStorage.panorami_storage = new PanoramiStorage();
-        PanoramiStorage.panorami_storage.initial_load();*/
+        PanoramiStorage.panorami_storage.initial_load();
 
         SharedPreferences pref = getApplicationContext().getSharedPreferences("SettingsPref", 0);
         SharedPreferences.Editor editor = pref.edit();

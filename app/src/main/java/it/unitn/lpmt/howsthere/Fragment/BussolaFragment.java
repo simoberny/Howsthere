@@ -75,13 +75,6 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
     }
 
     @Override
@@ -182,7 +175,7 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
             compassTramonto.startAnimation(ra);
         }
 
-        updateCameraBearing(map, currentDegree);
+        updateCameraBearing(map, -currentDegree);
         currentDegree = -azimuth;
     }
 

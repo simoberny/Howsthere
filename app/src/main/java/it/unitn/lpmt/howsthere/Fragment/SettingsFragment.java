@@ -61,7 +61,7 @@ public class SettingsFragment extends PreferenceFragmentCompat{
             maps.setDialogTitle(R.string.pref_maps_type);
         }
 
-        CheckBoxPreference nightmode = (CheckBoxPreference) findPreference("night_mode");
+        /*CheckBoxPreference nightmode = (CheckBoxPreference) findPreference("night_mode");
         nightmode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -84,7 +84,7 @@ public class SettingsFragment extends PreferenceFragmentCompat{
                 ((MainActivity) getActivity()).finish();
                 return true;
             }
-        });
+        });*/
 
         maps.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override

@@ -17,11 +17,11 @@
                 android:positiveButtonText="@null"
                 android:summary="%s"
                 android:title="@string/pref_maps_type" />
-            <CheckBoxPreference
+            <!--<CheckBoxPreference
                 android:defaultValue="false"
                 android:key="night_mode"
                 android:summary="@string/theme_summary"
-                android:title="@string/theme" />
+                android:title="@string/theme" />-->
         </PreferenceCategory>
         <PreferenceCategory android:title="Heywhatsthat">
                 <Preference android:key="info"

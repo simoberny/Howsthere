@@ -16,13 +16,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        PanoramiStorage.context = this;
-        PanoramiStorage.panorami_storage = new PanoramiStorage();
-        PanoramiStorage.panorami_storage.initial_load();
-
         INSTANCE = this;
-        Thread.setDefaultUncaughtExceptionHandler(new CustomExHandler(this));
+        //Thread.setDefaultUncaughtExceptionHandler(new CustomExHandler(this));
         Fresco.initialize(this);
     }
 

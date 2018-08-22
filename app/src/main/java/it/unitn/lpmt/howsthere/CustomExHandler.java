@@ -25,17 +25,17 @@ public class CustomExHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        PanoramiStorage p = PanoramiStorage.panorami_storage;
+        if(ex.toString().contains("NegativeArraySizeException")){
+            Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
+            intent.putExtra("crash", true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 
-        Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
-        intent.putExtra("crash", true);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            PendingIntent pendingIntent = PendingIntent.getActivity(App.INSTANCE.getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager mgr = (AlarmManager) App.INSTANCE.getBaseContext().getSystemService(Context.ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 25, pendingIntent);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(App.INSTANCE.getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager mgr = (AlarmManager) App.INSTANCE.getBaseContext().getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 25, pendingIntent);
-
-        System.exit(0);
+            System.exit(0);
+        }
     }
 
 }

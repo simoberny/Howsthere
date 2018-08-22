@@ -88,13 +88,8 @@ public class PanoramiStorage {
                 directory.mkdirs();
                 File inFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
                 in = new ObjectInputStream(new FileInputStream(inFile));
-                while(in.available() > 0) {
-                    Panorami = (List<Panorama>) in.readObject();
-                }
-
+                Panorami = (List<Panorama>) in.readObject();
                 in.close();
-            } catch (EOFException e) {
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -102,7 +97,6 @@ public class PanoramiStorage {
     }
 
     public void initial_load() {
-        //System.err.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL: chiamato initial load");
         Runnable r = new Runnable()
         {
             @Override
@@ -114,13 +108,8 @@ public class PanoramiStorage {
                     directory.mkdirs();
                     File inFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
                     in = new ObjectInputStream(new FileInputStream(inFile));
-                    while(in.available() > 0){
-                        Panorami = (List<Panorama>) in.readObject();
-                    }
+                    Panorami = (List<Panorama>) in.readObject();
                     in.close();
-                    //System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL: Fatto initial load");
-                } catch (EOFException e) {
-                    //
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -153,10 +142,7 @@ public class PanoramiStorage {
                     ObjectOutput out = new ObjectOutputStream(new FileOutputStream(outFile));
                     out.writeObject(Panorami);
                     out.close();
-                    System.out.println("Finito di salvare");
-                } catch (EOFException e) {
-                    System.out.println("Beccato");
-                } catch (Exception e) {
+                }catch (Exception e) {
                     e.printStackTrace();
                 }
 

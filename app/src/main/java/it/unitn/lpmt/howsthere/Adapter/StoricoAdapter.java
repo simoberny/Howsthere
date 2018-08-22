@@ -68,7 +68,7 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         Picasso.get().load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=300x350&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon).placeholder(R.drawable.nomap).into(anteprima);
 
         String d = (String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data);
-        data.setText(getTempoStorico(d));
+        data.setText(d);
 
         if (selezionati_id.contains(p.ID)){
             convertView.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
@@ -81,49 +81,7 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         return convertView;
     }
 
-    private String getTempoStorico(String d){
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        long diff = 0;
-        boolean dataPassata = false;
-        try {
-            Date date = format.parse(d);
-            if (new Date().getTime() - date.getTime() >= 0){ // mi segno se la data è futura o passata
-                dataPassata = true;
-            }
-            long diffInMillies = Math.abs(new Date().getTime() - date.getTime());
-            diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-        String tempo = "";
-
-        if(dataPassata==true) {
-            if (diff >= 60 && (diff / 60) < 24) {
-                tempo = "oggi";
-            } else if (diff >= 60 && (diff / 60) > 24 && (diff / 60) < 48) {
-                tempo = "ieri";
-            } else if (diff >= 60 && (diff / 60) > 48 && (diff / 60) < 3 * 30 * 24) {
-                long temp = (diff / 60 / 24);
-                tempo = temp + " giorn" + (((int) temp == 1) ? "o" : "i") + " fa";
-            } else {
-                tempo = d;
-            }
-        }else{
-            if (diff >= 60 && (diff / 60) < 24) {
-                tempo = "oggi";
-            } else if (diff >= 60 && (diff / 60) > 24 && (diff / 60) < 48) {
-                tempo = "domani";
-            } else if (diff >= 60 && (diff / 60) > 48 && (diff / 60) < 3 * 30 * 24) {
-                long temp = (diff / 60 / 24);
-                tempo = "fra " + temp + " giorn" + (((int) temp == 1) ? "o" : "i");
-            } else {
-                tempo = d;
-            }
-        }
-
-        return tempo;
-    }
 
     void stampaGrafico(Panorama p, final LineChart chart){
         List<Entry> entriesMontagne = new ArrayList<Entry>();
