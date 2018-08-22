@@ -146,12 +146,6 @@ public class HistoryFragment extends Fragment{
                     v.setChecked(false);
 
                     if(selezionati_id.size()==0){
-                        for(int i = 0; i < parent.getAdapter().getCount(); i++){
-                            CheckBox cb = r.getChildAt(i).findViewById(R.id.selectable);
-                            if(cb.isShown() && cb != null){
-                                cb.setVisibility(View.GONE);
-                            }
-                        }
                         in_selezione = false;
                     }
                 }else{
@@ -169,14 +163,6 @@ public class HistoryFragment extends Fragment{
                 String selected_id = ((Panorama)parent.getAdapter().getItem(position)).ID;
                 if(!selezionati_id.contains(selected_id)) {
                     CheckBox v = view.findViewById(R.id.selectable);
-                    if(!in_selezione){
-                        for (int i = 0; i < parent.getAdapter().getCount(); i++) {
-                            CheckBox cb = r.getChildAt(i).findViewById(R.id.selectable);
-                            if(cb.isShown() && cb != null) {
-                                cb.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
                     v.setChecked(true);
                     selezionati_id.add(selected_id);
 
