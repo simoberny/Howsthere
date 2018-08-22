@@ -31,8 +31,7 @@
         android:roundIcon="@drawable/round_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:versionCode="1"
-        android:versionName="Ruzzly">
+        android:versionCode="1">
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.com.vansuita.pickimage.provider"

@@ -344,7 +344,7 @@ public class MoonFragment extends Fragment {
         } else {
             albaTv.setText("nd");
         }
-        ((TextView) view.findViewById(R.id.albaOrizzonteLuna)).setText((String) DateFormat.format("HH", p.albaLunaNoMontagne) + ":" + (String) DateFormat.format("mm", p.albaLunaNoMontagne));
+        //((TextView) view.findViewById(R.id.albaOrizzonteLuna)).setText((String) DateFormat.format("HH", p.albaLunaNoMontagne) + ":" + (String) DateFormat.format("mm", p.albaLunaNoMontagne));
 
 
         //card tramonto sole
