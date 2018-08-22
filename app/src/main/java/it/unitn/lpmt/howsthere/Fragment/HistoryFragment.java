@@ -148,7 +148,9 @@ public class HistoryFragment extends Fragment{
                     if(selezionati_id.size()==0){
                         for(int i = 0; i < parent.getAdapter().getCount(); i++){
                             CheckBox cb = r.getChildAt(i).findViewById(R.id.selectable);
-                            cb.setVisibility(View.GONE);
+                            if(cb.isShown() && cb != null){
+                                cb.setVisibility(View.GONE);
+                            }
                         }
                         in_selezione = false;
                     }
@@ -170,7 +172,9 @@ public class HistoryFragment extends Fragment{
                     if(!in_selezione){
                         for (int i = 0; i < parent.getAdapter().getCount(); i++) {
                             CheckBox cb = r.getChildAt(i).findViewById(R.id.selectable);
-                            cb.setVisibility(View.VISIBLE);
+                            if(cb.isShown() && cb != null) {
+                                cb.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                     v.setChecked(true);

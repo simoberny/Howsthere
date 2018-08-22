@@ -71,7 +71,7 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         data.setText(getTempoStorico(d));
 
         if (selezionati_id.contains(p.ID)){
-            convertView.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.overlay);
             selectable.setVisibility(View.VISIBLE);
             selectable.setChecked(true);
         }
