@@ -52,7 +52,7 @@ public class MoonFragment extends Fragment {
     private FrameLayout main = null;
 
     LineChart chart = null;
-
+    static View currentView;
     public MoonFragment() {
         // Required empty public constructor
     }
@@ -84,7 +84,7 @@ public class MoonFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_moon, container, false);
-
+        currentView = view;
         p = ((RisultatiActivity)getActivity()).p;
 
         if(p!=null) {
@@ -94,36 +94,40 @@ public class MoonFragment extends Fragment {
             final CardView apparizioniCard = view.findViewById(R.id.apparizioniCard_luna);
             final CardView sparizioniCard = view.findViewById(R.id.sparizioniCard_luna);
 
+
             if (p.albeLuna.size() > 1) {
                 apparizioniCard.setVisibility(View.VISIBLE);
             }
+
             apparizioniLunaButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    ExpandableLayout apparizioniLunaLayout = view.findViewById(R.id.apparizioniLunaLayout);
-                    TextView apparizioniLunaTx = view.findViewById(R.id.apparizioniLunaTx);
-
+                    ExpandableLayout apparizioniLunaLayout = currentView.findViewById(R.id.apparizioniLunaLayout);
+                    TextView apparizioniLunaTx = currentView.findViewById(R.id.apparizioniLunaTx);
                     if (apparizioniLunaLayout.isExpanded() == false && p != null) {
                         apparizioniLunaTx.setText("");
                         for (int i = 0; i < p.albeLuna.size(); i++) {
-                            apparizioniLunaTx.append("" + p.albeLuna.get(i).ora + ":" + p.albeLuna.get(i).minuto + '\n');
+                            //System.out.println("i : " + i + p.albeLuna.get(i).ora + ":" + p.albeLuna.get(i).minuto);
+                            apparizioniLunaTx.append("" + p.albeLuna.get(i).ora + ":" + (p.albeLuna.get(i).minuto < 10 ? "0" + p.albeLuna.get(i).minuto : p.albeLuna.get(i).minuto) + '\n');
                         }
                     }
                     apparizioniLunaLayout.toggle();
                 }
             });
 
-            //menù espandibile sparizioni sole
+
+            //menù espandibile sparizioni luna
             if (p.tramontiLuna.size() > 1) {
                 sparizioniCard.setVisibility(View.VISIBLE);
             }
             sparizioniLunaButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    ExpandableLayout sparizioniLunaLayout = view.findViewById(R.id.sparizioniLunaLayout);
-                    TextView sparizioniLunaTx = view.findViewById(R.id.sparizioniLunaTx);
+                    ExpandableLayout sparizioniLunaLayout = currentView.findViewById(R.id.sparizioniLunaLayout);
+                    TextView sparizioniLunaTx = currentView.findViewById(R.id.sparizioniLunaTx);
                     if (sparizioniLunaLayout.isExpanded() == false && p != null) {
                         sparizioniLunaTx.setText("");
                         for (int i = 0; i < p.tramontiLuna.size(); i++) {
-                            sparizioniLunaTx.append("" + p.tramontiLuna.get(i).ora + ":" + p.tramontiLuna.get(i).minuto + '\n');
+                            //System.out.println("i : " + i + p.tramontiLuna.get(i).ora + ":" + p.tramontiLuna.get(i).minuto);
+                            sparizioniLunaTx.append("" + p.tramontiLuna.get(i).ora + ":" + (p.tramontiLuna.get(i).minuto < 10 ? "0" + p.tramontiLuna.get(i).minuto : p.tramontiLuna.get(i).minuto) + '\n');
                         }
                     }
                     sparizioniLunaLayout.toggle();
@@ -192,12 +196,25 @@ public class MoonFragment extends Fragment {
         List<Entry> entriesLuna = new ArrayList<Entry>();
 
         //Arrays.sort(risultatiLuna); //ordino secondo azimuth ATTENZIONE: se vengono ordinati allora si mescolano i dati della mattina dopo quelli della sera
+        for(int i = 288; i<577; i++) { //passo dati al grafico solo del giorno corrente e se validi e passo anche la mezzanotte del giorno dopo
+            if (p.risultatiLuna[i].minuto == 0) {
+                if (p.risultatiLuna[i].altezza >= -20) {
+                    entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) p.risultatiLuna[i].altezza));
+                }else{
+                    entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) -20));
+                }
+            }
+        }
+
+
+        /*  codice per mostrare anche la continuazione
         for(int i = 0; i<864; i++) { //passo dati al grafico
             if(p.risultatiLuna[i].minuto == 0){
+
                 if(i<288 && p.risultatiLuna[288].azimuth > p.risultatiLuna[i].azimuth) { //solo le ore del giorno prima che concludono l' arco in cielo
                     entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) p.risultatiLuna[i].altezza));
                 }
-                else if(i>575 && p.risultatiLuna[575].azimuth < p.risultatiLuna[i].azimuth) { //solo le ore del giorno prima che concludono l' arco in cielo
+                else if(i>575 && p.risultatiLuna[575].azimuth < p.risultatiLuna[i].azimuth) { //solo le ore del giorno dopo che concludono l' arco in cielo
                     entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) p.risultatiLuna[i].altezza));
                 }
                 else if(i>=288 && i<576){
@@ -207,7 +224,7 @@ public class MoonFragment extends Fragment {
                     entriesLuna.add(new Entry((float) p.risultatiLuna[i].azimuth, (float) -90));
                 }
             }
-        }
+        }*/
 
         //MONTAGNE
         for (int i =0; i<360; i++) {
@@ -253,11 +270,13 @@ public class MoonFragment extends Fragment {
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
                 int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
-                if (idx>23 && idx <48) {
+                return String.valueOf(idx % 25);
+
+                /*if (idx>23 && idx <48) { //per avere ore sul grafico solo sul giorno stesso e non sulle continuazioni
                     return String.valueOf(idx % 24);
                 }else{
                     return "";
-                }
+                }*/
             }
         });
 
@@ -271,8 +290,8 @@ public class MoonFragment extends Fragment {
         for(int i = 48; i<64; i++){
             coloricerchiLuna[i] = Color.argb(65,158, 158, 158);
         }
-        dataSetLuna.setCircleColors(coloricerchiLuna);
-
+        //dataSetLuna.setCircleColors(coloricerchiLuna); abilitazione colori diversi per continuazione in grigetto traiettoria
+        dataSetLuna.setCircleColors(Color.GRAY);
         chart.getDescription().setText("");
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
@@ -325,7 +344,7 @@ public class MoonFragment extends Fragment {
         } else {
             albaTv.setText("nd");
         }
-        ((TextView) view.findViewById(R.id.albaOrizzonteLuna)).setText((String) DateFormat.format("HH", p.albaLunaNoMontagne) + ":" + (String) DateFormat.format("mm", p.albaLunaNoMontagne)+ ":" + (String) DateFormat.format("dd", p.albaLunaNoMontagne));
+        ((TextView) view.findViewById(R.id.albaOrizzonteLuna)).setText((String) DateFormat.format("HH", p.albaLunaNoMontagne) + ":" + (String) DateFormat.format("mm", p.albaLunaNoMontagne));
 
 
         //card tramonto sole
@@ -337,10 +356,31 @@ public class MoonFragment extends Fragment {
         } else {
             tramontoTv.setText("nd");
         }
-        ((TextView) view.findViewById(R.id.tramontoOrizzonteLuna)).setText((String) DateFormat.format("HH", p.tramontoLunaNoMontagne) + ":" + (String) DateFormat.format("mm", p.tramontoLunaNoMontagne)+ ":" + (String) DateFormat.format("dd", p.tramontoLunaNoMontagne));
-        ((TextView) view.findViewById(R.id.minutiLunaMontagne)).setText("" + p.minutiLuna/60 + ":"+((p.minutiLuna%60) < 10 ? ("0" + (p.minutiLuna%60)) : (p.minutiLuna%60)));
+
+        if (p.tramontoLunaNoMontagne != null) ((TextView) view.findViewById(R.id.tramontoOrizzonteLuna)).setText((String) DateFormat.format("HH", p.tramontoLunaNoMontagne) + ":" + (String) DateFormat.format("mm", p.tramontoLunaNoMontagne));
+        //((TextView) view.findViewById(R.id.minutiLunaMontagne)).setText("" + p.minutiLuna/60 + ":"+((p.minutiLuna%60) < 10 ? ("0" + (p.minutiLuna%60)) : (p.minutiLuna%60)));
         ((TextView) view.findViewById(R.id.data_m)).setText((String) DateFormat.format("dd", p.data) + "/" + (String) DateFormat.format("MM", p.data) + "/" + (String) DateFormat.format("yyyy", p.data));
-        ((TextView) view.findViewById(R.id.faselunare)).setText(p.faseLuna+"");
-        ((TextView) view.findViewById(R.id.luceluna)).setText(p.percentualeLuna +"%");
+
+        /*   //determinazione stringa per fase lunare
+        170 - 180 + -180 - -170     nuova luna
+        -170 - -85                  luna crescente
+        -85 - -95                   primo quarto
+        -95 - -10                   Gibbosa crescente
+        -10 - 10                    Luna piena
+        10 - 85                     Gibbosa calante
+        85 - 95                     ultimo quarto
+        95 - 170                    luna calante
+         */
+        String nomeFaseLuna = "";
+        if ((p.faseLuna >= 175 && p.faseLuna < 181) || (p.faseLuna >= -180 && p.faseLuna < -170))  nomeFaseLuna = "Nuova luna";
+        if (p.faseLuna >= -170 && p.faseLuna < -85)  nomeFaseLuna = "Luna crescente";
+        if (p.faseLuna >= -85 && p.faseLuna < -95)  nomeFaseLuna = "Primo quarto";
+        if (p.faseLuna >= -95 && p.faseLuna < -10)  nomeFaseLuna = "Gibbosa crescente";
+        if (p.faseLuna >= -10 && p.faseLuna < 10)  nomeFaseLuna = "Luna piena";
+        if (p.faseLuna >= 10 && p.faseLuna < 85)  nomeFaseLuna = "Gibbosa calante";
+        if (p.faseLuna >= 85 && p.faseLuna < 95)  nomeFaseLuna = "Ultimo quarto";
+        if (p.faseLuna >= 95 && p.faseLuna < 175)  nomeFaseLuna = "Luna calante";
+        ((TextView) view.findViewById(R.id.faselunare)).setText(nomeFaseLuna + " (" + (int)p.faseLuna+") ");
+        ((TextView) view.findViewById(R.id.luceluna)).setText((int)p.percentualeLuna +"%");
     }
 }

@@ -289,7 +289,8 @@
                                     android:layout_height="match_parent"
                                     android:layout_marginTop="0dp"
                                     android:layout_weight="1"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
 
                                     <TextView
                                         android:id="@+id/textView5"
@@ -495,7 +496,8 @@
                                     android:layout_height="match_parent"
                                     android:layout_marginTop="0dp"
                                     android:layout_weight="1"
-                                    android:orientation="horizontal">
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
 
                                     <TextView
                                         android:layout_width="match_parent"
@@ -592,7 +594,8 @@
                         android:layout_marginBottom="5dp"
                         android:layout_marginTop="5dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -663,9 +666,9 @@
                                 android:background="@color/background"
                                 android:drawableRight="@drawable/baseline_chevron_right_24"
                                 android:paddingRight="10dp"
-                                android:text="@string/appa"
+                                android:text="@string/appaM"
                                 android:textColor="@color/place_autocomplete_search_text"
-                                android:visibility="gone" />
+                                android:visibility="visible" />
 
                             <net.cachapa.expandablelayout.ExpandableLayout
                                 android:id="@+id/apparizioniLunaLayout"
@@ -719,9 +722,9 @@
                                 android:background="@color/background"
                                 android:drawableRight="@drawable/baseline_chevron_right_24"
                                 android:paddingRight="10dp"
-                                android:text="@string/spa"
+                                android:text="@string/spaM"
                                 android:textColor="@color/place_autocomplete_prediction_primary_text"
-                                android:visibility="gone" />
+                                android:visibility="visible" />
 
                             <net.cachapa.expandablelayout.ExpandableLayout
                                 android:id="@+id/sparizioniLunaLayout"

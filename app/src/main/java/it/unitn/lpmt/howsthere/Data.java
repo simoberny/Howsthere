@@ -505,6 +505,7 @@ public class Data extends AppCompatActivity {
                     MoonIllumination m = MoonIllumination.compute().on(panorama.data).execute();
                     panorama.percentualeLuna = m.getFraction()*100;
                     panorama.faseLuna = m.getPhase();
+                    System.out.println("AAAAAAA" + m.toString());
 
                     MoonTimes m1 = MoonTimes.compute().on(panorama.data).execute();
                     panorama.albaLunaNoMontagne = m1.getRise();
@@ -562,15 +563,41 @@ public class Data extends AppCompatActivity {
         //ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne LUNA
         boolean prevLuna = false;
         panorama.minutiLuna = 0;
-        for(int i = 288; i<576; i++){
+        for(int i = 287; i<576; i++){ //cerco alba anche nei 5 minuti prima di mezzanotte per non escludere un alba esattamente a mezzanotte
             boolean is_sopra_luna = sopraLuna(i);
             if (is_sopra_luna) panorama.minutiLuna+=5;
-            //alba
-            if(!prevLuna && is_sopra_luna) panorama.albeLuna.add(panorama.risultatiLuna[i]);
+            //alba (non calcolata se è già sorta dal giorno prima)
+            if((!prevLuna && is_sopra_luna)&& i > 287) panorama.albeLuna.add(panorama.risultatiLuna[i]);
             //tramonto
             if(prevLuna && !is_sopra_luna) panorama.tramontiLuna.add(panorama.risultatiLuna[i]);
 
             prevLuna=is_sopra_luna;
+	/* ricerca albe luna nel giorno precedente se è sorta prima delle 00.00
+
+	boolean sopraLuna = sopraLuna(i);
+            if (sopraLuna) panorama.minutiLuna+=5;
+            if(!prevLuna && sopraLuna){ //alba
+                if(i == 288){ // la luna è già sorta a mezzanotte
+                    int j = 288;
+                    while (sopraLuna(j) && j > 0){
+                            j--;
+                        System.out.println("J: " + j);
+                        }
+                    panorama.albeLuna.add(panorama.risultatiLuna[j+1]);
+
+                }else{
+                    panorama.albeLuna.add(panorama.risultatiLuna[i]);
+                }
+
+
+            }
+            if(prevLuna && !sopraLuna){ //tramonto
+                panorama.tramontiLuna.add(panorama.risultatiLuna[i]);
+            }
+            prevLuna=sopraLuna;
+	*/
+
+
         }
 
         PanoramiStorage p = PanoramiStorage.panorami_storage; //salvo i dati del panorama con panoramiStorage

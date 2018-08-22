@@ -84,8 +84,12 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
     private String getTempoStorico(String d){
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         long diff = 0;
+        boolean dataPassata = false;
         try {
             Date date = format.parse(d);
+            if (new Date().getTime() - date.getTime() >= 0){ // mi segno se la data è futura o passata
+                dataPassata = true;
+            }
             long diffInMillies = Math.abs(new Date().getTime() - date.getTime());
             diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
         } catch (ParseException e) {
@@ -93,15 +97,29 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         }
 
         String tempo = "";
-        if(diff >= 60 && (diff/60) < 24){
-            tempo = "oggi";
-        }else if(diff >= 60 && (diff/60) > 24 && (diff/60) < 48) {
-            tempo = "ieri";
-        }else if(diff >= 60 && (diff/60) > 48 && (diff/60) < 3*30*24){
-            long temp = (diff / 60 / 24);
-            tempo = temp + " giorn" + (((int)temp == 1) ? "o" : "i") + " fa";
+
+        if(dataPassata==true) {
+            if (diff >= 60 && (diff / 60) < 24) {
+                tempo = "oggi";
+            } else if (diff >= 60 && (diff / 60) > 24 && (diff / 60) < 48) {
+                tempo = "ieri";
+            } else if (diff >= 60 && (diff / 60) > 48 && (diff / 60) < 3 * 30 * 24) {
+                long temp = (diff / 60 / 24);
+                tempo = temp + " giorn" + (((int) temp == 1) ? "o" : "i") + " fa";
+            } else {
+                tempo = d;
+            }
         }else{
-            tempo = d;
+            if (diff >= 60 && (diff / 60) < 24) {
+                tempo = "oggi";
+            } else if (diff >= 60 && (diff / 60) > 24 && (diff / 60) < 48) {
+                tempo = "domani";
+            } else if (diff >= 60 && (diff / 60) > 48 && (diff / 60) < 3 * 30 * 24) {
+                long temp = (diff / 60 / 24);
+                tempo = "fra " + temp + " giorn" + (((int) temp == 1) ? "o" : "i");
+            } else {
+                tempo = d;
+            }
         }
 
         return tempo;
