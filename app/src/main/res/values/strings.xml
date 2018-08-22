@@ -203,4 +203,6 @@
     <string name="long_press">Long press to select</string>
     <string name="del_every">Delete all</string>
     <string name="no_weather">No weather data available</string>
+    <string name="appaM">Apparition (mountains)</string>
+    <string name="spaM">Sparition (mountains)</string>
 </resources>

@@ -34,6 +34,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import it.unitn.lpmt.howsthere.Oggetti.Panorama;
 import it.unitn.lpmt.howsthere.R;
@@ -96,7 +97,7 @@ public class SunFragment extends Fragment {
                     if (apparizioniSoleLayout.isExpanded() == false && p != null) {
                         apparizioniSoleTx.setText("");
                         for (int i = 0; i < p.albe.size(); i++) {
-                            apparizioniSoleTx.append("" + p.albe.get(i).ora + ":" + p.albe.get(i).minuto + '\n');
+                            apparizioniSoleTx.append("" + p.albe.get(i).ora + ":" + (p.albe.get(i).minuto < 10 ? "0" + p.albe.get(i).minuto : p.albe.get(i).minuto) + '\n');
                         }
                     }
                     apparizioniSoleLayout.toggle();
@@ -114,7 +115,7 @@ public class SunFragment extends Fragment {
                     if (sparizioniSoleLayout.isExpanded() == false && p != null) {
                         sparizioniSoleTx.setText("");
                         for (int i = 0; i < p.tramonti.size(); i++) {
-                            sparizioniSoleTx.append("" + p.tramonti.get(i).ora + ":" + p.tramonti.get(i).minuto + '\n');
+                            sparizioniSoleTx.append("" + p.tramonti.get(i).ora + ":" + (p.tramonti.get(i).minuto < 10 ? "0" + p.tramonti.get(i).minuto : p.tramonti.get(i).minuto) + '\n');
                         }
                     }
                     sparizioniSoleLayout.toggle();
@@ -188,8 +189,12 @@ public class SunFragment extends Fragment {
         //SOLE
         //Arrays.sort(p.risultatiSole); //ordino secondo azimuth
         for(int i = 0; i<288; i++) { //passo dati al grafico
-            if(p.risultatiSole[i].minuto == 0) {
-                entriesSole.add(new Entry((float) p.risultatiSole[i].azimuth, (float) p.risultatiSole[i].altezza));
+            if (p.risultatiSole[i].minuto == 0) {
+                if (p.risultatiSole[i].altezza >= -20) { //ogni tanto la libreria per il calcolo della traiettoria sbaglia (bug noto che accade in posti lontani) in quel caso visto che l' errore non lo possiamo gestire piùttosto stampiamo i valori validi che ci arrivano anche se sono a caso
+                    entriesSole.add(new Entry((float) p.risultatiSole[i].azimuth, (float) p.risultatiSole[i].altezza));
+                }else{
+                    entriesSole.add(new Entry((float) p.risultatiSole[i].azimuth, (float) -20));
+                }
             }
         }
         //MONTAGNE
@@ -241,17 +246,6 @@ public class SunFragment extends Fragment {
             }
         });
 
-        int[] coloricerchiLuna = new int[64]; //un colore per ogni dato sul grafico (24 al giorno)
-        for(int i = 0; i<24; i++){
-            coloricerchiLuna[i] = Color.argb(65,158, 158, 158);
-        }
-        for(int i = 24; i<48; i++){
-            coloricerchiLuna[i] = Color.GRAY;
-        }
-        for(int i = 48; i<64; i++){
-            coloricerchiLuna[i] = Color.argb(65,158, 158, 158);
-        }
-
         chart.getDescription().setText("");
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
@@ -273,9 +267,13 @@ public class SunFragment extends Fragment {
         List<Entry> entrinseo = new ArrayList<Entry>();
         entrinseo.add(new Entry(0,5));
 
-        chart.setData(lineData);
-        chart.animateX(3500);
-        chart.invalidate();
+        try {
+            chart.setData(lineData);
+            chart.animateX(3500);
+            chart.invalidate();
+        }catch(Exception e){
+            System.out.println("errore grafico");
+        }
     }
 
     void stampaValoriBase(View view){
@@ -289,7 +287,7 @@ public class SunFragment extends Fragment {
         } else {
             albaTv.setText("nd");
         }
-        ((TextView) view.findViewById(R.id.albaOrizzonteSole)).setText(DateFormat.format("HH", p.albaNoMontagne) + ":" + DateFormat.format("mm", p.albaNoMontagne)+ ":" + DateFormat.format("dd", p.albaNoMontagne));
+        ((TextView) view.findViewById(R.id.albaOrizzonteSole)).setText(DateFormat.format("HH", p.albaNoMontagne) + ":" + DateFormat.format("mm", p.albaNoMontagne));
 
         //card tramonto sole
         TextView tramontoTv = view.findViewById(R.id.oraTramontoSole);
@@ -300,7 +298,7 @@ public class SunFragment extends Fragment {
         } else {
             tramontoTv.setText("nd");
         }
-        ((TextView) view.findViewById(R.id.tramontoOrizzonteSole)).setText(DateFormat.format("HH", p.tramontoNoMontagne) + ":" + DateFormat.format("mm", p.tramontoNoMontagne)+ ":" + DateFormat.format("dd", p.tramontoNoMontagne));
+        ((TextView) view.findViewById(R.id.tramontoOrizzonteSole)).setText(DateFormat.format("HH", p.tramontoNoMontagne) + ":" + DateFormat.format("mm", p.tramontoNoMontagne));
 
         ((TextView) view.findViewById(R.id.minutiSoleMontagne)).setText("" + p.minutiSole/60 + ":"+((p.minutiSole%60) < 10 ? ("0" + (p.minutiSole%60)) : (p.minutiSole%60)));
         int minutiSoleNoMontagne = (int)(1440-((Math.abs(p.tramontoNoMontagne.getTime() - p.albaNoMontagne.getTime()))/60000));

@@ -65,6 +65,8 @@
     <string name="fui_welcome_back_email_header">Bentornato!</string>
     <string name="appa">Apparizioni</string>
     <string name="alba">Alba</string>
+    <string name="appaM">Apparizioni (montagne)</string>
+    <string name="spaM">Sparizioni (montagne)</string>
     <string name="title_activity_add_feed">Aggiungi feed</string>
     <string name="fui_email_account_creation_error">Account email registrato con successo!</string>
     <string name="luceluna">% luna</string>
