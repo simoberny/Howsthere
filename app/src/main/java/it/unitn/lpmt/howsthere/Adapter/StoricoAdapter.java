@@ -4,7 +4,6 @@ package it.unitn.lpmt.howsthere.Adapter;
  * Created by matteo on 21/05/18.
  */
 
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -14,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,17 +59,29 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
 
         TextView nome_citta = (TextView) convertView.findViewById(R.id.nome_citta);
         TextView data = (TextView) convertView.findViewById(R.id.data);
-        TextView ID = (TextView) convertView.findViewById(R.id.ID);
-
-        chart = (LineChart) convertView.findViewById(R.id.chart_storico);
-        stampaGrafico(p,chart);
         ImageView anteprima = (ImageView) convertView.findViewById(R.id.anteprima);
+        CheckBox selectable = convertView.findViewById(R.id.selectable);
+        chart = (LineChart) convertView.findViewById(R.id.chart_storico);
 
-        Picasso.get().load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=250x350&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon).placeholder(R.drawable.nomap).into(anteprima);
 
         nome_citta.setText(p.citta+ " ");
-        String d = (String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data);
+        Picasso.get().load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=300x350&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon).placeholder(R.drawable.nomap).into(anteprima);
 
+        String d = (String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data);
+        data.setText(getTempoStorico(d));
+
+        if (selezionati_id.contains(p.ID)){
+            convertView.findViewById(R.id.overlay);
+            selectable.setVisibility(View.VISIBLE);
+            selectable.setChecked(true);
+        }
+
+        stampaGrafico(p,chart);
+
+        return convertView;
+    }
+
+    private String getTempoStorico(String d){
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         long diff = 0;
         boolean dataPassata = false;
@@ -110,16 +122,8 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
             }
         }
 
-        data.setText(tempo);
-        ID.setText(p.ID);
-
-        if (selezionati_id.contains(ID.getText())){
-            convertView.findViewById(R.id.spunta).setVisibility(View.VISIBLE);
-        }
-
-        return convertView;
+        return tempo;
     }
-
 
     void stampaGrafico(Panorama p, final LineChart chart){
         List<Entry> entriesMontagne = new ArrayList<Entry>();
@@ -135,17 +139,15 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
 
         //MONTAGNE
         for (int i =0; i<360; i++) {
-
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
         }
 
         //proprietà grafico:
-
         chart.setDrawGridBackground(false);
         chart.getAxisRight().setEnabled(false);
         chart.getAxisLeft().setEnabled(false);
-        chart.getAxisLeft().setAxisMinValue(-1);  //faccio partire da -1 le y. non da 0 perchè da una montagna alta è possibile finire leggermente sotto lo 0
-        chart.getAxisRight().setAxisMinValue(-1);
+        chart.getAxisLeft().setAxisMinimum(-1);  //faccio partire da -1 le y. non da 0 perchè da una montagna alta è possibile finire leggermente sotto lo 0
+        chart.getAxisRight().setAxisMinimum(-1);
         chart.setTouchEnabled(false);
         chart.setDragEnabled(false);
         chart.setScaleEnabled(false);
@@ -191,8 +193,6 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
             }
         });
 
-
-
         chart.getDescription().setText("");
         LineData lineData = new LineData();
         lineData.addDataSet(dataSetMontagne);
@@ -211,7 +211,6 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         List<Entry> entrinseo = new ArrayList<Entry>();
         entrinseo.add(new Entry(0,5));
         //l.setCustom(entrinseo);
-
         chart.setData(lineData);
         chart.invalidate();
     }

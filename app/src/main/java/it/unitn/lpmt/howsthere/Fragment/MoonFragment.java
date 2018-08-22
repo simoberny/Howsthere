@@ -349,7 +349,7 @@ public class MoonFragment extends Fragment {
 
         //card tramonto sole
         TextView tramontoTv = (TextView) view.findViewById(R.id.oraTramontoLuna);
-        if (p.getTramonto() != null) {
+        if (p.getTramontoLuna() != null) {
             tramontoTv.setText(p.getTramontoLuna().ora + ":" + (p.getTramontoLuna().minuto < 10 ? "0" + p.getTramontoLuna().minuto : p.getTramontoLuna().minuto));
             ((TextView) view.findViewById(R.id.azimutTramontoLuna)).setText(new DecimalFormat("##.##").format(p.getTramontoLuna().azimuth));
             ((TextView) view.findViewById(R.id.elevazioneTramontoLuna)).setText(new DecimalFormat("##.##").format(p.getTramontoLuna().altezza));

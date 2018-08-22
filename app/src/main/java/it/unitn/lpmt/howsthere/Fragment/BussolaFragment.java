@@ -51,10 +51,9 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
     Double lat, lon;
     Location currentLoc = null;
 
-    private GoogleMap mapTramonto = null;
-    private GoogleMap mapAlba = null;
+    private GoogleMap map = null;
 
-    TextView gradi_alba, gradi_tramonto, nord;
+    TextView gradi_alba, gradi_tramonto;
 
     float angoloDaSotrarreAlba = 0;
     float angoloDaSotrarreTramonto = 0;
@@ -94,8 +93,8 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
         lat = p.lat;
         lon = p.lon;
 
-        angoloDaSotrarreTramonto = (float) Math.floor((float) p.getAlba().azimuth * 100) / 100;
-        angoloDaSotrarreAlba = (float) Math.floor((float) p.getTramonto().azimuth * 100) / 100;
+        angoloDaSotrarreAlba = (float) Math.floor((float) p.getAlba().azimuth * 100) / 100;
+        angoloDaSotrarreTramonto = (float) Math.floor((float) p.getTramonto().azimuth * 100) / 100;
 
         mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
     }
@@ -105,19 +104,18 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bussola, container, false);
         //((RisultatiActivity)getActivity()).getSupportActionBar().setTitle("Alba e tramonto sole");
-        compassAlba = (ImageView) view.findViewById(R.id.compassAlba);
-        compassTramonto = (ImageView) view.findViewById(R.id.compassTramonto);
-        nord = view.findViewById(R.id.nord);
-        nord_compass = view.findViewById(R.id.nord_compass);
+        compassAlba = view.findViewById(R.id.compassAlba);
+        compassTramonto = view.findViewById(R.id.compassTramonto);
+
+        //nord = view.findViewById(R.id.nord);
+        nord_compass = view.findViewById(R.id.nord);
 
         gradi_alba = view.findViewById(R.id.gradi_alba);
         gradi_tramonto = view.findViewById(R.id.gradi_tramonto);
 
         if (isGooglePlayServicesAvailable(getContext())) {
-            SupportMapFragment mapFragmentAlba = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_alba);
-            mapFragmentAlba.getMapAsync(onMapReadyCallbackAlba());
-            SupportMapFragment mapFragmentTramonto = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_tram);
-            mapFragmentTramonto.getMapAsync(onMapReadyCallbackTramonto());
+            SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_bussola);
+            mapFragment.getMapAsync(onMapReadyCallback());
         }
         return view;
     }
@@ -125,56 +123,17 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
     @Override
     public void onResume() {
         super.onResume();
-        mSensorManager.registerListener((SensorEventListener) this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener((SensorEventListener) this);
+        mSensorManager.unregisterListener(this);
     }
 
-    float[] mGravity;
-    float[] mGeomagnetic;
-
     public void onSensorChanged(SensorEvent event) {
-        //float degree = Math.round(event.values[0])
-
-        LocationListener ll = new mylocationlistener();
-        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        boolean gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        if (gps_enabled) {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, ll);
-        }
-
-        if (network_enabled) {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-
-            currentLoc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        }
-
         float azimuth = event.values[0];
-
-        if(currentLoc != null) {
-            azimuth = azimuth * 180 / (float) Math.PI;
-            GeomagneticField geoField = new GeomagneticField(
-                    (float) currentLoc.getLatitude(),
-                    (float) currentLoc.getLongitude(),
-                    (float) currentLoc.getAltitude(),
-                    System.currentTimeMillis());
-            azimuth += geoField.getDeclination();
-        }
-
-
-        nord.setText((int)azimuth + "°");
         RotateAnimation nord = new RotateAnimation(
                 currentDegree,
                 -azimuth,
@@ -188,7 +147,7 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
         //ALBA
         if(compassAlba  != null) {
             if ((currentDegree + angoloDaSotrarreAlba) < 3 && (currentDegree + angoloDaSotrarreAlba) > -3) {
-                gradi_alba.setText("Allineato");
+                gradi_alba.setText(getResources().getString(R.string.aligned));
             } else {
                 gradi_alba.setText(angoloDaSotrarreAlba + "° N");
             }
@@ -202,13 +161,12 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
             ra.setDuration(210);
             ra.setFillAfter(true);
             compassAlba.startAnimation(ra);
-
         }
         
         //Tramonto
         if(compassTramonto != null) {
             if ((currentDegree + angoloDaSotrarreTramonto) < 3 && (currentDegree + angoloDaSotrarreTramonto) > -3) {
-                gradi_tramonto.setText("Allineato");
+                gradi_tramonto.setText(getResources().getString(R.string.aligned));
             } else {
                 gradi_tramonto.setText(angoloDaSotrarreTramonto + "° N");
             }
@@ -224,70 +182,38 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
             compassTramonto.startAnimation(ra);
         }
 
-        updateCameraBearing(mapAlba, currentDegree);
-        updateCameraBearing(mapTramonto, currentDegree);
-
+        updateCameraBearing(map, currentDegree);
         currentDegree = -azimuth;
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) { }
 
-    private class mylocationlistener implements LocationListener {
-        @Override
-        public void onLocationChanged(Location location) {
-            if (location != null) {
-                currentLoc = location;
-            }
-        }
-        @Override
-        public void onProviderDisabled(String provider) {}
-        @Override
-        public void onProviderEnabled(String provider) {}
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-    }
-
     private void updateCameraBearing(GoogleMap googleMap, float bearing) {
         if ( googleMap == null) return;
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(lat, lon))             // Sets the center of the map to current location
-                .zoom(14)                   // Sets the zoom
-                .bearing(bearing) // Sets the orientation of the camera to east
-                .tilt(0)                   // Sets the tilt of the camera to 0 degrees
-                .build();                   // Creates a CameraPosition from the builder
+                .target(new LatLng(lat, lon))
+                .zoom(12)
+                .bearing(bearing)
+                .tilt(0)
+                .build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-    public OnMapReadyCallback onMapReadyCallbackAlba(){
+    public OnMapReadyCallback onMapReadyCallback(){
         return new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                mapAlba = googleMap;
-                mapAlba.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                map = googleMap;
+                map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 LatLng pos = new LatLng(lat, lon);
-                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 14, 0,0)));
-                mapAlba.getUiSettings().setRotateGesturesEnabled(false);
-                mapAlba.getUiSettings().setTiltGesturesEnabled(false);
-                mapAlba.getUiSettings().setAllGesturesEnabled(false);
-                mapAlba.getUiSettings().setCompassEnabled(false);
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 12, 0,0)));
+                map.getUiSettings().setRotateGesturesEnabled(false);
+                map.getUiSettings().setTiltGesturesEnabled(false);
+                map.getUiSettings().setAllGesturesEnabled(false);
+                map.getUiSettings().setCompassEnabled(false);
             }
         };
     }
 
-    public OnMapReadyCallback onMapReadyCallbackTramonto(){
-        return new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mapTramonto = googleMap;
-                mapTramonto.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                LatLng pos = new LatLng(lat, lon);
-                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 14, 0,0)));
-                mapTramonto.getUiSettings().setRotateGesturesEnabled(false);
-                mapTramonto.getUiSettings().setTiltGesturesEnabled(false);
-                mapTramonto.getUiSettings().setAllGesturesEnabled(false);
-                mapTramonto.getUiSettings().setCompassEnabled(false);
-            }
-        };
-    }
 }

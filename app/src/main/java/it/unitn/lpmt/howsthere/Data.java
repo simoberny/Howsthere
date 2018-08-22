@@ -2,6 +2,7 @@ package it.unitn.lpmt.howsthere;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -147,9 +148,9 @@ public class Data extends AppCompatActivity {
                             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
                             ln.setVisibility(TextView.VISIBLE);
                             TextView tx = (TextView)findViewById(R.id.idErrTitolo);
-                            tx.setText("Posizione scelta non valida!");
+                            tx.setText(getResources().getString(R.string.pos_not_valid));
                             TextView tx1 = (TextView)findViewById(R.id.idErrDescrizione);
-                            tx1.setText("Le posizioni consentite includono latitudini da 60N fino a 54S (inclusa parte dell' alaska). Il mare è disponibile solo vicino alle coste.");
+                            tx1.setText(getResources().getString(R.string.permitted_location));
                             Button bt = (Button) findViewById(R.id.idErrButton);
                             bt.setVisibility(TextView.GONE);
                         }
@@ -177,7 +178,7 @@ public class Data extends AppCompatActivity {
                 e1.printStackTrace();
             }
             callsAPI(panorama.lat, panorama.lon);
-            loadingMessage.setText(R.string.loop_id + " n°: " + (richiestaID+1));
+            loadingMessage.setText(getResources().getString(R.string.loop_id) + " n°: " + (richiestaID+1));
             richiestaID++;
         }else{ //ID non ottenuto
             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
@@ -249,7 +250,7 @@ public class Data extends AppCompatActivity {
 
             checkStatus();
             richiestaStato++;
-            loadingMessage.setText(R.string.check_panorama + " n°: " + (richiestaStato+1));
+            loadingMessage.setText(getResources().getString(R.string.check_panorama) + " n°: " + (richiestaStato+1));
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.prontoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
@@ -313,7 +314,7 @@ public class Data extends AppCompatActivity {
             }
 
             richiestaDatiMontagne++;
-            loadingMessage.setText(R.string.check_panorama + " n°: " + (richiestaDatiMontagne+1));
+            loadingMessage.setText(getResources().getString(R.string.check_panorama) + " n°: " + (richiestaDatiMontagne+1));
             loadPeakData();
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
@@ -341,6 +342,7 @@ public class Data extends AppCompatActivity {
 
     private void loadNamePeak(){
         progressDialog.setTitle(R.string.name_mounatin);
+        loadingMessage.setText(R.string.name_mounatin);
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
         HeyWhatsNamePeak service = retrofit.create(HeyWhatsNamePeak.class);
         Call<ResponseBody> call = service.getNamePeak(panorama.ID);
@@ -354,7 +356,6 @@ public class Data extends AppCompatActivity {
                         if(gNamePeak == null || gNamePeak == ""){
                             richiediNomiMontagne();
                         }else{
-                            progressDialog.dismiss();
                             TextView tx = findViewById(R.id.panoramaName); //recupero e rendo visibile la conferma scaricamento dati
                             tx.setVisibility(TextView.VISIBLE);
                             setPeak(gPeak, gNamePeak);
@@ -382,7 +383,7 @@ public class Data extends AppCompatActivity {
             }
 
             richiestaNomiMontagne++;
-            loadingMessage.setText(R.string.check_name + " n°: " + (richiestaNomiMontagne+1));
+            loadingMessage.setText(getResources().getString(R.string.check_name) + " n°: " + (richiestaNomiMontagne+1));
             loadNamePeak();
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoNomiErrLayout);
@@ -413,10 +414,47 @@ public class Data extends AppCompatActivity {
      * @param namePeak nome picchi più importanti
      */
     private void setPeak(String peak, String namePeak){
+        progressDialog.dismiss();
         loadingMessage.setText(R.string.calculus);
         progressDialog.setTitle(R.string.calculus);
         progressDialog.show(); //Avvio la finestra di dialogo con il caricamento
 
+        Calc c = new Calc(peak, namePeak);
+        c.execute();
+    }
+
+    public void showResult(){
+        progressDialog.dismiss();
+        Intent i = new Intent(this,RisultatiActivity.class); //chiamo la classe Risultati
+        i.putExtra("ID", panorama.ID);
+        i.putExtra("citta", panorama.citta);
+        startActivity(i);
+        //Finish così l'attività non resta nello stack e quando nei risultati si premerà indietro tornerà direttamente nella main page
+        finish();
+    }
+
+    public class Calc extends AsyncTask<Void, Void, Void> {
+        String peak = "";
+        String namePeak = "";
+        public Calc(String peak, String namePeak){
+            this.peak = peak;
+            this.namePeak = namePeak;
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            calc(peak, namePeak);
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            showResult();
+        }
+
+    }
+
+    public void calc(String peak, String namePeak){
         //calcolo Alba e Tramonto senza montagne
         SunTimes s = SunTimes.compute()
                 .on(panorama.data)       // set a date
@@ -424,6 +462,7 @@ public class Data extends AppCompatActivity {
                 .execute();
         panorama.albaNoMontagne = s.getRise();
         panorama.tramontoNoMontagne = s.getSet();
+
 
         //CALCOLO SOLE ogni 5 min
         int indexSole = 0;
@@ -561,22 +600,10 @@ public class Data extends AppCompatActivity {
 
         }
 
-        loadingMessage.setText(R.string.sun_moon_math);
-        progressDialog.setTitle("Saving...");
-        progressDialog.show();
-
         PanoramiStorage p = PanoramiStorage.panorami_storage; //salvo i dati del panorama con panoramiStorage
         p.addPanorama(panorama);
-
-        progressDialog.dismiss();
-
-        Intent i = new Intent(this,RisultatiActivity.class); //chiamo la classe Risultati
-        i.putExtra("ID", panorama.ID);
-        i.putExtra("citta", panorama.citta);
-        startActivity(i);
-        //Finish così l'attività non resta nello stack e quando nei risultati si premerà indietro tornerà direttamente nella main page
-        finish();
     }
+
 
     /**
      *
@@ -587,7 +614,6 @@ public class Data extends AppCompatActivity {
      * nota: ci sono 2 casi limite, uno è che il sole / luna abbia l' azimuth iniziale più basso di tutti i punti del profilo montagne e l' altro è che lo abbia maggiore di tutte le montagne.
      *
      */
-
     private boolean sopra(int i){
         //todo confronto fra il primo e l' ultimo (0-360)
         int j = 0;

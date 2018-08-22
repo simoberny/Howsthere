@@ -103,7 +103,7 @@ public class RisultatiActivity extends AppCompatActivity {
                     if (mAuth.getCurrentUser() != null) {
                         getImage();
                     } else {
-                        Snackbar mySnackbar = Snackbar.make(findViewById(R.id.risultatiMainLayout), R.string.no_login, Snackbar.LENGTH_LONG);
+                        Snackbar mySnackbar = Snackbar.make(findViewById(R.id.coord_risultati), getResources().getString(R.string.no_login), Snackbar.LENGTH_LONG);
                         mySnackbar.setAction("Login", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -118,7 +118,7 @@ public class RisultatiActivity extends AppCompatActivity {
                 } else if (id == R.id.share) {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Howsthere: \nhttps://howsthere.page.link/panorama?date=" + p.data.getTime() + "&lat=" + p.lat + "&lon=" + p.lon + "&citta=" + p.citta);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.checkout) + " \nhttps://howsthere.page.link/panorama?date=" + p.data.getTime() + "&lat=" + p.lat + "&lon=" + p.lon + "&citta=" + p.citta);
                     sendIntent.setType("text/plain");
                     startActivity(sendIntent);
                 }

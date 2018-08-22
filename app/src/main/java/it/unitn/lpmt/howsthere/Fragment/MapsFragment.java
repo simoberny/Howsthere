@@ -231,7 +231,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
             //Carico il cerca di google
             placeAutoComplete = (SupportPlaceAutocompleteFragment) this.getChildFragmentManager().findFragmentById(R.id.place_autocomplete);
-
             placeAutoComplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
                 public void onPlaceSelected(Place place) {
