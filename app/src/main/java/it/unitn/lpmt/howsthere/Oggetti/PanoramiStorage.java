@@ -3,6 +3,9 @@ package it.unitn.lpmt.howsthere.Oggetti;
 import android.content.Context;
 import android.os.Handler;
 
+import com.facebook.imagepipeline.common.SourceUriType;
+
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -70,6 +73,7 @@ public class PanoramiStorage {
         save();
     }
 
+
     public List<Panorama> getAllPanorama() {
         load();
         return Panorami;
@@ -84,8 +88,12 @@ public class PanoramiStorage {
                 directory.mkdirs();
                 File inFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
                 in = new ObjectInputStream(new FileInputStream(inFile));
-                Panorami = (List<Panorama>) in.readObject();
+                while(in.available() > 0) {
+                    Panorami = (List<Panorama>) in.readObject();
+                }
+
                 in.close();
+            } catch (EOFException e) {
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -106,9 +114,13 @@ public class PanoramiStorage {
                     directory.mkdirs();
                     File inFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
                     in = new ObjectInputStream(new FileInputStream(inFile));
-                    Panorami = (List<Panorama>) in.readObject();
+                    while(in.available() > 0){
+                        Panorami = (List<Panorama>) in.readObject();
+                    }
                     in.close();
                     //System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL: Fatto initial load");
+                } catch (EOFException e) {
+                    //
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -128,18 +140,22 @@ public class PanoramiStorage {
         t.start();
     }
 
-    private void save() {
+    public void save() {
         Runnable r = new Runnable()
         {
             @Override
             public void run()
             {
                 try {
+                    Thread.sleep(1000);
                     File outFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
                     //System.err.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC file dir:  "+context.getFilesDir());
                     ObjectOutput out = new ObjectOutputStream(new FileOutputStream(outFile));
                     out.writeObject(Panorami);
                     out.close();
+                    System.out.println("Finito di salvare");
+                } catch (EOFException e) {
+                    System.out.println("Beccato");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

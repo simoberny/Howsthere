@@ -203,10 +203,8 @@
     <string name="long_press">Long press to select</string>
     <string name="del_every">Delete all</string>
     <string name="no_weather">No weather data available</string>
-<<<<<<< HEAD
     <string name="appaM">Apparition (mountains)</string>
     <string name="spaM">Sparition (mountains)</string>
-=======
     <string name="pos_not_valid">Position not valid!</string>
     <string name="permitted_location">Permitted locations include latitudes from 60N up to 54S (including part of Alaska). The sea is available only near the coasts.</string>
     <string name="powered">Peaks profile powered by</string>
@@ -217,5 +215,4 @@
     <string name="restart">Restart</string>
     <string name="error_un">Chart error</string>
     <string name="error_chart">Missing information of sun or moon. Retry in another position</string>
->>>>>>> 7b2156441baa3366a80b7d01672b4ec0f4f3a4ec
 </resources>

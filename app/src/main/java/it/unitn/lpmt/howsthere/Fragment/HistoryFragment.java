@@ -142,6 +142,7 @@ public class HistoryFragment extends Fragment{
                 }else if(selezionati_id.contains(selected_id)){
                     selezionati_id.remove(selected_id);
                     view.findViewById(R.id.overlay).setVisibility(View.GONE);
+                    v.setVisibility(View.GONE);
                     //view.findViewById(R.id.spunta).setVisibility(View.GONE); //Spunta Matteo
                     v.setChecked(false);
 
@@ -150,6 +151,7 @@ public class HistoryFragment extends Fragment{
                     }
                 }else{
                     view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+                    v.setVisibility(View.VISIBLE);
                     //view.findViewById(R.id.spunta).setVisibility(View.VISIBLE); //Spunta Matteo
                     v.setChecked(true);
                     selezionati_id.add(selected_id);
@@ -163,6 +165,7 @@ public class HistoryFragment extends Fragment{
                 String selected_id = ((Panorama)parent.getAdapter().getItem(position)).ID;
                 if(!selezionati_id.contains(selected_id)) {
                     CheckBox v = view.findViewById(R.id.selectable);
+                    v.setVisibility(View.VISIBLE);
                     v.setChecked(true);
                     selezionati_id.add(selected_id);
 

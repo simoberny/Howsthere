@@ -138,7 +138,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="it.unitn.lpmt.howsthere.MainActivity" />
         </activity>
-        <activity android:name=".CrashActivity"></activity>
+        <activity android:name=".CrashActivity" />
+        <activity android:name=".Exiter"
+            android:theme="@android:style/Theme.NoDisplay"></activity>
     </application>
 
 </manifest>

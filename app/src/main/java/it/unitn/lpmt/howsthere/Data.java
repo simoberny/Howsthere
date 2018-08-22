@@ -505,7 +505,6 @@ public class Data extends AppCompatActivity {
                     MoonIllumination m = MoonIllumination.compute().on(panorama.data).execute();
                     panorama.percentualeLuna = m.getFraction()*100;
                     panorama.faseLuna = m.getPhase();
-                    System.out.println("AAAAAAA" + m.toString());
 
                     MoonTimes m1 = MoonTimes.compute().on(panorama.data).execute();
                     panorama.albaLunaNoMontagne = m1.getRise();
@@ -572,9 +571,9 @@ public class Data extends AppCompatActivity {
             if(prevLuna && !is_sopra_luna) panorama.tramontiLuna.add(panorama.risultatiLuna[i]);
 
             prevLuna=is_sopra_luna;
-	/* ricerca albe luna nel giorno precedente se è sorta prima delle 00.00
+	    /* ricerca albe luna nel giorno precedente se è sorta prima delle 00.00
 
-	boolean sopraLuna = sopraLuna(i);
+	    boolean sopraLuna = sopraLuna(i);
             if (sopraLuna) panorama.minutiLuna+=5;
             if(!prevLuna && sopraLuna){ //alba
                 if(i == 288){ // la luna è già sorta a mezzanotte
