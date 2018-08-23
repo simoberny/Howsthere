@@ -28,7 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/toolbar"
-            android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             app:title="Feed"
             app:titleTextColor="@android:color/white" />
@@ -70,6 +69,7 @@
         android:id="@+id/nofeed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         android:background="@color/ap_white"
         android:gravity="center_vertical|center_horizontal">
 

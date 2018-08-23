@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -65,9 +66,9 @@ public class Data extends AppCompatActivity {
         panorama.citta = i.getStringExtra("citta");
 
         //Preparo la finestra di caricamento
+        View view = getLayoutInflater().inflate(R.layout.loading, null);
         progressDialog = new AlertDialog.Builder(this).create();
         progressDialog.setCancelable(false);
-        View view = getLayoutInflater().inflate(R.layout.loading, null);
         progressDialog.setView(view);
         loadingMessage = view.findViewById(R.id.loading_message);
 
@@ -136,13 +137,12 @@ public class Data extends AppCompatActivity {
                             panorama.ID = id;
                             TextView tx = (TextView)findViewById(R.id.idCheck); //recupero e rendo visibile la conferma ricezione ID
                             tx.setVisibility(TextView.VISIBLE);
-                            try {   //aspetto prima del primo tentativo, il server ci mette sempre almeno un secondo.
-                                Thread.sleep(1000);//
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            progressDialog.dismiss();
-                            checkStatus(); //Ottenuto l'ID controllo lo stato della generazione del panorama
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    checkStatus(); //Ottenuto l'ID controllo lo stato della generazione del panorama
+                                }
+                            }, 1000);
                         }else{
                             progressDialog.dismiss();
                             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
@@ -172,14 +172,14 @@ public class Data extends AppCompatActivity {
 
     private void richiediID(){
         if (richiestaID < n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-            callsAPI(panorama.lat, panorama.lon);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    richiestaID++;
+                    callsAPI(panorama.lat, panorama.lon);
+                }
+            }, 2000);
             loadingMessage.setText(getResources().getString(R.string.loop_id) + " n°: " + (richiestaID+1));
-            richiestaID++;
         }else{ //ID non ottenuto
             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
             ln.setVisibility(TextView.VISIBLE);
@@ -217,7 +217,6 @@ public class Data extends AppCompatActivity {
                     try {
                         String status = response.body().string();
                         if(status.length() > 0 && status.charAt(0) == '1'){ // Se la mappa è pronta vado ad ottenere il panorama
-                            progressDialog.dismiss();
                             TextView tx = (TextView)findViewById(R.id.panoramaCheck); //recupero e rendo visibile la conferma che è pronto il panorama
                             tx.setVisibility(TextView.VISIBLE);
                             loadPeakData();
@@ -242,14 +241,13 @@ public class Data extends AppCompatActivity {
 
     private void richiediStato(){
         if (richiestaStato < n_tentativi){ //richiedo l' id se non lì ho già fatto troppe volte
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-
-            checkStatus();
-            richiestaStato++;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    richiestaStato++;
+                    checkStatus();
+                }
+            }, 2000);
             loadingMessage.setText(getResources().getString(R.string.check_panorama) + " n°: " + (richiestaStato+1));
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.prontoErrLayout);
@@ -307,15 +305,14 @@ public class Data extends AppCompatActivity {
 
     private void richiediDatiMontagne(){
         if (richiestaDatiMontagne < n_tentativi){ //richiedo l'id se non lì ho già fatto troppe volte
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-
-            richiestaDatiMontagne++;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    richiestaDatiMontagne++;
+                    loadPeakData();
+                }
+            }, 2000);
             loadingMessage.setText(getResources().getString(R.string.check_panorama) + " n°: " + (richiestaDatiMontagne+1));
-            loadPeakData();
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
@@ -376,15 +373,14 @@ public class Data extends AppCompatActivity {
 
     private void richiediNomiMontagne(){
         if (richiestaNomiMontagne < n_tentativi){ // richiedo l' id se non lì ho già fatto troppe volte
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-
-            richiestaNomiMontagne++;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    richiestaNomiMontagne++;
+                    loadNamePeak();
+                }
+            }, 2000);
             loadingMessage.setText(getResources().getString(R.string.check_name) + " n°: " + (richiestaNomiMontagne+1));
-            loadNamePeak();
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoNomiErrLayout);
             ln.setVisibility(TextView.VISIBLE);

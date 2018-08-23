@@ -136,7 +136,6 @@ public class PanoramiStorage {
             public void run()
             {
                 try {
-                    Thread.sleep(1000);
                     File outFile = new File(context.getFilesDir(), "/panorami/appSaveState.data");
                     //System.err.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC file dir:  "+context.getFilesDir());
                     ObjectOutput out = new ObjectOutputStream(new FileOutputStream(outFile));
