@@ -31,8 +31,6 @@
         android:id="@+id/r_touch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/statusbar_view_height">
 
         <android.support.v7.widget.CardView
@@ -83,23 +81,21 @@
                 android:id="@+id/go_next"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="false"
-                android:layout_alignParentEnd="false"
                 android:layout_marginBottom="18dp"
                 android:clickable="true"
                 android:src="@drawable/ic_arrow_forward_white_24dp"
-                app:backgroundTint="@color/colorPrimary" />
+                app:backgroundTint="@color/colorPrimary"
+                android:focusable="true" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/position"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="false"
-                android:layout_alignParentEnd="false"
                 android:layout_marginBottom="10dp"
                 android:clickable="true"
                 android:src="@drawable/ic_my_location_black_24dp"
-                app:backgroundTint="@color/buttongrey" />
+                app:backgroundTint="@color/buttongrey"
+                android:focusable="true" />
         </LinearLayout>
 
     </RelativeLayout>

@@ -8,9 +8,10 @@
     android:id="@+id/post_feed_con">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        android:id="@+id/crop_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <FrameLayout
             android:id="@+id/top_frame"
@@ -31,71 +32,66 @@
                 android:id="@+id/rotate_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_gravity="right|bottom"
+                android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
                 android:background="@drawable/black_transp_circ_ripple"
+                android:contentDescription="TODO"
                 android:padding="8dp"
                 android:scaleType="center"
                 android:src="@mipmap/ic_rotate_right_white_24dp" />
 
         </FrameLayout>
 
-        <ScrollView
-            android:id="@+id/scrollView1"
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/crop_container"
+        android:layout_weight="1">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_margin="15dp"
+            android:orientation="vertical"
+            android:paddingBottom="100dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="15dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/posizi"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:text="Posizione" />
-
-                    <TextView
-                        android:id="@+id/getposizione"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="20dp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/posizi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Posizione"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/getposizione"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Panorama" />
-
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_below="@+id/risultatiMainLayout"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="30dp">
-
-                </com.github.mikephil.charting.charts.LineChart>
-
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-        </ScrollView>
 
-    </LinearLayout>
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp">
+
+            </com.github.mikephil.charting.charts.LineChart>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
@@ -114,16 +110,10 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0px"
-                android:layout_height="0px"
-                android:focusable="true"
-                android:focusableInTouchMode="true" />
-
             <EditText
                 android:id="@+id/desc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
@@ -137,29 +127,28 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginStart="15dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/annulla"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="5dp"
                     android:text="Annulla" />
 
                 <Button
                     android:id="@+id/invia"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:backgroundTint="@color/colorPrimary"
-                    android:drawableEnd="@android:drawable/ic_menu_send"
+                    android:drawableEnd="@drawable/baseline_chevron_right_24"
                     android:elevation="1dp"
-                    android:text="Carica"
-                    android:textColor="@android:color/white" />
+                    android:text="Carica" />
             </LinearLayout>
         </LinearLayout>
 

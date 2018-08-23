@@ -7,6 +7,7 @@ package it.unitn.lpmt.howsthere.Adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -17,6 +18,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -57,15 +62,19 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         convertView = inflater.inflate(R.layout.singolo_storico, null);
         Panorama p = l.get(position);
 
-        TextView nome_citta = (TextView) convertView.findViewById(R.id.nome_citta);
-        TextView data = (TextView) convertView.findViewById(R.id.data);
-        ImageView anteprima = (ImageView) convertView.findViewById(R.id.anteprima);
+        TextView nome_citta = convertView.findViewById(R.id.nome_citta);
+        TextView data = convertView.findViewById(R.id.data);
+        ImageView anteprima = convertView.findViewById(R.id.anteprima);
         CheckBox selectable = convertView.findViewById(R.id.selectable);
-        chart = (LineChart) convertView.findViewById(R.id.chart_storico);
+        chart = convertView.findViewById(R.id.chart_storico);
 
 
-        nome_citta.setText(p.citta+ " ");
-        Picasso.get().load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=300x350&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon).placeholder(R.drawable.nomap).into(anteprima);
+        nome_citta.setText(p.citta + " ");
+        Glide.with(context)
+                .load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=200x250&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon)
+                .placeholder(R.drawable.nomap)
+                .into(anteprima);
+        //Picasso.get().load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=200x250&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon).placeholder(R.drawable.nomap).into(anteprima);
 
         String d = (String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data);
         data.setText(d);
@@ -76,12 +85,28 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
             selectable.setChecked(true);
         }
 
-        stampaGrafico(p,chart);
+        new ShowChart(p, chart).execute();
 
         return convertView;
     }
 
 
+    class ShowChart extends AsyncTask<Void, Void, Void>{
+
+        private LineChart chart;
+        private Panorama p;
+
+        public ShowChart(Panorama p, LineChart chart){
+            this.chart = chart;
+            this.p = p;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            stampaGrafico(this.p, this.chart);
+            return null;
+        }
+    }
 
     void stampaGrafico(Panorama p, final LineChart chart){
         List<Entry> entriesMontagne = new ArrayList<Entry>();

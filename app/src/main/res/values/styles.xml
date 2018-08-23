@@ -1,5 +1,4 @@
 <resources>
-    <attr name="cardStyle" format="reference" />
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -7,6 +6,9 @@
         <item name="preferenceTheme">@style/PreferenceStyle</item>
         <item name="android:windowBackground">@color/real_background</item>
         <item name="android:colorBackground">@color/background</item>
+        <item name="cardViewStyle">@style/CardView</item>
+        <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
+
     </style>
 
     <style name="PreferenceStyle" parent="@style/PreferenceThemeOverlay.v14.Material">
@@ -33,7 +35,9 @@
         <item name="preferenceTheme">@style/PreferenceStyle</item>
         <item name="android:windowBackground">@color/real_background</item>
         <item name="android:colorBackground">@color/background</item>
-        <item name="cardStyle">@color/background</item>
+        <item name="cardViewStyle">@style/CardView</item>
+        <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">

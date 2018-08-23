@@ -22,24 +22,23 @@
             android:layout_marginEnd="5dp"
             android:layout_marginStart="5dp"
             android:gravity="center_vertical"
-            android:text="TextView"
-            android:textSize="16sp"
-            tools:text="A" />
+            android:hint="A"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:text="Nome"
+                android:hint="Nome picco"
                 android:textSize="16sp" />
 
             <TextView
@@ -48,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginStart="5dp"
-                android:text="100 ° N"
+                android:hint="100 ° N"
                 android:textColor="@color/dialog_text_sec"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -57,12 +56,19 @@
             android:id="@+id/altitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginEnd="15dp"
             android:layout_weight="0"
-            android:text="3000"
+            android:hint="3000"
             android:textAlignment="textEnd"
             android:textSize="16sp"
             android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Action invite"
+            app:srcCompat="@drawable/baseline_chevron_right_24" />
     </LinearLayout>
 
     <View

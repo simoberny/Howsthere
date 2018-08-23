@@ -119,6 +119,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
         Context ctx = getActivity().getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
     }
+
     public void onResume(){
         if (Build.VERSION.SDK_INT >= 21) {
             ((MainActivity)getActivity()).getWindow().setStatusBarColor(Color.TRANSPARENT);
@@ -155,33 +156,57 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
         final View rootview = (map_id == 0) ? inflater.inflate(R.layout.fragment_maps, container, false) : inflater.inflate(R.layout.fragment_maps_osm, container, false);
         //intanto creo il dialog che viene su quando clicco sulla mappa, poi lo aprirò
-       dialog = new BottomSheetDialog(getActivity());
-       dialogView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
-       dialog.setContentView(dialogView);
-       ((View) dialogView.getParent()).setBackgroundColor(getResources().getColor(android.R.color.transparent));
-       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-           @Override
-           public void onDismiss(DialogInterface dialog) {
-               if (map_id == 0)
-                   marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
-               else{
-                   map.getController().setCenter(osm_marker.getPosition());
-                   osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
-               }
-           }
-       });
 
-       dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-           @Override
-           public void onCancel(DialogInterface dialog) {
-               if (map_id == 0)
-                   marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
-               else {
-                   map.getController().setCenter(osm_marker.getPosition());
-                   osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
-               }
-           }
-       });
+                dialog = new BottomSheetDialog(getActivity());
+                dialogView = getActivity().getLayoutInflater().inflate(R.layout.bottomdialog, null);
+                dialog.setContentView(dialogView);
+                ((View) dialogView.getParent()).setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        if (map_id == 0)
+                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
+                        else{
+                            map.getController().setCenter(osm_marker.getPosition());
+                            osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
+                        }
+                    }
+                });
+
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        if (map_id == 0)
+                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_gray));
+                        else {
+                            map.getController().setCenter(osm_marker.getPosition());
+                            osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_gray));
+                        }
+                    }
+                });
+
+                Button date = dialogView.findViewById(R.id.dataselect);
+                date.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        DialogFragment datePicker = new DatePickerFragment();
+                        datePicker.show(getActivity().getSupportFragmentManager(), "Seleziona data");
+                        if (marker != null) marker.hideInfoWindow();
+                    }
+                });
+
+                Button send = dialogView.findViewById(R.id.send);
+                send.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(getActivity(), Data.class);
+                        i.putExtra("lat", ln.latitude);
+                        i.putExtra("long", ln.longitude);
+                        i.putExtra("data", dataSelezionata.getTime());
+                        i.putExtra("citta", citta);
+                        startActivity(i);
+                    }
+                });
 
         FloatingActionButton position = rootview.findViewById(R.id.position);
         position.setOnClickListener(new View.OnClickListener(){
@@ -190,29 +215,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
                 getLocation(rootview);
             }
         });
-
-       Button date = dialogView.findViewById(R.id.dataselect);
-       date.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                DialogFragment datePicker = new DatePickerFragment();
-                datePicker.show(getActivity().getSupportFragmentManager(), "Seleziona data");
-                if (marker != null) marker.hideInfoWindow();
-            }
-       });
-
-       Button send = dialogView.findViewById(R.id.send);
-       send.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivity(), Data.class);
-                i.putExtra("lat", ln.latitude);
-                i.putExtra("long", ln.longitude);
-                i.putExtra("data", dataSelezionata.getTime());
-                i.putExtra("citta", citta);
-                startActivity(i);
-            }
-       });
 
         if (map_id == 0) {
             ImageView reco = rootview.findViewById(R.id.recognition);

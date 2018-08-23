@@ -215,4 +215,5 @@
     <string name="restart">Restart</string>
     <string name="error_un">Chart error</string>
     <string name="error_chart">Missing information of sun or moon. Retry in another position</string>
+    <string name="no_sun">The sun never rise over mountain level.</string>
 </resources>

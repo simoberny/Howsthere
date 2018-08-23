@@ -112,11 +112,10 @@ public class HistoryFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_history, container, false);
-        // riscrivere la barra con la barra di sistema
+
         Toolbar bar = view.findViewById(R.id.history_toolbar);
         bar.showOverflowMenu();
         setHasOptionsMenu(true);
-
         ((MainActivity)getActivity()).setSupportActionBar(bar);
 
         FloatingActionButton new_pan = view.findViewById(R.id.new_pan);

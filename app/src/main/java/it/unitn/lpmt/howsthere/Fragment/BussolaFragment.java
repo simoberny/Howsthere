@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -50,6 +51,7 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
     SensorManager mSensorManager;
     Double lat, lon;
     Location currentLoc = null;
+    Panorama p = null;
 
     private GoogleMap map = null;
 
@@ -75,21 +77,21 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
+        p = ((RisultatiActivity) getActivity()).p;
+
+        lat = p.lat;
+        lon = p.lon;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         //Prendo ID e panorama (Uno dei due sarà null dipendentemente da che posto arriva
-        PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;
-        Panorama p = ((RisultatiActivity) getActivity()).p;
-
-        lat = p.lat;
-        lon = p.lon;
-
-        angoloDaSotrarreAlba = (float) Math.floor((float) p.getAlba().azimuth * 100) / 100;
-        angoloDaSotrarreTramonto = (float) Math.floor((float) p.getTramonto().azimuth * 100) / 100;
-
-        mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
+        if(p.albe.size() > 0 && p.tramonti.size() > 0) {
+            angoloDaSotrarreAlba = (float) Math.floor((float) p.getAlba().azimuth * 100) / 100;
+            angoloDaSotrarreTramonto = (float) Math.floor((float) p.getTramonto().azimuth * 100) / 100;
+            mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
+        }
     }
 
     @Override
@@ -97,32 +99,41 @@ public class BussolaFragment extends Fragment implements SensorEventListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bussola, container, false);
         //((RisultatiActivity)getActivity()).getSupportActionBar().setTitle("Alba e tramonto sole");
-        compassAlba = view.findViewById(R.id.compassAlba);
-        compassTramonto = view.findViewById(R.id.compassTramonto);
 
-        //nord = view.findViewById(R.id.nord);
-        nord_compass = view.findViewById(R.id.nord);
+        RelativeLayout norise = view.findViewById(R.id.norise);
 
-        gradi_alba = view.findViewById(R.id.gradi_alba);
-        gradi_tramonto = view.findViewById(R.id.gradi_tramonto);
+        if(p.albe.size() > 0 && p.tramonti.size() > 0){
+            norise.setVisibility(View.GONE);
 
-        if (isGooglePlayServicesAvailable(getContext())) {
-            SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_bussola);
-            mapFragment.getMapAsync(onMapReadyCallback());
+            compassAlba = view.findViewById(R.id.compassAlba);
+            compassTramonto = view.findViewById(R.id.compassTramonto);
+
+            //nord = view.findViewById(R.id.nord);
+            nord_compass = view.findViewById(R.id.nord);
+
+            gradi_alba = view.findViewById(R.id.gradi_alba);
+            gradi_tramonto = view.findViewById(R.id.gradi_tramonto);
+
+            if (isGooglePlayServicesAvailable(getContext())) {
+                SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map_bussola);
+                mapFragment.getMapAsync(onMapReadyCallback());
+            }
+
         }
+
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
+        if (mSensorManager != null) mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(this);
+        if (mSensorManager != null) mSensorManager.unregisterListener(this);
     }
 
     public void onSensorChanged(SensorEvent event) {

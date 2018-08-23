@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.bumptech.glide.Glide;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -57,10 +60,6 @@ public class MainActivity extends AppCompatActivity{
             startActivity(introIntent);
         }
 
-        PanoramiStorage.context = this;
-        PanoramiStorage.panorami_storage = new PanoramiStorage();
-        PanoramiStorage.panorami_storage.initial_load();
-
         SharedPreferences pref = getApplicationContext().getSharedPreferences("SettingsPref", 0);
         SharedPreferences.Editor editor = pref.edit();
         Integer night_mode = pref.getInt("night_mode", 0);
@@ -78,6 +77,10 @@ public class MainActivity extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        PanoramiStorage.context = this;
+        PanoramiStorage.panorami_storage = new PanoramiStorage();
+        PanoramiStorage.panorami_storage.initial_load();
 
         seq = new MaterialTapTargetSequence();
         isUserFirstTap= Boolean.valueOf(readSharedSetting(MainActivity.this, PREF_USER_FIRST_TAP, "true"));
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity{
         ff = FeedFragment.newInstance(extra);
         mf = MapsFragment.newInstance();
         mf.setRetainInstance(true);
+        ff.setRetainInstance(true);
 
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -241,5 +245,25 @@ public class MainActivity extends AppCompatActivity{
             winParams.flags &= ~bits;
         }
         win.setAttributes(winParams);
+    }
+
+    class CacheClearAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            Glide.get(getApplicationContext()).clearDiskCache();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute (Void result)    {
+            Glide.get(getApplicationContext()).clearMemory();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CacheClearAsyncTask a = new CacheClearAsyncTask();
+        a.execute();
     }
 }

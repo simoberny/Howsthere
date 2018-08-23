@@ -26,6 +26,10 @@ android {
         it.buildConfigField 'String', 'OWM_API_KEY', "\"d52769a03723b332fc98beb0f9a6abc6\""
     }
     buildToolsVersion '27.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {

@@ -221,7 +221,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                         return false;
                     }
                 })
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.image);
     }
 

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,7 +52,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private FeedAdapter adapter;
     private List<Feed> feedList;
     private FirebaseAuth mAuth;
-    private TextView nofeed;
+    private RelativeLayout nofeed;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private FirebaseFirestore db;
@@ -76,6 +77,14 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         feedList = new ArrayList<Feed>();
+    }
+
+    @Override
+    public void onResume() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            ((MainActivity)getActivity()).getWindow().setStatusBarColor(getResources().getColor(R.color.toolbar));
+        }
+        super.onResume();
     }
 
     @Override
