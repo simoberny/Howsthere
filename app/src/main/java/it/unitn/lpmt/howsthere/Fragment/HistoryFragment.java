@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class HistoryFragment extends Fragment{
 
     public HistoryFragment() {}
     public StoricoAdapter adapter;
+    private RelativeLayout nostorico;
 
     public static HistoryFragment newInstance() {
         HistoryFragment fragment = new HistoryFragment();
@@ -75,6 +77,9 @@ public class HistoryFragment extends Fragment{
                 adapter.notifyDataSetChanged();
                 selezionati_id.clear();
                 in_selezione = false;
+                if(adapter.l.size() == 0){
+                    nostorico.setVisibility(View.VISIBLE);
+                }
                 return true;
             }else{
                 Snackbar.make(getActivity().findViewById(R.id.layout_base),
@@ -85,6 +90,7 @@ public class HistoryFragment extends Fragment{
                         adapter.notifyDataSetChanged();
                         selezionati_id.clear();
                         in_selezione = false;
+                        nostorico.setVisibility(View.VISIBLE);
                     }
                 }).show();
             }
@@ -118,16 +124,7 @@ public class HistoryFragment extends Fragment{
         setHasOptionsMenu(true);
         ((MainActivity)getActivity()).setSupportActionBar(bar);
 
-        FloatingActionButton new_pan = view.findViewById(R.id.new_pan);
-        new_pan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BottomNavigationView navigation  = (getActivity()).findViewById(R.id.navigation);
-                navigation.setSelectedItemId(R.id.navigation_home);
-            }
-        });
-
-        LinearLayout nofeed = view.findViewById(R.id.nofeed);
+        nostorico = view.findViewById(R.id.nostorico);
         final ListView r = (ListView) view.findViewById(R.id.storico_lista);
         List<Panorama> list = PanoramiStorage.panorami_storage.getAllPanorama();
         adapter = new StoricoAdapter(view.getContext(), R.layout.singolo_storico, list,selezionati_id);
@@ -181,9 +178,9 @@ public class HistoryFragment extends Fragment{
         });
 
         if(list.size() > 0){
-            nofeed.setVisibility(View.GONE);
+            nostorico.setVisibility(View.GONE);
         }else{
-            nofeed.setVisibility(View.VISIBLE);
+            nostorico.setVisibility(View.VISIBLE);
         }
 
         return view;
