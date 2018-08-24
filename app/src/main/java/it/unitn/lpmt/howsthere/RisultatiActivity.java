@@ -31,7 +31,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
 import com.vansuita.pickimage.enums.EPickType;
@@ -47,6 +50,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import it.unitn.lpmt.howsthere.Fragment.BussolaFragment;
 import it.unitn.lpmt.howsthere.Fragment.MeteoFragment;
@@ -73,6 +77,8 @@ public class RisultatiActivity extends AppCompatActivity {
     private String mCurrentPhotoPath;
     private CoordinatorLayout main = null;
 
+
+
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
@@ -85,6 +91,7 @@ public class RisultatiActivity extends AppCompatActivity {
         setContentView(R.layout.activity_risultati_nav);
 
         main = findViewById(R.id.coord_risultati);
+
         Toolbar tl = findViewById(R.id.risultati_tool);
         tl.setNavigationIcon(R.drawable.baseline_arrow_back_24);
         tl.setNavigationOnClickListener(new View.OnClickListener() {
@@ -187,6 +194,7 @@ public class RisultatiActivity extends AppCompatActivity {
         }
 
         navigation.setSelectedItemId(R.id.navigation_risultati);
+
     }
 
     public String getPosizione(Double latitude, Double longitude){
@@ -367,6 +375,5 @@ public class RisultatiActivity extends AppCompatActivity {
                 break;
         }
     }
-
 
 }

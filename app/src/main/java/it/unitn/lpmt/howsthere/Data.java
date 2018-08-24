@@ -14,6 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import org.shredzone.commons.suncalc.MoonIllumination;
 import org.shredzone.commons.suncalc.MoonPosition;
 import org.shredzone.commons.suncalc.MoonTimes;
@@ -50,10 +54,15 @@ public class Data extends AppCompatActivity {
     public Panorama panorama = new Panorama();
     private TextView loadingMessage;
 
+    private FirebaseFirestore db;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
+
+        db = FirebaseFirestore.getInstance();
 
         Intent i = getIntent();
         panorama.lat = i.getDoubleExtra("lat", 0.0);
@@ -76,6 +85,27 @@ public class Data extends AppCompatActivity {
         retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.heywhatsthat.com/")
                 .build();
+
+        db.collection("conteggio").document("conteggio")
+            .get()
+            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    long count = documentSnapshot.getLong("count");
+                    System.out.println("Conteggio: " + count);
+
+                    Conteggio co = new Conteggio(++count);
+
+                    db.collection("conteggio").document("conteggio")
+                        .set(co)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                System.out.println("Feed aggiornata!");
+                            }
+                        });
+                }
+        });
 
         // Se c'è un istanza salvata non richiedo nuovamente i dati
         if (savedInstanceState != null) {
@@ -425,6 +455,9 @@ public class Data extends AppCompatActivity {
         Intent i = new Intent(this,RisultatiActivity.class); //chiamo la classe Risultati
         i.putExtra("ID", panorama.ID);
         i.putExtra("citta", panorama.citta);
+
+
+
         startActivity(i);
         //Finish così l'attività non resta nello stack e quando nei risultati si premerà indietro tornerà direttamente nella main page
         finish();
@@ -653,4 +686,21 @@ public class Data extends AppCompatActivity {
         }
         return false;
     }
+
+    public class Conteggio{
+        private long count;
+
+        public Conteggio(long count){
+            this.count = count;
+        }
+
+        public long getCount() {
+            return count;
+        }
+
+        public void setCount(long count) {
+            this.count = count;
+        }
+    }
+
 }
