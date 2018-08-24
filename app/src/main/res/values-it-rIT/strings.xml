@@ -122,4 +122,5 @@
     <string name="error_un">Errore grafico</string>
     <string name="error_chart">Informazioni mancanti sole e luna, riprovare in un altra posizione. L\'applicazione verrà riavviata</string>
     <string name="no_sun">Il sole non sale mai sopra il livello delle montagne</string>
+    <string name="notmanaged">Area ancora non supportata</string>
 </resources>

@@ -572,6 +572,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     public void positionAndDialog(Marker marker){
         TextView tx = dialogView.findViewById(R.id.info_pre);
+        Button send = dialogView.findViewById(R.id.send);
+        TextView notsupported = dialogView.findViewById(R.id.notsupported);
 
         Geocoder gcd = new Geocoder(getActivity(), Locale.getDefault());
         List<Address> addresses = null;
@@ -604,6 +606,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             osm_marker.setIcon(getResources().getDrawable(R.drawable.marker_red));
             osm_marker.setTitle(citta);
             osm_marker.setSnippet(citta);
+        }
+
+        if(ln.latitude < 17){
+            send.setVisibility(View.GONE);
+            notsupported.setVisibility(View.VISIBLE);
+        }else{
+            send.setVisibility(View.VISIBLE);
+            notsupported.setVisibility(View.GONE);
         }
 
         dialog.show();
