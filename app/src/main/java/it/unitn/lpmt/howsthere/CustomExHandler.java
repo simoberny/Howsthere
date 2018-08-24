@@ -26,6 +26,13 @@ public class CustomExHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
         if(ex.toString().contains("NegativeArraySizeException")){
+
+            PanoramiStorage p = PanoramiStorage.panorami_storage;
+            List<Panorama> list = p.getAllPanorama();
+            if(list.size() > 0){
+                p.delete_by_id(list.get(0).ID);
+            }
+
             Intent intent = new Intent(activity.getApplicationContext(), MainActivity.class);
             intent.putExtra("crash", true);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);

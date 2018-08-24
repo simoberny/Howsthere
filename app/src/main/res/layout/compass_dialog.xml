@@ -26,7 +26,7 @@
         android:layout_margin="5dp"
         android:layout_weight="1"
         android:text="Montagna"
-        android:textColor="@color/ap_charcoal"
+        android:textColor="@color/tw__light_gray"
         android:textSize="19sp"
         android:textStyle="bold" />
 

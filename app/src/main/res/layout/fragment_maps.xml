@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:background="@color/ap_white"
+                android:background="@color/tw__solid_white"
                 android:gravity="center_vertical">
 
                 <fragment

@@ -176,10 +176,11 @@ public class Data extends AppCompatActivity {
                 @Override
                 public void run() {
                     richiestaID++;
+                    loadingMessage.setText(getResources().getString(R.string.loop_id) + " n°: " + (richiestaID+1));
                     callsAPI(panorama.lat, panorama.lon);
                 }
             }, 2000);
-            loadingMessage.setText(getResources().getString(R.string.loop_id) + " n°: " + (richiestaID+1));
+
         }else{ //ID non ottenuto
             LinearLayout ln = (LinearLayout) findViewById(R.id.idErrLayout);
             ln.setVisibility(TextView.VISIBLE);
@@ -245,10 +246,10 @@ public class Data extends AppCompatActivity {
                 @Override
                 public void run() {
                     richiestaStato++;
+                    loadingMessage.setText(getResources().getString(R.string.check_panorama) + " n°: " + (richiestaStato+1));
                     checkStatus();
                 }
             }, 2000);
-            loadingMessage.setText(getResources().getString(R.string.check_panorama) + " n°: " + (richiestaStato+1));
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.prontoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
@@ -309,10 +310,10 @@ public class Data extends AppCompatActivity {
                 @Override
                 public void run() {
                     richiestaDatiMontagne++;
+                    loadingMessage.setText(getResources().getString(R.string.check_panorama) + " n°: " + (richiestaDatiMontagne+1));
                     loadPeakData();
                 }
             }, 2000);
-            loadingMessage.setText(getResources().getString(R.string.check_panorama) + " n°: " + (richiestaDatiMontagne+1));
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoErrLayout);
             ln.setVisibility(TextView.VISIBLE);
@@ -377,10 +378,10 @@ public class Data extends AppCompatActivity {
                 @Override
                 public void run() {
                     richiestaNomiMontagne++;
+                    loadingMessage.setText(getResources().getString(R.string.check_name) + " n°: " + (richiestaNomiMontagne+1));
                     loadNamePeak();
                 }
             }, 2000);
-            loadingMessage.setText(getResources().getString(R.string.check_name) + " n°: " + (richiestaNomiMontagne+1));
         }else{
             LinearLayout ln = (LinearLayout) findViewById(R.id.scaricoNomiErrLayout);
             ln.setVisibility(TextView.VISIBLE);
@@ -474,10 +475,10 @@ public class Data extends AppCompatActivity {
                         .execute();     // get the results
 
                 panorama.risultatiSole[indexSole] = new Posizione();
-                panorama.risultatiSole[indexSole].ora=ora;
-                panorama.risultatiSole[indexSole].minuto=min;
-                panorama.risultatiSole[indexSole].altezza=position.getAltitude();
-                panorama.risultatiSole[indexSole].azimuth=position.getAzimuth();
+                panorama.risultatiSole[indexSole].ora = ora;
+                panorama.risultatiSole[indexSole].minuto = min;
+                panorama.risultatiSole[indexSole].altezza = position.getAltitude();
+                panorama.risultatiSole[indexSole].azimuth = position.getAzimuth();
                 indexSole++;
             }
         }

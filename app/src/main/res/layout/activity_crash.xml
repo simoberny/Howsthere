@@ -38,6 +38,6 @@
             android:layout_margin="20dp"
             android:background="@drawable/round_back_button"
             android:text="@string/restart"
-            android:textColor="@color/ap_white" />
+            android:textColor="@color/tw__solid_white" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
