@@ -456,8 +456,6 @@ public class Data extends AppCompatActivity {
         i.putExtra("ID", panorama.ID);
         i.putExtra("citta", panorama.citta);
 
-
-
         startActivity(i);
         //Finish così l'attività non resta nello stack e quando nei risultati si premerà indietro tornerà direttamente nella main page
         finish();
@@ -512,6 +510,7 @@ public class Data extends AppCompatActivity {
                 panorama.risultatiSole[indexSole].minuto = min;
                 panorama.risultatiSole[indexSole].altezza = position.getAltitude();
                 panorama.risultatiSole[indexSole].azimuth = position.getAzimuth();
+
                 indexSole++;
             }
         }

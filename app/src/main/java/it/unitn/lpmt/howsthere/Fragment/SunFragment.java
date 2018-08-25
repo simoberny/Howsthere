@@ -25,6 +25,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.EntryXComparator;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -33,6 +34,7 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -197,6 +199,9 @@ public class SunFragment extends Fragment {
                 }
             }
         }
+
+        Collections.sort(entriesSole, new EntryXComparator());
+
         //MONTAGNE
         for (int i =0; i<360; i++) {
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));

@@ -28,12 +28,14 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.EntryXComparator;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -124,6 +126,8 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         for (int i =0; i<360; i++) {
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
         }
+
+        Collections.sort(entriesSole, new EntryXComparator());
 
         //proprietà grafico:
         chart.setDrawGridBackground(false);

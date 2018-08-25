@@ -28,6 +28,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.EntryXComparator;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,6 +41,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -285,7 +287,9 @@ public class PostFeed extends AppCompatActivity {
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
         }
 
-        System.out.println("Montagne: "+ entriesMontagne.size() + " Sole: " + entriesSole.size() + " Luna: "+ entriesLuna.size());
+        Collections.sort(entriesSole, new EntryXComparator());
+
+
         //proprietà grafico:
         LineChart chart = (LineChart) findViewById(R.id.chart);
         chart.setDrawGridBackground(false);
