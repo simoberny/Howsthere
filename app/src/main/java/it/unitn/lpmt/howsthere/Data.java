@@ -86,7 +86,7 @@ public class Data extends AppCompatActivity {
                 .baseUrl("http://www.heywhatsthat.com/")
                 .build();
 
-        db.collection("conteggio").document("conteggio")
+        /*db.collection("conteggio").document("conteggio")
             .get()
             .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -104,7 +104,7 @@ public class Data extends AppCompatActivity {
                             }
                         });
                 }
-        });
+        });*/
 
         // Se c'è un istanza salvata non richiedo nuovamente i dati
         if (savedInstanceState != null) {

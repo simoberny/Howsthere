@@ -39,6 +39,14 @@
           }
         },
         {
+          "client_id": "1038601279559-bmmrt4mbjihk12htdfm94gkfmllcu2ue.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.unitn.lpmt.howsthere",
+            "certificate_hash": "fa8023c4d203fc853be3dfa1dec3c1d3ba590ba7"
+          }
+        },
+        {
           "client_id": "1038601279559-un0k7omgoi1n4sfq933mifruo4a60kgk.apps.googleusercontent.com",
           "client_type": 3
         }
