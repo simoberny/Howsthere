@@ -287,8 +287,7 @@ public class PostFeed extends AppCompatActivity {
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
         }
 
-        Collections.sort(entriesSole, new EntryXComparator());
-
+        //Collections.sort(entriesSole, new EntryXComparator());
 
         //proprietà grafico:
         LineChart chart = (LineChart) findViewById(R.id.chart);

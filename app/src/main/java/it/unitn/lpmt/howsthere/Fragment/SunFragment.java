@@ -200,7 +200,7 @@ public class SunFragment extends Fragment {
             }
         }
 
-        Collections.sort(entriesSole, new EntryXComparator());
+        //Collections.sort(entriesSole, new EntryXComparator());
 
         //MONTAGNE
         for (int i =0; i<360; i++) {

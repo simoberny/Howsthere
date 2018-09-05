@@ -92,7 +92,6 @@ public class Data extends AppCompatActivity {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     long count = documentSnapshot.getLong("count");
-                    System.out.println("Conteggio: " + count);
 
                     Conteggio co = new Conteggio(++count);
 
@@ -101,7 +100,7 @@ public class Data extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                System.out.println("Feed aggiornata!");
+                                System.out.println("Conteggio aggiornato!");
                             }
                         });
                 }

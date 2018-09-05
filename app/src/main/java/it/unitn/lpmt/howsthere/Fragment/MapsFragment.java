@@ -608,13 +608,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
             osm_marker.setSnippet(citta);
         }
 
-        /*if(ln.latitude < 17){
+        if(ln.latitude < 17){
             send.setVisibility(View.GONE);
             notsupported.setVisibility(View.VISIBLE);
         }else{
             send.setVisibility(View.VISIBLE);
             notsupported.setVisibility(View.GONE);
-        }*/
+        }
 
         dialog.show();
     }
