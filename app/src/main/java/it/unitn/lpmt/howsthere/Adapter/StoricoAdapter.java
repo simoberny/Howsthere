@@ -5,10 +5,12 @@ package it.unitn.lpmt.howsthere.Adapter;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,70 +32,154 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.EntryXComparator;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import it.unitn.lpmt.howsthere.Oggetti.Panorama;
 import it.unitn.lpmt.howsthere.R;
+import it.unitn.lpmt.howsthere.RisultatiActivity;
 
-public class StoricoAdapter extends ArrayAdapter<Panorama>{
+public class StoricoAdapter extends RecyclerView.Adapter<StoricoAdapter.MyViewHolder>{
 
     public List<Panorama> l = null;
-    private LineChart chart;
     Context context;
-    private List<String> selezionati_id;
+    private List<String> selezionati_id = new ArrayList<String>();
+    boolean in_selezione = false;
 
-    public StoricoAdapter(Context context, int textViewResourceId, List<Panorama> objects, List<String> selezionati_id) {
-        super(context, textViewResourceId, objects);
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        TextView nome_citta, data;
+        ImageView anteprima;
+        CheckBox selectable;
+        LineChart chart;
+        View overlay;
+
+        public MyViewHolder(final View view) {
+            super(view);
+            nome_citta = view.findViewById(R.id.nome_citta);
+            data = view.findViewById(R.id.data);
+            anteprima = view.findViewById(R.id.anteprima);
+            selectable = view.findViewById(R.id.selectable);
+            overlay = view.findViewById(R.id.overlay);
+            chart = view.findViewById(R.id.chart_storico);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String selected_id = l.get(getAdapterPosition()).ID;
+                    CheckBox v = view.findViewById(R.id.selectable);
+                    if(!in_selezione) {
+                        Intent i = new Intent(context, RisultatiActivity.class);
+                        i.putExtra("ID", selected_id);
+                        context.startActivity(i);
+                    }else if(selezionati_id.contains(selected_id)){
+                        selezionati_id.remove(selected_id);
+                        view.findViewById(R.id.overlay).setVisibility(View.GONE);
+                        v.setVisibility(View.GONE);
+                        //view.findViewById(R.id.spunta).setVisibility(View.GONE); //Spunta Matteo
+                        v.setChecked(false);
+
+                        if(selezionati_id.size()==0){
+                            in_selezione = false;
+                        }
+                    }else{
+                        view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+                        v.setVisibility(View.VISIBLE);
+                        //view.findViewById(R.id.spunta).setVisibility(View.VISIBLE); //Spunta Matteo
+                        v.setChecked(true);
+                        selezionati_id.add(selected_id);
+                    }
+                }
+            });
+
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    String selected_id = l.get(getAdapterPosition()).ID;
+                    if(!selezionati_id.contains(selected_id)) {
+                        CheckBox v = view.findViewById(R.id.selectable);
+                        v.setVisibility(View.VISIBLE);
+                        v.setChecked(true);
+                        selezionati_id.add(selected_id);
+
+                        view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+
+                        in_selezione = true;
+                    }
+                    return true;
+                }
+            });
+        }
+    }
+
+    public StoricoAdapter(Context context, List<Panorama> objects) {
         this.selezionati_id = selezionati_id;
-        l = objects;
+        this.l = objects;
         this.context = context;
     }
 
     @Override
-    public View getView(final int position, View convertView, final ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.singolo_storico, null);
+    public StoricoAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.singolo_storico, parent, false);
+        return new StoricoAdapter.MyViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(final StoricoAdapter.MyViewHolder holder, final int position) {
         Panorama p = l.get(position);
 
-        TextView nome_citta = convertView.findViewById(R.id.nome_citta);
-        TextView data = convertView.findViewById(R.id.data);
-        ImageView anteprima = convertView.findViewById(R.id.anteprima);
-        CheckBox selectable = convertView.findViewById(R.id.selectable);
-        chart = convertView.findViewById(R.id.chart_storico);
-
-
-        nome_citta.setText(p.citta + " ");
+        holder.nome_citta.setText(p.citta + " ");
         Glide.with(context)
-                .load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=200x250&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon)
+                .load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=200x230&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon + "&key=AIzaSyAnxgK9W1tUZ7kkItOJr1kQPQ5BpKQlEcY")
                 .placeholder(R.drawable.nomap)
-                .into(anteprima);
+                .into(holder.anteprima);
         //Picasso.get().load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=200x250&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon).placeholder(R.drawable.nomap).into(anteprima);
 
         String d = (String) DateFormat.format("dd",p.data)+"/"+ (String) DateFormat.format("MM",p.data)+"/"+ (String) DateFormat.format("yyyy",p.data);
-        data.setText(d);
+        holder.data.setText(d);
 
         if (selezionati_id.contains(p.ID)){
-            convertView.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
-            selectable.setVisibility(View.VISIBLE);
-            selectable.setChecked(true);
+            holder.overlay.setVisibility(View.VISIBLE);
+            holder.selectable.setVisibility(View.VISIBLE);
+            holder.selectable.setChecked(true);
         }
 
-        new ShowChart(p, chart).execute();
-
-        return convertView;
+        new ShowChart(p, holder.chart).execute();
     }
 
+    @Override
+    public int getItemCount() {
+        return l.size();
+    }
+
+    public void clearSelezionati(){
+        this.selezionati_id.clear();
+    }
+
+    public List<String> getSelezionati(){
+        return this.selezionati_id;
+    }
+
+    public void setInSelezione(boolean selezione){
+        this.in_selezione = selezione;
+    }
+
+    public boolean getInSelezione(){
+        return this.in_selezione;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
 
     class ShowChart extends AsyncTask<Void, Void, Void>{
 
@@ -126,8 +214,6 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         for (int i =0; i<360; i++) {
             entriesMontagne.add(new Entry((float)p.risultatiMontagne[0][i], (float)p.risultatiMontagne[2][i]));
         }
-
-        //Collections.sort(entriesSole, new EntryXComparator());
 
         //proprietà grafico:
         chart.setDrawGridBackground(false);
@@ -202,5 +288,4 @@ public class StoricoAdapter extends ArrayAdapter<Panorama>{
         chart.invalidate();
     }
 }
-
 

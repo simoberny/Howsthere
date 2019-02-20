@@ -207,8 +207,8 @@ public class MoonFragment extends Fragment {
         }
 
 
-        /*  codice per mostrare anche la continuazione
-        for(int i = 0; i<864; i++) { //passo dati al grafico
+        //codice per mostrare anche la continuazione
+        /*for(int i = 0; i<864; i++) { //passo dati al grafico
             if(p.risultatiLuna[i].minuto == 0){
 
                 if(i<288 && p.risultatiLuna[288].azimuth > p.risultatiLuna[i].azimuth) { //solo le ore del giorno prima che concludono l' arco in cielo

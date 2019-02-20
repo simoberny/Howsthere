@@ -182,15 +182,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             }
         });
 
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
         long diff = 0;
-        try {
-            Date date = format.parse(feed.getTimeStamp());
-            long diffInMillies = Math.abs(new Date().getTime() - date.getTime());
-            diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+        long diffInMillies = Math.abs(new Date().getTime() - feed.getTimeStamp());
+        diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
 
         String tempo = "";
 

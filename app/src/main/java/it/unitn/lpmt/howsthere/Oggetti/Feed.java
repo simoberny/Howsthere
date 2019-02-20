@@ -4,6 +4,8 @@ package it.unitn.lpmt.howsthere.Oggetti;
  * Created by simob on 02/04/2018.
  */
 
+import com.google.firebase.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,14 +13,15 @@ import java.util.List;
  * Classe per la gestione dei feed, poi andrà completata con il database usando le Room
  */
 public class Feed {
-    private String ID, uid, name, location, imageUrl, panoramaID, timeStamp, descrizione, file_name;
+    private String ID, uid, name, location, imageUrl, panoramaID, descrizione, file_name;
+    private long timeStamp;
     private String p;
     private Integer likes;
     private List<String> likes_id;
 
     public Feed(){}
 
-    public Feed(String UID, String name, String location, String imageUrl, String timeStamp, String filename, String descrizione) {
+    public Feed(String UID, String name, String location, String imageUrl, long timeStamp, String filename, String descrizione) {
         this.uid = UID;
         this.name = name;
         this.location = location;
@@ -54,11 +57,11 @@ public class Feed {
         this.imageUrl = imageUrl;
     }
 
-    public String getTimeStamp() {
-        return timeStamp;
+    public long getTimeStamp() {
+        return this.timeStamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
+    public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
     }
 

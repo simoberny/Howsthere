@@ -130,7 +130,7 @@
     </string>
     <string name="fui_welcome_back_password_prompt_body" translatable="false" translation_description="Message to users that need to signin using existing email accounts">
         Hai già utilizzato <xliff:g example="jane.doe@example.com" id="email_addr" translation_description="">%1$s</xliff:g>
-        per fare il login. Inserisci la password per l'account.
+        per fare il login. Inserisci la password per l\'account.
     </string>
     <string name="fui_progress_dialog_signing_in" translation_description="Progress dialog text">Eseguendo l\'accesso…</string>
     <string name="fui_trouble_signing_in" translation_description="Link leading to forgot password flow">Signin problem?</string>

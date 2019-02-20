@@ -1,5 +1,5 @@
 <resources>
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Base.Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -7,8 +7,8 @@
         <item name="android:windowBackground">@color/real_background</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="cardViewStyle">@style/CardView</item>
-        <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
-
+        <item name="materialButtonStyle">@style/materialButton</item>
+        <item name="android:buttonStyle">@style/materialButton</item>
     </style>
 
     <style name="PreferenceStyle" parent="@style/PreferenceThemeOverlay.v14.Material">
@@ -28,7 +28,7 @@
         <item name="android:paddingBottom">5dp</item>
     </style>
 
-    <style name="AppThemeNoBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppThemeNoBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -36,7 +36,8 @@
         <item name="android:windowBackground">@color/real_background</item>
         <item name="android:colorBackground">@color/background</item>
         <item name="cardViewStyle">@style/CardView</item>
-        <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
+        <item name="materialButtonStyle">@style/materialButton</item>
+        <item name="android:buttonStyle">@style/materialButton</item>
 
     </style>
 
@@ -46,7 +47,7 @@
         <item name="preferenceTheme">@style/PreferenceStyle</item>
     </style>
 
-    <style name="LoginTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="LoginTheme" parent="Base.Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -58,6 +59,10 @@
         <item name="toolbarStyle">@style/LoginTheme.Toolbar</item>
     </style>
 
-    <style name="LoginTheme.Toolbar" parent="Widget.AppCompat.Toolbar"></style>
+    <style name="LoginTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar"></style>
+
+    <style name="materialButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="cornerRadius">20dp</item>
+    </style>
 
 </resources>

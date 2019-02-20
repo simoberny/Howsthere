@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -139,7 +140,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         final SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("MaxPhotoRef", 0);
         final SharedPreferences.Editor editor = pref.edit();
 
-        final Feed ne = new Feed(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getDisplayName(), posizione, uri, dateFormat.format(date), filename, descrizione);
+        final Feed ne = new Feed(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getDisplayName(), posizione, uri, new Date().getTime(), filename, descrizione);
 
         if(pan_id != null){
             PanoramiStorage panoramiStorage = PanoramiStorage.panorami_storage;

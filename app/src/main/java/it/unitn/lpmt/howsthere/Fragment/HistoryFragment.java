@@ -7,11 +7,15 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,6 +29,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unitn.lpmt.howsthere.Adapter.MyLinearLayoutManager;
 import it.unitn.lpmt.howsthere.Adapter.StoricoAdapter;
 import it.unitn.lpmt.howsthere.MainActivity;
 import it.unitn.lpmt.howsthere.Oggetti.Panorama;
@@ -33,13 +38,10 @@ import it.unitn.lpmt.howsthere.R;
 import it.unitn.lpmt.howsthere.RisultatiActivity;
 
 public class HistoryFragment extends Fragment{
-    //static List selezionati_posiz = new ArrayList();
-    List<String> selezionati_id = new ArrayList<String>();
-    boolean in_selezione = false;
-
     public HistoryFragment() {}
     public StoricoAdapter adapter;
-    private RelativeLayout nostorico;
+    private LinearLayoutManager mLayoutManager;
+    private RelativeLayout nostorico = null;
 
     public static HistoryFragment newInstance() {
         HistoryFragment fragment = new HistoryFragment();
@@ -66,6 +68,9 @@ public class HistoryFragment extends Fragment{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        boolean in_selezione = adapter.getInSelezione();
+        List<String> selezionati_id = adapter.getSelezionati();
+
         if (id == R.id.delete) {
             if(in_selezione) {
                 //adapter.onClick_menu();
@@ -75,9 +80,9 @@ public class HistoryFragment extends Fragment{
                     p.delete_by_id(selezionati_id.get(i));
                 }
                 adapter.notifyDataSetChanged();
-                selezionati_id.clear();
-                in_selezione = false;
-                if(adapter.l.size() == 0){
+                adapter.clearSelezionati();
+                adapter.setInSelezione(false);
+                if(adapter.getItemCount() == 0){
                     nostorico.setVisibility(View.VISIBLE);
                 }
                 return true;
@@ -88,9 +93,11 @@ public class HistoryFragment extends Fragment{
                     public void onClick(View view) {
                         PanoramiStorage.panorami_storage.delete_all();
                         adapter.notifyDataSetChanged();
-                        selezionati_id.clear();
-                        in_selezione = false;
-                        nostorico.setVisibility(View.VISIBLE);
+                        adapter.clearSelezionati();
+                        adapter.setInSelezione(false);
+                        if(adapter.getItemCount() == 0){
+                            nostorico.setVisibility(View.VISIBLE);
+                        }
                     }
                 }).show();
             }
@@ -125,57 +132,16 @@ public class HistoryFragment extends Fragment{
         ((MainActivity)getActivity()).setSupportActionBar(bar);
 
         nostorico = view.findViewById(R.id.nostorico);
-        final ListView r = (ListView) view.findViewById(R.id.storico_lista);
+        final RecyclerView r = view.findViewById(R.id.storico_lista);
         List<Panorama> list = PanoramiStorage.panorami_storage.getAllPanorama();
-        adapter = new StoricoAdapter(view.getContext(), R.layout.singolo_storico, list,selezionati_id);
+        adapter = new StoricoAdapter(view.getContext(), list);
+        mLayoutManager = new MyLinearLayoutManager(getActivity());
+        mLayoutManager.setSmoothScrollbarEnabled(true);
+
+        r.setLayoutManager(mLayoutManager);
+        r.setItemAnimator(new DefaultItemAnimator());
+
         r.setAdapter(adapter);
-
-        r.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-                String selected_id = ((Panorama)parent.getAdapter().getItem(position)).ID;
-                CheckBox v = view.findViewById(R.id.selectable);
-                if(!in_selezione) {
-                    Intent i = new Intent(getActivity(), RisultatiActivity.class);
-                    i.putExtra("ID", selected_id);
-                    startActivity(i);
-                }else if(selezionati_id.contains(selected_id)){
-                    selezionati_id.remove(selected_id);
-                    view.findViewById(R.id.overlay).setVisibility(View.GONE);
-                    v.setVisibility(View.GONE);
-                    //view.findViewById(R.id.spunta).setVisibility(View.GONE); //Spunta Matteo
-                    v.setChecked(false);
-
-                    if(selezionati_id.size()==0){
-                        in_selezione = false;
-                    }
-                }else{
-                    view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
-                    v.setVisibility(View.VISIBLE);
-                    //view.findViewById(R.id.spunta).setVisibility(View.VISIBLE); //Spunta Matteo
-                    v.setChecked(true);
-                    selezionati_id.add(selected_id);
-                }
-            }
-        });
-
-        r.setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener(){
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id){
-                String selected_id = ((Panorama)parent.getAdapter().getItem(position)).ID;
-                if(!selezionati_id.contains(selected_id)) {
-                    CheckBox v = view.findViewById(R.id.selectable);
-                    v.setVisibility(View.VISIBLE);
-                    v.setChecked(true);
-                    selezionati_id.add(selected_id);
-
-                    view.findViewById(R.id.overlay).setVisibility(View.VISIBLE);
-                    //view.findViewById(R.id.spunta).setVisibility(View.VISIBLE); //Spunta Matteo
-
-                    in_selezione = true;
-                }
-                return true;
-            }
-        });
 
         if(list.size() > 0){
             nostorico.setVisibility(View.GONE);

@@ -147,23 +147,6 @@ public class MainActivity extends AppCompatActivity{
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        BottomNavigationMenuView menuview = (BottomNavigationMenuView) navigation.getChildAt(0);
-        try {
-            Field shiftingMode = menuview.getClass().getDeclaredField("mShiftingMode");
-            shiftingMode.setAccessible(true);
-            shiftingMode.setBoolean(menuview, false);
-            shiftingMode.setAccessible(false);
-            for (int a = 0; a < menuview.getChildCount(); a++) {
-                BottomNavigationItemView item = (BottomNavigationItemView) menuview.getChildAt(a);
-                item.setShiftingMode(false);
-                item.setChecked(item.getItemData().isChecked());
-            }
-        } catch (NoSuchFieldException e) {
-            Log.e("ERROR NO SUCH FIELD", "Unable to get shift mode field");
-        } catch (IllegalAccessException e) {
-            Log.e("ERROR ILLEGAL ALG", "Unable to change value of shift mode");
-        }
-
         if (modify) {
             navigation.setSelectedItemId(R.id.navigation_user);
             editor.remove("modify");

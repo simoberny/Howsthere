@@ -71,51 +71,46 @@
                     android:text="@string/today"
                     android:textSize="19sp" />
 
-                <Button
+
+                <android.support.design.button.MaterialButton
                     android:id="@+id/dataselect"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_alignParentEnd="true"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:background="@drawable/round_with_stroke"
-                    android:drawablePadding="6dp"
-                    android:drawableStart="@drawable/baseline_date_range_24"
-                    android:paddingEnd="15dp"
-                    android:paddingStart="15dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="20dp"
+                    android:background="@android:color/background_light"
+                    android:elevation="0dp"
+                    android:icon="@drawable/baseline_date_range_24"
+                    android:padding="0dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     android:text="@string/select_date"
-                    android:textAllCaps="false"
-                    android:textColor="@color/colorPrimaryDark" />
+                    android:textColor="@color/colorAccent"
+                    app:cornerRadius="20dp"
+                    app:icon="@drawable/baseline_date_range_24" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:layout_weight="2">
+                android:layout_weight="2"
+                android:paddingEnd="20dp">
 
-                <Button
+                <android.support.design.button.MaterialButton
                     android:id="@+id/send"
-                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_alignParentEnd="true"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/round_back_button"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:drawablePadding="10dp"
-                    android:drawableStart="@drawable/baseline_timeline_white_24"
-                    android:elevation="1dp"
-                    android:paddingEnd="15dp"
-                    android:paddingStart="15dp"
-                    android:stateListAnimator="@null"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="20dp"
+                    android:background="@android:color/background_light"
+                    android:elevation="0dp"
+                    android:padding="0dp"
                     android:text="@string/next"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold" />
+                    android:textColor="@color/colorAccent"
+                    app:cornerRadius="20dp" />
             </RelativeLayout>
 
             <TextView

@@ -371,7 +371,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, DatePi
 
                 if (gps_enabled) {
                     //Servizio che richiede la posizione con GPS se disponibile ogni secondo
-                    lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, ll);
+                    lm.requestSingleUpdate(LocationManager.GPS_PROVIDER, ll, null);
                 }
                 if (network_enabled)
                     net_loc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);

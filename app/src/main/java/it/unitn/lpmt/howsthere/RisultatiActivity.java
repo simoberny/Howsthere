@@ -175,26 +175,7 @@ public class RisultatiActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        BottomNavigationMenuView menuview = (BottomNavigationMenuView) navigation.getChildAt(0);
-        try {
-            Field shiftingMode = menuview.getClass().getDeclaredField("mShiftingMode");
-            shiftingMode.setAccessible(true);
-            shiftingMode.setBoolean(menuview, false);
-            shiftingMode.setAccessible(false);
-            for (int i = 0; i < menuview.getChildCount(); i++) {
-                BottomNavigationItemView item = (BottomNavigationItemView) menuview.getChildAt(i);
-                item.setShiftingMode(false);
-                // set once again checked value, so view will be updated
-                item.setChecked(item.getItemData().isChecked());
-            }
-        } catch (NoSuchFieldException e) {
-            Log.e("ERROR NO SUCH FIELD", "Unable to get shift mode field");
-        } catch (IllegalAccessException e) {
-            Log.e("ERROR ILLEGAL ALG", "Unable to change value of shift mode");
-        }
-
         navigation.setSelectedItemId(R.id.navigation_risultati);
-
     }
 
     public String getPosizione(Double latitude, Double longitude){

@@ -380,13 +380,9 @@ public class Data extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     try {
                         gNamePeak = response.body().string();
-                        if(gNamePeak == null || gNamePeak == ""){
-                            richiediNomiMontagne();
-                        }else{
-                            TextView tx = findViewById(R.id.panoramaName); //recupero e rendo visibile la conferma scaricamento dati
-                            tx.setVisibility(TextView.VISIBLE);
-                            setPeak(gPeak, gNamePeak);
-                        }
+                        TextView tx = findViewById(R.id.panoramaName); //recupero e rendo visibile la conferma scaricamento dati
+                        tx.setVisibility(TextView.VISIBLE);
+                        setPeak(gPeak, gNamePeak);
                     } catch (IOException e) {
                         richiediNomiMontagne();
                     }
