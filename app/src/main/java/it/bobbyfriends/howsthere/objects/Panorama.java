@@ -1,5 +1,7 @@
 package it.bobbyfriends.howsthere.objects;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,11 +93,25 @@ public class Panorama implements Serializable {
         }
 
     }
+
     public Position getTramontoLuna(){
         if (tramontiLuna.size() != 0) {
             return tramontiLuna.get(tramontiLuna.size() - 1);
         }else{
             return null;
         }
+    }
+
+    public void setCity(String city){
+        this.citta = city;
+    }
+
+    public void setDate(Date sel_date){
+        this.data = sel_date;
+    }
+
+    public void setPosition(LatLng pos){
+        this.lat = pos.latitude;
+        this.lon = pos.longitude;
     }
 }

@@ -125,12 +125,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, DatePi
             @Override
             public void onClick(View view) {
                 process_HWT();
-                /*Intent i = new Intent(getActivity(), Data.class);
-                i.putExtra("lat", location.latitude);
-                i.putExtra("long", location.longitude);
-                i.putExtra("data", current_date.getTime());
-                i.putExtra("city", city);
-                startActivity(i);*/
             }
         });
         /* ************** */
@@ -149,8 +143,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, DatePi
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(marker != null)
-                    positionAndDialog(marker);
+                if(marker != null) positionAndDialog(marker);
             }
         });
 
@@ -210,6 +203,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, DatePi
 
     public void process_HWT(){
         Hwt hwt_data = new Hwt(getActivity());
+        hwt_data.initializePanorama(location, city, current_date);
         hwt_data.requestData();
     }
 

@@ -9,4 +9,8 @@
     <string name="position">Posizione</string>
     <string name="not_supported">Non supportato</string>
     <string name="downloading">Scaricamento dati...</string>
+    <string name="retry">Riprova</string>
+    <string name="get_id">Ottenendo ID</string>
+    <string name="get_mountain">Scaricando montagne</string>
+    <string name="processing">Processando...</string>
 </resources>
