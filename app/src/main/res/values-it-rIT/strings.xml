@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Howsthere</string>
+    <string name="title_home">Mappa</string>
+    <string name="title_history">Storico</string>
+    <string name="title_info">Info</string>
+    <string name="date_selection">Seleziona data</string>
+    <string name="today">Oggi</string>
+    <string name="next">Avanti</string>
+    <string name="position">Posizione</string>
+    <string name="not_supported">Non supportato</string>
+    <string name="downloading">Scaricamento dati...</string>
+</resources>
