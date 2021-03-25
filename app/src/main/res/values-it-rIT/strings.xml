@@ -12,5 +12,7 @@
     <string name="retry">Riprova</string>
     <string name="get_id">Ottenendo ID</string>
     <string name="get_mountain">Scaricando montagne</string>
+    <string name="get_status">Controllato stato...</string>
     <string name="processing">Processando...</string>
+    <string name="failed_try">Tentativo fallito. Riprovando...</string>
 </resources>
