@@ -1,17 +1,21 @@
 package it.bobbyfriends.howsthere;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.io.IOException;
 import java.util.Date;
 
 import it.bobbyfriends.howsthere.objects.Panorama;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -66,8 +70,48 @@ public class Hwt {
     }
 
     public void requestData(){
-        this.dialog_message.setText(activity_context.getResources().getString(R.string.get_id));
         dialog.show();
+        obtainId();
+    }
+
+    public String obtainId(){
+        this.dialog_message.setText(activity_context.getResources().getString(R.string.get_id));
+
+        HeyWhatsID service = retrofit.create(HeyWhatsID.class);
+        Call<ResponseBody> call = service.getID(this.panorama.lat, this.panorama.lon);
+        String id = "";
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String id = response.body().string();
+
+                        if(id != null && id != "") {
+                            panorama.ID = id;
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    checkStatus(); //Ottenuto l'ID controllo lo stato della generazione del panorama
+                                }
+                            }, 500);
+                        }else{
+                            progressDialog.dismiss();
+                        }
+                    } catch (IOException e) { e.printStackTrace(); }
+                } else {
+
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t)
+            {
+
+            }
+        });
+
+        return id;
     }
 }
-
