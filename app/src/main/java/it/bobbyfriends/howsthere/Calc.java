@@ -1,7 +1,6 @@
 package it.bobbyfriends.howsthere;
 
 import android.os.AsyncTask;
-import android.os.Build;
 
 import org.shredzone.commons.suncalc.MoonIllumination;
 import org.shredzone.commons.suncalc.MoonPosition;
@@ -19,6 +18,7 @@ import it.bobbyfriends.howsthere.objects.Peak;
 import it.bobbyfriends.howsthere.objects.Position;
 
 public class Calc extends AsyncTask<Void, Void, Void> {
+    public AsyncResponse delegate = null;
     String peak = "";
     String namePeak = "";
     Panorama processing_pan;
@@ -37,9 +37,12 @@ public class Calc extends AsyncTask<Void, Void, Void> {
 
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
-        //showResult();
+        delegate.processFinish();
+    }
 
-        // TODO Show result
+    public void savePanorama(){
+        //PanoramaStorage p = PanoramaStorage.panorami_storage;
+        //p.savePanorama(processing_pan);
     }
 
     public void calc(String peak, String namePeak){
@@ -51,7 +54,60 @@ public class Calc extends AsyncTask<Void, Void, Void> {
         processing_pan.albaNoMontagne = s.getRise();
         processing_pan.tramontoNoMontagne = s.getSet();
 
-        // Calculate sun every 5 minutes
+        generateSun();
+        generateMoon();
+
+        //parsingPeakName();
+
+        // Data Parsing
+        List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
+
+        for(int a = 1; a< lines.size(); a++){
+            List<String> tempsplit = Arrays.asList(lines.get(a).split(","));
+
+            for (int i =0; i<7; i++) {
+                processing_pan.risultatiMontagne[i][a-1] = Double.parseDouble(tempsplit.get(i));
+            }
+        }
+
+        // Ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne SOLE
+        boolean prevSole = false;
+        processing_pan.minutiSole = 0;
+
+        for(int i = 0; i<288; i++){
+            boolean is_sopra = sopra(i);
+
+            if(is_sopra) processing_pan.minutiSole += 5;
+
+            if(!prevSole && is_sopra){ //alba
+                processing_pan.albe.add(processing_pan.risultatiSole[i]);
+            }
+
+            if(prevSole && !is_sopra){ //alba
+                processing_pan.tramonti.add(processing_pan.risultatiSole[i]);
+            }
+
+            prevSole=is_sopra;
+        }
+
+        // Ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne LUNA
+        boolean prevLuna = false;
+        processing_pan.minutiLuna = 0;
+
+        for(int i = 287; i<576; i++){ //cerco alba anche nei 5 minuti prima di mezzanotte per non escludere un alba esattamente a mezzanotte
+            boolean is_sopra_luna = sopraLuna(i);
+            if (is_sopra_luna) processing_pan.minutiLuna += 5;
+            //alba (non calcolata se è già sorta dal giorno prima)
+            if((!prevLuna && is_sopra_luna)&& i > 287) processing_pan.albeLuna.add(processing_pan.risultatiLuna[i]);
+            //tramonto
+            if(prevLuna && !is_sopra_luna) processing_pan.tramontiLuna.add(processing_pan.risultatiLuna[i]);
+
+            prevLuna=is_sopra_luna;
+        }
+    }
+
+    // Calculate sun every 5 minutes
+    private void generateSun(){
         int indexSole = 0;
         for (int ora = 0; ora<24; ora++) {
             for (int min = 0; min < 60; min+=5) {
@@ -74,8 +130,10 @@ public class Calc extends AsyncTask<Void, Void, Void> {
                 indexSole++;
             }
         }
+    }
 
-        // Calculate moon every 5 minutes
+    // Calculate moon every 5 minutes
+    private void generateMoon(){
         int indexLuna = 0;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(processing_pan.data);
@@ -108,9 +166,11 @@ public class Calc extends AsyncTask<Void, Void, Void> {
                 }
             }
         }
+    }
 
-        // Parsing name
-        List<String> linee_nomi = Arrays.asList(namePeak.split("[\\r\\n]+"));
+    // Parsing peak's name
+    private void parsingPeakName(){
+        /*List<String> linee_nomi = Arrays.asList(namePeak.split("[\\r\\n]+"));
         for(int a = 0; a < linee_nomi.size(); a++){
             List<String> tempsplit = Arrays.asList(linee_nomi.get(a).split(" "));
 
@@ -126,48 +186,7 @@ public class Calc extends AsyncTask<Void, Void, Void> {
                 Peak temp = new Peak(b.toString(), Double.parseDouble(tempsplit.get(0)), Double.parseDouble(tempsplit.get(1)));
                 processing_pan.nomiPeak.add(temp);
             }
-        }
-
-        //PARSING dati
-        List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
-        for(int a = 1; a< lines.size(); a++){
-            List<String> tempsplit = Arrays.asList(lines.get(a).split(","));
-            for (int i =0; i<7; i++) {
-                processing_pan.risultatiMontagne[i][a-1] = Double.parseDouble(tempsplit.get(i));
-            }
-        }
-
-        //Ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne SOLE
-        boolean prevSole = false;
-        processing_pan.minutiSole = 0;
-        for(int i = 0; i<288; i++){
-
-            boolean is_sopra = sopra(i);
-            if (is_sopra) processing_pan.minutiSole+=5;
-            if(!prevSole && is_sopra){ //alba
-                processing_pan.albe.add(processing_pan.risultatiSole[i]);
-            }
-            if(prevSole && !is_sopra){ //alba
-                processing_pan.tramonti.add(processing_pan.risultatiSole[i]);
-            }
-            prevSole=is_sopra;
-        }
-
-        //ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne LUNA
-        boolean prevLuna = false;
-        processing_pan.minutiLuna = 0;
-        for(int i = 287; i<576; i++){ //cerco alba anche nei 5 minuti prima di mezzanotte per non escludere un alba esattamente a mezzanotte
-            boolean is_sopra_luna = sopraLuna(i);
-            if (is_sopra_luna) processing_pan.minutiLuna+=5;
-            //alba (non calcolata se è già sorta dal giorno prima)
-            if((!prevLuna && is_sopra_luna)&& i > 287) processing_pan.albeLuna.add(processing_pan.risultatiLuna[i]);
-            //tramonto
-            if(prevLuna && !is_sopra_luna) processing_pan.tramontiLuna.add(processing_pan.risultatiLuna[i]);
-
-            prevLuna=is_sopra_luna;
-        }
-
-        // TODO Save panorama
+        }*/
     }
 
     /**
@@ -182,6 +201,7 @@ public class Calc extends AsyncTask<Void, Void, Void> {
     private boolean sopra(int i){
         //todo confronto fra il primo e l' ultimo (0-360)
         int j = 0;
+
         for(int c = 0; c<360 && !(processing_pan.risultatiMontagne[0][c]>=processing_pan.risultatiSole[i].azimuth); c++){ //allineamento sole montagne
             j = c;
         }
@@ -200,6 +220,7 @@ public class Calc extends AsyncTask<Void, Void, Void> {
 
     private boolean sopraLuna(int i){
         int j = 0;
+
         for(int c = 0; c<360 && !(processing_pan.risultatiMontagne[0][c] >= processing_pan.risultatiLuna[i].azimuth);c++){ //allineamento Luna montagne
             j = c;
         }
@@ -215,22 +236,4 @@ public class Calc extends AsyncTask<Void, Void, Void> {
         }
         return false;
     }
-
-    public class Conteggio{
-        private long count;
-
-        public Conteggio(long count){
-            this.count = count;
-        }
-
-        public long getCount() {
-            return count;
-        }
-
-        public void setCount(long count) {
-            this.count = count;
-        }
-    }
 }
-
-

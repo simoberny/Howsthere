@@ -17,4 +17,11 @@
     <string name="failed_try">Tentativo fallito. Riprovando...</string>
     <string name="get_error">Dati non raggiungibili! Riprova a breve</string>
     <string name="get_mountain_name">Scaricamento nomi montagne...</string>
+
+    <!-- Results activity -->
+    <string name="title_activity_results">Risultati</string>
+    <string name="sun_fragment">Sole</string>
+    <string name="moon_fragment">Luna</string>
+    <string name="compass_fragment">Bussola</string>
+    <string name="weather_fragment">Meteo</string>
 </resources>

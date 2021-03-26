@@ -22,7 +22,7 @@ public class PanoramaStorage {
 
     }
 
-    public void addPanorama(Panorama p) {
+    public void savePanorama(Panorama p) {
 
     }
 

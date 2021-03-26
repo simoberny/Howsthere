@@ -1,6 +1,7 @@
 package it.bobbyfriends.howsthere;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +23,7 @@ import retrofit2.Retrofit;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public class Hwt {
+public class Hwt implements AsyncResponse{
     private Context activity_context;
     private Retrofit retrofit = null;
     private BottomSheetDialog dialog;
@@ -249,8 +250,21 @@ public class Hwt {
         process_state = 4; // Processing
         dialog_message.setText(activity_context.getResources().getString(R.string.processing));
 
-        Calc c = new Calc(peaks, null);
+        Calc c = new Calc(peaks, null, panorama);
+        c.delegate = this;
         c.execute();
+    }
+
+    @Override
+    public void processFinish() {
+        dialog.dismiss();
+
+        Intent i = new Intent(activity_context, Results.class);
+
+        i.putExtra("ID", panorama.ID);
+        i.putExtra("citta", panorama.citta);
+
+        activity_context.startActivity(i);
     }
 
     private void waitRetry(Integer retry){
