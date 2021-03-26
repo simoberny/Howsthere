@@ -4,9 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import androidx.fragment.app.DialogFragment;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import it.bobbyfriends.howsthere.objects.Panorama;
-import it.bobbyfriends.howsthere.ui.home.HomeFragment;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,9 +29,12 @@ public class Hwt {
 
     private TextView dialog_message;
     private Button bRetry;
+    private ProgressBar progress;
 
     public Panorama panorama = null;
-    private Integer max_retry = 2;
+    private String peaks;
+    private String peaks_name;
+    private Integer max_retry = 3;
     private Integer process_state = 0;
 
     public interface HeyWhatsID {
@@ -75,6 +76,7 @@ public class Hwt {
             }
         });
 
+        this.progress = dialogView.findViewById(R.id.progressBar);
         this.dialog_message = dialogView.findViewById(R.id.stat_news);
 
         this.panorama = new Panorama();
@@ -89,14 +91,13 @@ public class Hwt {
     public void requestData(){
         dialog_message.setText(activity_context.getResources().getString(R.string.get_id));
         dialog.show();
+
         obtainId(0);
     }
 
     public void obtainId(Integer retry){
-        System.out.println("Retry: " + retry);
-
         if(retry > max_retry){
-            bRetry.setVisibility(View.VISIBLE);
+            enableRetry();
             return;
         }
 
@@ -107,7 +108,6 @@ public class Hwt {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    dialog_message.setText("Response susseccful");
                     try {
                         String id = response.body().string();
 
@@ -119,23 +119,138 @@ public class Hwt {
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    checkStatus(id);
+                                    checkStatus(0);
                                 }
-                            }, 750);
+                            }, 1000);
+                        }else{
+                            waitRetry(retry);
                         }
                     } catch (IOException e) { e.printStackTrace(); }
                 }
-
-                //waitRetry(retry);
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t)
             {
-                dialog_message.setText("Errore: " + t.getMessage());
-                //waitRetry(retry);
+                waitRetry(retry);
             }
         });
+    }
+
+    public void checkStatus(Integer retry){
+        process_state = 1;
+        dialog_message.setText(activity_context.getResources().getString(R.string.get_status) + " - t: " + retry);
+
+        if(retry > max_retry){
+            enableRetry();
+            return;
+        }
+
+        HeyWhatsReady service = retrofit.create(HeyWhatsReady.class);
+        Call<ResponseBody> call = service.getStatus(panorama.ID);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String status = response.body().string();
+
+                        if(status.length() > 0 && status.charAt(0) == '1'){
+                            obtainPeaks(0);
+                        }else{
+                            waitRetry(retry);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                waitRetry(retry);
+            }
+        });
+    }
+
+    private void obtainPeaks(Integer retry){
+        process_state = 2;
+        dialog_message.setText(activity_context.getResources().getString(R.string.get_mountain) + " - t: " + retry);
+
+        if(retry > max_retry){
+            enableRetry();
+            return;
+        }
+
+        HeyWhatsPeak service = retrofit.create(HeyWhatsPeak.class);
+        Call<ResponseBody> call = service.getPeak(panorama.ID);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        peaks = response.body().string();
+                        if(peaks.length() > 0){
+                            //obtainPeakNames(0);
+                            processPeak();
+                        }else{
+                            waitRetry(retry);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                waitRetry(retry);
+            }
+        });
+    }
+
+    private void obtainPeakNames(Integer retry){
+        process_state = 3;
+        dialog_message.setText(activity_context.getResources().getString(R.string.get_mountain_name) + " - t: " + retry);
+
+        if(retry > max_retry){
+            enableRetry();
+            return;
+        }
+
+        HeyWhatsNamePeak service = retrofit.create(HeyWhatsNamePeak.class);
+        Call<ResponseBody> call = service.getNamePeak(panorama.ID);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        peaks_name = response.body().string();
+                        processPeak();
+                        return;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                waitRetry(retry);
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                waitRetry(retry);
+            }
+        });
+    }
+
+    private void processPeak(){
+        process_state = 4; // Processing
+        dialog_message.setText(activity_context.getResources().getString(R.string.processing));
+
+        Calc c = new Calc(peaks, null);
+        c.execute();
     }
 
     private void waitRetry(Integer retry){
@@ -143,17 +258,38 @@ public class Hwt {
             @Override
             public void run() {
                 dialog_message.setText(activity_context.getResources().getString(R.string.failed_try));
-                obtainId(retry + 1);
+                newRetry(retry + 1);
             }
         }, 2000);
     }
 
-    public void checkStatus(String id){
-        dialog_message.setText(activity_context.getResources().getString(R.string.get_status));
-        System.out.println("ID: " + id);
+    private void enableRetry(){
+        progress.setVisibility(View.GONE);
+        bRetry.setVisibility(View.VISIBLE);
+        dialog_message.setText(activity_context.getResources().getString(R.string.get_error));
+    }
+
+    public void newRetry(Integer retry){
+        switch(process_state){
+            case 0:
+                obtainId(retry);
+                break;
+            case 1:
+                checkStatus(retry);
+                break;
+            case 2:
+                obtainPeaks(retry);
+                break;
+            case 3:
+                obtainPeakNames(retry);
+                break;
+            default:
+        }
     }
 
     public void retryStage(){
-        System.out.println("Clicked!");
+        progress.setVisibility(View.VISIBLE);
+        bRetry.setVisibility(View.INVISIBLE);
+        newRetry(0);
     }
 }

@@ -17,7 +17,7 @@ public class Position implements Comparable, Serializable {
     }
 
     public int compareTo(Object x) {
-        if(x == null) System.out.println("dati sole/luna mancanti!");;
+        if(x == null) System.out.println("Missing sun and moon data");;
 
         if(!(x instanceof Position)) throw new ClassCastException();
 

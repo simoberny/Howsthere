@@ -26,14 +26,14 @@
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="28dp" />
 
             <TextView
                 android:id="@+id/stat_news"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="28dp"
                 android:text="@string/downloading"
                 android:textSize="18sp" />
 
@@ -44,6 +44,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/red_200"
             android:paddingLeft="26dp"
             android:paddingRight="26dp"
             android:text="@string/retry"

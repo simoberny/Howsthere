@@ -3,6 +3,7 @@ package it.bobbyfriends.howsthere.objects;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,10 +48,10 @@ public class Panorama implements Serializable {
 
     public double percentualeLuna = 0;
     public  double faseLuna = 0;
-    public Date albaNoMontagne;
-    public Date tramontoNoMontagne;
-    public Date albaLunaNoMontagne;
-    public Date tramontoLunaNoMontagne;
+    public ZonedDateTime albaNoMontagne;
+    public ZonedDateTime tramontoNoMontagne;
+    public ZonedDateTime albaLunaNoMontagne;
+    public ZonedDateTime tramontoLunaNoMontagne;
 
     public Date prossimaLunaPiena; // non ancora implementato
     public Date ultimaLunaPiena;

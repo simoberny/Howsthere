@@ -9,10 +9,12 @@
     <string name="position">Posizione</string>
     <string name="not_supported">Non supportato</string>
     <string name="downloading">Scaricamento dati...</string>
-    <string name="retry">Riprova</string>
+    <string name="retry">Nuovo tentativo</string>
     <string name="get_id">Ottenendo ID</string>
-    <string name="get_mountain">Scaricando montagne</string>
+    <string name="get_mountain">Scaricando montagne...</string>
     <string name="get_status">Controllato stato...</string>
     <string name="processing">Processando...</string>
     <string name="failed_try">Tentativo fallito. Riprovando...</string>
+    <string name="get_error">Dati non raggiungibili! Riprova a breve</string>
+    <string name="get_mountain_name">Scaricamento nomi montagne...</string>
 </resources>

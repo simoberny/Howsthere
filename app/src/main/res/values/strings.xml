@@ -11,8 +11,10 @@
     <string name="downloading">Downloading data...</string>
     <string name="retry">Retry</string>
     <string name="get_id">Obtaining ID</string>
-    <string name="get_mountain">Retrieving mountains</string>
+    <string name="get_mountain">Retrieving mountains...</string>
     <string name="get_status">Checking ID...</string>
     <string name="processing">Processing...</string>
     <string name="failed_try">Failed to obtain. Retrying...</string>
+    <string name="get_error">Data unreachable. Try again!</string>
+    <string name="get_mountain_name">Retrieving mountains names...</string>
 </resources>

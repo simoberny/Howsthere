@@ -207,6 +207,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, DatePi
         hwt_data.requestData();
     }
 
+    @SuppressLint("MissingPermission")
     public void getLocation(View view) {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
