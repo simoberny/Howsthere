@@ -1,5 +1,9 @@
 package it.bobbyfriends.howsthere.objects;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
@@ -9,6 +13,10 @@ import java.util.Date;
 import java.util.List;
 
 public class Panorama implements Serializable {
+    public String ID;
+    public String city;
+    public Date date;
+
     /*FORMATO DATI MONTAGNE (7 colonne,e 361 righe di cui una di descrizione)
        -azimuth:               0-360 vale 0 a nord e cresce verso est
        -altitude:              inclinazione all' orizzonte già calcolata
@@ -36,10 +44,6 @@ public class Panorama implements Serializable {
     public List<Position> albeLuna;
     public List<Position> tramontiLuna;
 
-    public String ID;
-    public String citta;
-    public Date data;
-
     public int minutiSole = 0;
     public int minutiLuna = 0;
     public int ore_sole;
@@ -47,7 +51,7 @@ public class Panorama implements Serializable {
     public  double lon = 0;
 
     public double percentualeLuna = 0;
-    public  double faseLuna = 0;
+    public double faseLuna = 0;
     public ZonedDateTime albaNoMontagne;
     public ZonedDateTime tramontoNoMontagne;
     public ZonedDateTime albaLunaNoMontagne;
@@ -67,7 +71,7 @@ public class Panorama implements Serializable {
         tramonti = new ArrayList<Position>();
         albeLuna = new ArrayList<Position>();
         tramontiLuna = new ArrayList<Position>();
-        data = new Date();
+        date = new Date();
     }
     //alba (prima apparizione), tramonto (ultima scomparsa)
     public Position getAlba(){
@@ -104,11 +108,11 @@ public class Panorama implements Serializable {
     }
 
     public void setCity(String city){
-        this.citta = city;
+        this.city = city;
     }
 
     public void setDate(Date sel_date){
-        this.data = sel_date;
+        this.date = sel_date;
     }
 
     public void setPosition(LatLng pos){

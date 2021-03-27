@@ -262,7 +262,7 @@ public class Hwt implements AsyncResponse{
         Intent i = new Intent(activity_context, Results.class);
 
         i.putExtra("ID", panorama.ID);
-        i.putExtra("citta", panorama.citta);
+        i.putExtra("city", panorama.city);
 
         activity_context.startActivity(i);
     }

@@ -76,8 +76,8 @@
                 android:focusable="true"
                 android:foregroundTint="@color/white"
                 android:src="@drawable/ic_baseline_arrow_forward_24"
-                app:tint="@color/white"
-                app:backgroundTint="@color/cyan_500" />
+                app:backgroundTint="@color/cyan_500"
+                app:tint="@color/white" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/position"

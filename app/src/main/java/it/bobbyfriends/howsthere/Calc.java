@@ -14,7 +14,6 @@ import java.util.List;
 
 import it.bobbyfriends.howsthere.objects.Panorama;
 import it.bobbyfriends.howsthere.objects.PanoramaStorage;
-import it.bobbyfriends.howsthere.objects.Peak;
 import it.bobbyfriends.howsthere.objects.Position;
 
 public class Calc extends AsyncTask<Void, Void, Void> {
@@ -41,13 +40,13 @@ public class Calc extends AsyncTask<Void, Void, Void> {
     }
 
     public void savePanorama(){
-        //PanoramaStorage p = PanoramaStorage.panorami_storage;
-        //p.savePanorama(processing_pan);
+        PanoramaStorage p = PanoramaStorage.persistent_storage;
+        p.addPanorama(processing_pan);
     }
 
     public void calc(String peak, String namePeak){
         SunTimes s = SunTimes.compute()
-                .on(processing_pan.data)
+                .on(processing_pan.date)
                 .at(processing_pan.lat, processing_pan.lon)
                 .execute();
 
@@ -104,6 +103,8 @@ public class Calc extends AsyncTask<Void, Void, Void> {
 
             prevLuna=is_sopra_luna;
         }
+
+        savePanorama();
     }
 
     // Calculate sun every 5 minutes
@@ -112,7 +113,7 @@ public class Calc extends AsyncTask<Void, Void, Void> {
         for (int ora = 0; ora<24; ora++) {
             for (int min = 0; min < 60; min+=5) {
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(processing_pan.data);
+                calendar.setTime(processing_pan.date);
                 calendar.set(Calendar.HOUR_OF_DAY, ora);
                 calendar.set(Calendar.MINUTE, min);
 
@@ -136,7 +137,7 @@ public class Calc extends AsyncTask<Void, Void, Void> {
     private void generateMoon(){
         int indexLuna = 0;
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(processing_pan.data);
+        calendar.setTime(processing_pan.date);
         calendar.add(Calendar.DATE, -1);
 
         for(int giorno = 0; giorno<3; giorno++) {
@@ -152,11 +153,11 @@ public class Calc extends AsyncTask<Void, Void, Void> {
                             .at(processing_pan.lat, processing_pan.lon) //set a location
                             .execute(); //get the results
 
-                    MoonIllumination m = MoonIllumination.compute().on(processing_pan.data).execute();
+                    MoonIllumination m = MoonIllumination.compute().on(processing_pan.date).execute();
                     processing_pan.percentualeLuna = m.getFraction() * 100;
                     processing_pan.faseLuna = m.getPhase();
 
-                    MoonTimes m1 = MoonTimes.compute().on(processing_pan.data).execute();
+                    MoonTimes m1 = MoonTimes.compute().on(processing_pan.date).execute();
                     processing_pan.albaLunaNoMontagne = m1.getRise();
                     processing_pan.tramontoLunaNoMontagne = m1.getSet();
 

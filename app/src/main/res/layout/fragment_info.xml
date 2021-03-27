@@ -18,10 +18,8 @@
             android:id="@+id/info_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cyan_500"
             android:theme="?attr/actionBarTheme"
-            app:title="@string/title_info"
-            app:titleTextColor="@android:color/white" />
+            app:title="@string/title_info" />
 
         <RelativeLayout
             android:layout_width="match_parent"

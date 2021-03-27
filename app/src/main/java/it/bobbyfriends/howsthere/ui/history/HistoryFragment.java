@@ -21,7 +21,7 @@ import it.bobbyfriends.howsthere.R;
 public class HistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        ((MainActivity)getActivity()).getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.cyan_500));
+        ((MainActivity)getActivity()).getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.white));
 
         View root = inflater.inflate(R.layout.fragment_history, container, false);
 

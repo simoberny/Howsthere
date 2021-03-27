@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_risultati"
+        android:id="@+id/navigation_sun"
         android:icon="@drawable/ic_baseline_wb_sunny_24"
         android:title="@string/sun_fragment" />
 
     <item
-        android:id="@+id/navigation_luna"
+        android:id="@+id/navigation_moon"
         android:icon="@drawable/ic_baseline_nightlight_24"
         android:title="@string/moon_fragment" />
 
     <item
-        android:id="@+id/navigation_bussola"
+        android:id="@+id/navigation_compass"
         android:icon="@drawable/ic_baseline_explore_24"
         android:title="@string/compass_fragment" />
 
     <item
-        android:id="@+id/navigation_meteo"
+        android:id="@+id/navigation_weather"
         android:icon="@drawable/ic_baseline_cloud_24"
         android:title="@string/weather_fragment" />
 </menu>
