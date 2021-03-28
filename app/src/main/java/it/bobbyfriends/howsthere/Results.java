@@ -12,6 +12,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -40,6 +41,22 @@ public class Results extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.share) {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.checkout) + " \nhttps://howsthere.page.link/panorama?date=" + p.date.getTime() + "&lat=" + p.lat + "&lon=" + p.lon + "&city=" + p.city);
+                    sendIntent.setType("text/plain");
+                    startActivity(sendIntent);
+                }
+
+                return false;
+            }
+        });
+
         PanoramaStorage panoramiStorage = PanoramaStorage.persistent_storage;
         p = panoramiStorage.getPanoramabyID(id);
 
@@ -51,5 +68,11 @@ public class Results extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.navigation);
         NavController navController = Navigation.findNavController(this, R.id.result_host);
         NavigationUI.setupWithNavController(navigation, navController);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.result_menu, menu);
+        return true;
     }
 }

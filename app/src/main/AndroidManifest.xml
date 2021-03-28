@@ -49,9 +49,21 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.HowsthereNoAction">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <data
+                    android:host="howsthere.page.link"
+                    android:path="/panorama"
+                    android:scheme="http" />
+                <data
+                    android:host="howsthere.page.link"
+                    android:path="/panorama"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
     </application>

@@ -18,6 +18,8 @@
     <string name="get_error">Data unreachable. Try again!</string>
     <string name="get_mountain_name">Retrieving mountains names...</string>
     <string name="unavailable">Unavailable</string>
+    <string name="share">Share</string>
+    <string name="checkout">Check out this panorama from Howsthere!</string>
 
     <!-- Results activity -->
     <string name="title_activity_results">Results</string>
@@ -25,6 +27,7 @@
     <string name="moon_fragment">Moon</string>
     <string name="compass_fragment">Compass</string>
     <string name="weather_fragment">Weather</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

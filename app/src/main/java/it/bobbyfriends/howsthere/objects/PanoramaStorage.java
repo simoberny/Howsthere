@@ -43,6 +43,8 @@ public class PanoramaStorage {
             Gson gson = new Gson();
             String json = pref.getString("history", "");
             panorami = gson.fromJson(json, new TypeToken<List<Panorama>>() {}.getType());
+
+            if(panorami == null) panorami = new ArrayList();
         }
     }
 
