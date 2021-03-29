@@ -27,4 +27,7 @@
     <string name="moon_fragment">Luna</string>
     <string name="compass_fragment">Bussola</string>
     <string name="weather_fragment">Meteo</string>
+
+    <!-- Hitory -->
+    <string name="nopan">Nessun panorama ancora generato!</string>
 </resources>

@@ -48,7 +48,7 @@ public class Results extends AppCompatActivity {
                 if (id == R.id.share) {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.checkout) + " \nhttps://howsthere.page.link/panorama?date=" + p.date.getTime() + "&lat=" + p.lat + "&lon=" + p.lon + "&city=" + p.city);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.checkout) + " \nhttps://howsthere.page.link/panorama?date=" + p.date.getTime() + "&lat=" + p.lat + "&lon=" + p.lon);
                     sendIntent.setType("text/plain");
                     startActivity(sendIntent);
                 }
