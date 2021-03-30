@@ -75,4 +75,8 @@ public class Results extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.result_menu, menu);
         return true;
     }
+
+    public Panorama getPanorama(){
+        return this.p;
+    }
 }

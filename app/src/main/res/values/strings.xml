@@ -28,6 +28,24 @@
     <string name="compass_fragment">Compass</string>
     <string name="weather_fragment">Weather</string>
 
+    <string name="save_cal">Save to Calendar</string>
+    <string name="horizon">Horizon</string>
+    <string name="elevation">Elevation</string>
+    <string name="time">Time</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
+    <string name="mountain">Peaks</string>
+    <string name="bussola">Compass</string>
+    <string name="sole">Sun</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+
+    <string name="tempoconmontagne">Time with mountain</string>
+    <string name="temposenzamontagne">Time without mountain</string>
+
+    <string name="appa">Apparition</string>
+    <string name="spa">Sparition</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

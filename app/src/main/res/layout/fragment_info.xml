@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/statusbar_view_height"
-    tools:context=".ui.history.HistoryFragment">
+    tools:context=".fragment.main.HistoryFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

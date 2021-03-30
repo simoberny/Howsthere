@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="it.bobbyfriends.howsthere.ui.home.HomeFragment"
+        android:name="it.bobbyfriends.howsthere.fragment.main.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_history"
-        android:name="it.bobbyfriends.howsthere.ui.history.HistoryFragment"
+        android:name="it.bobbyfriends.howsthere.fragment.main.HistoryFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_info" />
 
     <fragment
         android:id="@+id/navigation_info"
-        android:name="it.bobbyfriends.howsthere.ui.info.InfoFragment"
+        android:name="it.bobbyfriends.howsthere.fragment.main.InfoFragment"
         android:label="@string/title_info"
         tools:layout="@layout/fragment_history" />
 </navigation>

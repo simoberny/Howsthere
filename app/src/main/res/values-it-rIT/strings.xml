@@ -28,6 +28,24 @@
     <string name="compass_fragment">Bussola</string>
     <string name="weather_fragment">Meteo</string>
 
+    <string name="save_cal">Salva nel calendario</string>
+    <string name="horizon">Orizzonte</string>
+    <string name="elevation">Elevazione</string>
+    <string name="time">Ora</string>
+    <string name="sunrise">Alba</string>
+    <string name="sunset">Tramonto</string>
+    <string name="mountain">Cime</string>
+    <string name="bussola">Bussola</string>
+    <string name="sole">Sole</string>
+    <string name="humidity">Umidità</string>
+    <string name="pressure">Pressione</string>
+
+    <string name="tempoconmontagne">Tempo con montagne</string>
+    <string name="temposenzamontagne">Tempo senza montagne</string>
+
+    <string name="appa">Apparizioni</string>
+    <string name="spa">Sparizioni</string>
+
     <!-- Hitory -->
     <string name="nopan">Nessun panorama ancora generato!</string>
     <string name="long_press">Tieni premuto per selezionare</string>

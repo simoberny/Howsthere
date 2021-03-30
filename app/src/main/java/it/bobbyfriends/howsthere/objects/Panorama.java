@@ -47,15 +47,15 @@ public class Panorama implements Serializable {
     public int minutiSole = 0;
     public int minutiLuna = 0;
     public int ore_sole;
-    public  double lat = 0;
-    public  double lon = 0;
+    public double lat = 0;
+    public double lon = 0;
 
     public double percentualeLuna = 0;
     public double faseLuna = 0;
-    public ZonedDateTime albaNoMontagne;
-    public ZonedDateTime tramontoNoMontagne;
-    public ZonedDateTime albaLunaNoMontagne;
-    public ZonedDateTime tramontoLunaNoMontagne;
+    public Date albaNoMontagne;
+    public Date tramontoNoMontagne;
+    public Date albaLunaNoMontagne;
+    public Date tramontoLunaNoMontagne;
 
     public Date prossimaLunaPiena; // non ancora implementato
     public Date ultimaLunaPiena;

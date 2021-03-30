@@ -1,4 +1,4 @@
-package it.bobbyfriends.howsthere.ui.history;
+package it.bobbyfriends.howsthere.fragment.main;
 
 import android.content.Intent;
 import android.content.res.Resources;

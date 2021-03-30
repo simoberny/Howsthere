@@ -1,4 +1,4 @@
-package it.bobbyfriends.howsthere.ui.info;
+package it.bobbyfriends.howsthere.fragment.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

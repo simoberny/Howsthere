@@ -1,4 +1,4 @@
-package it.bobbyfriends.howsthere.fragment;
+package it.bobbyfriends.howsthere.fragment.result;
 
 import android.os.Bundle;
 

@@ -23,8 +23,6 @@ public class PanoramaStorage {
     public Panorama getPanoramabyID(String id) {
         loadPref();
 
-        System.out.println("Panorama size: " + panorami.size());
-
         for (int i = 0; i < panorami.size(); i++) {
             if (panorami.get(i).ID.equals(id)) {
                 return panorami.get(i);
@@ -60,10 +58,6 @@ public class PanoramaStorage {
 
             if(panorami == null) panorami = new ArrayList();
         }
-
-        for (Panorama mp : panorami) {
-            System.out.println("- : \n " + mp.ID + ": " + mp.city);
-        }
     }
 
     private void saveToPref(){
@@ -85,8 +79,6 @@ public class PanoramaStorage {
 
         for (int i = 0; i < panorami.size(); i++) {
             if (panorami.get(i).ID.equals(id)) {
-                System.out.println("Deleted panorama ID: " + panorami.get(i).ID);
-
                 panorami.remove(i);
                 saveToPref();
                 break;
