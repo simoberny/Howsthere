@@ -18,8 +18,9 @@
             android:id="@+id/info_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="?attr/actionBarTheme"
-            app:title="@string/title_info" />
+            android:theme="@style/Howsthere_ToolbarStyle"
+            app:title="@string/title_info"
+            app:titleTextColor="@color/white" />
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -78,12 +78,11 @@ android:descendantFocusability="blocksDescendants">
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/chart_storico"
                     android:layout_width="match_parent"
-                    android:layout_height="90dp"
+                    android:layout_height="70dp"
                     android:layout_centerHorizontal="true"
                     android:clickable="false"
                     android:focusable="false"
-                    android:focusableInTouchMode="false"
-                />
+                    android:focusableInTouchMode="false" />
 
             </RelativeLayout>
 
@@ -98,8 +97,8 @@ android:descendantFocusability="blocksDescendants">
 
                 <ImageView
                     android:id="@+id/imageView5"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="0"
                     app:srcCompat="@drawable/marker_red" />
@@ -117,7 +116,7 @@ android:descendantFocusability="blocksDescendants">
                     android:gravity="bottom|left"
                     android:padding="2dp"
                     android:text="Pergine"
-                    android:textSize="17sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
         </LinearLayout>

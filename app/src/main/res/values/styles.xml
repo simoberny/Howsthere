@@ -7,4 +7,27 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">15dp</item>
     </style>
+
+    <style name="Howsthere_ToolbarStyle">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:background">?colorPrimary</item>
+        <item name="android:theme">@style/Howsthere_ToolbarTheme</item>
+        <item name="titleTextAppearance">@style/CustomTitleTextAppearance</item>
+        <item name="subtitleTextAppearance">@style/CustomSubTitleTextAppearance</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="Howsthere_ToolbarTheme">
+        <item name="android:titleTextColor">@color/white</item>
+        <item name="android:subtitleTextColor">@color/white</item>
+    </style>
+
+    <style name="CustomTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="CustomSubTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>

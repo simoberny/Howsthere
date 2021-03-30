@@ -15,7 +15,10 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/risultati_tool"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@color/cyan_500"
+            android:theme="@style/Howsthere_ToolbarStyle"
+            app:titleTextColor="@color/white" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/navigation"

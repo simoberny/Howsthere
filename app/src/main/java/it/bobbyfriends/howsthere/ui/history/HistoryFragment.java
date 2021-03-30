@@ -54,47 +54,50 @@ public class HistoryFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*int id = item.getItemId();
+        int id = item.getItemId();
 
-        boolean in_selezione = mAdapter.getInSelezione();
-        List<String> selezionati_id = mAdapter.getSelezionati();
+        boolean selection = mAdapter.getSelectionMode();
+        List<String> selected_ids = mAdapter.getSelected();
 
         if (id == R.id.delete) {
-            if(in_selezione) {
+            if(selection) {
                 //adapter.onClick_menu();
-                for (int i = 0; i < selezionati_id.size(); i++) {
-                    System.err.println("     Selected:  " + selezionati_id.get(i));
+                for (int i = 0; i < selected_ids.size(); i++) {
+                    System.err.println("Selected:  " + selected_ids.get(i));
                     PanoramaStorage p = PanoramaStorage.persistent_storage;
-                    p.delete_by_id(selezionati_id.get(i));
+                    p.deleteById(selected_ids.get(i));
                 }
+
                 mAdapter.notifyDataSetChanged();
-                mAdapter.clearSelezionati();
-                mAdapter.setInSelezione(false);
+                mAdapter.clearSelected();
+                mAdapter.setSelectionMode(false);
+
                 if(mAdapter.getItemCount() == 0){
-                    nostorico.setVisibility(View.VISIBLE);
+                    empty.setVisibility(View.VISIBLE);
                 }
                 return true;
             }else{
-                Snackbar.make(getActivity().findViewById(R.id.layout_base),
+                Snackbar.make(getActivity().findViewById(R.id.history_layout),
                         R.string.long_press, Snackbar.LENGTH_LONG).setAction(R.string.del_every, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        PanoramaStorage.persistent_storage.delete_all();
+                        PanoramaStorage.persistent_storage.deleteAll();
                         mAdapter.notifyDataSetChanged();
-                        mAdapter.clearSelezionati();
-                        mAdapter.setInSelezione(false);
+                        mAdapter.clearSelected();
+                        mAdapter.setSelectionMode(false);
+
                         if(mAdapter.getItemCount() == 0){
-                            nostorico.setVisibility(View.VISIBLE);
+                            empty.setVisibility(View.VISIBLE);
                         }
                     }
                 }).show();
             }
         }else if(id == R.id.share){
-            if(in_selezione){
+            if(selection){
                 String sharing = getResources().getString(R.string.checkout);
-                for(int i = 0; i < selezionati_id.size(); i++){
-                    Panorama p = PanoramaStorage.persistent_storage.getPanoramabyID(selezionati_id.get(i));
-                    sharing += "\nPanorama " + i + " https://howsthere.page.link/panorama?date=" + p.data.getTime() + "&lat=" + p.lat + "&lon=" + p.lon + "\n";
+                for(int i = 0; i < selected_ids.size(); i++){
+                    Panorama p = PanoramaStorage.persistent_storage.getPanoramabyID(selected_ids.get(i));
+                    sharing += "\nPanorama " + i + " https://howsthere.page.link/panorama?date=" + p.date.getTime() + "&lat=" + p.lat + "&lon=" + p.lon + "\n";
                 }
 
                 Intent sendIntent = new Intent();
@@ -103,16 +106,16 @@ public class HistoryFragment extends Fragment {
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
             }else{
-                Snackbar.make(getActivity().findViewById(R.id.layout_base), R.string.select_to_share, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(getActivity().findViewById(R.id.history_layout), R.string.select_to_share, Snackbar.LENGTH_LONG).show();
             }
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        ((MainActivity)getActivity()).getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.white));
+        ((MainActivity)getActivity()).getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.cyan_500));
 
         View root = inflater.inflate(R.layout.fragment_history, container, false);
         mRecyclerView = (RecyclerView) root.findViewById(R.id.history_list);
@@ -130,13 +133,18 @@ public class HistoryFragment extends Fragment {
 
         mRecyclerView.setAdapter(mAdapter);
 
+        if(list.size() > 0){
+            empty.setVisibility(View.GONE);
+        }else{
+            empty.setVisibility(View.VISIBLE);
+        }
+
         return root;
     }
 
     public void setRecyclerViewLayoutManager() {
         int scrollPosition = 0;
 
-        // If a layout manager has already been set, get current scroll position.
         if (mRecyclerView.getLayoutManager() != null) {
             scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
                     .findFirstCompletelyVisibleItemPosition();

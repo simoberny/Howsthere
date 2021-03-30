@@ -19,7 +19,7 @@ import it.bobbyfriends.howsthere.R;
 public class InfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        ((MainActivity)getActivity()).getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.white));
+        ((MainActivity)getActivity()).getWindow().setStatusBarColor(ContextCompat.getColor(getContext(), R.color.cyan_500));
 
         View root = inflater.inflate(R.layout.fragment_info, container, false);
 

@@ -2,7 +2,7 @@
     <string name="app_name">Howsthere</string>
     <string name="title_home">Mappa</string>
     <string name="title_history">Storico</string>
-    <string name="title_info">Info</string>
+    <string name="title_info">Informazioni</string>
     <string name="date_selection">Seleziona data</string>
     <string name="today">Oggi</string>
     <string name="next">Avanti</string>
@@ -30,4 +30,7 @@
 
     <!-- Hitory -->
     <string name="nopan">Nessun panorama ancora generato!</string>
+    <string name="long_press">Tieni premuto per selezionare</string>
+    <string name="del_every">Elimina tutto</string>
+    <string name="select_to_share">Seleziona almeno un panorama per condividerlo!</string>
 </resources>

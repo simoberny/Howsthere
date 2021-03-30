@@ -61,8 +61,10 @@
                 android:layout_weight="1"
                 android:backgroundTint="#FFFFFF"
                 android:text="@string/date_selection"
+                android:textColor="@color/black"
                 android:textSize="12sp"
-                app:icon="@drawable/ic_baseline_date_range_24" />
+                app:icon="@drawable/ic_baseline_date_range_24"
+                app:iconTint="#474747" />
 
         </LinearLayout>
 

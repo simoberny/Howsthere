@@ -23,6 +23,8 @@ public class PanoramaStorage {
     public Panorama getPanoramabyID(String id) {
         loadPref();
 
+        System.out.println("Panorama size: " + panorami.size());
+
         for (int i = 0; i < panorami.size(); i++) {
             if (panorami.get(i).ID.equals(id)) {
                 return panorami.get(i);
@@ -34,8 +36,20 @@ public class PanoramaStorage {
 
     public void addPanorama(Panorama p) {
         loadPref();
-        panorami.add(0, p);
+        if(!panoramaExist(p)){
+            panorami.add(0, p);
+        }
         saveToPref();
+    }
+
+    public boolean panoramaExist(Panorama p){
+        for (Panorama mp : panorami) {
+            if (mp.lat == p.lat && mp.lon == p.lon && mp.date == p.date) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void loadPref(){
@@ -45,6 +59,10 @@ public class PanoramaStorage {
             panorami = gson.fromJson(json, new TypeToken<List<Panorama>>() {}.getType());
 
             if(panorami == null) panorami = new ArrayList();
+        }
+
+        for (Panorama mp : panorami) {
+            System.out.println("- : \n " + mp.ID + ": " + mp.city);
         }
     }
 
@@ -56,20 +74,29 @@ public class PanoramaStorage {
         prefsEditor.commit();
     }
 
-    public void delete(int pos) {
-
+    public void deleteAll() {
+        loadPref();
+        panorami.clear();
+        saveToPref();
     }
 
-    public void delete_all() {
+    public void deleteById(String id){
+        loadPref();
 
-    }
+        for (int i = 0; i < panorami.size(); i++) {
+            if (panorami.get(i).ID.equals(id)) {
+                System.out.println("Deleted panorama ID: " + panorami.get(i).ID);
 
-    public void delete_by_id(String id){
-
+                panorami.remove(i);
+                saveToPref();
+                break;
+            }
+        }
     }
 
     public List<Panorama> getAllPanorama() {
-        return null;
+        loadPref();
+        return panorami;
     }
 
     public void setContext(Activity in){
