@@ -46,9 +46,18 @@
     <string name="appa">Apparizioni</string>
     <string name="spa">Sparizioni</string>
 
+    <string name="tempolunaconmontagne">Tempo luna con montagna</string>
+    <string name="faseluna">Fasi lunare</string>
+    <string name="luceluna">% luna</string>
+
     <!-- Hitory -->
     <string name="nopan">Nessun panorama ancora generato!</string>
     <string name="long_press">Tieni premuto per selezionare</string>
     <string name="del_every">Elimina tutto</string>
     <string name="select_to_share">Seleziona almeno un panorama per condividerlo!</string>
+
+    <!-- Navigation Risultati -->
+    <string name="risultati_home">Sole</string>
+    <string name="risultati_luna">Luna</string>
+    <string name="risultati_meteo">Meteo</string>
 </resources>

@@ -46,6 +46,10 @@
     <string name="appa">Apparition</string>
     <string name="spa">Sparition</string>
 
+    <string name="tempolunaconmontagne">Time moon with mountain</string>
+    <string name="faseluna">Moon phase</string>
+    <string name="luceluna">% moon</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -54,5 +58,10 @@
     <string name="long_press">Long press to select</string>
     <string name="del_every">Delete all</string>
     <string name="select_to_share">Select at least one panorama to share it!</string>
+
+    <!-- Navigation Risultati -->
+    <string name="risultati_home">Sun</string>
+    <string name="risultati_luna">Moon</string>
+    <string name="risultati_meteo">Weather</string>
 
 </resources>

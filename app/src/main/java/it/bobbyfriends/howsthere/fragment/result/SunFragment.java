@@ -212,6 +212,7 @@ public class SunFragment extends Fragment {
         dataSetSole.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         dataSetSole.setColor(Color.rgb(255, 209, 26));
         dataSetSole.setLineWidth(2f);
+        dataSetSole.setCircleRadius(4f);
         dataSetSole.setDrawValues(true);
         dataSetSole.setDrawCircles(true);
         dataSetSole.setCircleColor(Color.rgb(255, 170, 0));
