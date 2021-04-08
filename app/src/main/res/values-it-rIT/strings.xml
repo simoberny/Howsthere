@@ -60,4 +60,8 @@
     <string name="risultati_home">Sole</string>
     <string name="risultati_luna">Luna</string>
     <string name="risultati_meteo">Meteo</string>
+    <string name="no_sun">Il sole non sale mai sopra il livello delle montagne!</string>
+    <string name="aligned">Allineato</string>
+
+
 </resources>

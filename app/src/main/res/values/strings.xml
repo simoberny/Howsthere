@@ -50,9 +50,6 @@
     <string name="faseluna">Moon phase</string>
     <string name="luceluna">% moon</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!-- History -->
     <string name="nopan">No panorama generated!</string>
     <string name="long_press">Long press to select</string>
@@ -63,5 +60,7 @@
     <string name="risultati_home">Sun</string>
     <string name="risultati_luna">Moon</string>
     <string name="risultati_meteo">Weather</string>
+    <string name="no_sun">The sun never rise over mountain level.</string>
+    <string name="aligned">Aligned</string>
 
 </resources>
