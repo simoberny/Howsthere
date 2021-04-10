@@ -21,6 +21,15 @@
     <string name="share">Condividi</string>
     <string name="checkout">Guarda questo panorama generato da Howsthere!</string>
 
+    <string name="developer">Sviluppatori</string>
+    <string name="linkedinandre"> <a href="https://www.linkedin.com/in/andrea-filippi-0739a51aa?trk=people-guest_people_search-card">Linkedin</a> </string>
+    <string name="linkedinmatte"> <a href="mailto:matteo.dalponte@studenti.unitn.it">Mail</a> </string>
+    <string name="linkedinsimo"> <a href="https://it.linkedin.com/in/simone-bernab%C3%A8-6623a4114">Linkedin</a> </string>
+    <string name="university">Progetto per esame universitario</string>
+    <string name="presentation">Organizza lo scatto perfetto conoscendo gli orari esatti di alba e tramonto calcolati conoscendo il profilo montagne. L\'applicazione permette di calcolare la traiettoria del sole rispetto al profilo delle montagne in data e posizione selezionate. Questo permette di conoscere lo stato del sole e della luna nell\'arco della giornata e di avere gli orari esatti di alba e tramonto. Dove disponibili vengono forniti i dati sulle montagne circostanti con la relativa altezza e direzione. Ogni ricerca generata può essere condivisa così da poter organizzare lo scatto perfetto in compagnia.</string>
+
+
+
     <!-- Results activity -->
     <string name="title_activity_results">Risultati</string>
     <string name="sun_fragment">Sole</string>

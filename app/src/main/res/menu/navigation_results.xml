@@ -15,8 +15,4 @@
         android:icon="@drawable/ic_baseline_explore_24"
         android:title="@string/compass_fragment" />
 
-    <item
-        android:id="@+id/navigation_weather"
-        android:icon="@drawable/ic_baseline_cloud_24"
-        android:title="@string/weather_fragment" />
 </menu>

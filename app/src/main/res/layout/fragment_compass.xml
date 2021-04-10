@@ -116,21 +116,9 @@ tools:context=".fragment.result.CompassFragment">
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
+                    android:paddingEnd="10dp"
                     android:text="20°"
                     android:textSize="21sp" />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_margin="5dp"
-                        app:cardBackgroundColor="@android:color/holo_orange_light"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="0dp" />
-                </RelativeLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -180,21 +168,9 @@ tools:context=".fragment.result.CompassFragment">
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
+                    android:paddingEnd="10dp"
                     android:text="50°"
                     android:textSize="21sp" />
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_margin="5dp"
-                        app:cardBackgroundColor="@android:color/holo_orange_dark"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="0dp" />
-                </RelativeLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

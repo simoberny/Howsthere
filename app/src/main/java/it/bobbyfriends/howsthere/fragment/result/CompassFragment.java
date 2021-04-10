@@ -4,7 +4,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,10 +26,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.bobbyfriends.howsthere.R;
 import it.bobbyfriends.howsthere.Results;
 import it.bobbyfriends.howsthere.objects.Panorama;
-import it.bobbyfriends.howsthere.objects.PanoramaStorage;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -40,7 +41,7 @@ public class CompassFragment extends Fragment {
     ImageView nord_compass;
 
     SensorManager mSensorManager;
-    private Sensor mAccelerometer, mGyroscope, mMagnetometer;
+    float azimut = 0.0f;
 
     Panorama p = null;
     private GoogleMap map = null;
@@ -49,6 +50,9 @@ public class CompassFragment extends Fragment {
     float currentDegree = 0f;
     float angoloDaSotrarreAlba = 0;
     float angoloDaSotrarreTramonto = 0;
+
+    private Sensor mAccelerometer;
+    private Sensor mMagnetometer;
 
     public CompassFragment() {}
 
@@ -91,10 +95,8 @@ public class CompassFragment extends Fragment {
 
         mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
 
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-
-        mSensorManager.registerListener(mSensorEventListener, mGyroscope, SensorManager.SENSOR_DELAY_GAME);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
         return view;
     }
@@ -102,7 +104,8 @@ public class CompassFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSensorManager.registerListener(mSensorEventListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(mSensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(mSensorEventListener, mMagnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
@@ -131,59 +134,99 @@ public class CompassFragment extends Fragment {
      * Listener that handles sensor events
      */
     private final SensorEventListener mSensorEventListener = new SensorEventListener() {
+        List<Float> average_list = new ArrayList();
+        float[] mGeomagnetic;
+        float[] mGravity;
+        Integer n_average = 10;
+
         @Override
         public void onSensorChanged(SensorEvent event) {
-            float azimuth = event.values[0];
-            RotateAnimation nord = new RotateAnimation(
-                    currentDegree,
-                    -azimuth,
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF,
-                    0.5f);
-            nord.setDuration(210);
-            nord.setFillAfter(true);
-            nord_compass.startAnimation(nord);
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+                mGravity = event.values;
+            if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+                mGeomagnetic = event.values;
 
-            //ALBA
-            if(compassAlba  != null) {
-                if ((currentDegree + angoloDaSotrarreAlba) < 3 && (currentDegree + angoloDaSotrarreAlba) > -3) {
-                    gradi_alba.setText(getResources().getString(R.string.aligned));
-                } else {
-                    gradi_alba.setText(angoloDaSotrarreAlba + "° N");
+            if (mGravity != null && mGeomagnetic != null) {
+                float Rot[] = new float[9];
+                float I[] = new float[9];
+
+                boolean success = SensorManager.getRotationMatrix(Rot, I, mGravity, mGeomagnetic);
+
+                if (success) {
+                    float orientation[] = new float[3];
+                    SensorManager.getOrientation(Rot, orientation);
+                    average_list = roll(average_list, orientation[0]);
+
+                    azimut = (float) (averageList(average_list) * 180 / Math.PI);
+
+                    RotateAnimation nord = new RotateAnimation(
+                            currentDegree,
+                            -azimut,
+                            Animation.RELATIVE_TO_SELF, 0.5f,
+                            Animation.RELATIVE_TO_SELF,
+                            0.5f);
+                    nord.setDuration(200);
+                    nord.setFillAfter(true);
+                    nord_compass.startAnimation(nord);
+
+                    //ALBA
+                    if(compassAlba  != null) {
+                        if ((currentDegree + angoloDaSotrarreAlba) < 4 && (currentDegree + angoloDaSotrarreAlba) > -4) {
+                            gradi_alba.setText(getResources().getString(R.string.aligned));
+                        } else {
+                            gradi_alba.setText(angoloDaSotrarreAlba + "° N ");
+                        }
+
+                        RotateAnimation ra = new RotateAnimation(
+                                currentDegree+angoloDaSotrarreAlba,
+                                -azimut + angoloDaSotrarreTramonto,
+                                Animation.RELATIVE_TO_SELF, 0.5f,
+                                Animation.RELATIVE_TO_SELF,
+                                0.5f);
+                        ra.setDuration(50);
+                        ra.setFillAfter(true);
+                        compassAlba.startAnimation(ra);
+                    }
+
+                    //Tramonto
+                    if(compassTramonto != null) {
+                        if ((currentDegree + angoloDaSotrarreTramonto) < 4 && (currentDegree + angoloDaSotrarreTramonto) > -4) {
+                            gradi_tramonto.setText(getResources().getString(R.string.aligned));
+                        } else {
+                            gradi_tramonto.setText(angoloDaSotrarreTramonto + "° N");
+                        }
+
+                        RotateAnimation ra = new RotateAnimation(
+                                currentDegree + angoloDaSotrarreTramonto,
+                                -azimut + angoloDaSotrarreTramonto,
+                                Animation.RELATIVE_TO_SELF, 0.5f,
+                                Animation.RELATIVE_TO_SELF,
+                                0.5f);
+                        ra.setDuration(50);
+                        ra.setFillAfter(true);
+                        compassTramonto.startAnimation(ra);
+                    }
+
+                    updateCameraBearing(map, -currentDegree);
+                    currentDegree = -azimut;
                 }
-
-                RotateAnimation ra = new RotateAnimation(
-                        currentDegree+angoloDaSotrarreAlba,
-                        -azimuth,
-                        Animation.RELATIVE_TO_SELF, 0.5f,
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f);
-                ra.setDuration(210);
-                ra.setFillAfter(true);
-                compassAlba.startAnimation(ra);
             }
+        }
 
-            //Tramonto
-            if(compassTramonto != null) {
-                if ((currentDegree + angoloDaSotrarreTramonto) < 3 && (currentDegree + angoloDaSotrarreTramonto) > -3) {
-                    gradi_tramonto.setText(getResources().getString(R.string.aligned));
-                } else {
-                    gradi_tramonto.setText(angoloDaSotrarreTramonto + "° N");
-                }
-
-                RotateAnimation ra = new RotateAnimation(
-                        currentDegree+angoloDaSotrarreTramonto,
-                        -azimuth,
-                        Animation.RELATIVE_TO_SELF, 0.5f,
-                        Animation.RELATIVE_TO_SELF,
-                        0.5f);
-                ra.setDuration(210);
-                ra.setFillAfter(true);
-                compassTramonto.startAnimation(ra);
+        public List<Float> roll(List<Float> list, Float newMember) {
+            if (list.size() == this.n_average.intValue()) {
+                list.remove(0);
             }
+            list.add(newMember);
+            return list;
+        }
 
-            updateCameraBearing(map, -currentDegree);
-            currentDegree = -azimuth;
+        public float averageList(List<Float> list) {
+            float total = 0.0f;
+            for (Float item : list) {
+                total += item.floatValue();
+            }
+            return total / ((float) list.size());
         }
 
         @Override
