@@ -1,13 +1,8 @@
-package it.bobbyfriends.howsthere.objects;
-
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+package it.unitn.lpmt.howsthere.objects;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

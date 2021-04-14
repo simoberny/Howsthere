@@ -1,4 +1,4 @@
-package it.bobbyfriends.howsthere.fragment.main;
+package it.unitn.lpmt.howsthere.fragment.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -61,11 +61,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import it.bobbyfriends.howsthere.BuildConfig;
-//import it.bobbyfriends.howsthere.Data;
-import it.bobbyfriends.howsthere.Hwt;
-import it.bobbyfriends.howsthere.MainActivity;
-import it.bobbyfriends.howsthere.R;
+//import it.unitn.lpmt.howsthere.Data;
+import it.unitn.lpmt.howsthere.BuildConfig;
+import it.unitn.lpmt.howsthere.Hwt;
+import it.unitn.lpmt.howsthere.MainActivity;
+import it.unitn.lpmt.howsthere.R;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener{
     private FusedLocationProviderClient fusedLocationClient;

@@ -1,4 +1,4 @@
-package it.bobbyfriends.howsthere;
+package it.unitn.lpmt.howsthere;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.io.IOException;
 import java.util.Date;
 
-import it.bobbyfriends.howsthere.objects.Panorama;
+import it.unitn.lpmt.howsthere.objects.Panorama;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;

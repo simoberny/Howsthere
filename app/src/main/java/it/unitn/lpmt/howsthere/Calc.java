@@ -1,4 +1,4 @@
-package it.bobbyfriends.howsthere;
+package it.unitn.lpmt.howsthere;
 
 import android.os.AsyncTask;
 
@@ -8,14 +8,13 @@ import org.shredzone.commons.suncalc.MoonTimes;
 import org.shredzone.commons.suncalc.SunPosition;
 import org.shredzone.commons.suncalc.SunTimes;
 
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import it.bobbyfriends.howsthere.objects.Panorama;
-import it.bobbyfriends.howsthere.objects.PanoramaStorage;
-import it.bobbyfriends.howsthere.objects.Position;
+import it.unitn.lpmt.howsthere.objects.Panorama;
+import it.unitn.lpmt.howsthere.objects.PanoramaStorage;
+import it.unitn.lpmt.howsthere.objects.Position;
 
 public class Calc extends AsyncTask<Void, Void, Void> {
     public AsyncResponse delegate = null;

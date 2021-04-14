@@ -1,4 +1,4 @@
-package it.bobbyfriends.howsthere.objects;
+package it.unitn.lpmt.howsthere.objects;
 
 import java.io.Serializable;
 

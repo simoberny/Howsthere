@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="it.bobbyfriends.howsthere">
+    package="it.unitn.lpmt.howsthere">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -25,15 +25,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Howsthere">
         <activity
-            android:name=".Results"
+            android:name="it.unitn.lpmt.howsthere.Results"
             android:label="@string/title_activity_results"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="it.unitn.lpmt.howsthere.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.HowsthereNoAction">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="it.bobbyfriends.howsthere.MainActivity" />
+                android:value="it.unitn.lpmt.howsthere.MainActivity" />
         </activity>
 
         <meta-data
@@ -44,7 +44,7 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="it.unitn.lpmt.howsthere.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.HowsthereNoAction">

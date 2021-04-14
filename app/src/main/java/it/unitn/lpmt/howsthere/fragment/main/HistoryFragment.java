@@ -1,8 +1,6 @@
-package it.bobbyfriends.howsthere.fragment.main;
+package it.unitn.lpmt.howsthere.fragment.main;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,15 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,11 +21,11 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-import it.bobbyfriends.howsthere.MainActivity;
-import it.bobbyfriends.howsthere.R;
-import it.bobbyfriends.howsthere.adapter.HistoryAdapter;
-import it.bobbyfriends.howsthere.objects.Panorama;
-import it.bobbyfriends.howsthere.objects.PanoramaStorage;
+import it.unitn.lpmt.howsthere.MainActivity;
+import it.unitn.lpmt.howsthere.R;
+import it.unitn.lpmt.howsthere.adapter.HistoryAdapter;
+import it.unitn.lpmt.howsthere.objects.Panorama;
+import it.unitn.lpmt.howsthere.objects.PanoramaStorage;
 
 public class HistoryFragment extends Fragment {
     protected RecyclerView mRecyclerView;

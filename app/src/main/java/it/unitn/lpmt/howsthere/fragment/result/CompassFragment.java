@@ -1,4 +1,4 @@
-package it.bobbyfriends.howsthere.fragment.result;
+package it.unitn.lpmt.howsthere.fragment.result;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -29,9 +29,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.bobbyfriends.howsthere.R;
-import it.bobbyfriends.howsthere.Results;
-import it.bobbyfriends.howsthere.objects.Panorama;
+import it.unitn.lpmt.howsthere.R;
+import it.unitn.lpmt.howsthere.Results;
+import it.unitn.lpmt.howsthere.objects.Panorama;
 
 import static android.content.Context.SENSOR_SERVICE;
 

@@ -7,7 +7,7 @@
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="false"
     android:transitionGroup="true"
-    tools:context="it.bobbyfriends.howsthere.MainActivity">
+    tools:context="it.lpmt.howsthere.MainActivity">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -15,7 +15,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="it.bobbyfriends.howsthere.MainActivity"></fragment>
+        tools:context="it.lpmt.howsthere.MainActivity"></fragment>
 
     <LinearLayout
         android:id="@+id/focusP"

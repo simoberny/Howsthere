@@ -1,4 +1,4 @@
-package it.bobbyfriends.howsthere.adapter;
+package it.unitn.lpmt.howsthere.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +23,13 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import it.bobbyfriends.howsthere.R;
-import it.bobbyfriends.howsthere.Results;
-import it.bobbyfriends.howsthere.objects.Panorama;
+import it.unitn.lpmt.howsthere.R;
+import it.unitn.lpmt.howsthere.Results;
+import it.unitn.lpmt.howsthere.objects.Panorama;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
     private Context aContext;

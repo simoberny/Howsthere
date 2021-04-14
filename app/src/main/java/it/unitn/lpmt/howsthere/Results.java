@@ -1,26 +1,20 @@
-package it.bobbyfriends.howsthere;
+package it.unitn.lpmt.howsthere;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import it.bobbyfriends.howsthere.objects.Panorama;
-import it.bobbyfriends.howsthere.objects.PanoramaStorage;
+import it.unitn.lpmt.howsthere.objects.Panorama;
+import it.unitn.lpmt.howsthere.objects.PanoramaStorage;
 
 public class Results extends AppCompatActivity {
     private Panorama p = null;

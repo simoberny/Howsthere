@@ -1,4 +1,4 @@
-package it.bobbyfriends.howsthere.fragment.main;
+package it.unitn.lpmt.howsthere.fragment.main;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import it.bobbyfriends.howsthere.MainActivity;
-import it.bobbyfriends.howsthere.R;
+import it.unitn.lpmt.howsthere.MainActivity;
+import it.unitn.lpmt.howsthere.R;
 
 public class InfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,

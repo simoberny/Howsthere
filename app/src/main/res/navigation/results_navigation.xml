@@ -7,20 +7,20 @@
 
     <fragment
         android:id="@+id/navigation_sun"
-        android:name="it.bobbyfriends.howsthere.fragment.result.SunFragment"
+        android:name="it.unitn.lpmt.howsthere.fragment.result.SunFragment"
         android:label="@string/sun_fragment"
         tools:layout="@layout/fragment_sun" >
     </fragment>
 
     <fragment
         android:id="@+id/navigation_moon"
-        android:name="it.bobbyfriends.howsthere.fragment.result.MoonFragment"
+        android:name="it.unitn.lpmt.howsthere.fragment.result.MoonFragment"
         android:label="@string/moon_fragment"
         tools:layout="@layout/fragment_moon" />
 
     <fragment
         android:id="@+id/navigation_compass"
-        android:name="it.bobbyfriends.howsthere.fragment.result.CompassFragment"
+        android:name="it.unitn.lpmt.howsthere.fragment.result.CompassFragment"
         android:label="@string/compass_fragment"
         tools:layout="@layout/fragment_compass" />
 

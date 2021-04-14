@@ -1,11 +1,10 @@
-package it.bobbyfriends.howsthere;
+package it.unitn.lpmt.howsthere;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -17,7 +16,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import java.io.IOException;
@@ -25,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import it.bobbyfriends.howsthere.objects.PanoramaStorage;
+import it.unitn.lpmt.howsthere.objects.PanoramaStorage;
 
 public class MainActivity extends AppCompatActivity {
     @Override
