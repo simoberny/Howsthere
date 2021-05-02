@@ -24,6 +24,8 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -162,12 +164,16 @@ public class SunFragment extends Fragment {
     private void stampaGrafico() {
         List<Entry> entriesMontagne = new ArrayList<Entry>();
         final List<Entry> entriesSole = new ArrayList<Entry>();
+
+        List<String> sun_label = new ArrayList<>();
+
         //SOLE
         //Arrays.sort(p.risultatiSole); //ordino secondo azimuth
         for (int i = 0; i < 288; i++) { //passo dati al grafico
             if (p.risultatiSole[i].minuto == 0) {
                 if (p.risultatiSole[i].altezza >= -20) { //ogni tanto la libreria per il calcolo della traiettoria sbaglia (bug noto che accade in posti lontani) in quel caso visto che l' errore non lo possiamo gestire piùttosto stampiamo i valori validi che ci arrivano anche se sono a caso
                     entriesSole.add(new Entry((float) p.risultatiSole[i].azimuth, (float) p.risultatiSole[i].altezza));
+                    sun_label.add("" + p.risultatiSole[i].ora);
                 } else {
                     entriesSole.add(new Entry((float) p.risultatiSole[i].azimuth, (float) -20));
                 }
@@ -220,6 +226,13 @@ public class SunFragment extends Fragment {
         dataSetSole.setDrawValues(true);
         dataSetSole.setDrawHighlightIndicators(false);
         dataSetSole.setValueTextSize(10f);
+        dataSetSole.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
+                return String.valueOf(idx);
+            }
+        });
 
         chart.getDescription().setText("");
         LineData lineData = new LineData();
@@ -287,3 +300,4 @@ public class SunFragment extends Fragment {
     }
 
 }
+

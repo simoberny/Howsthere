@@ -22,6 +22,8 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -230,6 +232,20 @@ public class MoonFragment extends Fragment {
         dataSetLuna.setDrawFilled(false);
         dataSetLuna.setDrawHighlightIndicators(false);
         dataSetLuna.setValueTextSize(9f);
+        dataSetLuna.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                int idx = chart.getLineData().getDataSetByIndex(dataSetIndex).getEntryIndex(entry);
+                return String.valueOf(idx % 25);
+
+                /*if (idx>23 && idx <48) { //per avere ore sul grafico solo sul giorno stesso e non sulle continuazioni
+                    return String.valueOf(idx % 24);
+                }else{
+                    return "";
+                }*/
+            }
+        });
+
 
         int[] coloricerchiLuna = new int[64]; //un colore per ogni dato sul grafico (24 al giorno)
         for (int i = 0; i < 24; i++) {
