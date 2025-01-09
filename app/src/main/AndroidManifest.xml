@@ -35,9 +35,34 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="howsthere.page.link"
+                    android:path="/panorama"
+                    android:scheme="http" />
+                <data
+                    android:host="howsthere.page.link"
+                    android:path="/panorama"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Result"
+            android:label="@string/title_activity_results"
+            android:parentActivityName="com.bobbyteam.howsthere2.MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bobbyteam.howsthere2.MainActivity" />
         </activity>
 
         <meta-data

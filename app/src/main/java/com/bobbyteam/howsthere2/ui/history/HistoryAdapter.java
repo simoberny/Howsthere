@@ -1,6 +1,7 @@
 package com.bobbyteam.howsthere2.ui.history;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.format.DateFormat;
 import android.view.ActionMode;
@@ -14,13 +15,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bobbyteam.howsthere2.BuildConfig;
+import com.bobbyteam.howsthere2.MainActivity;
 import com.bobbyteam.howsthere2.R;
+import com.bobbyteam.howsthere2.Result;
 import com.bobbyteam.howsthere2.objects.Panorama;
+import com.bobbyteam.howsthere2.objects.PanoramaStorage;
 import com.bumptech.glide.Glide;
 import com.google.android.material.color.MaterialColors;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ItemViewHolder> {
     private static final Integer maxItems = 100;
@@ -31,9 +40,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ItemView
     private ActionMode actionMode;
     private ActionMode.Callback actionModeCallback;
 
-    public HistoryAdapter(List<Panorama> items) {
-        this.items = items;
-        this.selectedPositions = new ArrayList<>();
+    public HistoryAdapter(Context ctx_, List<Panorama> items_) {
+        ctx = ctx_;
+        items = items_;
+        selectedPositions = new ArrayList<>();
     }
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -65,10 +75,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ItemView
         Panorama p = items.get(position);
         holder.textCity.setText(p.city);
 
-        String d = (String) DateFormat.format("dd", p.date) +
-                "/" + (String) DateFormat.format("MM", p.date) +
-                "/" + (String) DateFormat.format("yyyy", p.date);
-        holder.textDate.setText(d);
+        if(p.date != null)
+        {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            holder.textDate.setText(sdf.format(p.date));
+        }
+
         holder.selected.setVisibility(isMultiSelect ? View.VISIBLE : View.GONE);
 
         int selectedColor = MaterialColors.getColor(holder.itemView.getContext(), com.google.android.material.R.attr.colorSecondaryContainer, Color.LTGRAY);
@@ -79,7 +91,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ItemView
 
         // Render small maps preview of the position
         Glide.with(holder.itemView.getContext())
-                .load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=200x230&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon + "&key=AIzaSyC60n_RZwR9UwMxqj9lD_1JTXGZRF5arKg")
+                .load("https://maps.googleapis.com/maps/api/staticmap?center=" + p.lat  + "," + p.lon + "&zoom=10&size=200x230&sensor=false&markers=color:blue%7Clabel:S%7C" + p.lat  + "," + p.lon + "&key=" + BuildConfig.MAPS_API_KEY)
                 .placeholder(R.drawable.noimage)
                 .into(holder.previewImage);
 
@@ -102,8 +114,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ItemView
             if (isMultiSelect) {
                 toggleSelection(position);
             } else {
-                // TODO open activity with the result
-                System.out.println("Apri intent!");
+                String selected_id = items.get(position).id;
+
+                Intent i = new Intent(ctx, Result.class);
+                i.putExtra("id", selected_id);
+                ctx.startActivity(i);
             }
         });
     }
@@ -143,10 +158,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ItemView
     public void deleteSelectedItems() {
         for (int i = selectedPositions.size() - 1; i >= 0; i--) {
             int position = selectedPositions.get(i);
-            items.remove(position);
+            PanoramaStorage.getInstance().deleteById(items.get(position).id);
         }
 
+        isMultiSelect = false;
         selectedPositions.clear();
+
+        // Get updated panoramas
+        items = PanoramaStorage.getInstance().getAllPanorama();
+
         notifyDataSetChanged();
 
         if (actionMode != null) {
@@ -155,9 +175,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ItemView
     }
 
     public void clearItems() {
+        PanoramaStorage.getInstance().deleteAll();
+
         items.clear();
         isMultiSelect = false;
         selectedPositions.clear();
+
         notifyDataSetChanged();
     }
 

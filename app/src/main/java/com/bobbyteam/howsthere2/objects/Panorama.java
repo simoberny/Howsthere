@@ -3,7 +3,9 @@ package com.bobbyteam.howsthere2.objects;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,9 +13,10 @@ public class Panorama implements Serializable {
     public String id;
     public String city;
     public Date date;
+    public String tz;
 
-    //Formato dati montagne (7 colonne,e 361 righe di cui una di descrizione)
-    //   - Azimuth:               0-360 vale 0 a nord e cresce verso est
+    // Formato dati montagne (7 colonne, e 361 righe di cui una di descrizione)
+    //   - Azimuth:               0 - 360 vale 0 a nord e cresce verso est
     //   - Altitude:              Inclinazione all' orizzonte già calcolata
     //   - Distance (m):          Distanza montagna
     //   - Latitude:              Posizione
@@ -50,14 +53,8 @@ public class Panorama implements Serializable {
     public double moon_perc = 0;
     public double moon_phase = 0;
 
-    public Date sunrise_horizon;
-    public Date sunset_horizon;
-
-    public Date moon_sunrise_horizon;
-    public Date moon_sunset_horizon;
-
     public Date next_fullmoon; // TODO
-    public Date last_fullmoon;
+    public Date last_fullmoon; //TODO
 
     public Panorama(){
         peaks_data = new double[7][360];
@@ -71,7 +68,7 @@ public class Panorama implements Serializable {
         moon_sunsire = new ArrayList<Position>();
         moon_sunset = new ArrayList<Position>();
 
-        date = new Date();
+        date = Calendar.getInstance().getTime();
     }
 
     // Alba (prima apparizione)

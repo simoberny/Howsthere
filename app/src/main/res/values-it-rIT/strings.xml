@@ -6,4 +6,76 @@
 
     <string name="no_panorama">Nessun dato salvato!</string>
     <string name="delete_all">Elimina tutto</string>
+    <string name="share">Condividi</string>
+    <string name="checkout">Guarda questo panorama generato da Howsthere!</string>
+
+    <string name="nocity">Impossibile ottenere informazioni sulla posizione!</string>
+
+    <!-- Dialogo conferma eliminazione -->
+    <string name="dialog_title">Conferma eliminazione</string>
+    <string name="dialog_message">Sei sicuro di voler eliminare tutti gli elementi?</string>
+    <string name="dialog_positive">Elimina</string>
+    <string name="dialog_negative">Annulla</string>
+
+    <!-- Modal -->
+    <string name="date_selection">Select a date</string>
+    <string name="invalid_selection">Selezione non valida</string>
+    <string name="today">Oggi</string>
+    <string name="not_supported">Posizione non supportata!</string>
+    <string name="next">Avanti</string>
+
+    <!-- Data loading -->
+    <string name="downloading">Scaricamento dati...</string>
+    <string name="retry">Nuovo tentativo</string>
+    <string name="get_id">Ottenendo ID</string>
+    <string name="get_mountain">Scaricando montagne...</string>
+    <string name="get_status">Controllato stato...</string>
+    <string name="processing">Processando...</string>
+    <string name="failed_try">Tentativo fallito. Riprovando...</string>
+    <string name="get_error">Dati non raggiungibili! Riprova a breve</string>
+    <string name="get_mountain_name">Scaricamento nomi montagne...</string>
+    <string name="unavailable">Non disponibile</string>
+
+    <!-- Results activity -->
+    <string name="title_activity_results">Risultati</string>
+    <string name="sun_fragment">Sole</string>
+    <string name="moon_fragment">Luna</string>
+    <string name="compass_fragment">Bussola</string>
+    <string name="weather_fragment">Meteo</string>
+
+    <string name="save_cal">Salva nel calendario</string>
+    <string name="horizon">Orizzonte</string>
+    <string name="elevation">Elevazione</string>
+    <string name="time">Ora</string>
+    <string name="azimut">Azimut</string>
+    <string name="with_peaks">Con montagne</string>
+    <string name="sunrise">Alba</string>
+    <string name="sunset">Tramonto</string>
+    <string name="mountain">Cime</string>
+    <string name="bussola">Bussola</string>
+    <string name="sole">Sole</string>
+    <string name="humidity">Umidità</string>
+    <string name="pressure">Pressione</string>
+
+    <string name="blue_hour">Crepuscolo</string>
+    <string name="golden_hour">Ora d\'oro</string>
+    <string name="day_hour">Giorno</string>
+
+    <string name="moon_perc">Luna %</string>
+    <string name="moon_phase">Fase lunare</string>
+    <string name="next_fullmoon">Luna piena</string>
+    <string name="sun_times">Ore di sole</string>
+
+    <string name="sunrise_photo">Foto all\'alba</string>
+    <string name="sunset_photo">Foto al tramonto</string>
+
+    <string name="tempoconmontagne">Tempo con montagne</string>
+    <string name="temposenzamontagne">Tempo senza montagne</string>
+
+    <string name="appa">Apparizioni</string>
+    <string name="spa">Sparizioni</string>
+
+    <string name="tempolunaconmontagne">Tempo luna con montagna</string>
+    <string name="faseluna">Fasi lunare</string>
+    <string name="luceluna">% luna</string>
 </resources>

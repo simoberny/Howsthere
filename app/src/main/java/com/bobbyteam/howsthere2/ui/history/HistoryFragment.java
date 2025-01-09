@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +20,7 @@ import com.bobbyteam.howsthere2.MainActivity;
 import com.bobbyteam.howsthere2.R;
 import com.bobbyteam.howsthere2.databinding.FragmentHistoryBinding;
 import com.bobbyteam.howsthere2.objects.Panorama;
+import com.bobbyteam.howsthere2.objects.PanoramaStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +43,9 @@ public class HistoryFragment extends Fragment {
         historyRecycler = root.findViewById(R.id.recycler_view);
         empty = root.findViewById(R.id.no_history);
 
-        MainActivity activity = (MainActivity) getActivity();
-        List<Panorama> list =  Objects.requireNonNull(activity).getStorage().getAllPanorama();
+        List<Panorama> list =  PanoramaStorage.getInstance().getAllPanorama();
 
-        adapter = new HistoryAdapter(list);
+        adapter = new HistoryAdapter(requireActivity(), list);
         historyRecycler.setAdapter(adapter);
 
         adapter.setActionModeCallback(new ActionMode.Callback() {
@@ -64,6 +65,11 @@ public class HistoryFragment extends Fragment {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 if (item.getItemId() == R.id.action_delete_selected) {
                     adapter.deleteSelectedItems();
+
+                    if(adapter.getItemCount() == 0) {
+                        empty.setVisibility(View.GONE);
+                    }
+
                     return true;
                 }
                 return false;
@@ -82,9 +88,7 @@ public class HistoryFragment extends Fragment {
         // Gestisci il click sull'icona del menu
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_delete_all) {
-                // Elimina tutti gli elementi
-                adapter.clearItems(); // Assumi che il tuo adapter abbia un metodo per eliminare tutti gli elementi
-                empty.setVisibility(View.VISIBLE);
+                showDeleteConfirmationDialog();
 
                 return true;
             }
@@ -99,6 +103,23 @@ public class HistoryFragment extends Fragment {
         }
 
         return root;
+    }
+
+    private void showDeleteConfirmationDialog() {
+        new AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.dialog_title)) // Titolo localizzato
+            .setMessage(getString(R.string.dialog_message)) // Messaggio localizzato
+            .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
+                // Elimina tutti gli elementi
+                adapter.clearItems();
+                empty.setVisibility(View.VISIBLE);
+            })
+            .setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
+                // Chiudi il dialogo
+                dialog.dismiss();
+            })
+            .create()
+            .show();
     }
 
     @Override

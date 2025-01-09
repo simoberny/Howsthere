@@ -11,16 +11,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PanoramaStorage {
-    private Activity context = null;
+    private static PanoramaStorage instance;
     private List<Panorama> panoramas = new ArrayList<Panorama>();
     private SharedPreferences pref = null;
 
-    public PanoramaStorage(Activity context) {
-        this.context = context;
+    private PanoramaStorage() {}
+
+    public static synchronized PanoramaStorage getInstance() {
+        if (instance == null) {
+            instance = new PanoramaStorage();
+        }
+        return instance;
     }
 
-    public void init() {
-        pref = context.getPreferences(Context.MODE_PRIVATE);
+    public void init(Activity context_) {
+        pref = context_.getPreferences(Context.MODE_PRIVATE);
     }
 
     public Panorama getPanoramaByID(String id_) {
@@ -59,6 +64,7 @@ public class PanoramaStorage {
         if(panoramas.isEmpty()) {
             Gson gson = new Gson();
             String json = pref.getString("history", "");
+
             panoramas = gson.fromJson(json, new TypeToken<List<Panorama>>() {}.getType());
 
             if(panoramas == null)
@@ -70,15 +76,14 @@ public class PanoramaStorage {
         SharedPreferences.Editor prefsEditor = pref.edit();
         Gson gson = new Gson();
         String json = gson.toJson(panoramas);
+
         prefsEditor.putString("history", json);
         prefsEditor.apply();
     }
 
     public void deleteAll() {
         loadPref();
-
         panoramas.clear();
-
         saveToPref();
     }
 
@@ -97,9 +102,5 @@ public class PanoramaStorage {
     public List<Panorama> getAllPanorama() {
         loadPref();
         return panoramas;
-    }
-
-    public void setContext(Activity in){
-        this.context = in;
     }
 }
