@@ -54,6 +54,7 @@
     <string name="mountain">Cime</string>
     <string name="bussola">Bussola</string>
     <string name="sole">Sole</string>
+    <string name="moon">Luna</string>
     <string name="humidity">Umidità</string>
     <string name="pressure">Pressione</string>
 
@@ -63,11 +64,14 @@
 
     <string name="moon_perc">Luna %</string>
     <string name="moon_phase">Fase lunare</string>
-    <string name="next_fullmoon">Luna piena</string>
+    <string name="next_fullmoon">Prossimamente</string>
     <string name="sun_times">Ore di sole</string>
 
     <string name="sunrise_photo">Foto all\'alba</string>
     <string name="sunset_photo">Foto al tramonto</string>
+
+    <string name="no_sun">Il sole non sale mai sopra il livello delle montagne!</string>
+    <string name="aligned">Allineato</string>
 
     <string name="tempoconmontagne">Tempo con montagne</string>
     <string name="temposenzamontagne">Tempo senza montagne</string>
@@ -78,4 +82,17 @@
     <string name="tempolunaconmontagne">Tempo luna con montagna</string>
     <string name="faseluna">Fasi lunare</string>
     <string name="luceluna">% luna</string>
+    <string name="change_date">Cambia</string>
+
+    <string name="super_moon">Super luna</string>
+
+    <!-- Moon phases -->
+    <string name="newmoon">Nuova luna</string>
+    <string name="waxing_crescent">Luna crescente</string>
+    <string name="first_quarter">Primo quarto</string>
+    <string name="waxing_gibbous">Gibbosa crescente</string>
+    <string name="full_moon">Luna piena</string>
+    <string name="waning_gibbous">Gibbosa calante</string>
+    <string name="last_quarter">Ultimo quarto</string>
+    <string name="waning_crescent">Luna calante</string>
 </resources>

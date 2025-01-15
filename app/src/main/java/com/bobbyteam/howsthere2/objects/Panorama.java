@@ -3,6 +3,7 @@ package com.bobbyteam.howsthere2.objects;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +40,6 @@ public class Panorama implements Serializable {
     public List<Position> sunset;
 
     // Lista posizioni dove luna compare/scompare
-    // TODO
     public List<Position> moon_sunsire;
     public List<Position> moon_sunset;
 
@@ -53,14 +53,14 @@ public class Panorama implements Serializable {
     public double moon_perc = 0;
     public double moon_phase = 0;
 
-    public Date next_fullmoon; // TODO
-    public Date last_fullmoon; //TODO
+    public Date next_fullmoon;
+    public Date next_supermoon;
 
     public Panorama(){
         peaks_data = new double[7][360];
         peaks_name = new ArrayList<Peak>();
 
-        sun_data = new Position[288];
+        sun_data = new Position[Constants.SUN_SAMPLE];
         moon_data = new Position[864];
 
         sunrise = new ArrayList<Position>();

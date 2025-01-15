@@ -1,16 +1,25 @@
 package com.bobbyteam.howsthere2;
 
 import android.content.Context;
+
+import com.bobbyteam.howsthere2.objects.Constants;
 import com.bobbyteam.howsthere2.objects.Panorama;
 import com.bobbyteam.howsthere2.objects.PanoramaStorage;
 import com.bobbyteam.howsthere2.objects.Position;
 import com.bobbyteam.howsthere2.objects.TimezoneMapper;
 
 import org.shredzone.commons.suncalc.MoonIllumination;
+import org.shredzone.commons.suncalc.MoonPhase;
 import org.shredzone.commons.suncalc.MoonPosition;
 import org.shredzone.commons.suncalc.SunPosition;
+
+import java.time.LocalDate;
+import java.time.Year;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Processing  {
@@ -18,6 +27,10 @@ public class Processing  {
     String peak = "";
     String namePeak = "";
     Panorama panorama;
+
+    public Processing(Panorama pan_) {
+        panorama = pan_;
+    }
 
     public Processing(Context context_, String peak_, String namePeak_, Panorama pan_){
         peak = peak_;
@@ -30,11 +43,7 @@ public class Processing  {
     public void execute() {
         panorama.tz = TimezoneMapper.latLngToTimezoneString(panorama.lat, panorama.lon);
 
-        generateSun();
-        generateMoon();
-
         List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
-
         for(int a = 1; a < lines.size(); a++) {
             List<String> tempSplit = Arrays.asList(lines.get(a).split(","));
 
@@ -43,15 +52,55 @@ public class Processing  {
             }
         }
 
+        generateSunData();
+        generateMoonData();
+
+        PanoramaStorage.getInstance().addPanorama(panorama);
+    }
+
+    public Panorama update(Date data) {
+        panorama.date = data;
+        clearPanorama();
+
+        generateSunData();
+        generateMoonData();
+
+        return panorama;
+    }
+
+    // Calculate Sun trajectory position every 5 minutes
+    private void generateSunData() {
+        int indexSun = 0;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(panorama.date);
+
+        for (int hour = 0; hour < 24; hour++) {
+            for (int min = 0; min < 60; min += Constants.RESOLUTION) {
+                calendar.set(Calendar.HOUR_OF_DAY, hour);
+                calendar.set(Calendar.MINUTE, min);
+
+                SunPosition position = SunPosition.compute()
+                        .on(calendar.getTime())             // set a date
+                        .at(panorama.lat, panorama.lon)     // set a location
+                        .timezone(panorama.tz)
+                        .execute();                         // get the results
+
+                panorama.sun_data[indexSun] =
+                        new Position(hour, min, position.getAltitude(), position.getAzimuth());
+
+                indexSun++;
+            }
+        }
+
         // Ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne SOLE
         boolean prevSun = false;
         boolean isAbove = false;
         panorama.sun_minutes = 0;
 
-        for(int i = 0; i < 288; i++) {
+        for(int i = 0; i < Constants.SUN_SAMPLE; i++) {
             isAbove = abovePeaks(i);
 
-            if(isAbove) panorama.sun_minutes += 5;
+            if(isAbove) panorama.sun_minutes += 1;
 
             // Sunrise
             if(!prevSun && isAbove){
@@ -65,62 +114,10 @@ public class Processing  {
 
             prevSun = isAbove;
         }
-
-        // Ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne LUNA
-        boolean prevMoon = false;
-        boolean isMoonAbove = false;
-        panorama.moon_minutes = 0;
-
-        for(int i = 287; i < 576; i++){
-            // Cerco alba anche nei 5 minuti prima di mezzanotte per non escludere un alba esattamente a mezzanotte
-            isMoonAbove = abovePeaksMoon(i);
-
-            if (isMoonAbove) panorama.moon_minutes += 5;
-
-            //alba (non calcolata se è già sorta dal giorno prima)
-            if((!prevMoon && isMoonAbove)&& i > 287)
-                panorama.moon_sunsire.add(panorama.moon_data[i]);
-
-            //tramonto
-            if(prevMoon && !isMoonAbove)
-                panorama.moon_sunset.add(panorama.moon_data[i]);
-
-            prevMoon = isMoonAbove;
-        }
-
-        PanoramaStorage.getInstance().addPanorama(panorama);
-    }
-
-    // Calculate Sun trajectory position every 5 minutes
-    private void generateSun() {
-        int indexSun = 0;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(panorama.date);
-
-        for (int hour = 0; hour < 24; hour++) {
-            for (int min = 0; min < 60; min += 5) {
-                calendar.set(Calendar.HOUR_OF_DAY, hour);
-                calendar.set(Calendar.MINUTE, min);
-
-                SunPosition position = SunPosition.compute()
-                        .on(calendar.getTime())             // set a date
-                        .at(panorama.lat, panorama.lon)     // set a location
-                        .timezone(panorama.tz)
-                        .execute();                         // get the results
-
-                panorama.sun_data[indexSun] = new Position();
-                panorama.sun_data[indexSun].hour = hour;
-                panorama.sun_data[indexSun].minutes = min;
-                panorama.sun_data[indexSun].height = position.getAltitude();
-                panorama.sun_data[indexSun].azimuth = position.getAzimuth();
-
-                indexSun++;
-            }
-        }
     }
 
     // Calculate Moon trajectory position every 5 minutes
-    private void generateMoon() {
+    private void generateMoonData() {
         int indexMoon = 0;
 
         Calendar calendar = Calendar.getInstance();
@@ -151,8 +148,58 @@ public class Processing  {
 
         // Find moon phase
         MoonIllumination mIll = MoonIllumination.compute().on(panorama.date).execute();
+        MoonPhase.Parameters parameters = MoonPhase.compute()
+                .phase(MoonPhase.Phase.FULL_MOON);
+
         panorama.moon_perc = mIll.getFraction() * 100;
         panorama.moon_phase = mIll.getPhase();
+
+        LocalDate iterDate = panorama.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        int year = Year.now().getValue();
+
+        while (true) {
+            MoonPhase moonPhase = parameters
+                    .on(iterDate)
+                    .execute();
+            ZonedDateTime nextFullMoon = moonPhase
+                    .getTime();
+
+            if (nextFullMoon.getYear() > year) {
+                break;      // we've reached the next year
+            }
+
+            if(panorama.next_fullmoon == null)
+                panorama.next_fullmoon = Date.from(nextFullMoon.toInstant());
+
+            if (moonPhase.isSuperMoon()) {
+                panorama.next_supermoon = Date.from(nextFullMoon.toInstant());
+                break;
+            }
+
+            iterDate = nextFullMoon.toLocalDate().plusDays(1);
+        }
+
+        // Ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne LUNA
+        boolean prevMoon = false;
+        boolean isMoonAbove = false;
+        panorama.moon_minutes = 0;
+
+        for(int i = 287; i < 576; i++) {
+            // Cerco alba anche nei 5 minuti prima di mezzanotte per non escludere un alba esattamente a mezzanotte
+            isMoonAbove = abovePeaksMoon(i);
+
+            if (isMoonAbove) panorama.moon_minutes += 5;
+
+            //alba (non calcolata se è già sorta dal giorno prima)
+            if((!prevMoon && isMoonAbove) && i > 287)
+                panorama.moon_sunsire.add(panorama.moon_data[i]);
+
+            //tramonto
+            if(prevMoon && !isMoonAbove)
+                panorama.moon_sunset.add(panorama.moon_data[i]);
+
+            prevMoon = isMoonAbove;
+        }
     }
 
     /**
@@ -215,5 +262,16 @@ public class Processing  {
         }
 
         return false;
+    }
+
+    private void clearPanorama() {
+        panorama.sunrise.clear();
+        panorama.sunset.clear();
+
+        panorama.moon_sunset.clear();
+        panorama.moon_sunsire.clear();
+
+        panorama.sun_minutes = 0;
+        panorama.moon_minutes = 0;
     }
 }

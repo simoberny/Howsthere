@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="65dp"
         android:orientation="horizontal"
         android:paddingVertical="8dp"
         android:paddingHorizontal="16dp"
@@ -23,8 +23,8 @@
             android:visibility="gone" />
 
         <androidx.cardview.widget.CardView
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_marginEnd="16dp"
             app:cardCornerRadius="250dp"
             android:layout_gravity="center">
@@ -53,15 +53,15 @@
                 android:id="@+id/item_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorPrimary"
-                android:textSize="14sp" />
+                android:textColor="?attr/colorSecondary"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/item_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?attr/colorOnSurface"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
     </LinearLayout>

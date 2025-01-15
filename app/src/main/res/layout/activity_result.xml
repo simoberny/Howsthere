@@ -7,9 +7,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="90dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/result_toolbar"
@@ -22,32 +24,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
                 android:text="@string/title_activity_results"
                 android:textAppearance="?attr/textAppearanceHeadline6"
-                android:textColor="@color/md_theme_onBackground"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:gravity="center" />
+                android:textColor="@color/md_theme_onBackground" />
         </com.google.android.material.appbar.MaterialToolbar>
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingBottom="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="60dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
+                android:layout_marginBottom="5dp"
                 tools:ignore="MissingConstraints">
 
                 <androidx.cardview.widget.CardView
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="center"
                     android:layout_marginEnd="16dp"
                     app:cardCornerRadius="250dp">
@@ -76,17 +79,32 @@
                         android:id="@+id/item_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/colorPrimary"
-                        android:textSize="14sp" />
+                        android:textColor="?attr/colorSecondary"
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/item_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/change_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:contentDescription="@string/change_date"
+                    android:elevation="6dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/change_date"
+                    android:textColor="@color/md_theme_onPrimary"
+                    android:layout_marginLeft="8dp"
+                    app:backgroundTint="@color/md_theme_primary"
+                    app:tint="@color/md_theme_onPrimary" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -99,6 +117,26 @@
             app:defaultNavHost="true"
             app:navGraph="@navigation/result_navigation" />
     </LinearLayout>
+
+    <!--<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/change_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/change_date"
+        android:contentDescription="@string/change_date"
+        android:foregroundGravity="center_vertical"
+        android:textColor="@color/md_theme_onPrimary"
+        app:icon="@drawable/baseline_date_range_24"
+        app:iconTint="@color/md_theme_onPrimary"
+        app:backgroundTint="@color/md_theme_primary"
+        app:layout_anchor="@id/result_nav"
+        app:layout_anchorGravity="top|center"
+        app:layout_constraintBottom_toTopOf="@+id/result_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/baseline_date_range_24"
+        android:elevation="6dp"
+        app:tint="@color/md_theme_onPrimary" />-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/result_nav"

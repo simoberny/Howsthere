@@ -61,15 +61,13 @@ public class PanoramaStorage {
     }
 
     public void loadPref(){
-        if(panoramas.isEmpty()) {
-            Gson gson = new Gson();
-            String json = pref.getString("history", "");
+        Gson gson = new Gson();
+        String json = pref.getString("history", "");
 
-            panoramas = gson.fromJson(json, new TypeToken<List<Panorama>>() {}.getType());
+        panoramas = gson.fromJson(json, new TypeToken<List<Panorama>>() {}.getType());
 
-            if(panoramas == null)
-                panoramas = new ArrayList<Panorama>();
-        }
+        if(panoramas == null)
+            panoramas = new ArrayList<Panorama>();
     }
 
     private void saveToPref(){

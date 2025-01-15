@@ -4,8 +4,6 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,18 +14,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.bobbyteam.howsthere2.BuildConfig;
 import com.bobbyteam.howsthere2.Hwt;
-import com.bobbyteam.howsthere2.MainActivity;
 import com.bobbyteam.howsthere2.R;
 import com.bobbyteam.howsthere2.databinding.FragmentMapBinding;
 import com.bobbyteam.howsthere2.objects.MapStateManager;
@@ -58,15 +52,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.text.DateFormat;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -154,7 +143,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 launchProcessing();
             }
         });
-
 
         // Create a new Places client instance.
         Places.initialize(requireActivity().getApplicationContext(), BuildConfig.MAPS_API_KEY);

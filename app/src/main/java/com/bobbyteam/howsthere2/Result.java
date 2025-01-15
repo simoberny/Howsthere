@@ -1,7 +1,11 @@
 package com.bobbyteam.howsthere2;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,7 +16,6 @@ import androidx.core.view.WindowCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.bobbyteam.howsthere2.objects.Panorama;
@@ -20,9 +23,12 @@ import com.bobbyteam.howsthere2.objects.PanoramaStorage;
 import com.bobbyteam.howsthere2.ui.result.ResultViewModel;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Objects;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Result extends AppCompatActivity {
     private Panorama pan = null;
@@ -40,6 +46,7 @@ public class Result extends AppCompatActivity {
         TextView textDate = findViewById(R.id.item_date);
         TextView textCity = findViewById(R.id.item_city);
         ImageView previewImage = findViewById(R.id.preview_image);
+        Button changeDateBtn = findViewById(R.id.change_date);
 
         Toolbar toolbar = findViewById(R.id.result_toolbar);
         toolbar.inflateMenu(R.menu.result_toolbar_menu);
@@ -75,6 +82,40 @@ public class Result extends AppCompatActivity {
             return false;
         });
 
+        changeDateBtn.setOnClickListener(v -> {
+            Calendar c = Calendar.getInstance();
+            c.setTime(pan.date);
+
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    Result.this,
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year_,
+                                              int monthOfYear_, int dayOfMonth_) {
+                            Calendar selected = Calendar.getInstance();
+                            selected.set(Calendar.YEAR, year_);
+                            selected.set(Calendar.MONTH, monthOfYear_);
+                            selected.set(Calendar.DAY_OF_MONTH, dayOfMonth_);
+
+                            String currentDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(selected.getTime());
+                            textDate.setText(currentDate);
+
+                            pan.date = Date.from(selected.toInstant());
+
+                            Processing updateProcess = new Processing(pan);
+                            pan = updateProcess.update(pan.date);
+
+                            vm.setPanorama(pan);
+                        }
+                    },
+                    year, month, day);
+            datePickerDialog.show();
+        });
+
         BottomNavigationView navigation = findViewById(R.id.result_nav);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_activity_result);
         NavigationUI.setupWithNavController(navigation, navController);
@@ -84,16 +125,17 @@ public class Result extends AppCompatActivity {
         Bundle extras = intent.getExtras();
 
         id = (String) extras.get("id");
-        vm.setData(id);
 
         if(id != null) {
             pan = PanoramaStorage.getInstance().getPanoramaByID(id);
+            vm.setPanorama(pan);
+
             textDate.setText(sdf.format(pan.date));
             textCity.setText(pan.city);
 
             // Render small maps preview of the position
             Glide.with(this)
-                    .load("https://maps.googleapis.com/maps/api/staticmap?center=" + pan.lat  + "," + pan.lon + "&zoom=10&size=200x230&sensor=false&markers=color:blue%7Clabel:S%7C" + pan.lat  + "," + pan.lon + "&key=" + BuildConfig.MAPS_API_KEY)
+                    .load("https://maps.googleapis.com/maps/api/staticmap?center=" + pan.lat  + "," + pan.lon + "&zoom=12&size=200x230&sensor=false&markers=color:blue%7Clabel:S%7C" + pan.lat  + "," + pan.lon + "&key=" + BuildConfig.MAPS_API_KEY)
                     .placeholder(R.drawable.noimage)
                     .into(previewImage);
         }
