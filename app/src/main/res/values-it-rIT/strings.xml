@@ -7,6 +7,7 @@
     <string name="no_panorama">Nessun dato salvato!</string>
     <string name="delete_all">Elimina tutto</string>
     <string name="share">Condividi</string>
+    <string name="share_with">Condividi link con</string>
     <string name="checkout">Guarda questo panorama generato da Howsthere!</string>
 
     <string name="nocity">Impossibile ottenere informazioni sulla posizione!</string>

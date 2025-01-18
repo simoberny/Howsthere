@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.result.SunFragment">
+    tools:context="it.howsthere.howsthere2.ui.result.SunFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -92,52 +92,87 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/timeline_bar"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal"
-                android:background="#E0E0E0"> <!-- Sfondo per la barra -->
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="32dp">
 
-                <!-- Crepuscolo -->
-                <View
-                    android:id="@+id/twilight"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="15"
-                    android:background="#4A90E2" /> <!-- Colore blu chiaro -->
+                <LinearLayout
+                    android:id="@+id/timeline_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"> <!-- Sfondo per la barra -->
 
-                <!-- Alba -->
-                <View
-                    android:id="@+id/sunrise"
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/md_theme_background" /> <!-- Colore arancione chiaro -->
+                    <!-- Crepuscolo -->
+                    <View
+                        android:id="@+id/twilight"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="15"
+                        android:background="#4A90E2" /> <!-- Colore blu chiaro -->
 
-                <!-- Golden Hour -->
-                <View
-                    android:id="@+id/day_hour"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="70"
-                    android:background="#FFC107" /> <!-- Colore giallo -->
+                    <!-- Alba -->
+                    <View
+                        android:id="@+id/sunrise"
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/md_theme_background" /> <!-- Colore arancione chiaro -->
 
-                <!-- Tramonto -->
-                <View
-                    android:id="@+id/sunset"
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/md_theme_background" /> <!-- Colore arancione scuro -->
+                    <!-- Golden Hour -->
+                    <View
+                        android:id="@+id/day_hour"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="70"
+                        android:background="#FFC107" /> <!-- Colore giallo -->
 
-                <!-- Crepuscolo serale -->
-                <View
-                    android:id="@+id/evening_twilight"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="15"
-                    android:background="#4A90E2" /> <!-- Stesso colore del crepuscolo -->
-            </LinearLayout>
+                    <!-- Tramonto -->
+                    <View
+                        android:id="@+id/sunset"
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/md_theme_background" /> <!-- Colore arancione scuro -->
+
+                    <!-- Crepuscolo serale -->
+                    <View
+                        android:id="@+id/evening_twilight"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="15"
+                        android:background="#4A90E2" /> <!-- Stesso colore del crepuscolo -->
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/timeline_now"
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:id="@+id/left_now"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="50"
+                        android:alpha="0"
+                        android:background="@android:color/transparent" />
+
+                    <View
+                        android:id="@+id/bar_now"
+                        android:layout_width="8dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border" />
+
+                    <View
+                        android:id="@+id/right_now"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="50"
+                        android:alpha="0"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/timeline_text"

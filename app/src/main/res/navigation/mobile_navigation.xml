@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_map"
-        android:name="com.bobbyteam.howsthere2.ui.map.MapFragment"
+        android:name="it.howsthere.howsthere2.ui.map.MapFragment"
         android:label="@string/title_map"
         tools:layout="@layout/fragment_map" />
 
     <fragment
         android:id="@+id/navigation_history"
-        android:name="com.bobbyteam.howsthere2.ui.history.HistoryFragment"
+        android:name="it.howsthere.howsthere2.ui.history.HistoryFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
 

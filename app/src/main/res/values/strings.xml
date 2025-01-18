@@ -6,6 +6,7 @@
     <string name="no_panorama">No data yet.</string>
     <string name="delete_all">Delete all</string>
     <string name="share">Share</string>
+    <string name="share_with">Share link with</string>
     <string name="checkout">Check out this panorama from Howsthere!</string>
 
     <string name="nocity">Cannot obtain city information!</string>

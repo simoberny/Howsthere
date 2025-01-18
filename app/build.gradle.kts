@@ -4,26 +4,40 @@ plugins {
 }
 
 android {
-    namespace = "com.bobbyteam.howsthere2"
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\simob\\Android Keystore\\howsthere.jks")
+            keyAlias = "howsthere_key"
+            storePassword = "Bkt5P!qn\$kQnju"
+            keyPassword = "D4xktEqb4q^%79"
+        }
+    }
+    namespace = "it.howsthere.howsthere2"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.bobbyteam.howsthere2"
+        applicationId = "it.howsthere.howsthere2"
         minSdk = 30
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+        }
+
         release {
-            isMinifyEnabled = false
+            isDebuggable = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
