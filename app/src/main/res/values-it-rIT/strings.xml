@@ -19,7 +19,8 @@
     <string name="dialog_negative">Annulla</string>
 
     <!-- Modal -->
-    <string name="date_selection">Select a date</string>
+    <string name="date_selection">Seleziona data</string>
+    <string name="date_btn">Data</string>
     <string name="invalid_selection">Selezione non valida</string>
     <string name="today">Oggi</string>
     <string name="not_supported">Posizione non supportata!</string>

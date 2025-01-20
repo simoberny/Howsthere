@@ -19,6 +19,7 @@
 
     <!-- Modal -->
     <string name="date_selection">Select a date</string>
+    <string name="date_btn">Date</string>
     <string name="invalid_selection">Invalid selection</string>
     <string name="today">Today</string>
     <string name="not_supported">Position is not supported!</string>
