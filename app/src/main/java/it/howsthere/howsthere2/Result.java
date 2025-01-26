@@ -136,6 +136,16 @@ public class Result extends AppCompatActivity {
                     .load("https://maps.googleapis.com/maps/api/staticmap?center=" + pan.lat  + "," + pan.lon + "&zoom=12&size=200x230&sensor=false&markers=color:blue%7Clabel:S%7C" + pan.lat  + "," + pan.lon + "&key=" + BuildConfig.MAPS_API_KEY)
                     .placeholder(R.drawable.noimage)
                     .into(previewImage);
+
+            if(!pan.processedYearData) {
+                new Thread(() -> {
+                    Processing followUp = new Processing(pan);
+                    followUp.generateYearData();
+
+                    vm.postPanorama(followUp.getPanorama());
+                    PanoramaStorage.getInstance().addPanorama(pan);
+                }).start();
+            }
         }
     }
 }

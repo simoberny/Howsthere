@@ -1,16 +1,25 @@
 package it.howsthere.howsthere2;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.TextView;
+
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import org.shredzone.commons.suncalc.MoonIllumination;
 import org.shredzone.commons.suncalc.MoonPhase;
 import org.shredzone.commons.suncalc.MoonPosition;
 import org.shredzone.commons.suncalc.SunPosition;
+import org.shredzone.commons.suncalc.SunTimes;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Year;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,12 +30,14 @@ import it.howsthere.howsthere2.objects.Panorama;
 import it.howsthere.howsthere2.objects.PanoramaStorage;
 import it.howsthere.howsthere2.objects.Position;
 import it.howsthere.howsthere2.objects.TimezoneMapper;
+import it.howsthere.howsthere2.ui.result.ResultViewModel;
 
 public class Processing  {
-    Context context;
-    String peak = "";
-    String namePeak = "";
-    Panorama panorama;
+    private Context context;
+    private String peak = "";
+    private String namePeak = "";
+    private Panorama panorama;
+    private ResultViewModel vm;
 
     public Processing(Panorama pan_) {
         panorama = pan_;
@@ -38,6 +49,8 @@ public class Processing  {
         panorama = pan_;
 
         context = context_;
+
+        vm = new ViewModelProvider((ViewModelStoreOwner) context_).get(ResultViewModel.class);
     }
 
     public void execute() {
@@ -70,7 +83,6 @@ public class Processing  {
 
     // Calculate Sun trajectory position every 5 minutes
     private void generateSunData() {
-        int indexSun = 0;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(panorama.date);
 
@@ -85,35 +97,129 @@ public class Processing  {
                         .timezone(panorama.tz)
                         .execute();                         // get the results
 
-                panorama.sun_data[indexSun] =
-                        new Position(hour, min, position.getAltitude(), position.getAzimuth());
-
-                indexSun++;
+                panorama.sun_data.add(new Position(hour, min, position.getAltitude(), position.getAzimuth()));
             }
         }
 
         // Ricerca alba / uscita dalle montagne e tramonto / entrata nelle montagne SOLE
+        panorama.sun_minutes = timeAbovePeaks(panorama.sun_data, panorama.sunrise, panorama.sunset);
+    }
+
+    public void generateYearData() {
+        int year = Year.now().getValue();
+        Calendar iterDays = Calendar.getInstance();
+        iterDays.set(year, Calendar.JANUARY, 1);
+
+        int minPeakMinutes = 1440;
+        int maxPeakMinutes = 0;
+        long minDayMillis = 1440 * 60 * 1000;
+        long maxDayMillis = 0;
+
+        Date shorter = null;
+        Date longer = null;
+        long shorter_minutes = 0;
+        long longer_minutes = 0;
+
+        while (true) {
+            SunTimes s = SunTimes.compute()
+                    .on(iterDays.get(Calendar.YEAR), iterDays.get(Calendar.MONTH) + 1, iterDays.get(Calendar.DAY_OF_MONTH))
+                    .at(panorama.lat, panorama.lon)
+                    .timezone(panorama.tz)
+                    .execute();
+
+            if (iterDays.get(Calendar.YEAR) > year) {
+                break;      // we've reached the next year
+            }
+
+            ZonedDateTime rise = s.getRise();
+            ZonedDateTime set = s.getSet();
+
+            if(rise != null && set != null) {
+                Duration duration = Duration.between(rise, set);
+                long millis = duration.toMillis();
+
+                if(millis < minDayMillis) {
+                    shorter = iterDays.getTime();
+                    shorter_minutes = millis / (1000 * 60);
+                    minDayMillis = millis;
+                }
+
+                if(millis > maxDayMillis) {
+                    longer = iterDays.getTime();
+                    longer_minutes = millis / (1000 * 60);
+                    maxDayMillis = millis;
+                }
+            }
+
+            int minutes = getRealDayLength(iterDays);
+
+            if(minutes < minPeakMinutes) {
+                panorama.shortest_peak = iterDays.getTime();
+                panorama.shortest_peak_minutes = minutes;
+                minPeakMinutes = minutes;
+            }
+
+            if(minutes > maxPeakMinutes) {
+                panorama.longest_peak = iterDays.getTime();
+                panorama.longest_peak_minutes = minutes;
+                maxPeakMinutes = minutes;
+            }
+
+            iterDays.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        panorama.shortest_day = shorter;
+        panorama.longest_day = longer;
+        panorama.shortest_minutes = shorter_minutes;
+        panorama.longest_minutes = longer_minutes;
+
+        panorama.processedYearData = true;
+    }
+
+    private int getRealDayLength(Calendar day) {
+        List<Position> day_temp = new ArrayList<Position>(Constants.SUN_SAMPLE);
+        Calendar hourIter = (Calendar) day.clone();
+
+        for (int hour = 0; hour < 24; hour++) {
+            for (int min = 0; min < 60; min += Constants.RESOLUTION) {
+                SunPosition position = SunPosition.compute()
+                        .on(hourIter.get(Calendar.YEAR), hourIter.get(Calendar.MONTH) + 1, hourIter.get(Calendar.DAY_OF_MONTH), hour, min, 0)          // set a date
+                        .at(panorama.lat, panorama.lon)     // set a location
+                        .timezone(panorama.tz)
+                        .execute();                         // get the results
+
+                day_temp.add(new Position(hour, min, position.getAltitude(), position.getAzimuth()));
+            }
+        }
+
+        return timeAbovePeaks(day_temp, null, null);
+    }
+
+    private int timeAbovePeaks(List<Position> sun, List<Position> sunrise_list, List<Position> sunset_list) {
         boolean prevSun = false;
-        boolean isAbove = false;
-        panorama.sun_minutes = 0;
+        boolean isAbove;
+
+        int sun_minutes = 0;
 
         for(int i = 0; i < Constants.SUN_SAMPLE; i++) {
-            isAbove = abovePeaks(i);
+            isAbove = abovePeaks(sun, i);
 
-            if(isAbove) panorama.sun_minutes += 1;
+            if(isAbove) sun_minutes += 1;
 
             // Sunrise
-            if(!prevSun && isAbove){
-                panorama.sunrise.add(panorama.sun_data[i]);
+            if(sunrise_list != null && !prevSun && isAbove){
+                sunrise_list.add(sun.get(i));
             }
 
             // Sunset
-            if(prevSun && !isAbove){
-                panorama.sunset.add(panorama.sun_data[i]);
+            if(sunset_list != null && prevSun && !isAbove){
+                sunset_list.add(sun.get(i));
             }
 
             prevSun = isAbove;
         }
+
+        return sun_minutes;
     }
 
     // Calculate Moon trajectory position every 5 minutes
@@ -136,8 +242,7 @@ public class Processing  {
                             .timezone(panorama.tz)
                             .execute(); //get the results
 
-                    panorama.moon_data[indexMoon] =
-                            new Position(hour, min, position.getAltitude(), position.getAzimuth());
+                    panorama.moon_data.add(new Position(hour, min, position.getAltitude(), position.getAzimuth()));
 
                     indexMoon++;
                 }
@@ -192,11 +297,11 @@ public class Processing  {
 
             //alba (non calcolata se è già sorta dal giorno prima)
             if((!prevMoon && isMoonAbove) && i > 287)
-                panorama.moon_sunsire.add(panorama.moon_data[i]);
+                panorama.moon_sunsire.add(panorama.moon_data.get(i));
 
             //tramonto
             if(prevMoon && !isMoonAbove)
-                panorama.moon_sunset.add(panorama.moon_data[i]);
+                panorama.moon_sunset.add(panorama.moon_data.get(i));
 
             prevMoon = isMoonAbove;
         }
@@ -212,24 +317,18 @@ public class Processing  {
      * del profilo montagne e l' altro è che lo abbia maggiore di tutte le montagne.
      *
      */
-    private boolean abovePeaks(int i){
-        int j = 0;
-
-        // Allineamento sole montagne
-        for(int c = 0; c < 360 &&
-                !(panorama.peaks_data[0][c] >= panorama.sun_data[i].azimuth); c++) {
-            j = c;
-        }
+    private boolean abovePeaks(List<Position> sun, int i){
+        int j = findClosestAzimuthIndex(sun.get(i).azimuth);
 
         if(j == 359) {
             // Azimuth maggiore di tutti i dati delle montagne quindi confronto con l' ultimo e il primo
-            if (panorama.sun_data[i].height >
+            if (sun.get(i).height >
                     ((panorama.peaks_data[2][259] + panorama.peaks_data[2][0]) / 2)) {
                 return true;
             }
         }else{
             // Azimuth intermedio
-            if (panorama.sun_data[i].height >
+            if (sun.get(i).height >
                     ((panorama.peaks_data[2][j] + panorama.peaks_data[2][j+1]) / 2)) {
                 return true;
             }
@@ -243,19 +342,19 @@ public class Processing  {
 
         // Allineamento Luna montagne
         for(int c = 0; c < 360 &&
-                !(panorama.peaks_data[0][c] >= panorama.moon_data[i].azimuth); c++){
+                !(panorama.peaks_data[0][c] >= panorama.moon_data.get(i).azimuth); c++){
             j = c;
         }
 
         if(j==359){
             // Azimuth maggiore di tutti i dati delle montagne quindi confronto con l' ultimo e il primo
-            if (panorama.moon_data[i].height >
+            if (panorama.moon_data.get(i).height >
                     ((panorama.peaks_data[2][259] + panorama.peaks_data[2][0]) / 2)) {
                 return true;
             }
         }else{
             // Azimuth intermedio
-            if (panorama.moon_data[i].height >
+            if (panorama.moon_data.get(i).height >
                     ((panorama.peaks_data[2][j] + panorama.peaks_data[2][j+1]) / 2)) {
                 return true;
             }
@@ -264,7 +363,27 @@ public class Processing  {
         return false;
     }
 
+    private int findClosestAzimuthIndex(double azimuth) {
+        // Usa ricerca binaria per trovare l'indice
+        int left = 0, right = panorama.peaks_data[0].length - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (panorama.peaks_data[0][mid] < azimuth) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return Math.max(0, left - 1);
+    }
+
+    public Panorama getPanorama() {
+        return panorama;
+    }
+
     private void clearPanorama() {
+        panorama.sun_data.clear();
+
         panorama.sunrise.clear();
         panorama.sunset.clear();
 

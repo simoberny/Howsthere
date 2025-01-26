@@ -14,6 +14,8 @@ public class Panorama implements Serializable {
     public Date date;
     public String tz;
 
+    public Boolean processedYearData = false;
+
     // Formato dati montagne (7 colonne, e 361 righe di cui una di descrizione)
     //   - Azimuth:               0 - 360 vale 0 a nord e cresce verso est
     //   - Altitude:              Inclinazione all' orizzonte già calcolata
@@ -30,8 +32,8 @@ public class Panorama implements Serializable {
     //   - Minuto:
     //   - Altezza (gradi):       inclinazione all' orizzonte
     //   - Azimuth:               0-360 vale 0 a nord e cresce verso est
-    public Position[] sun_data;
-    public Position[] moon_data;
+    public List<Position> sun_data;
+    public List<Position> moon_data;
 
     // Lista posizioni dove sole compare/scompare
     public List<Position> sunrise;
@@ -54,12 +56,22 @@ public class Panorama implements Serializable {
     public Date next_fullmoon;
     public Date next_supermoon;
 
+    public Date shortest_day = null;
+    public long shortest_minutes = 0;
+    public Date longest_day = null;
+    public long longest_minutes = 0;
+
+    public Date shortest_peak = null;
+    public long shortest_peak_minutes = 0;
+    public Date longest_peak = null;
+    public long longest_peak_minutes = 0;
+
     public Panorama(){
         peaks_data = new double[7][360];
         peaks_name = new ArrayList<Peak>();
 
-        sun_data = new Position[Constants.SUN_SAMPLE];
-        moon_data = new Position[864];
+        sun_data = new ArrayList<Position>(Constants.SUN_SAMPLE);
+        moon_data = new ArrayList<Position>(864);
 
         sunrise = new ArrayList<Position>();
         sunset = new ArrayList<Position>();

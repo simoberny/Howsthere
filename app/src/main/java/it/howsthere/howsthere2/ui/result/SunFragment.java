@@ -1,14 +1,20 @@
 package it.howsthere.howsthere2.ui.result;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -24,10 +30,12 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.shredzone.commons.suncalc.SunTimes;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -66,64 +74,71 @@ public class SunFragment extends Fragment {
             if (p != null) {
                 renderChart();
                 renderValues(current);
+                renderYearValues(current);
             } else {
                 requireActivity().finish();
             }
 
-            Button saveSunrise = current.findViewById(R.id.save_sunrise);
-            saveSunrise.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(p.date);
-
-                    int year = calendar.get(Calendar.YEAR);
-                    int month = calendar.get(Calendar.MONTH);
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                    calendar.set(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day),
-                            p.getFirstSunrise().hour, p.getFirstSunrise().minutes);
-
-                    long startmillis = calendar.getTimeInMillis();
-
-                    Intent intent = new Intent(Intent.ACTION_INSERT);
-                    intent.setDataAndType(CalendarContract.Events.CONTENT_URI, "vnd.android.cursor.item/event");
-                    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, p.lat + ", " + p.lon);
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startmillis);
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, startmillis + 60 * 60 * 1000);
-                    intent.putExtra(CalendarContract.Events.TITLE, requireActivity().getString(R.string.sunrise_photo));
-                    startActivity(intent);
-                }
+            ImageButton saveSunrise = current.findViewById(R.id.sunriseMenu);
+            saveSunrise.setOnClickListener(v -> {
+                //showPopupMenu(v, "sunrise");
+                saveToCalendar("sunrise");
             });
 
-            Button saveSunset = current.findViewById(R.id.save_sunset);
-            saveSunset.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(p.date);
-
-                    int year = calendar.get(Calendar.YEAR);
-                    int month = calendar.get(Calendar.MONTH);
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                    calendar.set(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day),
-                            p.getLastSunset().hour, p.getLastSunset().minutes);
-
-                    long startmillis = calendar.getTimeInMillis();
-                    Intent intent = new Intent(Intent.ACTION_INSERT);
-                    intent.setDataAndType(CalendarContract.Events.CONTENT_URI, "vnd.android.cursor.item/event");
-                    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, p.lat + ", " + p.lon);
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startmillis);
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, startmillis + 60 * 60 * 1000);
-                    intent.putExtra(CalendarContract.Events.TITLE, requireActivity().getString(R.string.sunset_photo));
-                    startActivity(intent);
-                }
+            ImageButton saveSunset = current.findViewById(R.id.sunsetMenu);
+            saveSunset.setOnClickListener(v -> {
+                //showPopupMenu(v, "sunset");
+                saveToCalendar("sunset");
             });
         });
 
         // Inflate the layout for this fragment
         return current;
+    }
+
+    private void showPopupMenu(View view, String what) {
+        ContextThemeWrapper ctw = new ContextThemeWrapper(requireActivity(), R.style.Widget_App_PopupMenu);
+        PopupMenu popupMenu = new PopupMenu(ctw, view, Gravity.CENTER);
+        popupMenu.inflate(R.menu.menu_calendar);
+        popupMenu.setForceShowIcon(true);
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.save_to_calendar) {
+                saveToCalendar(what); // Passa la zona come parametro
+                return true;
+            }
+            return false;
+        });
+
+        popupMenu.show();
+    }
+
+    private void saveToCalendar(String what) {
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(p.date);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        if(Objects.equals(what, "sunrise")) {
+            calendar.set(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day),
+                    p.getFirstSunrise().hour, p.getFirstSunrise().minutes);
+            intent.putExtra(CalendarContract.Events.TITLE, requireActivity().getString(R.string.sunrise_photo));
+        } else {
+            calendar.set(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day),
+                    p.getLastSunset().hour, p.getLastSunset().minutes);
+            intent.putExtra(CalendarContract.Events.TITLE, requireActivity().getString(R.string.sunset_photo));
+        }
+
+        long startmillis = calendar.getTimeInMillis();
+
+        intent.setDataAndType(CalendarContract.Events.CONTENT_URI, "vnd.android.cursor.item/event");
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, p.lat + ", " + p.lon);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startmillis);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, startmillis + 60 * 60 * 1000);
+        startActivity(intent);
     }
 
     private void renderChart() {
@@ -133,14 +148,14 @@ public class SunFragment extends Fragment {
         // Fill sun positions
         //Arrays.sort(p.risultatiSole);
         for (int i = 0; i < Constants.SUN_SAMPLE; i++) {
-            if (p.sun_data[i].minutes == 0) {
+            if (p.sun_data.get(i).minutes == 0) {
                 // ogni tanto la libreria per il calcolo della traiettoria sbaglia
                 // (bug noto che accade in posti lontani) in quel caso visto che l' errore
                 // non lo possiamo gestire piùttosto stampiamo i valori validi che ci arrivano anche se sono a caso
-                if (p.sun_data[i].height >= -20) {
-                    sunVals.add(new Entry((float) p.sun_data[i].azimuth, (float) p.sun_data[i].height));
+                if (p.sun_data.get(i).height >= -20) {
+                    sunVals.add(new Entry((float) p.sun_data.get(i).azimuth, (float) p.sun_data.get(i).height));
                 } else {
-                    sunVals.add(new Entry((float) p.sun_data[i].azimuth, (float) -20));
+                    sunVals.add(new Entry((float) p.sun_data.get(i).azimuth, (float) -20));
                 }
             }
         }
@@ -235,6 +250,7 @@ public class SunFragment extends Fragment {
     }
 
     private void renderValues(View view) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(p.date);
@@ -242,11 +258,6 @@ public class SunFragment extends Fragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH) + 1;
         int year = calendar.get(Calendar.YEAR);
-
-        SunTimes times = SunTimes.compute()
-                .on(year, month, day)   // set a date
-                .at(p.lat, p.lon)   // set a location
-                .execute();     // get the results
 
         SunTimes s = SunTimes.compute()
                 .on(year, month, day)
@@ -288,6 +299,11 @@ public class SunFragment extends Fragment {
 
         TextView sunriseText = view.findViewById(R.id.sunrise_time);
         TextView sunsetText = view.findViewById(R.id.sunset_time);
+
+        FrameLayout frameTime = view.findViewById(R.id.frame_timeline);
+        LinearLayout noPeak = view.findViewById(R.id.timeline_nopeak);
+        LinearLayout labels = view.findViewById(R.id.timeline_text);
+
         TextView sunriseAzimutText = view.findViewById(R.id.azimut_sunrise);
         TextView sunsetAzimutText = view.findViewById(R.id.azimut_sunset);
         TextView sunriseHorizonText = view.findViewById(R.id.horizon_sunrise);
@@ -361,7 +377,6 @@ public class SunFragment extends Fragment {
 
         if (p.sunset.size() > 1) {
             //setsList.setVisibility(View.VISIBLE);
-
             List<TimelineItem> sunsetTimeline = new ArrayList<>();
 
             for (int i = 0; i < p.sunset.size(); i++) {
@@ -375,55 +390,126 @@ public class SunFragment extends Fragment {
         }
 
         if (p.getFirstSunrise() != null && p.getLastSunset() != null) {
-            View twilightView = view.findViewById(R.id.twilight);
-            View dayLightView = view.findViewById(R.id.day_hour);
-            View eveningTwilightView = view.findViewById(R.id.evening_twilight);
+            labels.setVisibility(View.VISIBLE);
+            frameTime.setVisibility(View.VISIBLE);
+            noPeak.setVisibility(View.VISIBLE);
 
-            View dayLeft = view.findViewById(R.id.left_now);
-            View dayRight = view.findViewById(R.id.right_now);
-
-            View morningView = view.findViewById(R.id.morning_padding);
-            View dayPadding = view.findViewById(R.id.day_padding);
-            View eveningPadding = view.findViewById(R.id.evening_padding);
-            TextView sunriseLabel = view.findViewById(R.id.sunrise_text);
-            TextView sunsetLabel = view.findViewById(R.id.sunset_text);
-
-            long startTwilight = 0 * 60 * 60 * 1000;
-            long sunrise = rise.getMinute() * 60 * 1000 + rise.getHour() * 60 * 60 * 1000;
-            long sunset = set.getMinute() * 60 * 1000 + set.getHour() * 60 * 60 * 1000;
+            long startTwilight = 0;
+            long sunrisePeak = p.getFirstSunrise().minutes * 60 * 1000 + p.getFirstSunrise().hour * 60 * 60 * 1000;
+            long sunsetPeak = p.getLastSunset().minutes * 60 * 1000 + p.getLastSunset().hour * 60 * 60 * 1000;
+            long sunriseHorizon = rise.getMinute() * 60 * 1000 + rise.getHour() * 60 * 60 * 1000;
+            long sunsetHorizon = set.getMinute() * 60 * 1000 + set.getHour() * 60 * 60 * 1000;
             long endTwilight = 24 * 60 * 60 * 1000;
             long daySpace = now.getMinute() * 60 * 1000 + now.getHour() * 60 * 60 * 1000;
 
             long totalDuration = endTwilight - startTwilight;
-            float twilightWeight = (float) (sunrise - startTwilight) / totalDuration;
-            float dayHourWeight = (float) (sunset - sunrise) / totalDuration;
-            float nightWeight = (float) (endTwilight - sunset) / totalDuration;
+            float twilightWeight = (float) (sunriseHorizon - startTwilight) / totalDuration;
+            float sunriseDiffWeight = (float) (sunrisePeak - sunriseHorizon) / totalDuration;
+            float dayHourWeight = (float) (sunsetPeak - sunrisePeak) / totalDuration;
+            float sunsetDiffWeight = (float) (sunsetHorizon - sunsetPeak) / totalDuration;
+            float nightWeight = (float) (endTwilight - sunsetHorizon) / totalDuration;
+
             float leftSpace = (float) (daySpace - startTwilight) / totalDuration;
             float rightSpace = (float) (endTwilight - daySpace) / totalDuration;
 
-            // Imposta i pesi
+            // Barra colorata
+            View twilightView = view.findViewById(R.id.twilight);
+            View sunriseDiffView = view.findViewById(R.id.sunrise_lost);
+            View dayLightView = view.findViewById(R.id.day_hour);
+            View sunsetDiffView = view.findViewById(R.id.sunset_lost);
+            View eveningTwilightView = view.findViewById(R.id.evening_twilight);
+
             setWeight(twilightView, twilightWeight);
+            setWeight(sunriseDiffView, sunriseDiffWeight);
             setWeight(dayLightView, dayHourWeight);
+            setWeight(sunsetDiffView, sunsetDiffWeight);
             setWeight(eveningTwilightView, nightWeight);
 
-            setWeight(morningView, twilightWeight);
-            setWeight(dayPadding, dayHourWeight);
-            setWeight(eveningPadding, nightWeight);
+            // Puntatore orario
+            View dayLeft = view.findViewById(R.id.left_now);
+            View dayRight = view.findViewById(R.id.right_now);
 
             setWeight(dayLeft, leftSpace);
             setWeight(dayRight, rightSpace);
 
-            sunriseLabel.setText(p.getFirstSunrise().hour + ":" +
+            // Orari con picchi
+            TextView sunrisePeakLabel = view.findViewById(R.id.sunrise_timeline);
+            TextView sunsetPeakLabel = view.findViewById(R.id.sunset_timeline);
+            View morningPadding = view.findViewById(R.id.morning_padding);
+            View dayPadding = view.findViewById(R.id.day_padding);
+            View eveningPadding = view.findViewById(R.id.evening_padding);
+
+            setWeight(morningPadding, twilightWeight + sunriseDiffWeight + 0.1f);
+            setWeight(dayPadding, dayHourWeight);
+            setWeight(eveningPadding, nightWeight + sunsetDiffWeight + 0.1f);
+
+            // Orari orizzonte
+            TextView sunriseLabel = view.findViewById(R.id.sunrise_nopeak_timeline);
+            TextView sunsetLabel = view.findViewById(R.id.sunset_nopeak_timeline);
+            View morningHorizonPadding = view.findViewById(R.id.morning_nopeak);
+            View dayHorizonPadding = view.findViewById(R.id.day_nopeak);
+            View eveningHorizonPadding = view.findViewById(R.id.evening_nopeak);
+
+            setWeight(morningHorizonPadding, twilightWeight - 0.1f);
+            setWeight(dayHorizonPadding, dayHourWeight);
+            setWeight(eveningHorizonPadding, nightWeight - 0.1f);
+
+            sunrisePeakLabel.setText(p.getFirstSunrise().hour + ":" +
                     (p.getFirstSunrise().minutes < 10 ? "0" + p.getFirstSunrise().minutes : p.getFirstSunrise().minutes));
 
-            sunsetLabel.setText(p.getLastSunset().hour + ":" +
+            sunsetPeakLabel.setText(p.getLastSunset().hour + ":" +
                     (p.getLastSunset().minutes < 10 ? "0" + p.getLastSunset().minutes : p.getLastSunset().minutes));
-        } else {
-            LinearLayout labels = view.findViewById(R.id.timeline_text);
-            LinearLayout timeline = view.findViewById(R.id.timeline_bar);
 
+            sunriseLabel.setText(rise.getHour() + ":" +
+                    (rise.getMinute() < 10 ? "0" + rise.getMinute() : rise.getMinute()));
+
+            sunsetLabel.setText(set.getHour() + ":" +
+                    (set.getMinute() < 10 ? "0" + set.getMinute() : set.getMinute()));
+        } else {
             labels.setVisibility(View.GONE);
-            timeline.setVisibility(View.GONE);
+            frameTime.setVisibility(View.GONE);
+            noPeak.setVisibility(View.GONE);
+        }
+    }
+
+    private void renderYearValues(View view) {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+        LinearProgressIndicator loading_shorter = view.findViewById(R.id.loading_shorter);
+        LinearProgressIndicator loading_longer = view.findViewById(R.id.loading_longer);
+
+        TextView shortestPeak = view.findViewById(R.id.shortest_peak);
+        TextView shortestPeakTime = view.findViewById(R.id.shortest_peak_time);
+        TextView longestPeak = view.findViewById(R.id.longest_peak);
+        TextView longestPeakTime = view.findViewById(R.id.longest_peak_time);
+
+        // Render shorter and longest day
+        TextView shortestHorizon = view.findViewById(R.id.shortest_horizon);
+        TextView shortestHorizonTime = view.findViewById(R.id.shortest_horizon_time);
+        TextView longestHorizon = view.findViewById(R.id.longest_horizon);
+        TextView longestHorizonTime = view.findViewById(R.id.longest_horizon_time);
+
+        if(p.shortest_day != null && p.longest_day != null) {
+            shortestHorizon.setText(sdf.format(p.shortest_day));
+            longestHorizon.setText(sdf.format(p.longest_day));
+
+            shortestHorizonTime.setText(p.shortest_minutes / 60 + "h:" + ((p.shortest_minutes % 60) < 10 ? ("0" + (p.shortest_minutes % 60)) : (p.shortest_minutes % 60)) + "min");
+            longestHorizonTime.setText(p.longest_minutes / 60 + "h:" + ((p.longest_minutes % 60) < 10 ? ("0" + (p.longest_minutes % 60)) : (p.longest_minutes % 60)) + "min");
+        }
+
+        if(p.shortest_peak != null && p.longest_peak != null) {
+            shortestPeak.setText(sdf.format(p.shortest_peak));
+            longestPeak.setText(sdf.format(p.longest_peak));
+
+            shortestPeakTime.setText(p.shortest_peak_minutes / 60 + "h:" + ((p.shortest_peak_minutes % 60) < 10 ? ("0" + (p.shortest_peak_minutes % 60)) : (p.shortest_peak_minutes % 60)) + "min");
+            longestPeakTime.setText(p.longest_peak_minutes / 60 + "h:" + ((p.longest_peak_minutes % 60) < 10 ? ("0" + (p.longest_peak_minutes % 60)) : (p.longest_peak_minutes % 60)) + "min");
+        }
+
+        if(p.processedYearData) {
+            loading_shorter.setVisibility(View.GONE);
+            loading_longer.setVisibility(View.GONE);
+        } else {
+            loading_shorter.setVisibility(View.VISIBLE);
+            loading_longer.setVisibility(View.VISIBLE);
         }
     }
 

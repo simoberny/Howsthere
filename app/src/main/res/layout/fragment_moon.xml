@@ -129,6 +129,25 @@
                                     android:layout_gravity="center_vertical"
                                     android:src="@drawable/moon_sunrise" />
 
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1" /> <!-- Questo espande il componente a sinistra -->
+
+                                <!-- Pulsante Menu -->
+                                <ImageButton
+                                    android:id="@+id/moonriseMenu"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:src="@drawable/baseline_notification_add_24"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="Menu Button"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="@color/md_theme_onBackground" />
+
+
                                 <!--<TextView
                                     android:id="@+id/sunrise_utc"
                                     android:layout_width="match_parent"
@@ -230,7 +249,7 @@
                                 android:scrollbars="vertical"
                                 android:visibility="gone" />
 
-                            <Button
+                            <!--<Button
                                 android:id="@+id/save_sunrise"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -240,7 +259,7 @@
                                 android:text="@string/save_cal"
                                 android:textSize="13sp"
                                 android:visibility="visible"
-                                app:icon="@drawable/baseline_notification_add_24" />
+                                app:icon="@drawable/baseline_notification_add_24" />-->
                         </LinearLayout>
 
                     </com.google.android.material.card.MaterialCardView>
@@ -268,6 +287,24 @@
                                     android:layout_height="30dp"
                                     android:layout_gravity="center_vertical"
                                     android:src="@drawable/moon_sunset" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1" /> <!-- Questo espande il componente a sinistra -->
+
+                                <!-- Pulsante Menu -->
+                                <ImageButton
+                                    android:id="@+id/moonsetMenu"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:src="@drawable/baseline_notification_add_24"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="Menu Button"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="@color/md_theme_onBackground" />
 
                                 <!--<TextView
                                     android:id="@+id/sunset_utc"
@@ -372,7 +409,7 @@
                                 android:scrollbars="vertical"
                                 android:visibility="gone" />
 
-                            <Button
+                            <!--<Button
                                 android:id="@+id/save_sunset"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -382,7 +419,7 @@
                                 android:text="@string/save_cal"
                                 android:textSize="13sp"
                                 android:visibility="visible"
-                                app:icon="@drawable/baseline_notification_add_24" />
+                                app:icon="@drawable/baseline_notification_add_24" />-->
 
                         </LinearLayout>
 

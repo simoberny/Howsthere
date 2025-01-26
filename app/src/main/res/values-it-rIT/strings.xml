@@ -4,11 +4,15 @@
     <string name="title_map">Mappa</string>
     <string name="title_history">Cronologia</string>
 
+    <string name="next_phase">Avanti</string>
     <string name="no_panorama">Nessun dato salvato!</string>
     <string name="delete_all">Elimina tutto</string>
     <string name="share">Condividi</string>
     <string name="share_with">Condividi link con</string>
     <string name="checkout">Guarda questo panorama generato da Howsthere!</string>
+
+    <string name="shorter_day">Giorno più corto</string>
+    <string name="longest_day">Giorno più lungo</string>
 
     <string name="nocity">Impossibile ottenere informazioni sulla posizione!</string>
 
@@ -30,8 +34,8 @@
     <string name="downloading">Scaricamento dati...</string>
     <string name="retry">Nuovo tentativo</string>
     <string name="get_id">Ottenendo ID</string>
-    <string name="get_mountain">Scaricando montagne...</string>
-    <string name="get_status">Controllato stato...</string>
+    <string name="get_mountain">Download dati montagne...</string>
+    <string name="get_status">Caricamento...</string>
     <string name="processing">Processando...</string>
     <string name="failed_try">Tentativo fallito. Riprovando...</string>
     <string name="get_error">Dati non raggiungibili! Riprova a breve</string>
@@ -71,6 +75,9 @@
 
     <string name="sunrise_photo">Foto all\'alba</string>
     <string name="sunset_photo">Foto al tramonto</string>
+
+    <string name="moonrise_photo">Foto apparizione Luna</string>
+    <string name="moonset_photo">Foto sparizione Luna</string>
 
     <string name="no_sun">Il sole non sale mai sopra il livello delle montagne!</string>
     <string name="aligned">Allineato</string>

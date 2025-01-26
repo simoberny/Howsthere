@@ -10,21 +10,10 @@ import it.howsthere.howsthere2.objects.Panorama;
 
 public class ResultViewModel extends ViewModel {
     private final MutableLiveData<String> id = new MutableLiveData<>();
-
     private final MutableLiveData<Panorama> panorama = new MutableLiveData<>();
     private final MutableLiveData<Date> date = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> loading = new MutableLiveData<>();
 
-    public void setId(String value) {
-        id.setValue(value);
-    }
-
-    public void setPanorama(Panorama value) {
-        panorama.setValue(value);
-    }
-
-    public void setDate(Date value) {
-        date.setValue(value);
-    }
 
     public LiveData<String> getId() {
         return id;
@@ -36,5 +25,29 @@ public class ResultViewModel extends ViewModel {
 
     public LiveData<Date> getDate() {
         return date;
+    }
+
+    public LiveData<Boolean> getLoadingEnd() {
+        return loading;
+    }
+
+    public void setId(String value) {
+        id.setValue(value);
+    }
+
+    public void setPanorama(Panorama value) {
+        panorama.setValue(value);
+    }
+
+    public void postPanorama(Panorama value) {
+        panorama.postValue(value);
+    }
+
+    public void setDate(Date value) {
+        date.setValue(value);
+    }
+
+    public void setLoading(Boolean state) {
+        loading.postValue(state);
     }
 }

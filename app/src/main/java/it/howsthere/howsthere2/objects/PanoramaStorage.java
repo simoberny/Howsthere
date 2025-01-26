@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PanoramaStorage {
     private static PanoramaStorage instance;
@@ -45,21 +46,25 @@ public class PanoramaStorage {
     public void addPanorama(Panorama p) {
         loadPref();
 
-        if(!panoramaExist(p)){
+        int pos = panoramaExist(p);
+
+        if(pos < 0){
             panoramas.add(0, p);
+        } else {
+            panoramas.set(pos, p);
         }
 
         saveToPref();
     }
 
-    public boolean panoramaExist(Panorama p){
-        for (Panorama mp : panoramas) {
-            if (mp.lat == p.lat && mp.lon == p.lon && mp.date == p.date) {
-                return true;
+    public int panoramaExist(Panorama p){
+        for (int i = 0; i < panoramas.size(); i++) {
+            if (Objects.equals(panoramas.get(i).id, p.id)) {
+                return i;
             }
         }
 
-        return false;
+        return -1;
     }
 
     public void loadPref(){

@@ -3,11 +3,15 @@
     <string name="title_map">Map</string>
     <string name="title_history">History</string>
 
+    <string name="next_phase">Next</string>
     <string name="no_panorama">No data yet.</string>
     <string name="delete_all">Delete all</string>
     <string name="share">Share</string>
     <string name="share_with">Share link with</string>
     <string name="checkout">Check out this panorama from Howsthere!</string>
+
+    <string name="shorter_day">Shorter day</string>
+    <string name="longest_day">Longest day</string>
 
     <string name="nocity">Cannot obtain city information!</string>
 
@@ -29,8 +33,8 @@
     <string name="downloading">Downloading data...</string>
     <string name="retry">Retry</string>
     <string name="get_id">Obtaining ID</string>
-    <string name="get_mountain">Retrieving mountains...</string>
-    <string name="get_status">Checking ID...</string>
+    <string name="get_mountain">Downloading peaks information ...</string>
+    <string name="get_status">Loading...</string>
     <string name="processing">Processing...</string>
     <string name="failed_try">Failed to obtain. Retrying...</string>
     <string name="get_error">Data unreachable. Try again!</string>
@@ -72,6 +76,9 @@
 
     <string name="sunrise_photo">Sunrise photo</string>
     <string name="sunset_photo">Sunset photo</string>
+
+    <string name="moonrise_photo">Moonrise photo</string>
+    <string name="moonset_photo">Moonset photo</string>
 
     <string name="tempoconmontagne">Time with mountain</string>
     <string name="temposenzamontagne">Time without mountain</string>

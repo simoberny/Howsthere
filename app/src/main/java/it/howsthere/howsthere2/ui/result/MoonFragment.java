@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -69,58 +70,48 @@ public class MoonFragment extends Fragment {
                 requireActivity().finish();
             }
 
-            Button saveSunrise = current.findViewById(R.id.save_sunrise);
-            saveSunrise.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(p.date); // Imposta la data nel calendario
-
-                    int year = calendar.get(Calendar.YEAR);
-                    int month = calendar.get(Calendar.MONTH);
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                    calendar.set(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day),
-                            p.getFirstMoonSunrise().hour, p.getFirstMoonSunrise().minutes);
-
-                    long start = calendar.getTimeInMillis();
-                    Intent intent = new Intent(Intent.ACTION_INSERT);
-                    intent.setDataAndType(CalendarContract.Events.CONTENT_URI, "vnd.android.cursor.item/event");
-                    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, p.lat + ", " + p.lon);
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, start);
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, start + 60 * 60 * 1000);
-                    intent.putExtra(CalendarContract.Events.TITLE, requireActivity().getString(R.string.sunrise_photo));
-                    startActivity(intent);
-                }
+            ImageButton saveSunrise = current.findViewById(R.id.moonriseMenu);
+            saveSunrise.setOnClickListener(v -> {
+                //showPopupMenu(v, "sunrise");
+                saveToCalendar("sunrise");
             });
 
-            Button saveSunset = current.findViewById(R.id.save_sunset);
-            saveSunset.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(p.date); // Imposta la data nel calendario
-
-                    int year = calendar.get(Calendar.YEAR);
-                    int month = calendar.get(Calendar.MONTH);
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                    calendar.set(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day),
-                            p.getLastMoonSunset().hour, p.getLastMoonSunset().minutes);
-
-                    long start = calendar.getTimeInMillis();
-                    Intent intent = new Intent(Intent.ACTION_INSERT);
-                    intent.setDataAndType(CalendarContract.Events.CONTENT_URI, "vnd.android.cursor.item/event");
-                    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, p.lat + ", " + p.lon);
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, start);
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, start + 60 * 60 * 1000);
-                    intent.putExtra(CalendarContract.Events.TITLE, requireActivity().getString(R.string.sunset_photo));
-                    startActivity(intent);
-                }
+            ImageButton saveSunset = current.findViewById(R.id.moonsetMenu);
+            saveSunset.setOnClickListener(v -> {
+                //showPopupMenu(v, "sunset");
+                saveToCalendar("sunset");
             });
         });
 
         return current;
+    }
+
+    private void saveToCalendar(String what) {
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(p.date);
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        if(Objects.equals(what, "sunrise")) {
+            calendar.set(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day),
+                    p.getFirstMoonSunrise().hour, p.getFirstMoonSunrise().minutes);
+            intent.putExtra(CalendarContract.Events.TITLE, requireActivity().getString(R.string.moonrise_photo));
+        } else {
+            calendar.set(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day),
+                    p.getLastMoonSunset().hour, p.getLastMoonSunset().minutes);
+            intent.putExtra(CalendarContract.Events.TITLE, requireActivity().getString(R.string.moonset_photo));
+        }
+
+        long startmillis = calendar.getTimeInMillis();
+
+        intent.setDataAndType(CalendarContract.Events.CONTENT_URI, "vnd.android.cursor.item/event");
+        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, p.lat + ", " + p.lon);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startmillis);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, startmillis + 60 * 60 * 1000);
+        startActivity(intent);
     }
 
     private void renderChart() {
@@ -132,9 +123,9 @@ public class MoonFragment extends Fragment {
 
         // Fill moon positions
         for (int i = 288; i < 576; i++) {
-            if (p.moon_data[i].minutes == 0) {
-                moonVals.add(new Entry((float) p.moon_data[i].azimuth, (float) p.moon_data[i].height));
-                moonSorted.add(new Entry((float) p.moon_data[i].azimuth, (float) p.moon_data[i].height));
+            if (p.moon_data.get(i).minutes == 0) {
+                moonVals.add(new Entry((float) p.moon_data.get(i).azimuth, (float) p.moon_data.get(i).height));
+                moonSorted.add(new Entry((float) p.moon_data.get(i).azimuth, (float) p.moon_data.get(i).height));
             }
         }
 
