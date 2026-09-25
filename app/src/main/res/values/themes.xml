@@ -1,6 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.Howsthere2" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
+        <!-- Style popup menu -->
+        <item name="android:popupMenuStyle">@style/Widget.App.PopupMenu</item>
+        <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
+
         <!-- Rende la status bar trasparente -->
         <item name="android:windowTranslucentStatus">false</item>
 
@@ -63,5 +67,9 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
         <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Widget.App.PopupMenu" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">@drawable/custom_popup_background</item>
     </style>
 </resources>

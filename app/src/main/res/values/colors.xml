@@ -1,4 +1,8 @@
 <resources>
+    <color name="sun_color">#FFEFB828</color>
+    <color name="moon_color">#FF94908D</color>
+    <color name="gradient_background">#00F9F9FF</color>
+
     <color name="md_theme_primary">#415F91</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
     <color name="md_theme_primaryContainer">#D6E3FF</color>

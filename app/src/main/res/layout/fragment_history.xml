@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/statusbar_view_height"
-    tools:context=".ui.history.HistoryFragment">
+    tools:context="it.howsthere.howsthere2.ui.history.HistoryFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,12 +47,26 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/no_panorama"
-            android:textSize="16sp" />
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_playlist_remove_24"
+                android:layout_marginBottom="10dp"
+                />
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/no_panorama"
+                android:textSize="16sp" />
+        </LinearLayout>
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

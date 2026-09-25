@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        tools:ignore="MissingConstraints">
+
+        <!-- Drag handle for accessibility -->
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/data_sel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/date_selection"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/current_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/invalid_selection"
+            android:textSize="16sp"
+            android:drawablePadding="15dp"
+            app:drawableStartCompat="@drawable/location_on_24px"
+            app:drawableTint="@color/md_theme_primary"
+            app:drawableTintMode="src_in"/>
+
+        <TextView
+            android:id="@+id/selected_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="15dp"
+            android:text="@string/today"
+            android:textSize="16sp"
+            app:drawableStartCompat="@drawable/baseline_date_range_24"
+            app:drawableTint="@color/md_theme_primary"
+            app:drawableTintMode="src_in" />
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:id="@+id/action_container"
+            app:layout_constraintTop_toBottomOf="@+id/selected_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginVertical="18dp"
+            android:orientation="horizontal"
+            android:textAlignment="center">
+
+            <Button
+                android:id="@+id/action_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/md_theme_tertiary"
+                android:text="@string/date_btn"
+                app:icon="@drawable/baseline_date_range_24" />
+
+            <Button
+                android:id="@+id/action_next"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/next"
+                android:visibility="visible"
+                app:icon="@drawable/round_arrow_forward_24"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/not_supported"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/not_supported"
+            android:textColor="@color/md_theme_error"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
