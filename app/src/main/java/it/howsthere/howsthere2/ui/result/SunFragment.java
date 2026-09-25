@@ -203,6 +203,18 @@ public class SunFragment extends Fragment {
         Drawable drawable = ContextCompat.getDrawable(requireActivity(), R.drawable.fade_mountains);
         datasetPeaks.setFillDrawable(drawable);
         datasetPeaks.setDrawHighlightIndicators(true);
+        datasetPeaks.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getPointLabel(Entry entry) {
+                int azi = (int) entry.getX();
+
+                if(p.peaks_name.get(azi) != null) {
+                    return p.peaks_name.get(azi).getName();
+                }
+
+                return "";
+            }
+        });
 
         // Sun line properties
         datasetSun.setMode(LineDataSet.Mode.CUBIC_BEZIER);

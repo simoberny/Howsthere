@@ -71,7 +71,7 @@ public class Hwt implements AsyncResponse {
 
         dialog = new BottomSheetDialog(context);
         View dialogView = View.inflate(context, R.layout.loading_bottom_sheet, null);
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.setContentView(dialogView);
 
         btnRetry = dialogView.findViewById(R.id.retry);
@@ -229,9 +229,18 @@ public class Hwt implements AsyncResponse {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    try {
-                        peaksName = response.body().string();
+                    try (ResponseBody body = response.body()) {
+                        peaksName = Objects.requireNonNull(body).string();
                         processPeak();
+
+                        /*if(!peaksName.isEmpty()) {
+                            System.out.println("PEAKS: " + peaksName);
+                            processPeak();
+                        } else {
+                            System.out.println("PEAKS: " + panorama.id);
+                            waitRetry(retry);
+                        }*/
+
                         return;
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -251,7 +260,7 @@ public class Hwt implements AsyncResponse {
         processState = 4; // Processing
         dialogMessage.setText(context.getResources().getString(R.string.processing));
 
-        Processing c = new Processing(context, peaks, null, panorama);
+        Processing c = new Processing(context, peaks, peaksName, panorama);
         c.execute();
 
         // After processing start the result activity
@@ -277,7 +286,7 @@ public class Hwt implements AsyncResponse {
                 dialogMessage.setText(context.getResources().getString(R.string.failed_try));
                 newRetry(retry_ + 1);
             }
-        }, 2500);
+        }, 1500);
     }
 
     private void showRetry() {

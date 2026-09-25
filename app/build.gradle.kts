@@ -13,14 +13,14 @@ android {
         }
     }
     namespace = "it.howsthere.howsthere2"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "it.howsthere.howsthere2"
         minSdk = 30
-        targetSdk = 34
-        versionCode = 5
-        versionName = "2.1.0"
+        targetSdk = 37
+        versionCode = 8
+        versionName = "2.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

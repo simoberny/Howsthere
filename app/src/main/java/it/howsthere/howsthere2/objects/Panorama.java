@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class Panorama implements Serializable {
 
     public Panorama(){
         peaks_data = new double[7][360];
-        peaks_name = new ArrayList<Peak>();
+        peaks_name = new ArrayList<Peak>(Collections.nCopies(365, null));
 
         sun_data = new ArrayList<Position>(Constants.SUN_SAMPLE);
         moon_data = new ArrayList<Position>(864);

@@ -69,7 +69,7 @@ public class Result extends AppCompatActivity {
                 shareIntent.setType("text/plain");
 
                 String shareLink = getResources().getString(R.string.checkout) +
-                        " \nhttp://www.howsthere.netsons.org/share?date=" +
+                        " \nhttps://simoberny.github.io/share?date=" +
                         pan.date.getTime() + "&lat=" + pan.lat + "&lon=" + pan.lon;
                 shareIntent.putExtra(Intent.EXTRA_TEXT, shareLink);
                 startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_with)));

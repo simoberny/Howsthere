@@ -28,6 +28,7 @@ import java.util.List;
 import it.howsthere.howsthere2.objects.Constants;
 import it.howsthere.howsthere2.objects.Panorama;
 import it.howsthere.howsthere2.objects.PanoramaStorage;
+import it.howsthere.howsthere2.objects.Peak;
 import it.howsthere.howsthere2.objects.Position;
 import it.howsthere.howsthere2.objects.TimezoneMapper;
 import it.howsthere.howsthere2.ui.result.ResultViewModel;
@@ -77,6 +78,8 @@ public class Processing  {
 
         generateSunData();
         generateMoonData();
+
+        parsingPeakName();
 
         return panorama;
     }
@@ -174,6 +177,34 @@ public class Processing  {
         panorama.longest_minutes = longer_minutes;
 
         panorama.processedYearData = true;
+    }
+
+    // Parsing peak's name
+    private void parsingPeakName() {
+        List<String> namesList = Arrays.asList(namePeak.split("[\\r\\n]+"));
+
+        for(int a = 0; a < namesList.size(); a++){
+            List<String> tempsplit = Arrays.asList(namesList.get(a).split(" "));
+
+            if(tempsplit.size() >= 5){
+                List<String> sublist = tempsplit.subList(4, tempsplit.size());
+
+                StringBuilder b = new StringBuilder();
+                for(int j = 0; j < sublist.size(); j++){
+                    b.append(String.valueOf(sublist.get(j)));
+                    b.append(" ");
+                }
+
+                int azi = Integer.parseInt(tempsplit.get(0));
+                Peak temp = new Peak(b.toString(),
+                        Double.parseDouble(tempsplit.get(0)),
+                        Double.parseDouble(tempsplit.get(1)));
+
+                System.out.println("PEAKSS: " + temp);
+
+                panorama.peaks_name.set(azi, temp);
+            }
+        }
     }
 
     private int getRealDayLength(Calendar day) {

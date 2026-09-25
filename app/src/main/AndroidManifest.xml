@@ -43,24 +43,24 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <data android:scheme="https" android:host="simoberny.github.io" />
                 <data android:scheme="http" />
-                <data android:host="howsthere.netsons.org" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="https" />
-                <data android:host="howsthere.netsons.org" />
+                <data android:scheme="https" android:host="simoberny.github.io" />
+                <data android:scheme="http" />
             </intent-filter>
         </activity>
 
         <activity
             android:name="it.howsthere.howsthere2.Result"
             android:label="@string/title_activity_results"
-            android:parentActivityName="it.howsthere.howsthere2.MainActivity">
+            android:parentActivityName="it.howsthere.howsthere2.MainActivity"
+            android:configChanges="orientation|screenSize">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

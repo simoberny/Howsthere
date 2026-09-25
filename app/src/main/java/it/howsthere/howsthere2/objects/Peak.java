@@ -30,11 +30,11 @@ public class Peak implements Serializable {
         this.azimuth = azimuth;
     }
 
-    public double getAltezza() {
+    public double getHeight() {
         return height;
     }
 
-    public void setAltezza(double height_) {
+    public void setHeight(double height_) {
         height = height_;
     }
 }
