@@ -45,7 +45,6 @@ public class Panorama implements Serializable {
     public List<Position> moon_sunset;
 
     public int sun_minutes = 0;
-    public int sun_hours = 0;
     public int moon_minutes = 0;
 
     public double lat = 0;
@@ -69,15 +68,15 @@ public class Panorama implements Serializable {
 
     public Panorama(){
         peaks_data = new double[7][360];
-        peaks_name = new ArrayList<Peak>(Collections.nCopies(365, null));
+        peaks_name = new ArrayList<>(Collections.nCopies(360, null));
 
-        sun_data = new ArrayList<Position>(Constants.SUN_SAMPLE);
-        moon_data = new ArrayList<Position>(864);
+        sun_data = new ArrayList<>(Constants.SUN_SAMPLE);
+        moon_data = new ArrayList<>(3 * Constants.MOON_SAMPLES_PER_DAY);
 
-        sunrise = new ArrayList<Position>();
-        sunset = new ArrayList<Position>();
-        moon_sunsire = new ArrayList<Position>();
-        moon_sunset = new ArrayList<Position>();
+        sunrise = new ArrayList<>();
+        sunset = new ArrayList<>();
+        moon_sunsire = new ArrayList<>();
+        moon_sunset = new ArrayList<>();
 
         date = Calendar.getInstance().getTime();
     }
@@ -112,7 +111,13 @@ public class Panorama implements Serializable {
         if (!moon_sunset.isEmpty()) {
             return moon_sunset.get(moon_sunset.size() - 1);
         }
+        return null;
+    }
 
+    public Peak getPeakAtAzimuth(int azimuth) {
+        if (peaks_name != null && azimuth >= 0 && azimuth < peaks_name.size()) {
+            return peaks_name.get(azimuth);
+        }
         return null;
     }
 

@@ -4,50 +4,42 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.util.Date;
 
 import it.howsthere.howsthere2.objects.Panorama;
 
 public class ResultViewModel extends ViewModel {
-    private final MutableLiveData<String> id = new MutableLiveData<>();
-    private final MutableLiveData<Panorama> panorama = new MutableLiveData<>();
-    private final MutableLiveData<Date> date = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> loading = new MutableLiveData<>();
+    private boolean calculatingYear;
 
-
-    public LiveData<String> getId() {
-        return id;
+    /** Rotation retains this ViewModel and must not start a second annual calculation. */
+    public synchronized void ensureYearData(Panorama value) {
+        if (value.processedYearData || calculatingYear) return;
+        calculatingYear = true;
+        new Thread(() -> {
+            try {
+                new it.howsthere.howsthere2.Processing(value).generateYearData();
+                postPanorama(value);
+                it.howsthere.howsthere2.objects.PanoramaStorage.getInstance().addPanorama(value);
+            } finally {
+                synchronized (ResultViewModel.this) {
+                    calculatingYear = false;
+                }
+            }
+        }, "panorama-year").start();
     }
+
+    private final MutableLiveData<Panorama> panorama = new MutableLiveData<>();
+
 
     public LiveData<Panorama> getPanorama() {
         return panorama;
-    }
-
-    public LiveData<Date> getDate() {
-        return date;
-    }
-
-    public LiveData<Boolean> getLoadingEnd() {
-        return loading;
-    }
-
-    public void setId(String value) {
-        id.setValue(value);
     }
 
     public void setPanorama(Panorama value) {
         panorama.setValue(value);
     }
 
-    public void postPanorama(Panorama value) {
+    private void postPanorama(Panorama value) {
         panorama.postValue(value);
     }
 
-    public void setDate(Date value) {
-        date.setValue(value);
-    }
-
-    public void setLoading(Boolean state) {
-        loading.postValue(state);
-    }
 }

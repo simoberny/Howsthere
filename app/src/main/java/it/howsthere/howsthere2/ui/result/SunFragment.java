@@ -1,35 +1,18 @@
 package it.howsthere.howsthere2.ui.result;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.provider.CalendarContract;
-import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import it.howsthere.howsthere2.R;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import org.shredzone.commons.suncalc.SunTimes;
@@ -38,16 +21,10 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
 
-import it.howsthere.howsthere2.objects.Constants;
+import it.howsthere.howsthere2.R;
 import it.howsthere.howsthere2.objects.Panorama;
-import it.howsthere.howsthere2.ui.timeline.TimelineAdapter;
-import it.howsthere.howsthere2.ui.timeline.TimelineItem;
 
 public class SunFragment extends Fragment {
     private Panorama p;
@@ -56,214 +33,56 @@ public class SunFragment extends Fragment {
     public SunFragment() { }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_sun, container, false);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View current = inflater.inflate(R.layout.fragment_sun, container, false);
+    public void onViewCreated(View current, Bundle savedInstanceState) {
+        super.onViewCreated(current, savedInstanceState);
+        current.findViewById(R.id.open_ar).setOnClickListener(v -> ArPanoramaFragment.open(this, false));
+        chart = current.findViewById(R.id.chart);
         ResultViewModel vm = new ViewModelProvider(requireActivity()).get(ResultViewModel.class);
 
         vm.getPanorama().observe(getViewLifecycleOwner(), data -> {
             // Usa il dato aggiornato
             p = data;
-            chart = current.findViewById(R.id.chart);
 
             if (p != null) {
-                renderChart();
-                renderValues(current);
-                renderYearValues(current);
+                new PanoramaChartController(chart, p, current.findViewById(R.id.peaks_count),
+                        p.sun_data, R.string.sole, R.color.sun_color, true).render();
+                if (current.findViewById(R.id.sunrise_time) != null) {
+                    renderValues(current);
+                    renderYearValues(current);
+                }
             } else {
                 requireActivity().finish();
             }
 
-            ImageButton saveSunrise = current.findViewById(R.id.sunriseMenu);
-            saveSunrise.setOnClickListener(v -> {
-                //showPopupMenu(v, "sunrise");
-                saveToCalendar("sunrise");
-            });
-
-            ImageButton saveSunset = current.findViewById(R.id.sunsetMenu);
-            saveSunset.setOnClickListener(v -> {
-                //showPopupMenu(v, "sunset");
-                saveToCalendar("sunset");
-            });
         });
 
-        // Inflate the layout for this fragment
-        return current;
+        View saveSunrise = current.findViewById(R.id.sunriseMenu);
+        if (saveSunrise != null) saveSunrise.setOnClickListener(v -> saveToCalendar(true));
+        View saveSunset = current.findViewById(R.id.sunsetMenu);
+        if (saveSunset != null) saveSunset.setOnClickListener(v -> saveToCalendar(false));
     }
 
-    private void showPopupMenu(View view, String what) {
-        ContextThemeWrapper ctw = new ContextThemeWrapper(requireActivity(), R.style.Widget_App_PopupMenu);
-        PopupMenu popupMenu = new PopupMenu(ctw, view, Gravity.CENTER);
-        popupMenu.inflate(R.menu.menu_calendar);
-        popupMenu.setForceShowIcon(true);
-
-        popupMenu.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.save_to_calendar) {
-                saveToCalendar(what); // Passa la zona come parametro
-                return true;
-            }
-            return false;
-        });
-
-        popupMenu.show();
+    @Override
+    public void onDestroyView() {
+        chart.setOnChartValueSelectedListener(null);
+        chart = null;
+        super.onDestroyView();
     }
 
-    private void saveToCalendar(String what) {
-        Intent intent = new Intent(Intent.ACTION_INSERT);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(p.date);
-
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        if(Objects.equals(what, "sunrise")) {
-            calendar.set(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day),
-                    p.getFirstSunrise().hour, p.getFirstSunrise().minutes);
-            intent.putExtra(CalendarContract.Events.TITLE, requireActivity().getString(R.string.sunrise_photo));
-        } else {
-            calendar.set(Integer.valueOf(year), Integer.valueOf(month), Integer.valueOf(day),
-                    p.getLastSunset().hour, p.getLastSunset().minutes);
-            intent.putExtra(CalendarContract.Events.TITLE, requireActivity().getString(R.string.sunset_photo));
-        }
-
-        long startmillis = calendar.getTimeInMillis();
-
-        intent.setDataAndType(CalendarContract.Events.CONTENT_URI, "vnd.android.cursor.item/event");
-        intent.putExtra(CalendarContract.Events.EVENT_LOCATION, p.lat + ", " + p.lon);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startmillis);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, startmillis + 60 * 60 * 1000);
-        startActivity(intent);
-    }
-
-    private void renderChart() {
-        List<Entry> peaksVals = new ArrayList<Entry>();
-        List<Entry> sunVals = new ArrayList<Entry>();
-
-        // Fill sun positions
-        //Arrays.sort(p.risultatiSole);
-        for (int i = 0; i < Constants.SUN_SAMPLE; i++) {
-            if (p.sun_data.get(i).minutes == 0) {
-                // ogni tanto la libreria per il calcolo della traiettoria sbaglia
-                // (bug noto che accade in posti lontani) in quel caso visto che l' errore
-                // non lo possiamo gestire piùttosto stampiamo i valori validi che ci arrivano anche se sono a caso
-                if (p.sun_data.get(i).height >= -20) {
-                    sunVals.add(new Entry((float) p.sun_data.get(i).azimuth, (float) p.sun_data.get(i).height));
-                } else {
-                    sunVals.add(new Entry((float) p.sun_data.get(i).azimuth, (float) -20));
-                }
-            }
-        }
-
-        // Create mountain line
-        for (int i = 0; i < 360; i++) {
-            peaksVals.add(new Entry((float) p.peaks_data[0][i], (float) p.peaks_data[2][i]));
-        }
-
-        LineDataSet datasetPeaks = new LineDataSet(peaksVals, requireActivity().getResources().getString(R.string.mountain));
-        LineDataSet datasetSun = new LineDataSet(sunVals, requireActivity().getResources().getString(R.string.sole));
-
-        // Chart properties
-        chart.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.md_theme_background));
-        chart.setDrawGridBackground(false);
-        chart.getAxisRight().setEnabled(false);
-        chart.getAxisLeft().setEnabled(false);
-        chart.getAxisLeft().setAxisMinimum(0);
-        chart.getAxisRight().setAxisMinimum(0);
-        chart.setPadding(0,0,0,0);
-        chart.setViewPortOffsets(0f, 0f, 0f, 0f);
-        chart.getXAxis().setDrawLabels(false);
-        chart.getXAxis().setDrawAxisLine(false);
-        chart.getAxisLeft().setDrawAxisLine(false);
-        chart.getXAxis().setDrawGridLines(false);
-        chart.setMaxVisibleValueCount(Integer.MAX_VALUE);//mostrami tutti i label
-        chart.setScaleEnabled(false);
-        chart.getDescription().setText("");
-        chart.setScaleEnabled(true);
-        chart.setScaleXEnabled(true); // Zoom sull'asse X
-        chart.setScaleYEnabled(true); // Zoom sull'asse Y
-        chart.setPinchZoom(true); // Usa due dita per zoomare contemporaneamente su X e Y
-        chart.setDoubleTapToZoomEnabled(false);
-
-        // Peaks line properties
-        datasetPeaks.setMode(LineDataSet.Mode.LINEAR);
-        datasetPeaks.setColor(ContextCompat.getColor(requireActivity(), R.color.md_theme_onBackground), 255);
-        datasetPeaks.setDrawValues(false);
-        datasetPeaks.setDrawCircles(false);
-        datasetPeaks.setDrawCircleHole(false);
-        datasetPeaks.setDrawValues(false);
-        datasetPeaks.setDrawFilled(true);
-        datasetPeaks.setLineWidth(1.5f);
-
-        Drawable drawable = ContextCompat.getDrawable(requireActivity(), R.drawable.fade_mountains);
-        datasetPeaks.setFillDrawable(drawable);
-        datasetPeaks.setDrawHighlightIndicators(true);
-        datasetPeaks.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getPointLabel(Entry entry) {
-                int azi = (int) entry.getX();
-
-                if(p.peaks_name.get(azi) != null) {
-                    return p.peaks_name.get(azi).getName();
-                }
-
-                return "";
-            }
-        });
-
-        // Sun line properties
-        datasetSun.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        datasetSun.setColor(ContextCompat.getColor(requireActivity(), R.color.sun_color), 255);
-        datasetSun.setLineWidth(3f);
-        datasetSun.setCircleRadius(4f);
-        datasetSun.setDrawValues(true);
-        datasetSun.setDrawCircles(true);
-        datasetSun.setCircleColor(ContextCompat.getColor(requireActivity(), R.color.sun_color));
-        datasetSun.setValueTextColor(ContextCompat.getColor(requireActivity(), R.color.md_theme_onBackground));
-        datasetSun.setCircleHoleColor(ContextCompat.getColor(requireActivity(), R.color.md_theme_background));
-        datasetSun.setDrawCircleHole(true);
-        datasetSun.setDrawFilled(false);
-        datasetSun.setDrawValues(true);
-        datasetSun.setDrawHighlightIndicators(true);
-        datasetSun.setValueTextSize(9f);
-        datasetSun.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getPointLabel(Entry entry) {
-                int index = sunVals.indexOf(entry);
-                return index + ":00";
-            }
-        });
-
-        LineData lineData = new LineData();
-        lineData.addDataSet(datasetPeaks);
-        lineData.addDataSet(datasetSun);
-
-        Legend l = chart.getLegend();
-        l.setFormSize(10f);
-        l.setTextSize(14f);
-        l.setTextColor(ContextCompat.getColor(requireActivity(), R.color.md_theme_onBackground));
-        l.setXEntrySpace(10f); // set the space between the legend entries on the x-axis
-        l.setYEntrySpace(6f); // set the space between the legend entries on the y-axis
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-
-        try {
-            chart.setData(lineData);
-            chart.animateX(1000);
-            chart.invalidate();
-        } catch (Exception e) {
-            System.out.println("Error in generating chart!");
-        }
+    private void saveToCalendar(boolean rising) {
+        if (p == null) return;
+        CalendarEvent.insert(requireContext(), p,
+                rising ? p.getFirstSunrise() : p.getLastSunset(),
+                rising ? R.string.sunrise_photo : R.string.sunset_photo);
     }
 
     private void renderValues(View view) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(p.date);
 
@@ -332,76 +151,42 @@ public class SunFragment extends Fragment {
         TextView goldenSetStart = view.findViewById(R.id.golden_set_start);
         TextView goldenSetEnd = view.findViewById(R.id.golden_set_end);
 
-        blueRiseStart.setText(Objects.requireNonNull(nightRise).format(formatter));
-        blueRiseEnd.setText(Objects.requireNonNull(blueRise).format(formatter));
-        goldenRiseStart.setText(Objects.requireNonNull(blueRise).format(formatter));
-        goldenRiseEnd.setText(Objects.requireNonNull(goldenRise).format(formatter));
+        blueRiseStart.setText(ResultFormatting.time(nightRise));
+        blueRiseEnd.setText(ResultFormatting.time(blueRise));
+        goldenRiseStart.setText(ResultFormatting.time(blueRise));
+        goldenRiseEnd.setText(ResultFormatting.time(goldenRise));
+        goldenSetStart.setText(ResultFormatting.time(goldenSet));
+        goldenSetEnd.setText(ResultFormatting.time(blueSet));
+        blueSetStart.setText(ResultFormatting.time(blueSet));
+        blueSetEnd.setText(ResultFormatting.time(nightSet));
 
-        goldenSetStart.setText(Objects.requireNonNull(goldenSet).format(formatter));
-        goldenSetEnd.setText(Objects.requireNonNull(blueSet).format(formatter));
-        blueSetStart.setText(Objects.requireNonNull(blueSet).format(formatter));
-        blueSetEnd.setText(Objects.requireNonNull(nightSet).format(formatter));
-
-        sunriseHorizonText.setText(Objects.requireNonNull(rise).format(formatter));
-        sunsetHorizonText.setText(Objects.requireNonNull(set).format(formatter));
+        sunriseHorizonText.setText(ResultFormatting.time(rise));
+        sunsetHorizonText.setText(ResultFormatting.time(set));
 
         if (p.getFirstSunrise() != null) {
             sunriseAzimutText.setText(new DecimalFormat("##.##").format(p.getFirstSunrise().azimuth));
-            sunriseText.setText(p.getFirstSunrise().hour + ":" +
-                    (p.getFirstSunrise().minutes < 10 ? "0" + p.getFirstSunrise().minutes : p.getFirstSunrise().minutes));
+            sunriseText.setText(ResultFormatting.time(p.getFirstSunrise()));
         } else {
             sunriseText.setText("--");
+            sunriseAzimutText.setText("--");
         }
 
         if (p.getLastSunset() != null) {
             sunsetAzimutText.setText(new DecimalFormat("##.##").format(p.getLastSunset().azimuth));
-            sunsetText.setText(p.getLastSunset().hour + ":" +
-                    (p.getLastSunset().minutes < 10 ? "0" + p.getLastSunset().minutes : p.getLastSunset().minutes));
+            sunsetText.setText(ResultFormatting.time(p.getLastSunset()));
         } else {
             sunsetText.setText("--");
+            sunsetAzimutText.setText("--");
         }
 
-        Duration duration = Duration.between(rise, set);
-        long hours = duration.toHours() % 24;
-        long minutes = duration.toMinutes() % 60;
-
-        sunTimeText.setText(hours + "h:" + ((minutes % 60) < 10 ? ("0" + (minutes % 60)) : minutes) + "min");
-        sunTimeWithPeaksText.setText(p.sun_minutes / 60 + "h:" + ((p.sun_minutes % 60) < 10 ? ("0" + (p.sun_minutes % 60)) : (p.sun_minutes % 60)) + "min");
-
-        // Render all the sunsire and sunset list
-        RecyclerView risesList = view.findViewById(R.id.timeline_rises);
-        RecyclerView setsList = view.findViewById(R.id.timeline_sets);
-        risesList.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        setsList.setLayoutManager(new LinearLayoutManager(requireActivity()));
-
-        if (p.sunrise.size() > 1) {
-            //risesList.setVisibility(View.VISIBLE);
-            List<TimelineItem> sunriseTimeline = new ArrayList<>();
-
-            for (int i = 0; i < p.sunrise.size(); i++) {
-                String sunTime = p.sunrise.get(i).hour + ":" + (p.sunrise.get(i).minutes < 10 ? "0" + p.sunrise.get(i).minutes : p.sunrise.get(i).minutes);
-                sunriseTimeline.add(new TimelineItem(sunTime));
-            }
-
-            TimelineAdapter adapter = new TimelineAdapter(sunriseTimeline);
-            risesList.setAdapter(adapter);
+        if (rise != null && set != null) {
+            sunTimeText.setText(ResultFormatting.duration(Duration.between(rise, set).toMinutes()));
+        } else {
+            sunTimeText.setText("--");
         }
+        sunTimeWithPeaksText.setText(ResultFormatting.duration(p.sun_minutes));
 
-        if (p.sunset.size() > 1) {
-            //setsList.setVisibility(View.VISIBLE);
-            List<TimelineItem> sunsetTimeline = new ArrayList<>();
-
-            for (int i = 0; i < p.sunset.size(); i++) {
-                String sunTime = p.sunset.get(i).hour + ":" + (p.sunset.get(i).minutes < 10 ? "0" + p.sunset.get(i).minutes : p.sunset.get(i).minutes);
-                sunsetTimeline.add(new TimelineItem(sunTime));
-            }
-
-            // Configura l'adapter
-            TimelineAdapter adapter = new TimelineAdapter(sunsetTimeline);
-            setsList.setAdapter(adapter);
-        }
-
-        if (p.getFirstSunrise() != null && p.getLastSunset() != null) {
+        if (p.getFirstSunrise() != null && p.getLastSunset() != null && rise != null && set != null) {
             labels.setVisibility(View.VISIBLE);
             frameTime.setVisibility(View.VISIBLE);
             noPeak.setVisibility(View.VISIBLE);
@@ -466,17 +251,13 @@ public class SunFragment extends Fragment {
             setWeight(dayHorizonPadding, dayHourWeight);
             setWeight(eveningHorizonPadding, nightWeight - 0.1f);
 
-            sunrisePeakLabel.setText(p.getFirstSunrise().hour + ":" +
-                    (p.getFirstSunrise().minutes < 10 ? "0" + p.getFirstSunrise().minutes : p.getFirstSunrise().minutes));
+            sunrisePeakLabel.setText(ResultFormatting.time(p.getFirstSunrise()));
 
-            sunsetPeakLabel.setText(p.getLastSunset().hour + ":" +
-                    (p.getLastSunset().minutes < 10 ? "0" + p.getLastSunset().minutes : p.getLastSunset().minutes));
+            sunsetPeakLabel.setText(ResultFormatting.time(p.getLastSunset()));
 
-            sunriseLabel.setText(rise.getHour() + ":" +
-                    (rise.getMinute() < 10 ? "0" + rise.getMinute() : rise.getMinute()));
+            sunriseLabel.setText(ResultFormatting.time(rise));
 
-            sunsetLabel.setText(set.getHour() + ":" +
-                    (set.getMinute() < 10 ? "0" + set.getMinute() : set.getMinute()));
+            sunsetLabel.setText(ResultFormatting.time(set));
         } else {
             labels.setVisibility(View.GONE);
             frameTime.setVisibility(View.GONE);
@@ -504,16 +285,16 @@ public class SunFragment extends Fragment {
             shortestHorizon.setText(sdf.format(p.shortest_day));
             longestHorizon.setText(sdf.format(p.longest_day));
 
-            shortestHorizonTime.setText(p.shortest_minutes / 60 + "h:" + ((p.shortest_minutes % 60) < 10 ? ("0" + (p.shortest_minutes % 60)) : (p.shortest_minutes % 60)) + "min");
-            longestHorizonTime.setText(p.longest_minutes / 60 + "h:" + ((p.longest_minutes % 60) < 10 ? ("0" + (p.longest_minutes % 60)) : (p.longest_minutes % 60)) + "min");
+            shortestHorizonTime.setText(ResultFormatting.duration(p.shortest_minutes));
+            longestHorizonTime.setText(ResultFormatting.duration(p.longest_minutes));
         }
 
         if(p.shortest_peak != null && p.longest_peak != null) {
             shortestPeak.setText(sdf.format(p.shortest_peak));
             longestPeak.setText(sdf.format(p.longest_peak));
 
-            shortestPeakTime.setText(p.shortest_peak_minutes / 60 + "h:" + ((p.shortest_peak_minutes % 60) < 10 ? ("0" + (p.shortest_peak_minutes % 60)) : (p.shortest_peak_minutes % 60)) + "min");
-            longestPeakTime.setText(p.longest_peak_minutes / 60 + "h:" + ((p.longest_peak_minutes % 60) < 10 ? ("0" + (p.longest_peak_minutes % 60)) : (p.longest_peak_minutes % 60)) + "min");
+            shortestPeakTime.setText(ResultFormatting.duration(p.shortest_peak_minutes));
+            longestPeakTime.setText(ResultFormatting.duration(p.longest_peak_minutes));
         }
 
         if(p.processedYearData) {
@@ -526,8 +307,11 @@ public class SunFragment extends Fragment {
     }
 
     private void setWeight(View view, float weight) {
+        if (view == null) return;
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
-        params.weight = weight;
-        view.setLayoutParams(params);
+        if (params != null) {
+            params.weight = Math.max(0f, weight);
+            view.setLayoutParams(params);
+        }
     }
 }

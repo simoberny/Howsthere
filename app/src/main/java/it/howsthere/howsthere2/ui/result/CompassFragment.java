@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -30,7 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import it.howsthere.howsthere2.objects.Panorama;
 
 public class CompassFragment extends Fragment implements OnMapReadyCallback, SensorEventListener {
-    Panorama p = null;
+    private Panorama p;
     private SensorManager sensorManager;
 
     private MapView mapView;
@@ -39,24 +38,18 @@ public class CompassFragment extends Fragment implements OnMapReadyCallback, Sen
     private ImageView sunriseImage;
     private ImageView sunsetImage;
 
-    TextView sunriseAzimut;
-    TextView sunsetAzimut;
+    private TextView sunriseAzimut;
+    private TextView sunsetAzimut;
 
-    float currentDegree = 0f;
+    private float currentDegree = 0f;
 
     public CompassFragment() { }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View current = inflater.inflate(R.layout.fragment_compass, container, false);
-        ResultViewModel vm = new ViewModelProvider(requireActivity()).get(ResultViewModel.class);
 
         mapView = current.findViewById(R.id.map_bussola);
         nordImage = current.findViewById(R.id.compass_nord);
@@ -69,39 +62,59 @@ public class CompassFragment extends Fragment implements OnMapReadyCallback, Sen
 
         sensorManager = (SensorManager) requireActivity().getSystemService(SENSOR_SERVICE);
 
-        vm.getPanorama().observe(getViewLifecycleOwner(), data -> {
-            p = data;
-
-            RelativeLayout noRise = current.findViewById(R.id.no_rise);
-            sunriseAzimut = current.findViewById(R.id.sunrise_azimut);
-            sunsetAzimut = current.findViewById(R.id.sunset_azimut);
-
-            if (p != null) {
-                if(!p.sunrise.isEmpty() && !p.sunset.isEmpty()) {
-                    noRise.setVisibility(View.GONE);
-                } else {
-                    noRise.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
         return current;
     }
 
     @Override
+    public void onViewCreated(View current, Bundle savedInstanceState) {
+        super.onViewCreated(current, savedInstanceState);
+        sunriseAzimut = current.findViewById(R.id.sunrise_azimut);
+        sunsetAzimut = current.findViewById(R.id.sunset_azimut);
+        View noRise = current.findViewById(R.id.no_rise);
+        new ViewModelProvider(requireActivity()).get(ResultViewModel.class)
+                .getPanorama().observe(getViewLifecycleOwner(), data -> {
+                    p = data;
+                    boolean hasEvents = p != null && p.getFirstSunrise() != null
+                            && p.getLastSunset() != null;
+                    noRise.setVisibility(hasEvents ? View.GONE : View.VISIBLE);
+                    centerMap();
+                });
+    }
+
+    private void centerMap() {
+        if (googleMap == null || p == null) return;
+        LatLng position = new LatLng(p.lat, p.lon);
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(
+                new CameraPosition(position, 12, 0, 0)));
+    }
+
+    @Override
     public void onMapReady(GoogleMap map) {
+        if (mapView == null) return;
         googleMap = map;
         googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-        // Imposta la mappa per seguire sempre il nord (modalità non tiltata)
-        googleMap.getUiSettings().setTiltGesturesEnabled(false);
-
-        LatLng pos = new LatLng(p.lat, p.lon);
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(pos, 12, 0,0)));
-        map.getUiSettings().setRotateGesturesEnabled(false);
-        map.getUiSettings().setTiltGesturesEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
         map.getUiSettings().setCompassEnabled(true);
+        centerMap();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        mapView.onStop();
+        super.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        if (mapView != null) mapView.onSaveInstanceState(state);
     }
 
     @Override
@@ -125,11 +138,7 @@ public class CompassFragment extends Fragment implements OnMapReadyCallback, Sen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (p != null) {
-            if (p.sunrise.isEmpty() && p.sunset.isEmpty()) {
-                return;
-            }
-        }
+        if (p == null || p.getFirstSunrise() == null || p.getLastSunset() == null) return;
 
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR && googleMap != null) {
             // Ottieni la matrice di rotazione dal sensore
@@ -152,66 +161,49 @@ public class CompassFragment extends Fragment implements OnMapReadyCallback, Sen
                     .build();
             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-            RotateAnimation nordAni = new RotateAnimation(
-                    currentDegree,
-                    -azimuth,
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF,
-                    0.5f);
-            nordAni.setDuration(50);
-            nordAni.setFillAfter(true);
-            nordImage.startAnimation(nordAni);
-
-            if ((currentDegree + p.getFirstSunrise().azimuth) < 4 && (currentDegree + p.getFirstSunrise().azimuth) > -4) {
-                sunriseAzimut.setText(getResources().getString(R.string.aligned));
-            } else {
-                sunriseAzimut.setText((int) Math.round(p.getFirstSunrise().azimuth) + "° N ");
-            }
-
-            if ((currentDegree + p.getLastSunset().azimuth) < 4 && (currentDegree + p.getLastSunset().azimuth) > -4) {
-                sunsetAzimut.setText(getResources().getString(R.string.aligned));
-            } else {
-                sunsetAzimut.setText((int) Math.round(p.getLastSunset().azimuth) + "° N ");
-            }
-
-            RotateAnimation sunriseAni = new RotateAnimation(
-                    (float) (currentDegree + p.getFirstSunrise().azimuth),
-                    (float) (-azimuth + p.getFirstSunrise().azimuth),
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF,
-                    0.5f);
-            sunriseAni.setDuration(50);
-            sunriseAni.setFillAfter(true);
-            sunriseImage.startAnimation(sunriseAni);
-
-            RotateAnimation sunsetAni = new RotateAnimation(
-                    (float) (currentDegree + p.getLastSunset().azimuth),
-                    (float) (-azimuth + p.getLastSunset().azimuth),
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF,
-                    0.5f);
-            sunsetAni.setDuration(50);
-            sunsetAni.setFillAfter(true);
-            sunsetImage.startAnimation(sunsetAni);
+            rotate(nordImage, currentDegree, -azimuth);
+            updateEvent(sunriseImage, sunriseAzimut, p.getFirstSunrise().azimuth, azimuth);
+            updateEvent(sunsetImage, sunsetAzimut, p.getLastSunset().azimuth, azimuth);
 
             currentDegree = -azimuth;
         }
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    private void updateEvent(ImageView image, TextView label, double eventAzimuth, float azimuth) {
+        double difference = (eventAzimuth - azimuth + 540) % 360 - 180;
+        label.setText(Math.abs(difference) < 4 ? getString(R.string.aligned)
+                : Math.round(eventAzimuth) + "° N");
+        rotate(image, (float) (currentDegree + eventAzimuth), (float) (eventAzimuth - azimuth));
+    }
 
+    private void rotate(ImageView image, float from, float to) {
+        RotateAnimation animation = new RotateAnimation(from, to,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animation.setDuration(50);
+        animation.setFillAfter(true);
+        image.startAnimation(animation);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onAccuracyChanged(Sensor sensor, int accuracy) { }
+
+    @Override
+    public void onDestroyView() {
+        sensorManager.unregisterListener(this);
         mapView.onDestroy();
+        mapView = null;
+        googleMap = null;
+        nordImage = null;
+        sunriseImage = null;
+        sunsetImage = null;
+        sunriseAzimut = null;
+        sunsetAzimut = null;
+        super.onDestroyView();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
+        if (mapView != null) mapView.onLowMemory();
     }
 }

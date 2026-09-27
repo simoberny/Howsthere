@@ -18,9 +18,10 @@
             android:orientation="horizontal"
             android:layout_marginVertical="20dp">
 
-            <ProgressBar
+            <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyle"
+                style="@style/Widget.Material3Expressive.CircularProgressIndicator.Wavy"
+                android:indeterminate="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -41,12 +42,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:backgroundTint="@color/md_theme_error"
+            app:backgroundTint="?attr/colorError"
+            android:textColor="?attr/colorOnError"
             android:text="@string/retry"
             android:drawablePadding="15dp"
             android:visibility="invisible"
-            app:drawableStartCompat="@drawable/baseline_replay_24"
-            app:drawableTint="@color/md_theme_onError"
+            app:icon="@drawable/baseline_replay_24"
+            app:iconTint="?attr/colorOnError"
             app:drawableTintMode="src_in" />
     </LinearLayout>
 

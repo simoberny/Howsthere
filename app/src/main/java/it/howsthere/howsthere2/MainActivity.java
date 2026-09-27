@@ -3,7 +3,6 @@ package it.howsthere.howsthere2;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -20,13 +19,12 @@ import it.howsthere.howsthere2.objects.PanoramaStorage;
 import it.howsthere.howsthere2.objects.Utils;
 
 public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Load saved storage
@@ -39,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Manage opened link to application
         Intent intent = getIntent();
-        String action = intent.getAction();
         Uri data = intent.getData();
 
         if (data != null) {
@@ -50,12 +47,19 @@ public class MainActivity extends AppCompatActivity {
                 String date = data.getQueryParameter("date");
                 String lat_query = data.getQueryParameter("lat");
                 String lon_query = data.getQueryParameter("lon");
-                String city = Utils.getCity(this, Double.parseDouble(lat_query), Double.parseDouble(lon_query));
 
-                long date_query = Long.parseLong(date);
-                Hwt hwt_data = new Hwt(this);
-                hwt_data.initializePanorama(new LatLng(Double.parseDouble(lat_query), Double.parseDouble(lon_query)), city, new Date(date_query));
-                hwt_data.requestData();
+                if (date != null && lat_query != null && lon_query != null) {
+                    try {
+                        double lat = Double.parseDouble(lat_query);
+                        double lon = Double.parseDouble(lon_query);
+                        long date_query = Long.parseLong(date);
+                        String city = Utils.getCity(this, lat, lon);
+
+                        Hwt hwt_data = new Hwt(this);
+                        hwt_data.initializePanorama(new LatLng(lat, lon), city, new Date(date_query));
+                        hwt_data.requestData();
+                    } catch (NumberFormatException ignored) {}
+                }
             }
         }
     }

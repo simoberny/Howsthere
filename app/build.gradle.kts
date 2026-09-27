@@ -18,9 +18,9 @@ android {
     defaultConfig {
         applicationId = "it.howsthere.howsthere2"
         minSdk = 30
-        targetSdk = 37
-        versionCode = 8
-        versionName = "2.2.0"
+        targetSdk = 36
+        versionCode = 9
+        versionName = "3.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -70,6 +70,11 @@ secrets {
 }
 
 dependencies {
+    // CameraX 1.4 targets the existing compileSdk 35.
+    val cameraVersion = "1.4.2"
+    implementation("androidx.camera:camera-camera2:$cameraVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraVersion")
+    implementation("androidx.camera:camera-view:$cameraVersion")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
     implementation("com.google.android.libraries.places:places:4.1.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")

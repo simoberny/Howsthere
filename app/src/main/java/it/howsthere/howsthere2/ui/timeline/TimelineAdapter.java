@@ -12,12 +12,15 @@ import it.howsthere.howsthere2.R;
 
 import java.util.List;
 
+import it.howsthere.howsthere2.objects.Position;
+import it.howsthere.howsthere2.ui.result.ResultFormatting;
+
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHolder> {
 
-    private List<TimelineItem> timelineItems;
+    private final List<Position> positions;
 
-    public TimelineAdapter(List<TimelineItem> timelineItems) {
-        this.timelineItems = timelineItems;
+    public TimelineAdapter(List<Position> positions) {
+        this.positions = positions;
     }
 
     @NonNull
@@ -30,13 +33,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        TimelineItem item = timelineItems.get(position);
-        holder.timeTextView.setText(item.getTime());
+        holder.timeTextView.setText(ResultFormatting.time(positions.get(position)));
     }
 
     @Override
     public int getItemCount() {
-        return timelineItems.size();
+        return positions.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

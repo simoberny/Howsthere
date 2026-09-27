@@ -2,7 +2,7 @@ package it.howsthere.howsthere2.objects;
 
 import java.io.Serializable;
 
-public class Position implements Comparable, Serializable {
+public class Position implements Comparable<Position>, Serializable {
     public int hour;
     public int minutes;
     public double height;
@@ -16,12 +16,8 @@ public class Position implements Comparable, Serializable {
         azimuth = azimuth_;
     }
 
-    public int compareTo(Object in_) {
-        if(in_ == null) System.out.println("Missing sun and moon data");;
-        if(!(in_ instanceof Position)) throw new ClassCastException();
-
-        Position instance_ = (Position) in_;
-
-        return Double.compare(azimuth, instance_.azimuth);
+    @Override
+    public int compareTo(Position other) {
+        return Double.compare(azimuth, other.azimuth);
     }
 }

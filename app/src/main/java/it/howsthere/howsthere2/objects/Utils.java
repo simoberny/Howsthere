@@ -3,41 +3,36 @@ package it.howsthere.howsthere2.objects;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
+import android.util.Log;
 import android.widget.Toast;
-
-import it.howsthere.howsthere2.R;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class Utils {
-    public static String getCity(Context context, Double latitude, Double longitude) {
-        Geocoder gcd = new Geocoder(context, Locale.getDefault());
-        List<Address> addresses = null;
-        String city = null;
+import it.howsthere.howsthere2.R;
 
+public final class Utils {
+    private Utils() { }
+
+    public static String getCity(Context context, double latitude, double longitude) {
         try {
-            addresses = gcd.getFromLocation(latitude, longitude, 1);
+            List<Address> addresses = new Geocoder(context, Locale.getDefault())
+                    .getFromLocation(latitude, longitude, 1);
             if (addresses != null && !addresses.isEmpty()) {
-                for (Address adr : addresses) {
-                    if (adr.getLocality() != null && !adr.getLocality().isEmpty()) {
-                        city = adr.getLocality() + ", " + adr.getCountryName();
-                    }else{
-                        city = adr.getAdminArea() + ", " + adr.getCountryName();
-                    }
+                Address address = addresses.get(0);
+                String locality = address.getLocality();
+                if (locality == null || locality.isEmpty()) locality = address.getAdminArea();
+                String country = address.getCountryName();
+                if (locality != null && !locality.isEmpty()) {
+                    return country == null || country.isEmpty() ? locality : locality + ", " + country;
                 }
+                if (country != null && !country.isEmpty()) return country;
             }
-
-            if(city == null)
-                city = context.getResources().getString(R.string.unavailable);
-        } catch (IOException e) {
-            System.out.println("Cannot obtain city information: " + e.getMessage());
-            Toast toast = Toast.makeText(context,
-                    context.getResources().getString(R.string.nocity), Toast.LENGTH_SHORT);
-            toast.show();
+        } catch (IOException error) {
+            Log.w("Utils", "Cannot obtain city information", error);
+            Toast.makeText(context, R.string.nocity, Toast.LENGTH_SHORT).show();
         }
-
-        return city;
+        return context.getString(R.string.unavailable);
     }
 }

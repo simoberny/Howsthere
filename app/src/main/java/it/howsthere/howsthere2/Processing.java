@@ -1,13 +1,5 @@
 package it.howsthere.howsthere2;
 
-import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.TextView;
-
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
-
 import org.shredzone.commons.suncalc.MoonIllumination;
 import org.shredzone.commons.suncalc.MoonPhase;
 import org.shredzone.commons.suncalc.MoonPosition;
@@ -22,6 +14,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -31,43 +24,33 @@ import it.howsthere.howsthere2.objects.PanoramaStorage;
 import it.howsthere.howsthere2.objects.Peak;
 import it.howsthere.howsthere2.objects.Position;
 import it.howsthere.howsthere2.objects.TimezoneMapper;
-import it.howsthere.howsthere2.ui.result.ResultViewModel;
 
-public class Processing  {
-    private Context context;
-    private String peak = "";
-    private String namePeak = "";
-    private Panorama panorama;
-    private ResultViewModel vm;
+public class Processing {
+    private final String peak;
+    private final String namePeak;
+    private final Panorama panorama;
 
-    public Processing(Panorama pan_) {
-        panorama = pan_;
+    public Processing(Panorama panorama) {
+        this("", "", panorama);
     }
 
-    public Processing(Context context_, String peak_, String namePeak_, Panorama pan_){
-        peak = peak_;
-        namePeak = namePeak_;
-        panorama = pan_;
-
-        context = context_;
-
-        vm = new ViewModelProvider((ViewModelStoreOwner) context_).get(ResultViewModel.class);
+    public Processing(String peak, String namePeak, Panorama panorama) {
+        this.peak = peak;
+        this.namePeak = namePeak;
+        this.panorama = panorama;
     }
 
     public void execute() {
         panorama.tz = TimezoneMapper.latLngToTimezoneString(panorama.lat, panorama.lon);
 
-        List<String> lines = Arrays.asList(peak.split("[\\r\\n]+"));
-        for(int a = 1; a < lines.size(); a++) {
-            List<String> tempSplit = Arrays.asList(lines.get(a).split(","));
-
-            for (int i = 0; i < 7; i++) {
-                panorama.peaks_data[i][a-1] = Double.parseDouble(tempSplit.get(i));
-            }
-        }
+        panorama.peaks_data = HorizonData.parseProfile(peak);
+        clearPanorama();
+        panorama.peaks_name = new ArrayList<>(Collections.nCopies(360, null));
 
         generateSunData();
         generateMoonData();
+
+        parsePeakNames();
 
         PanoramaStorage.getInstance().addPanorama(panorama);
     }
@@ -79,12 +62,14 @@ public class Processing  {
         generateSunData();
         generateMoonData();
 
-        parsingPeakName();
+        if (namePeak != null && !namePeak.trim().isEmpty()) {
+            parsePeakNames();
+        }
 
         return panorama;
     }
 
-    // Calculate Sun trajectory position every 5 minutes
+    // Calculate Sun trajectory at the configured minute resolution.
     private void generateSunData() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(panorama.date);
@@ -180,35 +165,48 @@ public class Processing  {
     }
 
     // Parsing peak's name
-    private void parsingPeakName() {
+    private void parsePeakNames() {
+        if (namePeak == null || namePeak.trim().isEmpty()) {
+            return;
+        }
+
+        if (panorama.peaks_name == null) {
+            panorama.peaks_name = new ArrayList<>(Collections.nCopies(360, null));
+        }
+
         List<String> namesList = Arrays.asList(namePeak.split("[\\r\\n]+"));
 
         for(int a = 0; a < namesList.size(); a++){
-            List<String> tempsplit = Arrays.asList(namesList.get(a).split(" "));
+            String line = namesList.get(a).trim();
+            if (line.isEmpty()) continue;
+
+            List<String> tempsplit = Arrays.asList(line.split("\\s+"));
 
             if(tempsplit.size() >= 5){
-                List<String> sublist = tempsplit.subList(4, tempsplit.size());
+                try {
+                    double aziDouble = Double.parseDouble(tempsplit.get(0));
+                    double height = Double.parseDouble(tempsplit.get(1));
+                    if (!Double.isFinite(aziDouble) || !Double.isFinite(height)) continue;
+                    int azi = ((int) Math.round(aziDouble)) % 360;
+                    if (azi < 0) azi += 360;
 
-                StringBuilder b = new StringBuilder();
-                for(int j = 0; j < sublist.size(); j++){
-                    b.append(String.valueOf(sublist.get(j)));
-                    b.append(" ");
+                    List<String> sublist = tempsplit.subList(4, tempsplit.size());
+                    String name = String.join(" ", sublist).trim();
+
+                    Peak temp = new Peak(name, aziDouble, height);
+
+                    if (azi < panorama.peaks_name.size()) {
+                        panorama.peaks_name.set(azi, temp);
+                    }
+                } catch (NumberFormatException ignored) {
+                    // Line does not contain valid numeric coordinates (e.g. header or invalid format)
                 }
-
-                int azi = Integer.parseInt(tempsplit.get(0));
-                Peak temp = new Peak(b.toString(),
-                        Double.parseDouble(tempsplit.get(0)),
-                        Double.parseDouble(tempsplit.get(1)));
-
-                System.out.println("PEAKSS: " + temp);
-
-                panorama.peaks_name.set(azi, temp);
             }
         }
     }
 
     private int getRealDayLength(Calendar day) {
-        List<Position> day_temp = new ArrayList<Position>(Constants.SUN_SAMPLE);
+        List<Position> day_temp = new ArrayList<>(Constants.SUN_SAMPLE);
         Calendar hourIter = (Calendar) day.clone();
 
         for (int hour = 0; hour < 24; hour++) {
@@ -232,10 +230,10 @@ public class Processing  {
 
         int sun_minutes = 0;
 
-        for(int i = 0; i < Constants.SUN_SAMPLE; i++) {
-            isAbove = abovePeaks(sun, i);
+        for(int i = 0; i < sun.size(); i++) {
+            isAbove = HorizonData.isAbove(panorama.peaks_data, sun.get(i));
 
-            if(isAbove) sun_minutes += 1;
+            if(isAbove) sun_minutes += Constants.RESOLUTION;
 
             // Sunrise
             if(sunrise_list != null && !prevSun && isAbove){
@@ -255,15 +253,13 @@ public class Processing  {
 
     // Calculate Moon trajectory position every 5 minutes
     private void generateMoonData() {
-        int indexMoon = 0;
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(panorama.date);
         calendar.add(Calendar.DATE, -1);
 
         for(int day = 0; day < 3; day++) {
             for (int hour = 0; hour < 24; hour++) {
-                for (int min = 0; min < 60; min += 5) {
+                for (int min = 0; min < 60; min += Constants.MOON_RESOLUTION) {
                     calendar.set(Calendar.HOUR_OF_DAY, hour);
                     calendar.set(Calendar.MINUTE, min);
 
@@ -274,8 +270,6 @@ public class Processing  {
                             .execute(); //get the results
 
                     panorama.moon_data.add(new Position(hour, min, position.getAltitude(), position.getAzimuth()));
-
-                    indexMoon++;
                 }
             }
 
@@ -291,7 +285,7 @@ public class Processing  {
         panorama.moon_phase = mIll.getPhase();
 
         LocalDate iterDate = panorama.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        int year = Year.now().getValue();
+        int baseYear = iterDate.getYear();
 
         while (true) {
             MoonPhase moonPhase = parameters
@@ -300,8 +294,8 @@ public class Processing  {
             ZonedDateTime nextFullMoon = moonPhase
                     .getTime();
 
-            if (nextFullMoon.getYear() > year) {
-                break;      // we've reached the next year
+            if (nextFullMoon.getYear() > baseYear + 1) {
+                break;      // search up to the next year
             }
 
             if(panorama.next_fullmoon == null)
@@ -320,14 +314,14 @@ public class Processing  {
         boolean isMoonAbove = false;
         panorama.moon_minutes = 0;
 
-        for(int i = 287; i < 576; i++) {
+        for(int i = Constants.MOON_SAMPLES_PER_DAY - 1; i < 2 * Constants.MOON_SAMPLES_PER_DAY; i++) {
             // Cerco alba anche nei 5 minuti prima di mezzanotte per non escludere un alba esattamente a mezzanotte
-            isMoonAbove = abovePeaksMoon(i);
+            isMoonAbove = HorizonData.isAbove(panorama.peaks_data, panorama.moon_data.get(i));
 
-            if (isMoonAbove) panorama.moon_minutes += 5;
+            if (isMoonAbove) panorama.moon_minutes += Constants.MOON_RESOLUTION;
 
             //alba (non calcolata se è già sorta dal giorno prima)
-            if((!prevMoon && isMoonAbove) && i > 287)
+            if((!prevMoon && isMoonAbove) && i >= Constants.MOON_SAMPLES_PER_DAY)
                 panorama.moon_sunsire.add(panorama.moon_data.get(i));
 
             //tramonto
@@ -338,82 +332,9 @@ public class Processing  {
         }
     }
 
-    /**
-     *
-     * @param i posizione i-esima del sole
-     * @return se il sole è sopra o sotto il profilo
-     *
-     * Per la posizione i-esima del sole allineo con l' azimuth rispetto alle montagne e confronto l' altezza.
-     * nota: ci sono 2 casi limite, uno è che il sole / luna abbia l' azimuth iniziale più basso di tutti i punti
-     * del profilo montagne e l' altro è che lo abbia maggiore di tutte le montagne.
-     *
-     */
-    private boolean abovePeaks(List<Position> sun, int i){
-        int j = findClosestAzimuthIndex(sun.get(i).azimuth);
-
-        if(j == 359) {
-            // Azimuth maggiore di tutti i dati delle montagne quindi confronto con l' ultimo e il primo
-            if (sun.get(i).height >
-                    ((panorama.peaks_data[2][259] + panorama.peaks_data[2][0]) / 2)) {
-                return true;
-            }
-        }else{
-            // Azimuth intermedio
-            if (sun.get(i).height >
-                    ((panorama.peaks_data[2][j] + panorama.peaks_data[2][j+1]) / 2)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean abovePeaksMoon(int i){
-        int j = 0;
-
-        // Allineamento Luna montagne
-        for(int c = 0; c < 360 &&
-                !(panorama.peaks_data[0][c] >= panorama.moon_data.get(i).azimuth); c++){
-            j = c;
-        }
-
-        if(j==359){
-            // Azimuth maggiore di tutti i dati delle montagne quindi confronto con l' ultimo e il primo
-            if (panorama.moon_data.get(i).height >
-                    ((panorama.peaks_data[2][259] + panorama.peaks_data[2][0]) / 2)) {
-                return true;
-            }
-        }else{
-            // Azimuth intermedio
-            if (panorama.moon_data.get(i).height >
-                    ((panorama.peaks_data[2][j] + panorama.peaks_data[2][j+1]) / 2)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private int findClosestAzimuthIndex(double azimuth) {
-        // Usa ricerca binaria per trovare l'indice
-        int left = 0, right = panorama.peaks_data[0].length - 1;
-        while (left <= right) {
-            int mid = (left + right) / 2;
-            if (panorama.peaks_data[0][mid] < azimuth) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-        return Math.max(0, left - 1);
-    }
-
-    public Panorama getPanorama() {
-        return panorama;
-    }
-
     private void clearPanorama() {
         panorama.sun_data.clear();
+        panorama.moon_data.clear();
 
         panorama.sunrise.clear();
         panorama.sunset.clear();
@@ -421,6 +342,8 @@ public class Processing  {
         panorama.moon_sunset.clear();
         panorama.moon_sunsire.clear();
 
+        panorama.next_fullmoon = null;
+        panorama.next_supermoon = null;
         panorama.sun_minutes = 0;
         panorama.moon_minutes = 0;
     }

@@ -1,10 +1,15 @@
 package it.howsthere.howsthere2;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
+import it.howsthere.howsthere2.ui.AppDatePicker;
+import android.content.res.Configuration;
+import android.view.View;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +27,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import it.howsthere.howsthere2.objects.Panorama;
 import it.howsthere.howsthere2.objects.PanoramaStorage;
@@ -31,7 +34,6 @@ import it.howsthere.howsthere2.ui.result.ResultViewModel;
 
 public class Result extends AppCompatActivity {
     private Panorama pan = null;
-    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,13 @@ public class Result extends AppCompatActivity {
 
         ResultViewModel vm = new ViewModelProvider(this).get(ResultViewModel.class);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        View root = findViewById(R.id.result_root);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
+            Insets safe = insets.getInsets(WindowInsetsCompat.Type.systemBars()
+                    | WindowInsetsCompat.Type.displayCutout());
+            view.setPadding(safe.left, safe.top, safe.right, safe.bottom);
+            return insets;
+        });
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         TextView textDate = findViewById(R.id.item_date);
@@ -64,7 +73,7 @@ public class Result extends AppCompatActivity {
 
         // Gestisci il click sull'icona del menu
         toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.action_share) {
+            if (item.getItemId() == R.id.action_share && pan != null) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
 
@@ -80,52 +89,48 @@ public class Result extends AppCompatActivity {
             return false;
         });
 
+        AppDatePicker.register(getSupportFragmentManager(), this, "result-date", selected -> {
+            if (pan == null) return;
+            pan = new Processing(pan).update(selected);
+            textDate.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format(selected));
+            vm.setPanorama(pan);
+        });
         changeDateBtn.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
-            c.setTime(pan.date);
-
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    Result.this,
-                    new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year_,
-                                              int monthOfYear_, int dayOfMonth_) {
-                            Calendar selected = Calendar.getInstance();
-                            selected.set(Calendar.YEAR, year_);
-                            selected.set(Calendar.MONTH, monthOfYear_);
-                            selected.set(Calendar.DAY_OF_MONTH, dayOfMonth_);
-
-                            String currentDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(selected.getTime());
-                            textDate.setText(currentDate);
-
-                            pan.date = Date.from(selected.toInstant());
-
-                            Processing updateProcess = new Processing(pan);
-                            pan = updateProcess.update(pan.date);
-
-                            vm.setPanorama(pan);
-                        }
-                    },
-                    year, month, day);
-            datePickerDialog.show();
+            if (pan != null) AppDatePicker.show(getSupportFragmentManager(), "result-date", pan.date);
         });
 
         BottomNavigationView navigation = findViewById(R.id.result_nav);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_activity_result);
         NavigationUI.setupWithNavController(navigation, navController);
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            boolean immersiveChart = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
+                    && (destination.getId() == R.id.navigation_sun || destination.getId() == R.id.navigation_moon);
+            int visibility = immersiveChart ? View.GONE : View.VISIBLE;
+            toolbar.setVisibility(visibility);
+            findViewById(R.id.relativeLayout).setVisibility(visibility);
+            navigation.setVisibility(visibility);
+            WindowInsetsControllerCompat bars = WindowCompat.getInsetsController(getWindow(), root);
+            bars.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            if (immersiveChart) bars.hide(WindowInsetsCompat.Type.systemBars());
+            else bars.show(WindowInsetsCompat.Type.systemBars());
+            ViewCompat.requestApplyInsets(root);
+        });
 
         // Get ID from intent and change UI
         Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-
-        id = (String) extras.get("id");
+        String id = intent.getStringExtra("id");
+        if (id == null) {
+            finish();
+            return;
+        }
 
         if(id != null) {
-            pan = PanoramaStorage.getInstance().getPanoramaByID(id);
+            pan = vm.getPanorama().getValue();
+            if (pan == null) pan = PanoramaStorage.getInstance().getPanoramaByID(id);
+            if (pan == null) {
+                finish();
+                return;
+            }
             vm.setPanorama(pan);
 
             textDate.setText(sdf.format(pan.date));
@@ -137,15 +142,7 @@ public class Result extends AppCompatActivity {
                     .placeholder(R.drawable.noimage)
                     .into(previewImage);
 
-            if(!pan.processedYearData) {
-                new Thread(() -> {
-                    Processing followUp = new Processing(pan);
-                    followUp.generateYearData();
-
-                    vm.postPanorama(followUp.getPanorama());
-                    PanoramaStorage.getInstance().addPanorama(pan);
-                }).start();
-            }
+            vm.ensureYearData(pan);
         }
     }
 }

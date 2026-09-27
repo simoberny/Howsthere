@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:orientation="vertical">
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Howsthere.Card.Summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:accessibilityHeading="true"
+                android:layout_marginBottom="16dp"
+                android:text="@string/shorter_day"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/loading_shorter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:indeterminate="true" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/horizon"
+                        android:textAppearance="?attr/textAppearanceTitleSmall" />
+                    <TextView
+                        android:id="@+id/shortest_horizon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="—"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/shortest_horizon_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="—"
+                    android:textColor="?attr/colorPrimary"
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+            </LinearLayout>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/with_peaks"
+                        android:textAppearance="?attr/textAppearanceTitleSmall" />
+                    <TextView
+                        android:id="@+id/shortest_peak"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="—"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/shortest_peak_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="—"
+                    android:textColor="?attr/colorPrimary"
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Howsthere.Card.Summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:accessibilityHeading="true"
+                android:layout_marginBottom="16dp"
+                android:text="@string/longest_day"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/loading_longer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:indeterminate="true" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/horizon"
+                        android:textAppearance="?attr/textAppearanceTitleSmall" />
+                    <TextView
+                        android:id="@+id/longest_horizon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="—"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/longest_horizon_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="—"
+                    android:textColor="?attr/colorPrimary"
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+            </LinearLayout>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="16dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/with_peaks"
+                        android:textAppearance="?attr/textAppearanceTitleSmall" />
+                    <TextView
+                        android:id="@+id/longest_peak"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="—"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textAppearance="?attr/textAppearanceBodyMedium" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/longest_peak_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="—"
+                    android:textColor="?attr/colorPrimary"
+                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

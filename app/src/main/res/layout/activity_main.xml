@@ -23,15 +23,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
+        style="@style/Widget.Material3Expressive.BottomNavigationView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:labelVisibilityMode="labeled"
-        app:itemTextAppearanceActive="@style/TextAppearance.Material3.BodyLarge"
-        app:itemTextAppearanceInactive="@style/TextAppearance.Material3.BodyMedium"
-        app:itemIconTint="?attr/colorPrimary"
-        app:itemTextColor="?attr/colorPrimary"
         app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

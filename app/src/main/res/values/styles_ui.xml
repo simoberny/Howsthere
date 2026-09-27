@@ -1,0 +1,38 @@
+<resources>
+    <style name="Widget.Howsthere.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">24dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainerLow</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+    <style name="Widget.Howsthere.Button" parent="Widget.Material3Expressive.Button">
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="ThemeOverlay.Howsthere.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Howsthere.BottomSheet</item>
+    </style>
+    <style name="Widget.Howsthere.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">?attr/colorSurfaceContainerLow</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Howsthere.BottomSheet</item>
+    </style>
+    <style name="ShapeAppearanceOverlay.Howsthere.BottomSheet" parent="">
+        <item name="cornerSizeTopLeft">28dp</item>
+        <item name="cornerSizeTopRight">28dp</item>
+    </style>
+    <style name="Widget.Howsthere.Card.Compact" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+    <style name="Widget.Howsthere.Card.Summary" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+    <style name="Theme.Howsthere2.Ar" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

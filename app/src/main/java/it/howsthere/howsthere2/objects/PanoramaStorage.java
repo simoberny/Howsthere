@@ -10,12 +10,15 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 
 public class PanoramaStorage {
     private static PanoramaStorage instance;
     private List<Panorama> panoramas = new ArrayList<>();
-    private SharedPreferences pref = null;
+    private SharedPreferences pref;
+    private final Gson gson = new Gson();
+    private static final Type HISTORY_TYPE = new TypeToken<ArrayList<Panorama>>() { }.getType();
 
     private PanoramaStorage() {}
 
@@ -27,26 +30,21 @@ public class PanoramaStorage {
         return instance;
     }
 
-    public void init(Activity context_) {
+    public synchronized void init(Activity context_) {
         pref = context_.getPreferences(Context.MODE_PRIVATE);
     }
 
-    public Panorama getPanoramaByID(String id_) {
+    public synchronized Panorama getPanoramaByID(String id_) {
         loadPref();
 
-        for (int i = 0; i < panoramas.size(); i++) {
-            if (panoramas.get(i).id.equals(id_)) {
-                return panoramas.get(i);
-            }
-        }
-
-        return null;
+        int index = indexOf(id_);
+        return index < 0 ? null : panoramas.get(index);
     }
 
-    public void addPanorama(Panorama p) {
+    public synchronized void addPanorama(Panorama p) {
         loadPref();
 
-        int pos = panoramaExist(p);
+        int pos = indexOf(p.id);
 
         if(pos < 0){
             panoramas.add(0, p);
@@ -57,9 +55,9 @@ public class PanoramaStorage {
         saveToPref();
     }
 
-    public int panoramaExist(Panorama p){
+    private int indexOf(String id){
         for (int i = 0; i < panoramas.size(); i++) {
-            if (Objects.equals(panoramas.get(i).id, p.id)) {
+            if (Objects.equals(panoramas.get(i).id, id)) {
                 return i;
             }
         }
@@ -67,12 +65,11 @@ public class PanoramaStorage {
         return -1;
     }
 
-    public void loadPref(){
+    private void loadPref(){
         if(pref != null) {
-            Gson gson = new Gson();
             String json = pref.getString("history", "");
 
-            panoramas = gson.fromJson(json, new TypeToken<ArrayList<Panorama>>() {}.getType());
+            panoramas = gson.fromJson(json, HISTORY_TYPE);
 
             if(panoramas == null)
                 panoramas = new ArrayList<>();
@@ -81,35 +78,28 @@ public class PanoramaStorage {
 
     private void saveToPref(){
         SharedPreferences.Editor prefsEditor = pref.edit();
-        Gson gson = new Gson();
-
-        Type type = new TypeToken<ArrayList<Panorama>>() {}.getType();
-        String json = gson.toJson(panoramas, type);
+        String json = gson.toJson(panoramas, HISTORY_TYPE);
 
         prefsEditor.putString("history", json);
         prefsEditor.apply();
     }
 
-    public void deleteAll() {
+    public synchronized void deleteAll() {
         loadPref();
         panoramas.clear();
         saveToPref();
     }
 
-    public void deleteById(String id_){
+    /** Persist a multiple selection once, keeping reads and writes atomic. */
+    public synchronized void deleteByIds(Collection<String> ids) {
         loadPref();
-
-        for (int i = 0; i < panoramas.size(); i++) {
-            if (panoramas.get(i).id.equals(id_)) {
-                panoramas.remove(i);
-                saveToPref();
-                break;
-            }
+        if (panoramas.removeIf(panorama -> ids.contains(panorama.id))) {
+            saveToPref();
         }
     }
 
-    public List<Panorama> getAllPanorama() {
+    public synchronized List<Panorama> getAllPanorama() {
         loadPref();
-        return panoramas;
+        return new ArrayList<>(panoramas);
     }
 }

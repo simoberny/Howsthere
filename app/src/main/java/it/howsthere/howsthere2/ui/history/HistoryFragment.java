@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,11 +27,11 @@ import it.howsthere.howsthere2.objects.PanoramaStorage;
 public class HistoryFragment extends Fragment {
     private FragmentHistoryBinding binding;
 
-    protected HistoryAdapter adapter;
+    private HistoryAdapter adapter;
 
-    protected RecyclerView historyRecycler;
+    private RecyclerView historyRecycler;
 
-    protected RelativeLayout empty;
+    private RelativeLayout empty;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -64,9 +64,7 @@ public class HistoryFragment extends Fragment {
                 if (item.getItemId() == R.id.action_delete_selected) {
                     adapter.deleteSelectedItems();
 
-                    if(adapter.getItemCount() == 0) {
-                        empty.setVisibility(View.GONE);
-                    }
+                    updateEmptyState();
 
                     return true;
                 }
@@ -75,7 +73,6 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                //adapter.setActionModeCallback(null);
                 adapter.unselectItems();
             }
         });
@@ -94,23 +91,31 @@ public class HistoryFragment extends Fragment {
             return false;
         });
 
-        if(!list.isEmpty()){
-            empty.setVisibility(View.GONE);
-        }else{
-            empty.setVisibility(View.VISIBLE);
-        }
+        root.findViewById(R.id.open_map).setOnClickListener(v ->
+                androidx.navigation.fragment.NavHostFragment.findNavController(this)
+                        .popBackStack(R.id.navigation_map, false));
+        updateEmptyState();
 
         return root;
     }
 
+    private void updateEmptyState() {
+        boolean isEmpty = adapter.getItemCount() == 0;
+        empty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        historyRecycler.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        binding.getRoot().findViewById(R.id.history_hint).setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        Toolbar toolbar = binding.getRoot().findViewById(R.id.history_toolbar);
+        toolbar.getMenu().findItem(R.id.action_delete_all).setEnabled(!isEmpty);
+    }
+
     private void showDeleteConfirmationDialog() {
-        new AlertDialog.Builder(requireContext())
+        new MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.dialog_title)) // Titolo localizzato
             .setMessage(getString(R.string.dialog_message)) // Messaggio localizzato
             .setPositiveButton(getString(R.string.dialog_positive), (dialog, which) -> {
                 // Elimina tutti gli elementi
                 adapter.clearItems();
-                empty.setVisibility(View.VISIBLE);
+                updateEmptyState();
             })
             .setNegativeButton(getString(R.string.dialog_negative), (dialog, which) -> {
                 // Chiudi il dialogo
@@ -122,7 +127,13 @@ public class HistoryFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
+        adapter.finishSelection();
+        adapter.setActionModeCallback(null);
+        historyRecycler.setAdapter(null);
+        adapter = null;
+        historyRecycler = null;
+        empty = null;
         binding = null;
+        super.onDestroyView();
     }
 }
