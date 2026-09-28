@@ -19,13 +19,20 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keep class it.howsthere.howsthere2.objects.Panorama
--keep class it.howsthere.howsthere2.objects.Position
--keep class it.howsthere.howsthere2.objects.PanoramaStorage
-
--keepclassmembernames class it.howsthere.howsthere2.objects.Panorama {<fields>;}
--keepclassmembernames class it.howsthere.howsthere2.objects.Position{<fields>;}
--keepclassmembernames class it.howsthere.howsthere2.objects.PanoramaStorage{<fields>;}
+# Gson persists these models by field name. Keep fields and default constructors,
+# including Peak, so strict full mode cannot remove reflective data or rename saved keys.
+-keep,allowoptimization class it.howsthere.howsthere2.objects.Panorama {
+    <fields>;
+    <init>();
+}
+-keep,allowoptimization class it.howsthere.howsthere2.objects.Position {
+    <fields>;
+    <init>();
+}
+-keep,allowoptimization class it.howsthere.howsthere2.objects.Peak {
+    <fields>;
+    <init>();
+}
 
 -dontwarn edu.umd.cs.findbugs.annotations.Nullable
 # Keep generic signatures; needed for correct type resolution

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/place_search_root"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="?attr/colorSurface">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/place_search_close"
+            style="@style/Widget.Material3Expressive.Button.IconButton.Tonal"
+            android:layout_width="48dp" android:layout_height="48dp"
+            android:contentDescription="@string/search_close"
+            app:icon="@drawable/baseline_arrow_back_ios_24" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:layout_marginStart="12dp"
+            android:hint="@string/search_place" app:endIconMode="clear_text">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/place_query"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:inputType="textCapWords" android:imeOptions="actionSearch" android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/place_search_progress" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:indeterminate="true" android:visibility="gone" />
+    <TextView android:id="@+id/place_search_status" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp" android:text="@string/search_hint"
+        android:textAppearance="?attr/textAppearanceBodyMedium" android:accessibilityLiveRegion="polite" />
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/place_predictions"
+        android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:clipToPadding="false" android:paddingHorizontal="8dp" />
+    <ImageView android:id="@+id/places_attribution" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_margin="16dp" android:layout_gravity="end"
+        android:contentDescription="@string/search_attribution" />
+</LinearLayout>

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import androidx.fragment.app.Fragment;
 
 import it.howsthere.howsthere2.R;
 import it.howsthere.howsthere2.databinding.FragmentMapBinding;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,23 +30,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import it.howsthere.howsthere2.ui.AppDatePicker;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-import it.howsthere.howsthere2.BuildConfig;
 import it.howsthere.howsthere2.Hwt;
 import it.howsthere.howsthere2.objects.MapStateManager;
 import it.howsthere.howsthere2.objects.Utils;
@@ -69,6 +60,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMapBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        it.howsthere.howsthere2.ui.SystemInsets.apply(root.findViewById(R.id.r_touch));
 
         mapManager = new MapStateManager(requireActivity());
 
@@ -98,30 +90,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Button send = dialogView.findViewById(R.id.action_next);
         send.setOnClickListener(view -> launchProcessing());
 
-        // Create a new Places client instance.
-        Places.initialize(requireActivity().getApplicationContext(), BuildConfig.MAPS_API_KEY);
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment) getChildFragmentManager().findFragmentById(R.id.autocomplete_search);
-
-        if (autocompleteFragment != null) {
-            autocompleteFragment.setHint(getString(R.string.search_place));
-            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.DISPLAY_NAME, Place.Field.LOCATION));
-        }
-
-        // Set up a PlaceSelectionListener to handle the response.
-        if (autocompleteFragment != null) {
-            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                @Override
-                public void onPlaceSelected(@NotNull Place place) {
-                    LatLng pl = place.getLocation();
-                    animateLocation(pl, 15);
-                }
-
-                @Override
-                public void onError(@NotNull Status status) {
-                    Log.i("ERROR", "An error occurred: " + status);
-                }
-            });
-        }
+        getChildFragmentManager().setFragmentResultListener(PlaceSearchFragment.RESULT, this, (key, result) ->
+                animateLocation(new LatLng(result.getDouble("latitude"), result.getDouble("longitude")), 15));
+        root.findViewById(R.id.autocomplete_search).setOnClickListener(v -> {
+            if (!getChildFragmentManager().isStateSaved()
+                    && getChildFragmentManager().findFragmentByTag("place-search") == null) {
+                new PlaceSearchFragment().show(getChildFragmentManager(), "place-search");
+            }
+        });
 
         /* Positioning button */
         FloatingActionButton position = root.findViewById(R.id.gps_position);

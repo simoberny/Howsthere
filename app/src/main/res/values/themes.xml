@@ -10,7 +10,6 @@
         <item name="popupMenuStyle">@style/Widget.App.PopupMenu</item>
 
         <!-- Rende la status bar trasparente -->
-        <item name="android:windowTranslucentStatus">false</item>
 
         <!-- Mostra la barra delle azioni sopra la toolbar già presente -->
         <item name="windowActionModeOverlay">true</item>
@@ -63,17 +62,9 @@
         <item name="colorSurfaceContainerHighest">@color/md_theme_surfaceContainerHighest</item>
         <item name="bottomNavigationStyle">@style/Widget.Material3Expressive.BottomNavigationView</item>
 
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="Theme.Howsthere2.Action" parent="Theme.Howsthere2">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:statusBarColor">?attr/colorPrimaryDark</item>
-        <item name="android:windowLightStatusBar">false</item>
-    </style>
-
-    <style name="Widget.App.PopupMenu" parent="Widget.Material3.PopupMenu">
+<style name="Widget.App.PopupMenu" parent="Widget.Material3.PopupMenu">
         <item name="android:popupBackground">@drawable/custom_popup_background</item>
     </style>
 </resources>

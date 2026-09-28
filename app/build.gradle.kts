@@ -13,14 +13,14 @@ android {
         }
     }
     namespace = "it.howsthere.howsthere2"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "it.howsthere.howsthere2"
         minSdk = 30
         targetSdk = 36
-        versionCode = 9
-        versionName = "3.0.0"
+        versionCode = 10
+        versionName = "3.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,6 +33,7 @@ android {
         release {
             isDebuggable = false
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -49,6 +50,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        resValues = true
     }
 }
 
@@ -70,13 +72,15 @@ secrets {
 }
 
 dependencies {
-    // CameraX 1.4 targets the existing compileSdk 35.
+    implementation("androidx.activity:activity:1.10.1")
+    implementation("androidx.core:core:1.17.0")
+    // Keep CameraX aligned across its artifacts.
     val cameraVersion = "1.4.2"
     implementation("androidx.camera:camera-camera2:$cameraVersion")
     implementation("androidx.camera:camera-lifecycle:$cameraVersion")
     implementation("androidx.camera:camera-view:$cameraVersion")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
-    implementation("com.google.android.libraries.places:places:4.1.0")
+    implementation("com.google.android.libraries.places:places:5.3.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("org.shredzone.commons:commons-suncalc:3.11")

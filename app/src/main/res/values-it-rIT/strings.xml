@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Howsthere 2</string>
+    <string name="app_name">Sunpeak</string>
     <string name="title_map">Mappa</string>
     <string name="title_history">Cronologia</string>
 
@@ -140,4 +140,11 @@
     <string name="ar_profile_legend">Montagne</string>
     <string name="ar_sun_legend">Traiettoria sole</string>
     <string name="ar_moon_legend">Traiettoria luna</string>
+    <string name="search_hint">Scrivi almeno due caratteri.</string>
+    <string name="search_loading">Ricerca in corso…</string>
+    <string name="search_empty">Nessun luogo trovato.</string>
+    <string name="search_select">Seleziona un luogo.</string>
+    <string name="search_error">Ricerca non disponibile. Controlla la connessione e riprova.</string>
+    <string name="search_close">Chiudi ricerca</string>
+    <string name="search_attribution">Powered by Google</string>
 </resources>

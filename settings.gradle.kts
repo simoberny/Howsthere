@@ -21,6 +21,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Howsthere 2"
+rootProject.name = "Sunpeak"
 include(":app")
  

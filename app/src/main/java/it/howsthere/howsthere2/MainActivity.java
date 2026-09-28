@@ -5,7 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.WindowCompat;
+import androidx.activity.EdgeToEdge;
+import it.howsthere.howsthere2.ui.SystemInsets;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         // Load saved storage
         PanoramaStorage.getInstance().init(this);
 
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        SystemInsets.applyWithStatusBarBackground(binding.getRoot());
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Howsthere 2</string>
+    <string name="app_name">Sunpeak</string>
     <string name="title_map">Map</string>
     <string name="title_history">History</string>
 
@@ -138,4 +138,11 @@
     <string name="ar_profile_legend">Mountains</string>
     <string name="ar_sun_legend">Sun path</string>
     <string name="ar_moon_legend">Moon path</string>
+    <string name="search_hint">Type at least two characters.</string>
+    <string name="search_loading">Searching…</string>
+    <string name="search_empty">No places found.</string>
+    <string name="search_select">Select a place.</string>
+    <string name="search_error">Search unavailable. Check your connection and try again.</string>
+    <string name="search_close">Close search</string>
+    <string name="search_attribution">Powered by Google</string>
 </resources>

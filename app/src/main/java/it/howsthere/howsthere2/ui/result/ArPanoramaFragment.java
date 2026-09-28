@@ -184,7 +184,7 @@ public class ArPanoramaFragment extends DialogFragment implements SensorEventLis
         footer.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) ->
                 overlay.setLabelInsets(header.getBottom(), view.getHeight() - footer.getTop()));
         cameraView.getPreviewStreamState().observe(getViewLifecycleOwner(), stream -> {
-            boolean ready = stream == PreviewView.StreamState.STREAMING;
+            boolean ready = resumed && preview != null && stream == PreviewView.StreamState.STREAMING;
             overlay.setCameraReady(ready);
             if (ready) { cameraMessage = 0; retry.setVisibility(View.GONE); updateStatus(); }
         });
@@ -200,7 +200,7 @@ public class ArPanoramaFragment extends DialogFragment implements SensorEventLis
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         window.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        WindowCompat.setDecorFitsSystemWindows(window, false);
+        WindowCompat.enableEdgeToEdge(window);
         WindowInsetsControllerCompat bars = WindowCompat.getInsetsController(window, window.getDecorView());
         bars.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         bars.hide(WindowInsetsCompat.Type.systemBars());

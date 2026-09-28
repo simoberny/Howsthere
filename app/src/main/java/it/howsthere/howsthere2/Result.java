@@ -4,7 +4,8 @@ import android.content.Intent;
 import it.howsthere.howsthere2.ui.AppDatePicker;
 import android.content.res.Configuration;
 import android.view.View;
-import androidx.core.graphics.Insets;
+import androidx.activity.EdgeToEdge;
+import it.howsthere.howsthere2.ui.SystemInsets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -38,17 +39,12 @@ public class Result extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_result);
 
         ResultViewModel vm = new ViewModelProvider(this).get(ResultViewModel.class);
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         View root = findViewById(R.id.result_root);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
-            Insets safe = insets.getInsets(WindowInsetsCompat.Type.systemBars()
-                    | WindowInsetsCompat.Type.displayCutout());
-            view.setPadding(safe.left, safe.top, safe.right, safe.bottom);
-            return insets;
-        });
+        SystemInsets.apply(root);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         TextView textDate = findViewById(R.id.item_date);

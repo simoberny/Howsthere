@@ -37,6 +37,7 @@ public class HistoryFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHistoryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        it.howsthere.howsthere2.ui.SystemInsets.apply(root);
 
         historyRecycler = root.findViewById(R.id.recycler_view);
         empty = root.findViewById(R.id.no_history);

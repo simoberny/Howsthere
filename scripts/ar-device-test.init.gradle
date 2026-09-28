@@ -1,0 +1,9 @@
+// Isolated device testing: never overwrites the user's installed app or history.
+// Usage: gradlew -I scripts/ar-device-test.init.gradle :app:assembleDebug :app:assembleDebugAndroidTest
+gradle.beforeProject { project ->
+    project.plugins.withId("com.android.application") {
+        project.android.buildTypes.getByName("debug").applicationIdSuffix = ".artest"
+        project.android.sourceSets.getByName("debug").manifest.srcFile(
+                new File(project.rootDir, "scripts/ar-test-manifest.xml"))
+    }
+}
